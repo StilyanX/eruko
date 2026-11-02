@@ -1,0 +1,12 @@
+@layer unit {
+  /* One claim to rewrite (augustus-record-entry): its label, the sentence, and the box, set apart
+     from the next. */
+  augustus-record-entry .lrn-bio-write > * + * {
+    margin-top: var(--space-2);
+  }
+  augustus-record-entry .lrn-bio-write + .lrn-bio-write {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+}

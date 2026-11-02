@@ -1,0 +1,71 @@
+@layer shell {
+  /* Settings (the .panel pattern in app.css): its title and Close, the theme's rows, then the
+     language: one row naming it, which opens its list in place under the browser's own marker. */
+  /* The title and Close share a baseline, as the top bar's words do. */
+  .set-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .set-head h2 {
+    font-size: var(--type-h2);
+    line-height: var(--leading-h2);
+  }
+  .set-group + .set-group {
+    margin-top: var(--space-6);
+  }
+  .set-legend {
+    margin-bottom: var(--space-2);
+  }
+  /* The theme's rows stand 56 pixels high, above the 44-pixel floor, and a line after them keeps
+     a slip off the records' rows, which share their look. */
+  .set-theme .radio {
+    min-height: calc(var(--target) + var(--space-3));
+  }
+  /* On the theme group's own foot: a fieldset's top edge runs through its legend. */
+  .set-theme {
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--border);
+  }
+  .set-theme + .set-group {
+    margin-top: var(--space-5);
+  }
+  .set-lang-list {
+    margin-top: var(--space-2);
+  }
+  /* The records: rows like the theme's, each one thing to do; the word after one is done; and a
+     question asked in place before a backup replaces them, set off by a line of the
+     text's own colour. */
+  .set-row {
+    width: 100%;
+    color: var(--text);
+    text-align: left;
+  }
+  .set-note {
+    margin-top: var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+  .set-lead {
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+  .set-note:empty {
+    margin: 0;
+  }
+  .set-ask {
+    margin-top: var(--space-4);
+    padding-left: var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    border-left: 2px solid var(--text);
+  }
+  /* The row keeps the browser's own open-and-closed marker, so it shows that it opens. */
+  .set-lang > summary {
+    display: list-item;
+    list-style-position: inside;
+  }
+}

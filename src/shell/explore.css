@@ -1,0 +1,134 @@
+@layer shell {
+  /* The explore page: the disciplines, the search, and the units grouped by discipline, each unit
+     a card. On a phone the disciplines are a grid of two to a line under the title; from 48em they
+     are one wrapping line; from 80em they stand in the rail and stay in view. */
+  .ep-sidebar ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    list-style: none;
+  }
+  @media (min-width: 48em) {
+    .ep-sidebar ul {
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+  .ep-nav-item {
+    display: flex;
+    align-items: center;
+    min-height: var(--target);
+    padding: 0 var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    line-height: var(--leading-body);
+    color: var(--text-2);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  @media (hover: hover) {
+    .ep-nav-item:hover {
+      color: var(--text);
+      background: var(--hover);
+    }
+  }
+  /* The discipline shown: ink text and a text-coloured edge, never a colour alone. */
+  .ep-nav-item[aria-current='page'] {
+    color: var(--text);
+    border-color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--text);
+  }
+  @media (min-width: 80em) {
+    /* The title stands over the column, and the rail beside both. */
+    .page > .ep-title {
+      grid-column: 2;
+    }
+    .ep-sidebar {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      position: sticky;
+      top: calc(var(--topbar-h) + var(--space-6));
+    }
+    .ep-sidebar ul {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+  }
+
+  .ep-section + .ep-section {
+    margin-top: var(--space-7);
+  }
+  .ep-section-name {
+    margin-bottom: var(--space-3);
+    font-size: var(--type-h3);
+    line-height: var(--leading-h3);
+  }
+
+  .ep-cards {
+    display: grid;
+    gap: var(--space-4);
+    list-style: none;
+  }
+  /* A unit: a card whose title link covers the whole card. */
+  .ep-card {
+    position: relative;
+    padding: var(--pad);
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  @media (hover: hover) {
+    .ep-card:hover {
+      background: var(--hover);
+    }
+  }
+  .ep-card:has(a:focus-visible) {
+    outline: var(--focus-width) solid var(--accent);
+    outline-offset: 2px;
+  }
+  .ep-card-title {
+    font-size: var(--type-h2);
+    line-height: var(--leading-h2);
+  }
+  .ep-card-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .ep-card-title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .ep-card-title a:focus-visible {
+    outline: none;
+  }
+  .ep-card-desc {
+    margin-top: var(--space-2);
+    color: var(--text-2);
+  }
+  /* Where the learner stands in the unit: the unit page's own first line. */
+  .ep-card-state {
+    margin-top: var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    font-variant-numeric: tabular-nums;
+  }
+  /* What waits today: a link to the work, set above the title link that covers the card. */
+  .ep-card-today {
+    position: relative;
+    margin-top: var(--space-1);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+  .ep-card-today a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target);
+  }
+}

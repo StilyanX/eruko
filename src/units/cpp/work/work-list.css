@@ -1,0 +1,41 @@
+@layer unit {
+  /* The Parsons board (work/parsons.dom.js): the program with every place in it, a line placed
+     with its press to take it out, an empty place as a dashed line, then the lines to place. */
+  cpp-work-list .cpp-placed .cpp-line {
+    display: flex;
+    align-items: center;
+  }
+  cpp-work-list .cpp-placed {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-1) 0;
+  }
+  cpp-work-list .cpp-slot {
+    min-height: var(--target);
+    margin: var(--space-1) 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  cpp-work-list .cpp-blank {
+    display: inline-block;
+    width: 12ch;
+    min-height: var(--target);
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--type-ui);
+  }
+  cpp-work-list .cpp-pool {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+  }
+  cpp-work-list .cpp-pool-line {
+    justify-content: flex-start;
+    width: 100%;
+    overflow-x: auto;
+    text-align: left;
+  }
+  cpp-work-list .cpp-pool-line code {
+    white-space: pre;
+  }
+}

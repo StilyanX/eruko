@@ -1,0 +1,13 @@
+@layer unit {
+  /* The pair of lives (augustus-pair): one column per life, side by side, each the line length
+     of the text. */
+  augustus-pair .lrn-bio-pair {
+    display: grid;
+    gap: var(--space-4) var(--space-5);
+  }
+  @media (min-width: 48em) {
+    augustus-pair .lrn-bio-pair {
+      grid-template-columns: repeat(var(--cols), minmax(0, var(--bio-line)));
+    }
+  }
+}

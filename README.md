@@ -1,199 +1,154 @@
-<p align="center">
-  <img alt="Aether" src="public/aether-banner.svg" width="900">
-</p>
+# Eruko
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/code-MIT-blue?style=flat-square" alt="MIT License"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/content-CC_BY--NC--SA_4.0-blue?style=flat-square" alt="CC BY-NC-SA 4.0"></a>
-  <a href="https://github.com/sponsors/StilyanX"><img src="https://img.shields.io/badge/sponsor-%E2%9D%A4-pink?style=flat-square" alt="Sponsor"></a>
-</p>
+Eruko is a free study app for every learner. It runs in a browser. It has no account and no tracking, and your records stay on your own devices.
 
-<p align="center"><strong>No streaks. No points. No accounts. Just knowledge.</strong></p>
+You can open any page at any time.
 
-<p align="center">A free, self-hosted learning platform. Every subject, in plain language, full depth.<br>Community-built. Forever free.</p>
+## Units
 
----
+Each unit teaches one subject. A unit's Start page says what the unit needs before its first session. A unit is its folder in `src/units/`: `npm run gen` lists every folder there for the app, so a unit is added or removed with its folder and `npm run gen`. [`STATUS.md`](STATUS.md) labels each unit Draft, Testing or Ready.
 
-<p align="center">
-  <img src="public/screenshots/home.png" alt="Explore: the map of knowable things" width="900">
-</p>
-<p align="center">
-  <img src="public/screenshots/subject.png" alt="Subject view: Classical Mechanics, its units and modules, with a progress bar and a Begin Here action" width="900">
-</p>
-<p align="center">
-  <img src="public/screenshots/learn.png" alt="Learning view: the Vectors and Kinematics lesson, with an interactive force-decomposition figure and a self-explain prompt" width="900">
-</p>
+| Unit | Discipline | Course |
+| --- | --- | --- |
+| Arithmetic | Mathematics | 51 topics in 7 sections, number facts, mixed practice and an end level |
+| Augustus | Biography | 56 lessons in 7 sections |
+| Go course | Go | The rules of Go in 5 parts, then 22 kinds of problem in 3 sections |
+| C++ course | Programming | 12 first kinds of program, then the language track: 57 kinds in 2 stages |
 
----
+## What Eruko refuses
 
-## Why Aether
+Anything below, found in the app, is a defect.
 
-Most learning platforms are built to keep you on the platform. Aether is built to get knowledge into your head, then get out of the way.
+- A point, badge, coin, level, streak or unlock given for starting, finishing or scoring on a task
+- A notification you did not ask for
+- Advertising on a screen where you read
+- Another learner's rank shown to you
+- A task that joins learners without one shared goal and a part each learner answers for
+- The app using your data to keep you going without your choice
+- A list that loads more items as you scroll
+- A feature judged by how learners perform during the lesson itself
 
-- **No gamification.** No streaks, badges, leaderboards, or daily limits. A platform that rewards showing up is optimizing for showing up, not for learning.
-- **No accounts.** No data about you is collected or transmitted. Progress lives in your browser, on your machine, under your control.
-- **No paywalls.** Every topic, every tool, every flashcard. Free, permanently, not a free tier.
-- **No bloat.** Installs in one command. Runs offline. No backend required.
-- **Built on what actually works, not what looks good in a demo.** Retrieval practice and spaced review are the two techniques cognitive-science research rates highest for durable learning across ages and subjects. Aether builds around them: FSRS-scheduled spaced repetition, predict-and-explain cards that force retrieval before revealing the answer, LaTeX equations and interactive simulations for the concepts words alone can't carry.
+## Your records
 
----
+Your records stay on your own devices. Eruko sends nothing about you to anyone, except what a service in "Services outside your browser" needs when you use it. Each browser keeps the record in its own storage, and clearing the browser's data erases that copy.
 
-## What's Inside
+Served by `npm start`, Eruko also keeps the record on the computer that serves it, in `~/.local/share/eruko` or the folder `ERUKO_DATA` names, so every device that opens it there shares one record. A save made while that computer is out of reach waits in the browser and goes when it is back. With `ERUKO_DATA=off`, each browser keeps its own record alone. A plain web server ([`DEPLOY.md`](DEPLOY.md)) keeps no record.
 
-<table align="center">
-  <tr>
-    <td><strong>LEARN</strong></td>
-    <td><strong>PRACTICE</strong></td>
-    <td><strong>REFERENCE</strong></td>
-  </tr>
-  <tr>
-    <td>Long-form articles. LaTeX equations. Interactive geometry. Code blocks. Progressive disclosure.</td>
-    <td>FSRS-powered spaced repetition. Predict-and-explain cards. Locally computed intervals. Session stats.</td>
-    <td>Formula sheets. Key definitions. One page per topic: what you open mid-problem, not mid-lesson.</td>
-  </tr>
-</table>
+Settings saves a backup file in JSON, a plain text format. Loading a backup file replaces every record.
 
-Each subject is sequenced so foundations come before what depends on them (algebra before functions, kinematics before dynamics), not as a fixed syllabus but as a real prerequisite chain. Skipping ahead is always possible; skipping the foundation isn't invisible when it costs you three chapters later.
+## Run it
 
-**Subjects currently covered** (172 topics, plus 12 capstone exams):
+You need git, Node.js 22.12 or later and npm. If you already hold the code, open a terminal in the folder that holds `package.json` and start at step 2.
 
-- **Mathematics** (69 topics): Arithmetic (place value, fractions, decimals, number theory, rational numbers, interactive tools); Algebra (foundations, equations and inequalities, polynomials, functions, sequences, the binomial theorem)
-- **Physics** (60 topics): Classical Mechanics (Newtonian, Lagrangian, Hamiltonian, rigid bodies, oscillations, perturbation theory)
-- **Chemistry** (18 topics): General Chemistry (atomic structure, bonding, thermodynamics, kinetics, equilibrium, electrochemistry, analysis)
-- **Languages** (10 topics): German A1
-- **History** (6 topics): Prehistory, from human evolution to the first civilizations
-- **Explore** (9 topics): curated books, films, papers, podcasts, videos
+1. Get the code and open its folder.
 
-Arithmetic also ships 12 capstone exams, which sit outside the topic count.
+   ```bash
+   git clone https://github.com/StilyanX/eruko.git
+   cd eruko
+   ```
 
-More subjects ship continuously.
+2. Install the packages. They are only the tools that generate files and check the code: the app itself runs none of them.
 
----
+   ```bash
+   npm install
+   ```
 
-## Support the Project
+3. Serve the app on your computer. The terminal prints "Eruko at http://127.0.0.1:9999/eruko/".
 
-Aether will always be free. If it's useful, consider sponsoring. It funds new content, new subjects, and keeps the lights on.
+   ```bash
+   npm start
+   ```
 
-<p align="center">
-  <a href="https://github.com/sponsors/StilyanX">
-    <img src="https://img.shields.io/badge/Sponsor_on_GitHub-%E2%9D%A4-pink?style=for-the-badge&logo=github" alt="Sponsor on GitHub">
-  </a>
-</p>
+4. Open http://127.0.0.1:9999/eruko/ in the browser. It shows a page titled "Units": a search field, then the units grouped by discipline. To use another port, run `node scripts/serve.mjs <port>`.
 
----
+The app has no build: the browser loads the files in `src/` as they are written. After the first visit, every page opens with no connection. The browser tests run in Chromium only; other browsers are not tested.
 
-## Installation
+### Put it on a web server
 
-**Linux / macOS**
+Serve the folder `src/` under the path `/eruko/`, over https with HTTP/2 and Brotli or gzip. [`DEPLOY.md`](DEPLOY.md) gives the steps: the server settings for Caddy or nginx, an upload that survives a slow or dropped link, and the checks.
+
+## Services outside your browser
+
+Eruko runs without any of these. [`scripts/lib/csp.mjs`](scripts/lib/csp.mjs) sets the page's Content-Security-Policy, the browser rule that lets the page contact only itself and these hosts. [`NOTICE`](NOTICE) gives each address.
+
+| Feature | Service | What it needs |
+| --- | --- | --- |
+| Your public Go rating and games | Online Go Server (OGS) | A connection and your OGS user name, typed on Go's Start page. No login is used |
+| Go game review | The Go relay and KataGo, a Go engine | KataGo installed and the relay running, both on your computer. The steps are below |
+| C++ programs, run and checked | The C++ runner | GCC 14 or later and the runner running, both on your computer. The steps are below |
+
+## Start the Go relay
+
+Install KataGo. Go's Start page names the release and the network file. Then name the program, the network file and the analysis config to the relay once.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/StilyanX/aether/main/install.sh | bash
+npm run go-relay -- --katago <program> --model <network file> --config <analysis config>
 ```
 
-**Windows** (PowerShell, run as Administrator)
+The relay prints a line that starts "The relay answers at". Leave it running while you use Go. Later, start it with `npm run go-relay`. If Eruko is open at an address other than `http://127.0.0.1:9999` or `http://localhost:9999`, add `--origin <that address>`. The first lines of [`scripts/go-relay.mjs`](scripts/go-relay.mjs) list the other options.
 
-```powershell
-irm https://raw.githubusercontent.com/StilyanX/aether/main/install.ps1 | iex
-```
+## Start the C++ runner
 
-Open [http://localhost:8000](http://localhost:8000). Aether loads automatically.
-
-<details>
-<summary>Manual install</summary>
-<br>
-
-Install [Node.js LTS](https://nodejs.org) and [Git](https://git-scm.com), then:
+The C++ course compiles and runs your programs on your own computer, since no C++ compiler runs in the browser. The runner is tested on Linux only. Install GCC 14 or later, so that `g++` is on your PATH, then start the runner.
 
 ```bash
-git clone https://github.com/StilyanX/aether.git
-cd aether
-npm install
-npm run dev
+npm run cpp-runner
 ```
 
-</details>
+It prints "The runner answers at http://127.0.0.1:8767". Leave it running while you use the C++ course. If Eruko is open at an address other than `http://127.0.0.1:9999` or `http://localhost:9999`, add `-- --origin <that address>`. The first lines of [`scripts/cpp-runner.mjs`](scripts/cpp-runner.mjs) list the other options.
 
-<details>
-<summary>Troubleshooting</summary>
-<br>
+## Change it
 
-| Symptom                             | Fix                                                                                                      |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `curl: command not found` (Windows) | Use the PowerShell command instead                                                                       |
-| `winget: command not found`         | Update Windows to 1709+ or install Node manually from [nodejs.org](https://nodejs.org)                   |
-| Port 8000 already in use            | Stop the conflicting process (`lsof -ti:8000 \| xargs kill`) or change `server.port` in `vite.config.js` |
-| Blank page or 404                   | Navigate to [http://localhost:8000/aether/](http://localhost:8000/aether/) manually          |
+### Where things live
 
-</details>
+| To change | Go to |
+| --- | --- |
+| The list of units and their pages | [`src/shell/registry.js`](src/shell/registry.js), which reads every unit's `manifest.js` from the folders that `npm run gen` lists in `src/shell/units.gen.js` |
+| A unit's title, discipline, place in the list, record parts, outside hosts, description, sources, pages or sections | `src/units/<unit>/core/entry.logic.js` |
+| A page of a unit | Its folder in `src/units/<unit>/`, loaded by the unit's `manifest.js` |
+| One unit's own logic and shared screens | `src/units/<unit>/core/` |
+| A unit's lessons, problems or texts | `src/units/<unit>/content/` |
+| The layout, top bar, Explore, unit page, search or Settings | `src/shell/` |
+| The controls and screens every unit shares | `src/parts/` |
+| The plain logic every unit shares: days, scheduling, practice | `src/kernel/` |
+| Where the record is kept (SQLite in the browser's own files) | `src/record/` |
+| A storage key | A unit's own parts in its `entry.logic.js` (`parts`); the app's own in `src/kernel/storage.logic.js` |
+| A window event | `src/parts/events.dom.js`, the one file that names events |
+| Colours, type or spacing | `src/style/` |
+| A unit element's styles | `<stem>.css` beside its `<stem>.element.js`, imported by the unit's `unit.css` (the one sheet the shell links), its selectors starting with the element's tag; what several of a unit's elements draw, in `unit.css` |
+| What works offline | `src/sw.js`; its list of files is generated |
+| A generator | `scripts/gen/` |
+| A check | `scripts/check/` |
+| A test | A logic file's own `<stem>.test.js` beside it; `tests/` for the scripts, the generated and vendored files and the units' material; `e2e/` (screens, in the browser) |
 
----
+### What a change keeps
 
-## Ways to Contribute
+Shared code names no unit: `npm run lint` fails when a file outside a unit's own (its folder, and the scripts and tests whose names start with the unit's folder name) names one.
 
-Aether is built by one person so far. The point of it being open source is that it should not stay that way.
+`npm run lint` also fails on a breach of the code's rules: imports run one way (shell, a unit's manifest, its features, its core, the shared parts, the record, the kernel); a unit never imports another unit or the shell; a feature never imports another feature; every import is relative and ends in `.js`; and each file is one of the kinds `.element.js`, `.dom.js`, `.logic.js` or `.gen.js`, or `.test.js` beside the logic file of its stem.
 
-There is no fixed list of what you can contribute. If you know something, write it. If something is broken, fix it. If something could be clearer, improve it. If a subject is missing, add it. If a visualization would make something click, build it.
+### Generated files
 
-A few examples to get started:
+The script named on a file's first line, after `// Generated by`, writes that file. Edit the sources that script reads, then run it again. `npm run gen` runs every generator.
 
-- **Content:** topic articles, flashcard decks, reference sheets, worked examples
-- **Visualizations:** interactive diagrams, physics simulations, geometry tools
-- **Code:** bug fixes, performance, accessibility, packaging, new features
-- **Review:** fact-check a chapter, improve an explanation, catch an error
+Arithmetic generates from `unit.yaml`, `topics/` and `bank/` in its `content/` folder, the C++ course from `unit.md`, `labels.md`, `kinds/` and `track/` in its own, and Augustus from its built lives in `content/`. Go generates from the problem positions in `scripts/lib/`; [`scripts/lib/cpp-track.md`](scripts/lib/cpp-track.md) gives the format of the C++ language track. The service worker's list of files, `src/sw-manifest.gen.js`, holds a hash of every file in `src/`: run `npm run gen` after changing any of them, or that file is not kept for offline use.
 
-See CONTRIBUTING.md for dev setup. See WANTED.md for concrete asks.
+### Check a change
 
-### The Wanted List
+All five pass before a commit.
 
-`WANTED.md` is a flat list of concrete asks. Comment on the corresponding issue to claim one. If what you want to add is not on the list, open an issue first.
+```bash
+npm run gen               # every generated file, written again from its sources
+npm run lint              # code rules, types and the checks in scripts/check/
+npm test                  # the tests beside each logic file, and in tests/
+npm run knip              # unused files, exports and dependencies
+npm run test:screens      # every screen in the browser, with axe, every address and offline
+```
 
-### What This Project Will Not Become
+## The project
 
-A few choices are not up for change. Contributions that move against them will be declined:
+[`RELEASES.md`](RELEASES.md) says how releases are numbered, and [`TRADEMARK.md`](TRADEMARK.md) what a changed copy is called. To help, read [`CONTRIBUTING.md`](CONTRIBUTING.md). Report a security hole as [`SECURITY.md`](SECURITY.md) says, and a barrier as [`ACCESSIBILITY.md`](ACCESSIBILITY.md) says.
 
-- No accounts.
-- No backend.
-- No streaks, XP, badges, daily goals, notifications, or engagement metrics.
-- No paywall, subscriptions, premium tier, or telemetry.
+## Licence
 
-Everything else is open. To argue with one of the above, open an issue with `track:design-principles`.
-
----
-
-### Stack
-
-<p>
-  <img src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19">
-  <img src="https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 6">
-  <img src="https://img.shields.io/badge/MathJax-orange?style=for-the-badge" alt="MathJax">
-  <img src="https://img.shields.io/badge/Matter.js-4B5562?style=for-the-badge" alt="Matter.js">
-  <img src="https://img.shields.io/badge/Mafs-1a73e8?style=for-the-badge" alt="Mafs">
-  <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js">
-</p>
-
-### Privacy
-
-No accounts. No backend. No cookies. No telemetry, no analytics, no crash reporting. All progress is stored locally in `localStorage` and `IndexedDB`, and no data about you is ever collected or transmitted.
-
-Aether does load assets from third-party hosts: fonts from Google Fonts, MathJax and Prism from jsDelivr, and images from Wikimedia Commons, Open Library, Google Books, and YouTube. Your browser contacts those hosts directly, which means they can see your IP address and which page requested the asset. That is the standard consequence of loading anything from a CDN, and it is the only way information about you leaves your machine. [`NOTICE`](NOTICE) lists every external host and what it serves. Self-host the assets if you want a fully airtight setup.
-
-### Standards
-
-WCAG 2.2 accessible. ARIA labels on interactive elements. 2px focus indicators. `prefers-reduced-motion` support. Sub-second first paint.
-
-### License
-
-Platform code (`src/`, `public/`, config files): [MIT](LICENSE).
-Learning content (`src/features/`): [CC BY-NC-SA 4.0](LICENSE).
-
-<details>
-<summary>Attribution</summary>
-<br>
-
-Content is derived from university-level textbooks and educational materials. All source material is credited on each topic page. Content is rewritten in plain language, restructured for active recall, and supplemented with worked examples and visual explanations. No verbatim text is reproduced.
-
-This use constitutes fair use under 17 U.S.C. 107: educational, non-commercial, transformative, no market substitution.
-
-Sources include works by Kleppner & Kolenkow and others.
-
-</details>
+Code: MIT. Unit content in `src/units/*/content/`: CC BY-SA 4.0, except material taken from a source, which keeps that source's licence. [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE) hold the terms.

@@ -1,0 +1,29 @@
+@layer unit {
+  /* Recall beside the record (augustus-recall). */
+  augustus-recall .lrn-bio-told {
+    white-space: pre-wrap;
+  }
+  /* The telling beside the record's list stays in view while the list scrolls; on a narrow screen
+     it stands above the list. */
+  @media (min-width: 48em) {
+    augustus-recall .lrn-bio-told-col {
+      position: sticky;
+      top: calc(var(--topbar-h) + var(--space-4));
+      align-self: start;
+      max-height: calc(100dvh - var(--topbar-h) - var(--space-5));
+      overflow-y: auto;
+    }
+  }
+  augustus-recall .lrn-bio-items {
+    padding-left: var(--space-5);
+  }
+  augustus-recall .lrn-bio-items > li + li {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  /* A record item's fields, each on its own line under its name. */
+  augustus-recall .lrn-bio-say + .lrn-bio-say {
+    margin-top: var(--space-1);
+  }
+}

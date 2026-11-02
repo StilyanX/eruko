@@ -1,0 +1,41 @@
+@layer base {
+  /* Type. Literata sets every line the learner reads, headings included (its optical-size axis
+     gives the display cut at title sizes on its own); Inter sets the interface: buttons, labels,
+     the path, settings. Sizes are rem, so the root size (the reader's own text size, and 150% from
+     48em up: app.css) scales every step together. Sentence case everywhere. Two weights: 400 for
+     every line, 600 for headings and a term at its definition. */
+  :root {
+    --font-text: 'Literata Variable', Georgia, 'Times New Roman', serif;
+    --font-ui: 'Inter Variable', system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace; /* the not-found address only */
+
+    --type-ui: 1rem; /* 16: buttons, labels, the path, notes; Inter 16 matches Literata 17's x-height */
+    --type-body: 1.0625rem; /* 17: every line to read, and every input */
+    --type-h3: 1.1875rem; /* 19 */
+    --type-h2: 1.4375rem; /* 23 */
+    --type-h1: 1.875rem; /* 30 */
+
+    --leading-body: 1.5;
+    --leading-h3: 1.3;
+    --leading-h2: 1.25;
+    --leading-h1: 1.15;
+
+    --weight-text: 400;
+    --weight-head: 600;
+  }
+
+  /* Wider screens get the larger heading steps; body and interface sizes stay. */
+  @media (min-width: 48em) {
+    :root {
+      --type-h3: 1.25rem; /* 20 */
+      --type-h2: 1.625rem; /* 26 */
+      --type-h1: 2.25rem; /* 36 */
+    }
+  }
+
+  /* A formula piece sits in the line and never wraps inside itself (parts/maths-screens.dom.js). */
+  .lrn-piece {
+    margin: 0 0.1em;
+    white-space: nowrap;
+  }
+}

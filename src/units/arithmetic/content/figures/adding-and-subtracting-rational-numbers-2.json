@@ -1,0 +1,9 @@
+{
+  "from": -4,
+  "to": 2,
+  "arrows": [
+    { "from": "0", "to": "-3", "tex": "\\vec x", "row": 1 },
+    { "from": "-3", "to": "-2", "tex": "\\vec y", "row": 2 }
+  ],
+  "marks": [{ "at": "-2", "tex": "\\vec x+\\vec y", "row": 3 }]
+}

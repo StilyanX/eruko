@@ -1,0 +1,174 @@
+/* Go's sheet, the one the shell links while a Go page is open: each element's own sheet, beside
+   it under its stem, then what the unit's shared screens draw on its pages (core/board.dom.js,
+   core/screens.dom.js): the board, under the Go paper's visual rules (a still diagram, a black
+   stone a solid disc, a white stone an open circle in the same line weight, a lighter grid, and a
+   light ground on every screen whatever the theme: the board's colours are tokens), its lists of
+   lines and its fields. */
+@import './work/work-list.css';
+
+@layer unit {
+  go-work .go-board,
+  go-review .go-board,
+  go-start .go-board {
+    margin: var(--space-4) 0;
+  }
+  /* A board is drawn at its real size and scrolls in this box when it is wider than its column. */
+  go-work .lrn-figure-scroll,
+  go-review .lrn-figure-scroll,
+  go-start .lrn-figure-scroll {
+    overflow-x: auto;
+  }
+  go-work .go-board svg,
+  go-review .go-board svg,
+  go-start .go-board svg {
+    display: block;
+    max-width: none;
+  }
+  go-work .go-ground,
+  go-review .go-ground,
+  go-start .go-ground {
+    fill: var(--board-ground);
+  }
+  go-work .go-line,
+  go-review .go-line,
+  go-start .go-line {
+    stroke: var(--board-grid);
+    stroke-width: 1;
+  }
+  go-work .go-edge,
+  go-review .go-edge,
+  go-start .go-edge {
+    stroke: var(--board-ink);
+    stroke-width: 2;
+  }
+  go-work .go-star,
+  go-review .go-star,
+  go-start .go-star {
+    fill: var(--board-grid);
+  }
+  /* The last move: a ring inside its stone, light on a black stone and dark on a white one. */
+  go-work .go-last,
+  go-review .go-last,
+  go-start .go-last {
+    fill: none;
+    stroke: var(--board-ink);
+    stroke-width: 2;
+  }
+  go-work .go-last-on-black,
+  go-review .go-last-on-black,
+  go-start .go-last-on-black {
+    stroke: var(--board-ground);
+  }
+  go-work .go-black,
+  go-review .go-black,
+  go-start .go-black {
+    fill: var(--board-ink);
+    stroke: var(--board-ink);
+    stroke-width: 1.5;
+  }
+  go-work .go-white,
+  go-review .go-white,
+  go-start .go-white {
+    fill: var(--board-ground);
+    stroke: var(--board-ink);
+    stroke-width: 1.5;
+  }
+  /* A stone taken off as dead before the count: faint, and crossed. */
+  go-work .go-dead,
+  go-review .go-dead,
+  go-start .go-dead {
+    opacity: 0.5;
+  }
+  go-work .go-dead-mark,
+  go-review .go-dead-mark,
+  go-start .go-dead-mark {
+    stroke: var(--board-ink);
+    stroke-width: 2;
+  }
+  go-work .go-dead-mark-on-black,
+  go-review .go-dead-mark-on-black,
+  go-start .go-dead-mark-on-black {
+    stroke: var(--board-ground);
+  }
+  /* A board that takes a click: the point clicked fills the answer, and is ringed. */
+  go-work .go-pick,
+  go-review .go-pick,
+  go-start .go-pick {
+    cursor: pointer;
+  }
+  go-work .go-chosen,
+  go-review .go-chosen,
+  go-start .go-chosen {
+    fill: none;
+    stroke: var(--board-mark);
+    stroke-width: 3;
+  }
+  go-work .go-num,
+  go-review .go-num,
+  go-start .go-num,
+  go-work .go-coord,
+  go-review .go-coord,
+  go-start .go-coord {
+    font-family: var(--font-text);
+    font-size: var(--type-body);
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+  go-work .go-num,
+  go-review .go-num,
+  go-start .go-num {
+    fill: var(--board-ink);
+  }
+  go-work .go-num-on-black,
+  go-review .go-num-on-black,
+  go-start .go-num-on-black {
+    fill: var(--board-ground);
+  }
+  go-work .go-coord,
+  go-review .go-coord,
+  go-start .go-coord {
+    fill: var(--text-2);
+  }
+  go-work .go-line-list,
+  go-review .go-line-list,
+  go-start .go-line-list {
+    margin: var(--space-3) 0;
+    padding: 0;
+    list-style: none;
+  }
+  go-work .go-fields,
+  go-review .go-fields,
+  go-start .go-fields {
+    display: grid;
+    gap: var(--space-3);
+  }
+  /* The text under a board is set at the body size, like the numbers and coordinates in it. */
+  go-work .go-board figcaption,
+  go-review .go-board figcaption,
+  go-start .go-board figcaption {
+    font-size: var(--type-body);
+  }
+  /* The text beside a board: its stones as a plain list. */
+  go-work .go-text,
+  go-review .go-text,
+  go-start .go-text {
+    margin: var(--space-2) 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* Under forced colours the board keeps its own light ground and dark ink, so a black stone, a
+     white stone and the rings stay told apart by shape; the coordinates sit on the page, so they
+     take the page's text colour. */
+  @media (forced-colors: active) {
+    go-work .go-board svg,
+    go-review .go-board svg,
+    go-start .go-board svg {
+      forced-color-adjust: none;
+    }
+    go-work .go-coord,
+    go-review .go-coord,
+    go-start .go-coord {
+      fill: CanvasText;
+    }
+  }
+}

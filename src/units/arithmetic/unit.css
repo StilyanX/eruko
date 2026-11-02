@@ -1,0 +1,7 @@
+/* Arithmetic's sheet, the one the shell links while an Arithmetic page is open: it brings in each
+   feature's own sheet, which sits beside the element it styles under the element's stem. The
+   paper's reading rules and the pieces both mathematics units share are in study-page.css. */
+@import './core/number-line.css';
+@import './core/place-line.css';
+@import './number-facts/fact-drill.css';
+@import './end-level/end-sheet.css';

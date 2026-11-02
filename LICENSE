@@ -1,4 +1,4 @@
-# Aether: Dual License
+# Eruko: Dual License
 
 Copyright (c) 2026 Stilyan Stoyanov
 
@@ -6,8 +6,8 @@ Copyright (c) 2026 Stilyan Stoyanov
 
 ## Platform Code: MIT License
 
-The source code of the Aether platform (everything except the learning content
-in `src/features/`) is licensed under the MIT License.
+The source code of the Eruko platform (everything except the unit content in
+`src/units/*/content/`) is licensed under the MIT License.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,28 +29,35 @@ SOFTWARE.
 
 ---
 
-## Learning Content: Creative Commons BY-NC-SA 4.0
+## Learning Content: Creative Commons BY-SA 4.0
 
-The learning content in `src/features/` (all educational modules, curriculum
-structure, and written material) is licensed under the Creative Commons
-Attribution-NonCommercial-ShareAlike 4.0 International License.
+The unit content in `src/units/*/content/` (the topics, problems, lessons, meanings
+and other written material) is licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International License.
 
 You are free to:
-- Share: copy and redistribute the material in any medium or format
-- Adapt: remix, transform, and build upon the material
+- Share: copy and redistribute the material in any medium or format, for any purpose,
+  commercial use included
+- Adapt: remix, transform, and build upon the material, for any purpose
 
 Under the following terms:
-- Attribution: you must give appropriate credit to Aether and its contributors
-- NonCommercial: you may not use the material for commercial purposes
+- Attribution: you must give appropriate credit to Eruko and its contributors
 - ShareAlike: if you remix or build upon the material, you must distribute
-  your contributions under the same CC BY-NC-SA 4.0 license
+  your contributions under the same CC BY-SA 4.0 license
 
-Full license text: https://creativecommons.org/licenses/by-nc-sa/4.0/
+Full license text: https://creativecommons.org/licenses/by-sa/4.0/
+
+Material taken from a source keeps that source's own licence. The Go problems in
+`src/units/go/content/problems.gen.js` whose `source` is not `aether`, and the
+positions they come from in `scripts/lib/`, are from An Younggil and David Ormerod's
+Weekly Go Problems under its Creative Commons BY-NC-SA 4.0 terms, or from classical
+collections in the public domain. [`NOTICE`](NOTICE) names each source.
 
 ---
 
 ## Contributing
 
-By contributing to Aether, you agree that:
-- Your code contributions are licensed under MIT
-- Your content contributions are licensed under CC BY-NC-SA 4.0
+What you contribute comes in under the licence it goes out under: code under MIT,
+content under CC BY-SA 4.0. Each commit is signed off under the Developer
+Certificate of Origin (CONTRIBUTING.md). You keep your rights, and no one can
+relicense your work without your consent.

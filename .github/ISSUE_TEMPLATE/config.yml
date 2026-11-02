@@ -1,5 +1,5 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
-  - name: General discussion
-    url: https://github.com/StilyanX/aether/discussions
-    about: Ask questions or chat, no bug needed
+  - name: A security hole
+    url: https://github.com/StilyanX/eruko/security/advisories/new
+    about: Report it privately, as SECURITY.md says. Do not open a public issue.

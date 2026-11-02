@@ -1,0 +1,36 @@
+@layer unit {
+  /* The fact sheet (arithmetic-fact-drill): eleven facts a page. Each row is its number, the sum
+     and the answer box beside it; the rows fill one or two columns, never narrower than a row
+     needs. */
+  arithmetic-fact-drill .lrn-ss-sheet {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-2) var(--space-6);
+    margin: var(--space-4) 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-ui);
+    font-size: var(--type-body);
+    font-variant-numeric: tabular-nums;
+  }
+  arithmetic-fact-drill .lrn-ss-sheet li {
+    margin: 0;
+  }
+  arithmetic-fact-drill .lrn-ss-sheet label {
+    display: grid;
+    /* The sum's column holds the longest fact, "100 ÷ 10 =", on one line. */
+    grid-template-columns: 4ch 10ch auto;
+    justify-content: start;
+    align-items: center;
+    gap: var(--space-3);
+    white-space: nowrap;
+  }
+  arithmetic-fact-drill .lrn-ss-n {
+    text-align: right;
+    color: var(--text-2);
+  }
+  arithmetic-fact-drill .lrn-ss-sheet .field {
+    text-align: center;
+    font-family: var(--font-ui);
+  }
+}
