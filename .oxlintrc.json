@@ -1,0 +1,78 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import"],
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": false
+      }
+    ],
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/require-array-sort-compare": [
+      "error",
+      {
+        "ignoreStringArrays": true
+      }
+    ],
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 60,
+        "skipBlankLines": false,
+        "skipComments": false,
+        "IIFEs": true
+      }
+    ],
+    "typescript/switch-exhaustiveness-check": [
+      "error",
+      {
+        "considerDefaultExhaustiveForUnions": false,
+        "requireDefaultForNonUnion": true
+      }
+    ]
+  },
+  "ignorePatterns": ["node_modules/**", "src/record/sqlite-*/**", "src/units/german/core/hls-*/**"],
+  "overrides": [
+    {
+      "files": ["tests/**", "src/**/*.test.js"],
+      "rules": {
+        "typescript/no-floating-promises": "off"
+      }
+    },
+    {
+      "files": ["src/**/*.logic.js"],
+      "rules": {
+        "no-restricted-properties": [
+          "error",
+          {
+            "object": "Date",
+            "property": "now",
+            "message": "Logic lint: time enters a .logic.js file as an argument."
+          },
+          {
+            "object": "Math",
+            "property": "random",
+            "message": "Logic lint: randomness enters a .logic.js file as an argument."
+          }
+        ]
+      }
+    }
+  ]
+}

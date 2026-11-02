@@ -1,0 +1,9 @@
+{
+  "from": 0,
+  "to": 1,
+  "cuts": 6,
+  "marks": [
+    { "at": "1/2", "tex": "\\frac{m}{n}" },
+    { "at": "1/2", "tex": "\\frac{cm}{cn}", "side": "below" }
+  ]
+}

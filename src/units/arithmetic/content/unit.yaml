@@ -1,0 +1,80 @@
+# The unit's manifest. Built on the Mathematics division of "A Self-Study System":
+# every topic runs its four steps, and the paper names the three sources below.
+# The paper rules out capstones, unit tests and cards, so capstone, mastery_gate
+# and coverage_audit are gone.
+
+slug: explore/mathematics/arithmetic
+discipline: Mathematics
+title: Arithmetic
+prerequisites: []
+
+canon_sources:
+  - author: Hung-Hsi Wu
+    work: Understanding Numbers in Elementary School Mathematics
+    publisher: American Mathematical Society
+    year: 2011
+    feeds: steps 1 and 2 (worked examples, problem bank), with his corrections list and posted Activity solutions
+  - author: Edmund Landau
+    work: Foundations of Analysis
+    chapters: 1-2 (Theorems 1-115)
+    feeds: step 3 (proofs to read)
+  - author: Kevin Buzzard and Jon Eugster
+    work: Natural Number Game
+    feeds: step 4 (statements to prove)
+
+# Prerequisite order. Number Facts and Mixed Practice are the number-facts gate and step 2;
+# the facts come first, as in the paper's "Running it" chart and the registry's pager order.
+topics:
+  - number-facts
+  - mixed-practice
+  - place-value
+  - laws-of-addition-and-multiplication
+  - order-and-addition
+  - order-and-multiplication
+  - powers
+  - addition-algorithm
+  - subtraction-algorithm
+  - multiplication-algorithm
+  - division-with-remainder-and-long-division
+  - numbers-in-base-b
+  - fractions-and-decimals-defined
+  - equivalent-fractions
+  - adding-fractions-and-decimals
+  - comparing-fractions
+  - estimation
+  - subtracting-fractions-and-decimals
+  - multiplying-fractions-and-decimals
+  - dividing-fractions
+  - complex-fractions
+  - percent
+  - ratio-and-rate
+  - average-speed-and-percent-problems
+  - adding-and-subtracting-rational-numbers
+  - addition-of-rational-numbers-from-its-laws
+  - multiplying-rational-numbers
+  - dividing-rational-numbers
+  - ordering-rational-numbers
+  - divisibility-rules
+  - primes-and-divisors
+  - fundamental-theorem-of-arithmetic
+  - euclidean-algorithm
+  - greatest-common-divisor-and-least-common-multiple
+  - pythagorean-triples
+  - finite-decimals
+  - scientific-notation
+  - decimals
+  - decimal-expansions-of-fractions
+  - natural-numbers-from-the-axioms
+  - addition-from-the-axioms
+  - order-of-the-natural-numbers
+  - multiplication-from-the-axioms
+  - powers-in-the-natural-number-game
+  - fraction-pair-equivalence
+  - ordering-fraction-pairs
+  - adding-fraction-pairs
+  - multiplying-fraction-pairs
+  - positive-rational-number-equality
+  - ordering-positive-rational-numbers
+  - adding-positive-rational-numbers
+  - multiplying-positive-rational-numbers
+  - whole-number-classes

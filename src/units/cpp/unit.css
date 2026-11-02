@@ -1,0 +1,186 @@
+/* C++'s sheet, the one the shell links while a C++ page is open: each element's own sheet,
+   beside it under its stem, then what the unit's shared screens draw on its pages
+   (core/screens.dom.js), under the Programming paper's visual rules: all code in one fixed-width
+   face, one text colour on the page's own ground, never wrapped, a box wider than its column
+   scrolling sideways in itself; line numbers as plain digits in the margin; the state table a
+   still grid whose "Line" head is in the body face and whose names are in the code face. */
+@import './work/work-list.css';
+
+@layer unit {
+  cpp-work :is(code, pre, .cpp-editor, .cpp-cell),
+  cpp-start :is(code, pre, .cpp-editor, .cpp-cell),
+  cpp-review :is(code, pre) {
+    font-family: var(--font-mono);
+    font-size: var(--type-ui);
+    color: var(--text);
+  }
+  /* The next contest's form, drawn by its own element, starts flush with its step. */
+  cpp-work .lrn cpp-next-contest > :first-child,
+  cpp-start .lrn cpp-next-contest > :first-child {
+    margin-top: 0;
+  }
+  /* A piece of code in a sentence stays on one line. */
+  cpp-start :is(li, p) code,
+  cpp-work p code {
+    white-space: nowrap;
+  }
+  /* A program, printed text or error text: a box of its own lines that scrolls sideways. */
+  cpp-work :is(.cpp-code, .cpp-out),
+  cpp-start :is(.cpp-code, .cpp-out) {
+    margin: var(--space-2) 0 var(--space-4);
+    padding: var(--space-3);
+    overflow-x: auto;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  cpp-work .cpp-out,
+  cpp-start .cpp-out {
+    white-space: pre;
+    line-height: var(--leading-body);
+  }
+  cpp-work .cpp-line,
+  cpp-start .cpp-line {
+    display: block;
+    min-height: 1.5em;
+    white-space: pre;
+    line-height: var(--leading-body);
+  }
+  /* A line's number in the margin, in the code's one text colour. */
+  cpp-work .cpp-num,
+  cpp-start .cpp-num {
+    display: inline-block;
+    width: 2ch;
+    margin-right: 1ch;
+    text-align: right;
+    color: var(--text);
+    user-select: none;
+  }
+  /* A label above its group of lines, in the body face; a group inside a group one level in. */
+  cpp-work .lrn .cpp-label,
+  cpp-start .lrn .cpp-label {
+    margin: var(--space-3) 0 var(--space-1);
+    max-width: var(--measure);
+    white-space: normal;
+  }
+  cpp-work .lrn .cpp-label:first-child,
+  cpp-start .lrn .cpp-label:first-child {
+    margin-top: 0;
+  }
+  cpp-work .cpp-label-in,
+  cpp-start .cpp-label-in {
+    padding-left: 4ch;
+  }
+  cpp-work .lrn .cpp-name,
+  cpp-start .lrn .cpp-name {
+    margin: var(--space-3) 0 0;
+  }
+  /* What was expected beside what was given, from 48em. */
+  cpp-work .cpp-pair {
+    display: grid;
+    gap: 0 var(--space-5);
+  }
+  cpp-work .cpp-pair > * {
+    min-width: 0;
+  }
+  @media (min-width: 48em) {
+    cpp-work .cpp-pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  /* A trace item's program, as wide as its own longest line in the code face with its line
+     numbers, so no line is cut; its table beside it where both fit, else under it. After the
+     answer, the two tables side by side where both fit. */
+  cpp-work :is(.cpp-side, .cpp-tables),
+  cpp-start .cpp-side {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0 var(--space-4);
+  }
+  cpp-work .cpp-side > :first-child,
+  cpp-start .cpp-side > :first-child {
+    flex: 0 0 auto;
+    width: calc((var(--cpp-columns, 64) + 3) * 1ch + 2 * var(--space-3) + 2px);
+    max-width: 100%;
+    font-family: var(--font-mono);
+    font-size: var(--type-ui);
+  }
+  cpp-work :is(.cpp-side > :last-child, .cpp-tables > *),
+  cpp-start .cpp-side > :last-child {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+  }
+  /* A trace screen takes the screen's whole width, past the frame and its rail, so its program
+     and its table, or its two tables, show together; its sentences keep the column's measure. */
+  @media (min-width: 80em) {
+    cpp-work .page:has(:is(.cpp-side, .cpp-tables)),
+    cpp-start .page:has(.cpp-side) {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: none;
+      padding-inline: var(--space-4);
+    }
+    cpp-work .page:has(:is(.cpp-side, .cpp-tables)) > .page-col,
+    cpp-start .page:has(.cpp-side) > .page-col {
+      grid-column: 1;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: none;
+    }
+    cpp-work .page:has(:is(.cpp-side, .cpp-tables)) > .page-col > *,
+    cpp-start .page:has(.cpp-side) > .page-col > * {
+      grid-column: 1;
+    }
+    cpp-work .page:has(:is(.cpp-side, .cpp-tables)) :is(.lrn-ss, .lrn-section) > :is(p, h3),
+    cpp-start .page:has(.cpp-side) :is(.lrn-ss, .lrn-section) > :is(p, h3, ol) {
+      max-width: var(--measure);
+    }
+  }
+  /* The state table: one column per name, one row per line run, the line's number first. */
+  cpp-work .cpp-table,
+  cpp-start .cpp-table {
+    margin: var(--space-2) 0 var(--space-4);
+    overflow-x: auto;
+  }
+  cpp-work .cpp-table table,
+  cpp-start .cpp-table table {
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  cpp-work .cpp-table :is(th, td),
+  cpp-start .cpp-table :is(th, td) {
+    padding: 2px 4px 2px 2px;
+    font-weight: var(--weight-text);
+    text-align: left;
+    white-space: pre;
+    border-bottom: 1px solid var(--border);
+  }
+  /* A line between columns, so two names side by side never read as one. */
+  cpp-work .cpp-table :is(th, td) + :is(th, td),
+  cpp-start .cpp-table :is(th, td) + :is(th, td) {
+    border-left: 1px solid var(--border);
+  }
+  cpp-work .cpp-table th,
+  cpp-start .cpp-table th {
+    font-family: var(--font-text);
+  }
+  /* A cell is 44 pixels high, the least a control may be, so a long table shows whole. */
+  cpp-work .cpp-cell {
+    width: 6ch;
+    min-height: 44px;
+    padding: 0 var(--space-1);
+  }
+  /* A line's number has at most two digits. */
+  cpp-work .cpp-cell-line {
+    width: 3ch;
+  }
+  /* The editor: a plain field in the code face, its lines never wrapped. */
+  cpp-work .cpp-editor {
+    white-space: pre;
+    overflow-x: auto;
+    tab-size: 4;
+  }
+  cpp-work textarea.cpp-printed {
+    min-height: 0;
+  }
+}

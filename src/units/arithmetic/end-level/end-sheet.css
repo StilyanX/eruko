@@ -1,0 +1,32 @@
+@layer unit {
+  /* The end level's sheet (arithmetic-end-sheet): one problem at a time, its question large and
+     its entries one under another, each label beside its box. */
+  arithmetic-end-sheet .ar-end-question {
+    margin: var(--space-4) 0 var(--space-3);
+    font-family: var(--font-ui);
+    font-size: var(--type-h2);
+    font-variant-numeric: tabular-nums;
+  }
+  arithmetic-end-sheet .ar-end-entries {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+  }
+  arithmetic-end-sheet .ar-end-entry {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 16rem);
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-ui);
+  }
+  arithmetic-end-sheet .ar-end-locked {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+  arithmetic-end-sheet .ar-end-entry .field {
+    font-family: var(--font-ui);
+    font-variant-numeric: tabular-nums;
+  }
+}

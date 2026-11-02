@@ -1,0 +1,78 @@
+/* Augustus's sheet, the one the shell links while an Augustus page is open: each feature's own
+   sheet, beside the element it styles, then the rules for every page of the unit (its main is
+   .lrn-bio) and for what the unit's shared screens (core/screens.dom.js) and several elements
+   draw. The Biography paper's reading rules: one column about 55 characters wide, and two only for
+   a claim beside its witness and for recall beside the record. */
+@import './life/check.css';
+@import './life/pair.css';
+@import './life/recall.css';
+@import './life/record-entry.css';
+
+@layer unit {
+  augustus-life .lrn-bio,
+  augustus-review .lrn-bio,
+  augustus-start .lrn-bio {
+    --bio-line: 40ch;
+  }
+  augustus-life .lrn-bio .lrn-ss,
+  augustus-review .lrn-bio .lrn-ss,
+  augustus-start .lrn-bio .lrn-ss {
+    max-width: calc(var(--bio-line) + 2 * var(--pad) + 2px);
+  }
+  augustus-life .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
+  augustus-review .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
+  augustus-start .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q) {
+    max-width: var(--bio-line);
+  }
+  augustus-life .lrn-bio .lrn-ss:has(.lrn-bio-cols),
+  augustus-review .lrn-bio .lrn-ss:has(.lrn-bio-cols),
+  augustus-start .lrn-bio .lrn-ss:has(.lrn-bio-cols) {
+    max-width: calc(2 * var(--bio-line) + var(--space-5) + 2 * var(--pad) + 2px);
+  }
+  augustus-life .lrn-bio-date,
+  augustus-review .lrn-bio-date,
+  augustus-start .lrn-bio-date {
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    font-variant-numeric: tabular-nums;
+  }
+  augustus-life .lrn-bio-cols,
+  augustus-review .lrn-bio-cols,
+  augustus-start .lrn-bio-cols {
+    display: grid;
+    gap: var(--space-4) var(--space-5);
+  }
+  @media (min-width: 48em) {
+    augustus-life .lrn-bio-cols,
+    augustus-review .lrn-bio-cols,
+    augustus-start .lrn-bio-cols {
+      grid-template-columns: repeat(2, minmax(0, var(--bio-line)));
+    }
+  }
+  augustus-life .lrn-bio-claim + .lrn-bio-claim,
+  augustus-review .lrn-bio-claim + .lrn-bio-claim,
+  augustus-start .lrn-bio-claim + .lrn-bio-claim {
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  /* The witness beside the claim: the ancient account, set off by a line on its left. */
+  augustus-life .lrn-bio-claim > * + *,
+  augustus-review .lrn-bio-claim > * + *,
+  augustus-start .lrn-bio-claim > * + * {
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--border);
+  }
+  augustus-check .lrn-bio-entry,
+  augustus-end-level .lrn-bio-entry,
+  augustus-pair .lrn-bio-entry,
+  augustus-struggle .lrn-bio-entry {
+    margin: var(--space-4) 0;
+  }
+  /* The pair of lives: the step is as wide as its columns. */
+  augustus-life .lrn-bio .lrn-ss:has(.lrn-bio-pair),
+  augustus-review .lrn-bio .lrn-ss:has(.lrn-bio-pair),
+  augustus-start .lrn-bio .lrn-ss:has(.lrn-bio-pair) {
+    max-width: calc(3 * var(--bio-line) + 2 * var(--space-5) + 2 * var(--pad) + 2px);
+  }
+}

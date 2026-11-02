@@ -1,0 +1,192 @@
+@layer shell {
+  /* The unit page (the paper's unit page): the title, the place line held to it, the unit's own
+     pages, the course in sections, then the sources. Rows are flat, between lines, with no card:
+     their text keeps to the column's edge, and the lines and the hover fill reach the same short
+     way past it, so the fill always meets its lines. */
+
+  /* Where the learner stands: one plain line held to the title. */
+  .hm-title:has(+ .hm-place) {
+    margin-bottom: var(--space-2);
+  }
+  .hm-place {
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+
+  .hm-list {
+    margin-top: var(--space-7);
+  }
+
+  /* Start and Review, the cards of the page, ahead of the course: each its name in a heading's type, and what
+     it holds under the name. */
+  .hm-start {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--pad);
+    color: var(--text);
+    text-decoration: none;
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  @media (hover: hover) {
+    a.hm-start:hover {
+      background: var(--hover);
+    }
+  }
+  .hm-start-title {
+    font-size: var(--type-h3);
+    line-height: var(--leading-h3);
+    font-weight: var(--weight-head);
+  }
+  .hm-start-note {
+    color: var(--text-2);
+  }
+  .hm-start + .hm-start {
+    margin-top: var(--space-4);
+  }
+  .hm-start + .hm-block {
+    margin-top: var(--space-7);
+  }
+  .hm-block-label {
+    margin-bottom: var(--space-3);
+    font-size: var(--type-h2);
+    line-height: var(--leading-h2);
+  }
+
+  /* A row: its number in the course where it has one, its title, and Done at its end. A
+     section's row is a button that opens in place on its rows. */
+  .hm-rows {
+    margin: 0 calc(-1 * var(--space-2));
+    list-style: none;
+    border-top: 1px solid var(--border);
+  }
+  .hm-rows li {
+    border-bottom: 1px solid var(--border);
+  }
+  .hm-rows + .hm-rows {
+    border-top: 0;
+  }
+  .hm-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0 var(--space-3);
+    width: 100%;
+    min-height: var(--target);
+    padding: var(--space-3) var(--space-2);
+    font: inherit;
+    text-align: left;
+    color: var(--text);
+    text-decoration: none;
+  }
+  @media (hover: hover) {
+    .hm-row:hover {
+      background: var(--hover);
+    }
+  }
+  .hm-row:focus-visible {
+    outline-offset: -3px;
+  }
+  /* The page's place in the unit's order, in a margin of its own, so the titles line up. */
+  .hm-numbered .hm-row {
+    grid-template-columns: 2em minmax(0, 1fr) auto;
+  }
+  .hm-num {
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+  }
+  .hm-row-title {
+    overflow-wrap: anywhere;
+  }
+  /* A line under a row's title: why the row opens nothing. */
+  .hm-row-note {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+  /* Done, or how many are done, at the row's end: a word, never a colour or a mark. */
+  .hm-state {
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+  /* A row that opens nothing is set in the quieter text colour, so the rows that open stand out. */
+  .hm-still {
+    color: var(--text-2);
+  }
+  /* A row with no page of its own takes no hover. */
+  @media (hover: hover) {
+    .hm-still:hover {
+      background: none;
+    }
+  }
+
+  /* A section opens in place: its rows slide down under its name in a fifth of a second, the one
+     motion in the app, and at once under reduced motion. Nothing above it moves. */
+  .hm-section-open {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur-open) ease-out;
+  }
+  .hm-section[aria-expanded='true'] + .hm-section-open {
+    grid-template-rows: 1fr;
+  }
+  .hm-section-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+  /* A section's name carries the browser's own disclosure marker, closed or open. */
+  .hm-section .hm-row-title {
+    display: list-item;
+    list-style: disclosure-closed inside;
+  }
+  .hm-section[aria-expanded='true'] .hm-row-title {
+    list-style-type: disclosure-open;
+  }
+  .hm-section-inner > .hm-rows {
+    margin: 0 0 var(--space-3) var(--space-5);
+    font-size: var(--type-ui);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hm-section-open {
+      transition: none;
+    }
+  }
+
+  .hm-found-title,
+  .hm-part-title {
+    margin: var(--space-5) 0 var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+  }
+
+  /* A part's title lines up with the text of the rows under it. */
+  .hm-part-title {
+    padding-inline: var(--space-2);
+  }
+
+  /* The sources close the page: a label, then each title with its author under it. */
+  .hm-sources-label {
+    margin: var(--space-8) 0 var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    line-height: var(--leading-body);
+    color: var(--text-2);
+  }
+  .hm-sources {
+    list-style: none;
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+  .hm-sources li {
+    padding: var(--space-2) 0;
+  }
+  .hm-source-by {
+    display: block;
+    font-family: var(--font-ui);
+  }
+}

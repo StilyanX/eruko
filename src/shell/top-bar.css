@@ -1,0 +1,125 @@
+@layer shell {
+  /* The bar on top of every page: the path on the left, from the Eruko wordmark to the page's
+     parent, and Settings on the right. Solid, with a line under it: text scrolling behind a
+     see-through bar is harder to read. Its ground and line run the full width; its wordmark and
+     Settings sit on the frame's edges, the same on every page, so they never move between pages
+     and the wordmark stands over the text's left edge. */
+  .lv-topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-bar);
+    display: flex;
+    /* One baseline for the path and Settings, whose faces differ; the 44-pixel steps sit centred
+       in the bar's height. */
+    align-items: baseline;
+    gap: var(--space-2);
+    height: var(--topbar-h);
+    padding-block-start: calc((var(--topbar-h) - var(--target)) / 2);
+    padding-inline: calc(max(0px, (100% - var(--frame)) / 2) + var(--gutter));
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    line-height: var(--leading-body);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .lv-crumb {
+    min-width: 0;
+    flex: 1;
+  }
+  /* The steps share one baseline, so the wordmark in the reading face and the unit in the UI face
+     stand on the same line. */
+  .lv-crumb ol {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+    list-style: none;
+    white-space: nowrap;
+  }
+  .lv-crumb li {
+    display: flex;
+    align-items: baseline;
+    min-width: 0;
+  }
+  /* A chevron between steps of the path. */
+  .lv-sep {
+    align-self: center;
+    margin: 0 var(--space-1);
+    color: var(--text-2);
+  }
+  /* Each step is at least 44px wide, the target of every control, so a short name such as Go is
+     still easy to hit. */
+  .lv-crumb a {
+    display: inline-flex;
+    align-items: center;
+    min-width: var(--target);
+    min-height: var(--target);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+  @media (hover: hover) {
+    .lv-crumb a:hover {
+      color: var(--text);
+      text-decoration: underline;
+    }
+  }
+  /* The first step is the name of the place: Eruko, set as a wordmark in the reading face. */
+  .lv-crumb .lv-mark {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target);
+    padding-inline-start: 1.65em;
+    font-family: var(--font-text);
+    font-size: var(--type-body);
+    font-weight: var(--weight-head);
+    color: var(--text);
+  }
+  /* The mark before the name: YInMn Blue on light grounds, the text's colour on dark ones, where
+     the blue is under 3 to 1. It sits out of the flow, so the name alone sets the step's baseline. */
+  .lv-crumb .lv-mark::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    translate: 0 -50%;
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    background: var(--brand, currentColor);
+    mask: url('mark.svg') center / contain no-repeat;
+  }
+  @media (forced-colors: active) {
+    .lv-crumb .lv-mark::before {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+
+  /* Settings: a word alone. It shows no edge until hover, so its word, not its box, holds the
+     bar's edge. */
+  .lv-topbar-button {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    min-height: var(--target);
+    margin-right: calc(-1 * var(--space-3));
+    padding: 0 var(--space-3);
+    color: var(--text-2);
+    border-radius: var(--radius);
+  }
+  @media (hover: hover) {
+    .lv-topbar-button:hover {
+      color: var(--text);
+      background: var(--hover);
+    }
+  }
+
+  /* On a phone a path of three keeps its ends: Eruko, and the unit just above the page. */
+  @media (max-width: 47.99em) {
+    .lv-crumb li:nth-child(2):not(:last-child) {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+/* Hides: which stylesheets the app is drawn with, and in which order. index.html links only this
+   file, and the shell links the open unit's unit.css (shell/page.js). The faces come first; then
+   every stylesheet sits in one cascade layer for its level, and the layers' order is set here
+   once, before any of them loads: a later layer wins a tie whatever its selectors' weight, so a
+   unit's rule beats a shared one, and the order never hangs on which file arrived first. */
+@layer tokens, base, maths, shell, study, unit;
+@import './fonts/literata-5.3.0/opsz.css';
+@import './fonts/literata-5.3.0/opsz-italic.css';
+@import './fonts/inter-5.3.0/opsz.css';
+@import './typography.css';
+@import './tokens.css';
+@import './app.css';
+@import '../shell/top-bar.css';
+@import '../shell/explore.css';
+@import '../shell/unit-page.css';
+@import '../shell/settings.css';
+@import './maths.css';
+@import '../parts/study-page.css';

@@ -1,0 +1,10 @@
+{
+  "name": "SQLite WASM",
+  "version": "3.54.0",
+  "source": "https://sqlite.org/2026/sqlite-wasm-3540000.zip",
+  "sourceSha3_256": "e59cbb6eeeed94d751a24237b10fc4bf4585465a7351c550e313f198cc6743bd",
+  "files": {
+    "sqlite3.mjs": "be942c6387b75bd246dcea8f243b17c1cddc21ced659b87e718f16d190c6fa92",
+    "sqlite3.wasm": "4f0bbae88a25ace2c9e5f8651d78cc76465ae3f66480ffa3cb196c89fa83ac33"
+  }
+}

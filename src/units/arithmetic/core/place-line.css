@@ -1,0 +1,54 @@
+@layer unit {
+  /* The screen of "Place it on the line": the line, the row under it the mark stands in, and the
+     box for the typed route. The line and the row share the ends' room (--line-pad), so a place on
+     one is the same place on the other. */
+  arithmetic-place-line {
+    display: block;
+    --line-pad: 2.5em;
+  }
+  arithmetic-place-line .lrn-place-line {
+    margin: var(--space-3) 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  arithmetic-place-line .lrn-place-marks {
+    position: relative;
+    height: 3em;
+    margin: 0 var(--line-pad);
+  }
+  /* The mark: a triangle under the line, pointing up, and its words. Never a number. */
+  arithmetic-place-line .lrn-place-marker {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+    border-right: 0.6em solid transparent;
+    border-bottom: 0.9em solid currentColor;
+    border-left: 0.6em solid transparent;
+  }
+  arithmetic-place-line .lrn-place-marker-label {
+    position: absolute;
+    top: 1.1em;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  arithmetic-place-line .lrn-place-check {
+    margin: var(--space-3) 0;
+  }
+  arithmetic-place-line .lrn-place-type {
+    display: block;
+    margin: var(--space-3) 0;
+  }
+  arithmetic-place-line .lrn-place-type .field {
+    width: 8ch;
+    margin-top: var(--space-1);
+  }
+
+  @media (forced-colors: active) {
+    arithmetic-place-line .lrn-place-marker {
+      forced-color-adjust: none;
+      border-bottom-color: CanvasText;
+    }
+  }
+}

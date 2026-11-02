@@ -1,0 +1,337 @@
+@layer study {
+  /* The study page (study-page.element.js) and what every unit's screens share on it: reading, the
+     contents list, a step's box and its pager. Each unit's own pieces are in its
+     folder (units/<unit>/<unit>.css). knowledge/wiki/design-language.md is the brief. */
+
+  /* ---------- Reading ---------- */
+
+  .lrn {
+    color: var(--text);
+  }
+  .lrn :where(h1, h2, h3) {
+    scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
+  }
+  .lrn h1 {
+    font-size: var(--type-h1);
+    line-height: var(--leading-h1);
+  }
+  .lrn h2 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--type-h2);
+    line-height: var(--leading-h2);
+  }
+  .lrn h3 {
+    margin: var(--space-6) 0 var(--space-2);
+    font-size: var(--type-h3);
+    line-height: var(--leading-h3);
+  }
+  .lrn p {
+    margin: 0 0 var(--space-4);
+    overflow-wrap: break-word;
+  }
+  .lrn p:last-child {
+    margin-bottom: 0;
+  }
+  .lrn :where(ul, ol) {
+    margin: var(--space-4) 0;
+    padding-left: var(--space-5);
+  }
+  .lrn li {
+    margin-bottom: var(--space-2);
+  }
+  .lrn li::marker {
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+  /* Maths is set at the size of the text around it. */
+  .lrn math {
+    font-size: inherit;
+  }
+  /* Display maths stands on its own line and scrolls inside it, never the page (WCAG 1.4.10). */
+  .lrn .lrn-display {
+    display: block;
+    max-width: 100%;
+    margin: var(--space-4) 0;
+    overflow-x: auto;
+  }
+  /* Inline maths wider than its line is made a focusable scroll box (study.dom.js). */
+  .lrn math[tabindex] {
+    display: inline-block;
+    max-width: calc(100% - 1ch);
+    overflow-x: auto;
+    overflow-y: hidden;
+    vertical-align: middle;
+  }
+
+  /* One side of a long inline formula (maths-screens.dom.js): it moves to a new line whole, and
+     wraps inside only when it is wider than the line. */
+  .lrn .lrn-side {
+    display: inline-block;
+    max-width: 100%;
+  }
+  /* Where the pieces of one formula meet, the margin each piece keeps from the text
+     (typography.css) is dropped, so the joins set as tight as an unbroken formula. */
+  .lrn .lrn-side > .lrn-piece:has(+ .lrn-piece),
+  .lrn .lrn-side:has(+ .lrn-side) > .lrn-piece:last-child {
+    margin-right: 0;
+  }
+  .lrn .lrn-side > .lrn-piece + .lrn-piece,
+  .lrn .lrn-side + .lrn-side > .lrn-piece:first-child {
+    margin-left: 0;
+  }
+
+  /* The page header: the title. */
+  .lrn-page-header {
+    margin-bottom: var(--space-7);
+  }
+
+  /* The contents of a page with more than one section: plain links to its sections, under the
+     title on a narrow screen and in the rail from 80em, where they stay in view. */
+  .contents {
+    margin-bottom: var(--space-7);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+  }
+  .lrn .contents-title {
+    margin-bottom: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    line-height: var(--leading-body);
+  }
+  .lrn .contents ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .lrn .contents li {
+    margin: 0;
+  }
+  .contents a {
+    display: flex;
+    align-items: center;
+    min-height: var(--target);
+  }
+  @media (min-width: 80em) {
+    .study > .page-col {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: var(--rail) minmax(0, var(--measure));
+      align-items: start;
+      column-gap: var(--rail-gap);
+      max-width: none;
+    }
+    .study > .page-col > * {
+      grid-column: 2;
+    }
+    .study .contents {
+      position: sticky;
+      top: calc(var(--topbar-h) + var(--space-6));
+      grid-column: 1;
+      grid-row: 1 / span 99;
+      margin: 0;
+    }
+  }
+
+  /* Sections part by space alone; a line would only repeat what the heading already says. A
+     section with nothing in it now (only its heading) is not shown. */
+  .lrn-section + .lrn-section {
+    margin-top: var(--space-7);
+  }
+  .lrn-section:has(> h2:only-child) {
+    display: none;
+  }
+  .lrn :is(.lrn-section, [id]) {
+    scroll-margin-top: calc(var(--topbar-h) + var(--space-4));
+  }
+
+  /* ---------- Steps ---------- */
+
+  .lrn-ss {
+    margin: var(--space-4) 0;
+    padding: var(--pad);
+    background: var(--raised);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  /* A card's padding is its only inset: what it holds starts and ends flush with it. */
+  .lrn .lrn-ss > :first-child {
+    margin-top: 0;
+  }
+  .lrn .lrn-ss > :last-child {
+    margin-bottom: 0;
+  }
+  .lrn-ss-note {
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+
+  /* Previous and Next inside a section; Next holds the row's end. */
+  .lrn-ss-pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin: var(--space-4) 0 var(--space-5);
+  }
+  .lrn-ss-next {
+    position: relative;
+    display: flex;
+    gap: var(--space-3);
+    margin-left: auto;
+  }
+  /* Why a locked button at the row's end is locked: under the buttons, in the space the row keeps
+     below itself, and out of the row's own layout, so showing it moves no button. */
+  .lrn-ss-next .why {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: max-content;
+    max-width: 80vw;
+    text-align: right;
+  }
+
+  /* ---------- The Review page ---------- */
+
+  /* The dated list as a deck list: each kind of item a row between lines, its name at the start
+     and the number due at the end, in figures that line up. A kind with nothing due is set in the
+     quieter colour, and opens nothing. */
+  .lrn-rv {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+  .lrn-rv :is(th, td) {
+    padding: var(--space-3) 0;
+    font-weight: var(--weight-text);
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lrn-rv :is(th, td):last-child {
+    width: 1%;
+    padding-left: var(--space-5);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .lrn-rv thead th {
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    color: var(--text-2);
+  }
+  .lrn-rv-none :is(th, td) {
+    color: var(--text-2);
+  }
+
+  /* ---------- The papers' reading rules ---------- */
+
+  /* The maths units and the language unit: no text smaller than the body. Bold marks only a term
+     at its definition (maths) or a new form (language). */
+  :is(.lrn-math, .lrn-de) :is(.lrn-ss-note, .label, .lrn-de-box, .why) {
+    font-size: var(--type-body);
+  }
+
+  /* ---------- Mathematics screens (maths-screens.dom.js) ---------- */
+
+  /* A solution's lines and reasons. */
+  .lrn-ss-lines {
+    margin: var(--space-3) 0;
+    padding-left: var(--space-5);
+  }
+  .lrn-ss-line {
+    padding: var(--space-1) 0;
+  }
+  .lrn-ss-text {
+    display: block;
+  }
+  .lrn-ss-reason {
+    display: block;
+    margin-top: var(--space-1);
+    padding-left: var(--space-3);
+    color: var(--text-2);
+    border-left: 2px solid var(--border);
+  }
+  .lrn-ss-covered {
+    color: var(--text-2);
+  }
+  .lrn-ss-list {
+    margin-top: var(--space-4);
+  }
+  .lrn-ss-list summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--target);
+    font-family: var(--font-ui);
+    font-size: var(--type-ui);
+    cursor: pointer;
+  }
+  /* A list of rows, each with its label and its figure at the right. */
+  .lrn .lrn-ss-plan {
+    padding: 0;
+    list-style: none;
+  }
+  .lrn .lrn-ss-plan li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 var(--space-4);
+    margin: 0;
+    padding: var(--space-2) 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .lrn .lrn-ss-plan li + li {
+    border-top: 1px solid var(--border);
+  }
+  .lrn-ss-figure {
+    margin: var(--space-3) 0;
+    color: var(--text);
+  }
+  /* A figure is drawn so its smallest label is body text size (--figure-width: the viewBox width
+     over that label's font size, set by figure()), never shrunk to the column: a wider one
+     scrolls in its box, which the keyboard reaches while it overflows. */
+  .lrn-figure-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .lrn-ss-figure svg {
+    display: block;
+    max-width: none;
+    width: calc(var(--figure-width) * var(--type-body));
+    height: auto;
+  }
+  .lrn-ss-figure figcaption {
+    margin-top: var(--space-2);
+    color: var(--text-2);
+  }
+  .lrn-ss-figure figcaption ul {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+
+  /* ---------- Print ---------- */
+
+  @page {
+    margin: 20mm;
+    size: A4;
+  }
+  @media print {
+    .lv-topbar,
+    .contents {
+      display: none !important;
+    }
+    .page {
+      display: block;
+      padding: 0;
+    }
+    h1,
+    h2,
+    h3 {
+      break-after: avoid;
+    }
+    p {
+      break-inside: avoid;
+    }
+    .lrn-figure-scroll {
+      overflow: visible;
+    }
+  }
+}

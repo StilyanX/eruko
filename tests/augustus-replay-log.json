@@ -1,0 +1,185 @@
+[
+ {
+  "t": "go",
+  "life": "augustus",
+  "lesson": 0,
+  "step": "situation",
+  "screen": 3,
+  "day": "2026-10-01",
+  "id": "id0"
+ },
+ {
+  "t": "go",
+  "life": "augustus",
+  "lesson": 0,
+  "step": "question",
+  "screen": 0,
+  "day": "2026-10-01",
+  "id": "id1"
+ },
+ {
+  "t": "draft",
+  "life": "augustus",
+  "lesson": 0,
+  "pText": "0.3",
+  "reason": "",
+  "day": "2026-10-01",
+  "id": "id2"
+ },
+ {
+  "t": "draft",
+  "life": "augustus",
+  "lesson": 0,
+  "pText": "0.3",
+  "reason": "He is young.",
+  "day": "2026-10-01",
+  "id": "id3"
+ },
+ {
+  "t": "lock",
+  "life": "augustus",
+  "lesson": 0,
+  "pText": "0.3",
+  "reason": "He is young.",
+  "day": "2026-10-01",
+  "id": "id4"
+ },
+ {
+  "t": "go",
+  "life": "augustus",
+  "lesson": 0,
+  "step": "struggle",
+  "screen": 0,
+  "day": "2026-10-01",
+  "id": "id5"
+ },
+ {
+  "t": "setback-type",
+  "life": "augustus",
+  "lesson": 0,
+  "row": 0,
+  "field": "setback",
+  "text": "He fell ill.",
+  "day": "2026-10-01",
+  "id": "id6"
+ },
+ {
+  "t": "setback-type",
+  "life": "augustus",
+  "lesson": 0,
+  "row": 0,
+  "field": "cost",
+  "text": "He stayed in Rome.",
+  "day": "2026-10-01",
+  "id": "id7"
+ },
+ {
+  "t": "setback-type",
+  "life": "augustus",
+  "lesson": 0,
+  "row": 0,
+  "field": "next",
+  "text": "He followed Caesar later.",
+  "day": "2026-10-01",
+  "id": "id8"
+ },
+ {
+  "t": "setbacks-done",
+  "life": "augustus",
+  "lesson": 0,
+  "none": false,
+  "day": "2026-10-01",
+  "id": "id9"
+ },
+ {
+  "t": "pick",
+  "life": "augustus",
+  "lesson": 0,
+  "sentence": "aug-001.0.3",
+  "on": true,
+  "day": "2026-10-01",
+  "id": "id10"
+ },
+ {
+  "t": "claims-chosen",
+  "life": "augustus",
+  "lesson": 0,
+  "day": "2026-10-01",
+  "id": "id11"
+ },
+ {
+  "t": "claim-text",
+  "life": "augustus",
+  "lesson": 0,
+  "sentence": "aug-001.0.3",
+  "text": "Caesar was his great-uncle.",
+  "day": "2026-10-01",
+  "id": "id12"
+ },
+ {
+  "t": "note-text",
+  "life": "augustus",
+  "lesson": 0,
+  "text": "A patron who leaves for war.",
+  "day": "2026-10-01",
+  "id": "id13"
+ },
+ {
+  "t": "record-done",
+  "life": "augustus",
+  "lesson": 0,
+  "day": "2026-10-01",
+  "id": "id14"
+ },
+ {
+  "t": "tell-text",
+  "life": "augustus",
+  "text": "Caesar went to Africa; he stayed.",
+  "day": "2026-10-01",
+  "id": "id15"
+ },
+ {
+  "t": "tell-show",
+  "life": "augustus",
+  "day": "2026-10-01",
+  "id": "id16"
+ },
+ {
+  "t": "mark",
+  "life": "augustus",
+  "item": "id4",
+  "right": true,
+  "day": "2026-10-01",
+  "id": "id17"
+ },
+ {
+  "t": "mark",
+  "life": "augustus",
+  "item": "id9-0",
+  "right": true,
+  "day": "2026-10-01",
+  "id": "id18"
+ },
+ {
+  "t": "mark",
+  "life": "augustus",
+  "item": "id14-0",
+  "right": true,
+  "day": "2026-10-01",
+  "id": "id19"
+ },
+ {
+  "t": "mark",
+  "life": "augustus",
+  "item": "id14-note",
+  "right": true,
+  "day": "2026-10-01",
+  "id": "id20"
+ },
+ {
+  "t": "judge",
+  "life": "augustus",
+  "day": "2026-10-01",
+  "id": "id21"
+ }
+]

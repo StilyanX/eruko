@@ -1,0 +1,83 @@
+@layer unit {
+  /* A number line (number-line.logic.js): as wide as its column, its labels text at the reader's
+     size, placed by percent over the line. The line's ends keep room for their labels. */
+  arithmetic-number-line {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 var(--line-pad, 2.5em);
+    color: var(--text);
+  }
+  arithmetic-number-line .lrn-line-track {
+    position: relative;
+  }
+  arithmetic-number-line .lrn-line-axis {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    overflow: visible;
+  }
+  arithmetic-number-line .lrn-line-axis line {
+    stroke: currentColor;
+    stroke-width: 2px;
+  }
+  arithmetic-number-line .lrn-line-axis .lrn-line-base {
+    stroke-width: 1px;
+  }
+  /* A sign set over a label, such as the arrow over a vector's letters, stays at the label's size:
+     the smallest sign of a figure is never below the text. */
+  arithmetic-number-line mover > :last-child {
+    font-size: inherit;
+  }
+  arithmetic-number-line .lrn-line-n,
+  arithmetic-number-line .lrn-line-at {
+    position: absolute;
+    transform: translateX(-50%);
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  /* The unit cut for the check: a tick at each cut, as many as the line holds. */
+  arithmetic-number-line .lrn-line-cuts {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0.5em;
+    background: repeating-linear-gradient(
+      to right,
+      currentColor 0 1px,
+      transparent 1px calc(100% / var(--cuts))
+    );
+  }
+  /* An arrow between two places, its head at the end it points to. */
+  arithmetic-number-line .lrn-line-arrow {
+    position: absolute;
+    height: 0;
+    border-top: 2px solid currentColor;
+  }
+  arithmetic-number-line .lrn-line-arrow::after {
+    content: '';
+    position: absolute;
+    top: -0.45em;
+    border-top: 0.4em solid transparent;
+    border-bottom: 0.4em solid transparent;
+  }
+  arithmetic-number-line .lrn-line-right::after {
+    right: 0;
+    border-left: 0.7em solid currentColor;
+  }
+  arithmetic-number-line .lrn-line-left::after {
+    left: 0;
+    border-right: 0.7em solid currentColor;
+  }
+
+  @media (forced-colors: active) {
+    arithmetic-number-line {
+      forced-color-adjust: none;
+      color: CanvasText;
+    }
+  }
+}

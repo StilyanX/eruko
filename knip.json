@@ -1,21 +1,19 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
-    "index.html",
-    "src/features/**/*.{jsx,js}",
-    "src/config/registry.js",
-    "src/components/viz/index.jsx"
+    "src/shell/main.js",
+    "src/shell/registry.js",
+    "src/units/*/manifest.js",
+    "src/record/worker.js",
+    "src/units/*/content/**/*.js",
+    "src/units/*/core/typeset.logic.js",
+    "src/units/go/core/own-worker.dom.js",
+    "src/sw.js",
+    "scripts/**/*.mjs",
+    "tests/*.test.mjs",
+    "src/**/*.test.js",
+    "e2e/*.spec.mjs"
   ],
-  "project": [
-    "src/**/*.{js,jsx}"
-  ],
-  "ignore": [
-    "src/lib/**"
-  ],
-  "ignoreDependencies": [
-    "react-compiler-runtime",
-    "postcss",
-    "autoprefixer",
-    "svgo"
-  ]
+  "project": ["src/**/*.js", "scripts/**/*.mjs", "tests/**/*.mjs", "e2e/**/*.mjs"],
+  "ignoreBinaries": ["tail", "g\\+\\+", "gdb", "nix-shell"]
 }

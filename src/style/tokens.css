@@ -1,0 +1,122 @@
+@layer tokens {
+  /* Design tokens: knowledge/wiki/design-language.md. Dark is written here; light and
+     high contrast override the colour roles below, so a component reads one token per role
+     and never writes a colour of its own. Every text role clears 4.5:1 on every surface in every
+     theme, and every line clears 3:1. Colour carries no meaning: every state is also a word. */
+  :root,
+  [data-theme='dark'] {
+    color-scheme: dark;
+
+    /* Surfaces: the page, a card or field, and the hover fill. A card is told apart by its line,
+       not by a shadow. */
+    --bg: #121110;
+    --raised: #1c1b19;
+    --hover: #2d2b27;
+
+    /* Two text tiers: what you read, and what labels or annotates it. */
+    --text: #ece9e1;
+    --text-2: #cfcbc0;
+
+    /* The one line: every card, field, rule and control edge. */
+    --border: #8a8479;
+
+    /* One accent: links, the focus ring and the primary button. */
+    --accent: #a5b4fc;
+    --on-accent: #0f1330;
+    --scrim: rgb(0 0 0 / 0.6);
+
+    /* One corner for everything: small, since the pages are for reading (6px phone, 9px desktop). */
+    --radius: 0.375rem;
+
+    /* Spacing, base 4 (px at a 16px root): 4 8 12 16 24 32 48 64. */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+
+    /* The frame every page sits in: a gutter, a rail slot (from 80em), a gap and the text column.
+       The column's left edge is the same on every page, and the wordmark stands over the frame's
+       left edge. The rail's 80em lives in the media queries of app.css, explore.css and
+       study-page.css (a media query cannot read a custom property). */
+    --gutter: var(--space-4);
+    --rail: 13rem;
+    --rail-gap: var(--space-6);
+    /* About 55 letters of Literata at the body size. */
+    --measure: 32rem;
+    --frame: calc(var(--rail) + var(--rail-gap) + var(--measure) + 2 * var(--gutter));
+    --pad: var(--space-4);
+
+    /* The smallest control: 44px, never less. */
+    --target: max(44px, 2.75rem);
+    --topbar-h: 3.5rem;
+
+    --focus-width: 3px;
+
+    /* Stacking, bottom to top (dialogs sit in the browser's top layer, above both). */
+    --z-bar: 10;
+    --z-skip: 30;
+
+    /* The one motion on any screen: a unit page's section sliding open, in a fifth of a second. */
+    --dur-open: 200ms;
+
+    /* A board's own colours, the same in every theme: a light ground, a lighter grid, the ink of
+       the lines and stones, and the ring of a point picked. */
+    --board-ground: #f4f1e8;
+    --board-grid: #8a8479;
+    --board-ink: #14130f;
+    --board-mark: #b3261e;
+  }
+  @media (min-width: 48em) {
+    :root {
+      --gutter: var(--space-6);
+      --pad: var(--space-5);
+    }
+  }
+
+  /* Light is the reading theme; dark keeps its text off pure white and its ground
+     off pure black. Warm grounds throughout, with one cool ink accent. Only high contrast, which
+     the reader asks for, uses pure black and white. */
+  [data-theme='light'] {
+    color-scheme: light;
+    --bg: #f7f5f0;
+    --raised: #fffefc;
+    --hover: #ebe7dd;
+    --text: #1c1a17;
+    --text-2: #4a463f;
+    --border: #857f73;
+    --accent: #3a3fb0;
+    --brand: #2e5090;
+    --on-accent: #ffffff;
+    --scrim: rgb(28 25 20 / 0.42);
+  }
+
+
+  /* High contrast, picked in Settings or asked for by the device (shell/theme.js sets
+     data-contrast): text 7:1 or more and every edge 3:1 or more. */
+  [data-theme='light'][data-contrast='more'] {
+    --bg: #ffffff;
+    --raised: #ffffff;
+    --hover: #e6e6e6;
+    --text: #000000;
+    --text-2: #262626;
+    --border: #595959;
+    --accent: #23288f;
+    --on-accent: #ffffff;
+    --scrim: rgb(0 0 0 / 0.6);
+  }
+  [data-theme='dark'][data-contrast='more'] {
+    --bg: #000000;
+    --raised: #000000;
+    --hover: #262626;
+    --text: #ffffff;
+    --text-2: #e6e6e6;
+    --border: #a6a6a6;
+    --accent: #c3cdff;
+    --on-accent: #000000;
+    --scrim: rgb(0 0 0 / 0.8);
+  }
+}

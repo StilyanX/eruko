@@ -1,0 +1,7 @@
+@layer unit {
+  /* A game's settings, as the work list states them (go-work-list). */
+  go-work-list .go-settings {
+    margin: var(--space-3) 0;
+    padding-left: var(--space-5);
+  }
+}

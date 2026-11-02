@@ -1,0 +1,10 @@
+/* Temml's maths stylesheet, vendored whole (src/style/maths/), in its own layer. */
+@import './maths/temml-latin-modern.css' layer(maths);
+
+@layer maths {
+  /* A table's cells keep the padding above and below that MathML Core gives them, which the
+     base layer's reset (app.css) takes off: Temml sets only their sides. */
+  mtd {
+    padding-block: 0.5ex;
+  }
+}

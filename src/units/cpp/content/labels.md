@@ -1,0 +1,170 @@
+# Labels
+
+## Part labels (worked examples)
+- Include `iostream`, the part of the library that reads input.
+- Include `print`, the part of the library that prints output.
+- Write the steps inside `main`, where the program starts.
+- Make an `int` variable, which holds an integer, and start it at zero with `{0}`.
+- Read the numbers from the input with `std::cin` and `>>`.
+- Print with `std::println`, which puts the value in place of `{}` and ends the line.
+- Work out the value with `+`, `-`, `*`, `/` and `%`, where `/` drops the remainder and `%` gives it.
+- Include `string`, the part of the library that holds text.
+- Make a string variable that starts empty.
+- Read the whole line, spaces included, into the string with `std::getline`.
+- Get the number of characters in the line with `line.size()`.
+- Write text around `{}` in the quotes, and give one value for each `{}`.
+- Compare 2 values with `==` (equal), `!=` (not equal), `<`, `<=`, `>` or `>=`.
+- Run the lines in the first `{ }` when the test in brackets holds, else the lines after `else`.
+- Print fixed words by writing them alone between the quotes.
+- Test the next case with `else if` when every case before it fails.
+- Take each character of the line in turn with `for (const char character : line)`.
+- Hold one character in a `char`, and mark with `const` a value that never changes.
+- Add a `char`, or fixed words in double quotes, to the end of a string with `+=`.
+- Write one `char` between single quotes.
+- Repeat the lines in `{ }` with `for`, once for each index from 0 to n - 1.
+- Add one to a variable with `++`.
+- Add to a variable with `+=`.
+- Join 2 tests with `&&`, which holds only when both hold.
+- Give a variable a new value with `=`, which is not the test `==`.
+- Turn the index into a position counting from 1 with `index + 1`.
+- Repeat the lines in `{ }` with `while`, as long as the test in brackets holds.
+- Divide a variable and keep the result with `/=`.
+- Include `map`, the part of the library that holds `std::map`, a table from each key to its value.
+- Make the map with `std::map<std::string, int>`, the key type first, then the value type.
+- Read a word with `std::cin` and `>>`, which stops at a space.
+- Add one with `++counts[word]`, which starts a new word at 0.
+- Take each entry of the map as `const auto& [word, count]`, its key and its value.
+- Write the type of the answer, here `std::string`, before the function's name.
+- Give the function an `int` parameter, a copy of the number it is called with.
+- Give back a value with `return`, which ends the function.
+- Call the function with the number in brackets, and print what it returns.
+
+## Plan labels
+- Print the value.
+- Read the input.
+- Read the line.
+- Print the first result if the test holds, else the second.
+- Test each case in order, and print the result of the first that holds.
+- Start the result as an empty string.
+- For each character of the line, in order, add to the result.
+- Add the character, then a dash.
+- Add `_` for a space, else the character itself.
+- Add the character when it is not a space.
+- Add the character twice.
+- Add 1 for a 0, else add 0.
+- Add `%20` for a space, else the character itself.
+- Add a space for a space, else a `*`.
+- Add `[` for `(`, `]` for `)`, else the character itself.
+- Add a full stop for `!`, nothing for `?`, else the character itself.
+- Add the character, then a space when it is a comma.
+- Add `T` for `A`, `A` for `T`, `G` for `C`, else `C`.
+- Print the result.
+- Read how many numbers follow.
+- Start the total at zero.
+- For each index from 0 to n - 1, read a number and add to the total.
+- Add the number to the total.
+- Add the square of the number to the total.
+- Add the number without its minus sign.
+- Add the number when it is greater than 0.
+- Add the last digit of the number to the total.
+- Add the number when it is even.
+- Add the number, or 100 when the number is greater than 100.
+- Add half the number, rounded down, to the total.
+- Add the number of digits of the number.
+- Add the number at an even index, else take it away.
+- Add the number when it is one of the last 3.
+- Print the total.
+- Start the count at zero.
+- For each index from 0 to n - 1, read a number and test it.
+- Add one when the number is negative.
+- Add one when the number is even.
+- Add one when the number is greater than 0.
+- Add one when the number is 0.
+- Add one when 5 divides the number.
+- Add one when the last digit of the number is 7.
+- Add one when the number is not 1.
+- Add one when the square of the number is greater than 50.
+- Add one when the 2 digits of the number are equal.
+- Add one when n divides the number.
+- Add one when the number equals its index.
+- Print the count.
+- Start the position at -1, the mark for none found.
+- Keep the position of the first negative number.
+- Keep the position of the first even number.
+- Keep the position of the first 0.
+- Keep the position of the first number greater than 100.
+- Keep the position of the first number that 7 divides.
+- Keep the position of the first number whose last digit is 5.
+- Keep the position of the first number whose square is above 1000.
+- Keep the position of the first number from 10 to 20.
+- Keep the position of the first even number greater than 0.
+- Keep the position of the first number smaller than its position.
+- Keep the position of the first negative number at an even position.
+- Print the position.
+- Read the first number and keep it.
+- Start the position at 1.
+- Keep the first number as the smallest too.
+- Start the count at 1.
+- Keep the first number as the largest too.
+- Keep the first number as the total too.
+- Start the largest drop at 0.
+- For each index from 1 to n - 1, read a number and compare it with the kept one.
+- Keep the number when it is larger.
+- Keep the number when it is smaller.
+- Keep the number and its position when it is larger.
+- Keep the number and its position when it is smaller than or equal to the kept one.
+- Keep a larger number and start its count at 1, or add one to the count for an equal one.
+- Keep a larger number and add one to the count.
+- Keep the drop to the number when it is larger than the kept drop.
+- Keep the number when its last digit is larger than the kept one's.
+- Keep the number when it is closer to 0.
+- Keep the total when it is larger.
+- While the test holds, change the number and add one to the count.
+- Halve an even number, or make an odd number 3 times itself plus 1.
+- Drop the last digit.
+- Halve an even number, or take 1 from an odd one.
+- Halve the number, rounded down.
+- Divide the number by 3 when 3 divides it, or take 1 from it.
+- Halve the number, rounded up.
+- Take the count from the number.
+- Take the smaller number away from the larger one.
+- Take a tenth of the number, rounded down, away from it.
+- Add one to the number.
+- Add one to the count.
+- Read how many words follow.
+- Start an empty map from each word to its count.
+- For each index from 0 to n - 1, read a word and add one to its count.
+- Add one to the word's count.
+- Go through each word and its count in the map, in alphabetical order.
+- Print the word and its count.
+- Print the word and its count when the count is more than 1.
+- Print the word when its count is 1.
+- Print the word and its count times 100, divided by n.
+- Print the word and its count less 1.
+- Print the word, then Yes when its count is more than 2, else No.
+- Print the word and its count when the count is more than half of n.
+- Print the word, then once, twice or many for its count.
+- Print the word and its count when the word has 3 letters or fewer.
+- Print the word and how many pairs its count makes.
+- Print the word, adding its count when the count is more than 1.
+- Write a function above main that takes one number and gives back the answer for it.
+- Give back the grade for the score.
+- For each index from 0 to n - 1, read a number and print the function's answer.
+- Give back 28 for month 2, 30 for months 4, 6, 9 and 11, else 31.
+- Give back the part of the day for the hour.
+- Give back 0 for a number below 0, 100 for one above 100, else the number.
+- Give back the value for the band of the number.
+- Add each last digit to the total, then drop it from the number.
+- Give back the total.
+- Start the result at zero.
+- Move each last digit of the number to the end of the result.
+- Give back the result.
+- Add one for each integer from 1 to the number that divides it.
+- Give back the count.
+- Start the divisor at 2.
+- Add one to the divisor until it divides the number.
+- Give back the divisor.
+- Add a `*` for each index from 0 to the number - 1.
+- Give back the number rounded down or up to a multiple of 10.
+
+Plan words: counter, accumulator, loop, flag, sentinel, tally, running total

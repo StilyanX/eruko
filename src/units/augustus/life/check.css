@@ -1,0 +1,10 @@
+@layer unit {
+  /* The check's sentences (augustus-check), each a choice on its own line, under its screen's
+     date line. */
+  augustus-check .lrn-bio-pick > * + * {
+    margin-top: var(--space-2);
+  }
+  augustus-check .lrn-bio-pick + .lrn-bio-pick {
+    margin-top: var(--space-5);
+  }
+}

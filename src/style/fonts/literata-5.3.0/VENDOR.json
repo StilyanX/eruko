@@ -1,0 +1,25 @@
+{
+  "name": "@fontsource-variable/literata",
+  "version": "5.3.0",
+  "source": "https://registry.npmjs.org/@fontsource-variable/literata/-/literata-5.3.0.tgz",
+  "license": "OFL-1.1",
+  "files": {
+    "LICENSE": "9895ebc015226accf416b758ac1ca02a2fb4f83a89d316791ef697c3dc0852aa",
+    "files/literata-cyrillic-ext-opsz-italic.woff2": "fd71d598ad1f4304c2a8acef7ae66574a2e74dac6157044c8cec87e3234b226f",
+    "files/literata-cyrillic-ext-opsz-normal.woff2": "777c82bd95a9e0a51cf8ca579be4a667aa800bd41ba29e8490d99a39f728d391",
+    "files/literata-cyrillic-opsz-italic.woff2": "37c470b724396cf95e39c99ce27d9fd02b5b552672c90cbdc603bdc9145139e7",
+    "files/literata-cyrillic-opsz-normal.woff2": "a9054771acc03576b03c0f18daf6f4785dfd65f1427863d14610be7a647a4373",
+    "files/literata-greek-ext-opsz-italic.woff2": "d10f79be056e2ca47cac7602877d256ee25c58d184ab32f35719514109ef8226",
+    "files/literata-greek-ext-opsz-normal.woff2": "ddec2c8446e758de47732823748e46d677c359e4c7d28b8a6f5a105e232127b6",
+    "files/literata-greek-opsz-italic.woff2": "6d7605de1880b037552f30e47477a4bb37d97f1be7387b61ef35ae800a272e29",
+    "files/literata-greek-opsz-normal.woff2": "1a7f2e3f1b37ae8c92b57eb8f164da44ac369783bd58ad6295368bbc7b9f7d08",
+    "files/literata-latin-ext-opsz-italic.woff2": "09e48237261b84a90f2d6011c050d10d4bacd060cd884a10fe4edf69c0bf3870",
+    "files/literata-latin-ext-opsz-normal.woff2": "1160835f4cdae6a86572ed501c13b62b341480cc7c13fc88ba0c21efdf1fcd73",
+    "files/literata-latin-opsz-italic.woff2": "97bc5aa317653eb249d66782c8533e5f1bd7d27a97b5265155a3d1700e785b7b",
+    "files/literata-latin-opsz-normal.woff2": "29de894c768689feef6ab4ef274a9a16d19bfc5b0c3cbfcdac80ef220816210c",
+    "files/literata-vietnamese-opsz-italic.woff2": "e7906bb79b12a47663ef5755fcd2f5a1d0ea9644aa5be19620c2ad1fa5cafc18",
+    "files/literata-vietnamese-opsz-normal.woff2": "6264a9207554ec7e0740e8732134586012d56f9f0804e3e72701f31926c059ad",
+    "opsz-italic.css": "b238f80a5ad448f9edf3c289c21ff3aec424c180bdd33b3f09aa2b2a292692ff",
+    "opsz.css": "9d93c56556114d41b2306373ef9c8b529413375886a7d6a4792b0500cea5fc89"
+  }
+}
