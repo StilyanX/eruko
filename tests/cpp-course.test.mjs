@@ -66,7 +66,7 @@ async function buildRefuses(edits, message) {
 
 test('the parser reads the kind, its plan, the frame, the labels and the blanks', () => {
   const course = readCourse(GOOD, { draft: true })
-  assert.deepEqual(course.sections, [{ title: 'First kinds', first: 1, last: 1 }])
+  assert.deepEqual(course.sections, [{ title: 'Whole programs', first: 1, last: 1 }])
   assert.deepEqual(courseShape(course).kinds, [
     { id: 1, name: 'Compute and print a value', after: [], plan: ['Read the two numbers.', 'Print the value.'], problems: ['1.01'], trace: 'T1' }
   ])
@@ -155,8 +155,8 @@ test('Braces: a function\'s { stands alone on the next line, a control statement
   refuses([[KIND, 'int main()\n{\n    int first', 'int main()\n    int first']], /Braces: main's \{ stands alone on the line right after "int main\(\)"/)
 })
 
-test('Problems per kind: a kind holds at least 10 problems, unless the build is a draft', () => {
-  assert.throws(() => readCourse(GOOD), /kind\.md: Problems per kind: kind 1 holds 1 problems; a kind holds at least 10\. While you write, node scripts\/gen\/cpp\.mjs --draft/)
+test('Problems per kind: a first kind holds at least 10 problems, unless the build is a draft', () => {
+  assert.throws(() => readCourse(GOOD), /kind\.md: Problems per kind: kind 1 holds 1 problems; it holds at least 10\. While you write, node scripts\/gen\/cpp\.mjs --draft/)
 })
 
 test('course.gen.js matches the sources (run node scripts/gen/cpp.mjs)', () => {
@@ -191,6 +191,22 @@ test('the build compiles every program, makes the tests\' outputs and records th
     { line: 10, values: ['3', '7'] }
   ])
   assert.equal(kind.trace.output, '11\n')
+})
+
+test('Trace per kind: a reference solution that reads its input and has two examples is kept as a returning trace, run on them', { skip: noTracer }, async () => {
+  const [none] = (await buildCourse(GOOD, { draft: true })).kinds
+  assert.deepEqual(none?.traces, [], 'one example: no returning trace')
+  const two = variant([[PROBLEM, '```out\n5\n```\n', '```out\n5\n```\n```in\n2 7\n```\n```out\n-5\n```\n']])
+  const [kind] = (await buildCourse(two, { draft: true })).kinds
+  rmSync(two, { recursive: true, force: true })
+  const [trace] = kind?.traces ?? []
+  assert.equal(kind?.traces.length, 1)
+  assert.equal(trace?.id, 'T1')
+  assert.deepEqual(trace?.columns, ['first', 'second'])
+  assert.deepEqual(trace?.inputs, ['9 4\n', '2 7\n'])
+  assert.equal(trace?.lines.length, 10)
+  assert.deepEqual(trace?.rows.at(-1), { line: 9, values: ['9', '4'] })
+  assert.equal(trace?.output, '-5\n')
 })
 
 test('Entry check: the reference compiles and gives every example\'s output', { skip: noTracer }, async () => {
@@ -237,7 +253,17 @@ test('the runner compiles once, runs each test on stdin, names files bare, and s
     const broken = await call('/run', { kind: 'program', files: { 'main.cpp': 'int main() {\n    x = 1;\n}\n' }, tests: [] })
     assert.equal(broken.compiled, false)
     assert.match(broken.error, /^main\.cpp: In function 'int main\(\)':\nmain\.cpp:2:5: error: 'x' was not declared/)
-    assert.deepEqual(await call('/run', { kind: 'catch2', files: { 'main.cpp': twice }, tests: [] }), { compiled: false, error: 'Catch2 tests are not supported yet.' })
+    assert.match((await call('/run', { kind: 'catch2', files: { 'main.cpp': twice }, tests: [] })).error, /_test\.cpp/, 'a function problem sends its test file')
+    // a function problem: the track's test file under Catch2 v2, its first test alone as the example
+    const header = '#pragma once\nint twice(int n);\n'
+    const body = '#include "twice.h"\nint twice(int n) { return n + n; }\n'
+    const tests = '#include "twice.h"\n#include "test/catch.hpp"\nTEST_CASE("one") { REQUIRE(twice(1) == 2); }\n#if defined(EXERCISM_RUN_ALL_TESTS)\nTEST_CASE("three") { REQUIRE(twice(3) == 7); }\n#endif\n'
+    const files = { 'twice.h': header, 'twice.cpp': body, 'twice_test.cpp': tests }
+    const example = await call('/run', { kind: 'catch2', files, tests: [], examples: true })
+    assert.match(example.runs[0].stdout, /<OverallResultsCases successes="1" failures="0"/)
+    const all = await call('/run', { kind: 'catch2', files, tests: [] })
+    assert.match(all.runs[0].stdout, /<OverallResultsCases successes="1" failures="1"/)
+    assert.match(all.runs[0].stdout, /twice\(3\) == 7[\s\S]*6 == 7/, 'the failed assertion and what it expanded to')
     const forever = '#include <iostream>\n\nint main() {\n    int n {0};\n    while (true) {\n        ++n;\n    }\n}\n'
     // Compiled first, so the stop below reaches a program already running.
     await call('/run', { kind: 'program', files: { 'main.cpp': forever }, tests: [] })
@@ -249,4 +275,29 @@ test('the runner compiles once, runs each test on stdin, names files bare, and s
   } finally {
     runner.kill()
   }
+})
+
+const FUNCTION = path.join(import.meta.dirname, 'fixtures', 'cpp', 'function')
+
+test('function problems: an Exercism exercise and a written one, built with Catch2; the example shown as calls', { skip: noTracer }, async () => {
+  const { kinds } = await buildCourse(FUNCTION, { draft: true })
+  const found = kinds[0]?.problems['1.01']
+  const written = kinds[0]?.problems['1.02']
+  assert.equal(found?.source, 'exercism')
+  assert.deepEqual(found?.fn?.calls, [{ call: 'leap::is_leap_year(2015)', expected: 'false' }])
+  assert.deepEqual([found?.examples.length, found?.tests.length], [1, 5])
+  assert.deepEqual(found?.solution.frame, [0, 2, 9], '#pragma once and the namespace lines stand in place')
+  assert.equal(written?.source, 'aether')
+  assert.match(written?.fn?.test ?? '', /#if defined\(EXERCISM_RUN_ALL_TESTS\)\nTEST_CASE\("minus_four"\)/)
+})
+
+test('function problems: a reference that fails a case, and a written problem whose slow solution disagrees, do not enter', { skip: noTracer }, async () => {
+  const at = (/** @type {[string, string, string][]} */ edits) => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'eruko-cpp-function-'))
+    cpSync(FUNCTION, dir, { recursive: true })
+    for (const [file, from, to] of edits) writeFileSync(path.join(dir, file), readFileSync(path.join(dir, file), 'utf8').replace(from, to))
+    return dir
+  }
+  await assert.rejects(buildCourse(at([['kinds/01-leap/1.01.md', 'year % 400 == 0', 'year % 300 == 0']]), { draft: true }), /Entry check: the reference solution fails the test case/)
+  await assert.rejects(buildCourse(at([['kinds/01-leap/1.02.md', 'odd = !odd;', 'odd = true;']]), { draft: true }), /Written problems: the slow solution fails/)
 })

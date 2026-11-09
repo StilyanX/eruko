@@ -2,15 +2,23 @@
 // it; The build, Programming, The one next action and The checks): a pure function of the course,
 // the record and the day, which returns the first case that applies: 1 the contest record, once
 // the start gate is open and the contest day has passed, then the next contest's start; 2 what is
-// due, oldest date first, problems before trace items, then course order; 3 the practice
+// due, oldest date first, kinds and problems before trace items, then course order, a due kind
+// giving one problem by Kind's return and a due trace one program by Trace per kind; 3 the practice
 // submission; 4 mixed practice and 5 the open kind's first run, taking turns. Before them, Setup;
 // after them, nothing left. Gate 1 dates an answer, gate 3 retires a kind and opens the next, and
 // the start gate opens the rated contests.
 import { assert, unreachable } from '../../../kernel/invariant.logic.js'
-import { isDue, nextOf, writeLine } from '../../../kernel/days.logic.js'
-import { isTrace, itemId } from './decode.logic.js'
+import { nextOf, writeLine } from '../../../kernel/days.logic.js'
+import { isTrace, itemId, kindKey } from './decode.logic.js'
 import { kindLine, withKind } from './record.logic.js'
-import { openTrackKind, sideToday, trackAction, trackFirst, trackMixed } from './track.logic.js'
+import {
+  openTrackKind,
+  sideToday,
+  trackAction,
+  trackDates,
+  trackFirst,
+  trackMixed
+} from './track.logic.js'
 
 /**
  * The steps the next action names that the record does not hold open.
@@ -27,7 +35,7 @@ import { openTrackKind, sideToday, trackAction, trackFirst, trackMixed } from '.
  */
 
 /**
- * The first kinds: the course's first section, the twelve kinds Eruko built.
+ * Whole programs: the course's first section, the twelve kinds Eruko built.
  * @param {import('./decode.logic.js').Course} course
  */
 const firstKinds = course => {
@@ -59,50 +67,137 @@ export const startGate = (course, record) =>
 export const openKind = (course, record) => course.kinds.find(k => !kindLine(record, k.id)?.retired)
 
 /**
- * The kind that holds a problem or a trace item.
+ * The kind that holds a problem or a trace item, or whose key on the dated list this is.
  * @param {import('./decode.logic.js').Course} course
- * @param {import('./decode.logic.js').ItemId} id
+ * @param {string} id
  */
 export function kindOf(course, id) {
-  const kind = course.kinds.find(k => k.trace === id || k.problems.some(p => p === id))
+  const kind = course.kinds.find(
+    k => k.trace === id || kindKey(k.id) === id || k.problems.some(p => p === id)
+  )
   assert(kind, `An item of the record is of a kind the course holds: ${id}`)
   return kind.id
 }
 
 /**
- * Every problem and trace item by its place in the course order: the problems kind by kind,
- * then the trace items kind by kind, so that a problem comes before a trace item on one date.
- * @param {import('./decode.logic.js').Course} course
+ * A problem last answered wrong: its newest line is wrong, and no check after that day passed
+ * every test. A problem right at a later check writes no line of its own; its submit says so.
+ * @param {Pick<import('./decode.logic.js').CppRecord, 'recall' | 'runs'>} record
+ * @param {string} id
  */
-const courseOrder = course =>
-  new Map(
-    [...course.kinds.flatMap(k => k.problems), ...course.kinds.map(k => k.trace)].map((id, i) => [
-      String(id),
-      i
-    ])
+const wrongNow = (record, id) => {
+  const last = record.recall[id]?.at(-1)
+  return (
+    last?.right === false &&
+    !record.runs.some(r => r.id === id && r.date > last.date && r.total > 0 && r.passed === r.total)
   )
+}
 
 /**
- * The problems and trace items due today: the oldest date first; on one date, problems before
- * trace items, and within each the one earlier in the course order.
- * A problem refused under the runtime is left out: it is not used, and its dated lines stay.
+ * The course's items on the dated list, each with its next date and its place in the course
+ * order (kinds and problems kind by kind, then the traces): a retired kind, due by its own line
+ * and the day after one of its problems is answered wrong; a problem of a kind in its first run,
+ * last answered wrong, which comes back alone; a kind's trace. A problem refused under the
+ * runtime is left out: it is not used, and its dated lines stay.
  * @param {import('./decode.logic.js').Course} course
- * @param {Pick<import('./decode.logic.js').CppRecord, 'recall' | 'runtime'>} record
- * @param {string} day
- * @returns {import('./decode.logic.js').ItemId[]}
+ * @param {Pick<import('./decode.logic.js').CppRecord, 'course' | 'recall' | 'runs' | 'runtime'>} record
  */
-export function dueToday(course, record, day) {
-  const order = courseOrder(course)
+function dated(course, record) {
   const refused = refusedOf(record)
-  return Object.entries(record.recall)
-    .flatMap(([id, lines]) => {
-      const next = nextOf(lines)
-      return next !== undefined && isDue(lines, day) && !refused.has(id)
-        ? [{ id, next, at: order.get(id) ?? 0 }]
+  const n = course.kinds.length
+  return course.kinds.flatMap((kind, k) => {
+    const wrong = kind.problems.flatMap((id, i) =>
+      !refused.has(id) && wrongNow(record, id)
+        ? [{ key: String(id), next: nextOf(record.recall[id]) ?? '', at: k * 1000 + i + 1 }]
         : []
-    })
+    )
+    const own = nextOf(record.recall[kindKey(kind.id)])
+    const [next] = [...(own ? [own] : []), ...wrong.map(w => w.next)].sort()
+    const items = kindLine(record, kind.id)?.retired
+      ? [{ key: kindKey(kind.id), next: next ?? '', at: k * 1000 }]
+      : wrong
+    const trace = nextOf(record.recall[kind.trace]) ?? ''
+    return [...items, { key: String(kind.trace), next: trace, at: n * 1000 + k }].filter(
+      x => x.next
+    )
+  })
+}
+
+/**
+ * What is due today, by its key on the dated list: the oldest date first; on one date, kinds and
+ * problems before trace items, and within each the one earlier in the course order.
+ * @param {import('./decode.logic.js').Course} course
+ * @param {Pick<import('./decode.logic.js').CppRecord, 'course' | 'recall' | 'runs' | 'runtime'>} record
+ * @param {string} day
+ * @returns {string[]}
+ */
+export const dueToday = (course, record, day) =>
+  dated(course, record)
+    .filter(x => x.next <= day)
     .sort((a, b) => (a.next < b.next ? -1 : a.next > b.next ? 1 : a.at - b.at))
-    .map(x => itemId(x.id))
+    .map(x => x.key)
+
+/**
+ * Every next date on the dated list: the course's items, then what the track brings back.
+ * @param {import('./decode.logic.js').Course} course
+ * @param {import('./decode.logic.js').CppRecord} record
+ * @returns {string[]}
+ */
+export const datesOf = (course, record) => [
+  ...dated(course, record).map(x => x.next),
+  ...trackDates(course.track, record)
+]
+
+/**
+ * The newest day a problem was seen: its first try, a dated line, or a submit.
+ * @param {Pick<import('./decode.logic.js').CppRecord, 'recall' | 'runs' | 'tries'>} record
+ * @param {string} id
+ */
+const seenOf = (record, id) =>
+  [
+    ...record.tries.filter(t => t.id === id).map(t => t.date),
+    ...(record.recall[id] ?? []).map(l => l.date),
+    ...record.runs.filter(r => r.id === id).map(r => r.date)
+  ]
+    .sort()
+    .at(-1) ?? ''
+
+/**
+ * Kind's return: the one problem a due kind gives: its own problem last answered wrong (the one
+ * answered wrong last); else a never-tried problem; else, until Eruko adds one, the problem seen
+ * longest ago; on a tie, the one earlier in the course. None when the kind has no problem in use.
+ * @param {import('./decode.logic.js').Kind} kind
+ * @param {Pick<import('./decode.logic.js').CppRecord, 'recall' | 'runs' | 'tries' | 'runtime'>} record
+ * @returns {import('./decode.logic.js').ProblemId | undefined}
+ */
+export function kindGives(kind, record) {
+  const refused = refusedOf(record)
+  const used = kind.problems.filter(id => !refused.has(id))
+  const lastLine = (/** @type {string} */ id) => record.recall[id]?.at(-1)?.date ?? ''
+  const wrong = used.filter(id => wrongNow(record, id))
+  if (wrong.length) return wrong.reduce((a, b) => (lastLine(b) > lastLine(a) ? b : a))
+  const [fresh] = untried(kind, record)
+  if (fresh !== undefined) return fresh
+  const [first, ...rest] = used
+  if (first === undefined) return undefined
+  return rest.reduce((a, b) => (seenOf(record, b) < seenOf(record, a) ? b : a), first)
+}
+
+/**
+ * Trace per kind: the program a kind's trace is asked on. The first run asks the kind's own
+ * trace; each right answer on an earlier day moves it on to the next returning trace not yet
+ * traced, and once each has been traced, round again, so the next is the one traced longest ago.
+ * A wrong answer keeps the program, so a trace answered wrong comes back as itself.
+ * ponytail: a returning trace added later is met in its turn of the round, not at once.
+ * @param {Pick<import('./decode.logic.js').KindContent, 'trace' | 'traces'>} content
+ * @param {readonly import('../../../kernel/days.logic.js').Line[] | undefined} lines the trace's lines
+ * @param {string} day
+ * @returns {import('./decode.logic.js').Trace}
+ */
+export function traceOn(content, lines, day) {
+  const programs = [content.trace, ...content.traces]
+  const right = (lines ?? []).filter(l => l.right && l.date < day).length
+  return programs[right % programs.length] ?? content.trace
 }
 
 /**
@@ -203,13 +298,13 @@ export const contestToday = (course, record, day) =>
   Boolean(record.server?.next.startsWith(day)) && startGate(course, record)
 
 /**
- * The first date after today on which a problem or a trace item comes back, or '' for none.
- * @param {Pick<import('./decode.logic.js').CppRecord, 'recall'>} record
+ * The first date after today on which an item comes back, or '' for none.
+ * @param {import('./decode.logic.js').Course} course
+ * @param {import('./decode.logic.js').CppRecord} record
  * @param {string} day
  */
-export const laterDate = (record, day) =>
-  Object.values(record.recall)
-    .flatMap(lines => nextOf(lines) ?? [])
+export const laterDate = (course, record, day) =>
+  datesOf(course, record)
     .filter(next => next > day)
     .sort()[0] ?? ''
 
@@ -234,7 +329,7 @@ export function nextAction(course, record, day, zoned = day) {
   const track = !open
     ? null
     : record.pin
-      ? trackAction(course.track, record, day)
+      ? trackAction(course.track, record, day, course.reading)
       : { n: 'C', step: 'track-setup' }
   const side = sideToday(record, { open, contest: contestToday(course, record, zoned) }, day)
   if (side === 'track' && track && track.step !== 'track-waits') return track
@@ -245,7 +340,7 @@ export function nextAction(course, record, day, zoned = day) {
 }
 
 /**
- * The language track is open: every one of the twelve first kinds is retired. The practice
+ * The language track is open: every one of the twelve whole-program kinds is retired. The practice
  * contest and the start gate are not asked of it.
  * @param {import('./decode.logic.js').Course} course
  * @param {Pick<import('./decode.logic.js').CppRecord, 'course'>} record
@@ -262,8 +357,11 @@ export const trackOpen = (course, record) =>
  * @returns {Action}
  */
 function courseAction(course, record, day) {
-  const [due] = dueToday(course, record, day)
-  if (due !== undefined) return { n: 2, step: 'recall', id: due, kind: kindOf(course, due) }
+  for (const key of dueToday(course, record, day)) {
+    const kind = course.kinds.find(k => k.id === kindOf(course, key))
+    const id = kind && key === kindKey(kind.id) ? kindGives(kind, record) : itemId(key)
+    if (kind && id !== undefined) return { n: 2, step: 'recall', id, kind: kind.id }
+  }
   if (firstKindsRetired(course, record) && !record.practice) return { n: 3, step: 'practice' }
   const mixed = mixedDraw(course, record)
   const part = firstRunPart(course, record)
@@ -333,7 +431,7 @@ export function trackRows(course, record, work) {
 }
 
 /** The first track kind's row before the track opens. */
-const TRACK_OPENS = 'Opens once the twelve first kinds are retired.'
+const TRACK_OPENS = 'Opens once the twelve whole-program kinds are retired.'
 
 /** The open kind's row while it waits for new problems. */
 const WAITS_ROW = 'Opens again once Eruko adds new problems to it.'
@@ -353,22 +451,25 @@ export function waitsForProblems(course, record) {
 
 /**
  * How many steps with no date wait today, for the unit's dated list: the contest step, the
- * practice submission, mixed practice and the first run, each one or none.
+ * practice submission, mixed practice and the first run, each one or none. On the contest day
+ * the contest is the whole plan: one.
  * @param {import('./decode.logic.js').Course} course
  * @param {import('./decode.logic.js').CppRecord} record
  * @param {string} day
  */
 export const waitingToday = (course, record, day) =>
-  [
-    record.runtime && record.server && contestStep(course, record, day),
-    firstKindsRetired(course, record) && !record.practice,
-    mixedDraw(course, record),
-    firstRunPart(course, record),
-    trackOpen(course, record) && trackMixed(course.track, record),
-    trackOpen(course, record) &&
-      trackFirst(course.track, record)?.step !== 'track-waits' &&
-      trackFirst(course.track, record)
-  ].filter(Boolean).length
+  contestToday(course, record, day)
+    ? 1
+    : [
+        record.runtime && record.server && contestStep(course, record, day),
+        firstKindsRetired(course, record) && !record.practice,
+        mixedDraw(course, record),
+        firstRunPart(course, record),
+        trackOpen(course, record) && trackMixed(course.track, record),
+        trackOpen(course, record) &&
+          trackFirst(course.track, record, course.reading)?.step !== 'track-waits' &&
+          trackFirst(course.track, record, course.reading)
+      ].filter(Boolean).length
 
 /**
  * The day studied, kept once.
@@ -424,9 +525,9 @@ export function exampleRead(course, record, kind, day) {
 }
 
 /**
- * Gate 3, asked after the problem written alone: right, the kind is retired today and the next
- * kind of the course opens at its worked example; wrong, its reference solution is read and the
- * kind goes back to a fresh Parsons problem.
+ * Gate 3, asked after the problem written alone: right, the kind is retired today, its first line
+ * written that day, right, and the next kind of the course opens at its worked example; wrong,
+ * its reference solution is read and the kind goes back to a fresh Parsons problem.
  * @param {import('./decode.logic.js').Course} course
  * @param {import('./decode.logic.js').CppRecord} record
  * @param {import('./decode.logic.js').KindId} kind
@@ -437,7 +538,7 @@ function gate3(course, record, kind, right, day) {
   if (!right) return partDone(record, kind, { part: 'parsons' }, day)
   const at = course.kinds.findIndex(k => k.id === kind)
   const after = course.kinds[at + 1]
-  const retired = partDone(record, kind, { retired: day }, day)
+  const retired = withLine(partDone(record, kind, { retired: day }, day), kindKey(kind), true, day)
   return after ? withKind(retired, after.id, { opened: day, part: 'example' }) : retired
 }
 
@@ -458,22 +559,21 @@ const tried = (record, id, right, mixed, day) => ({
 /**
  * The item's line on the dated list, written from the day's first answer (kernel writeLine).
  * @param {import('./decode.logic.js').CppRecord} record
- * @param {import('./decode.logic.js').ItemId} id
+ * @param {string} id
  * @param {boolean} right
  * @param {string} day
  * @returns {import('./decode.logic.js').CppRecord}
  */
-const dated = (record, id, right, day) => ({
+const withLine = (record, id, right, day) => ({
   ...record,
   recall: { ...record.recall, [id]: writeLine(record.recall[id], right, day) }
 })
 
 /**
- * Gate 1 and what follows it for each item answered: a recalled problem or trace item and the
- * first run's trace item write their line; a never-tried problem of mixed practice writes one
- * only when wrong, and the problem alone always, since a right one retires its kind; a Parsons
- * problem writes none. A first try is kept for every never-tried problem. The open kind's part
- * moves on, and the turn passes.
+ * Gate 1 and what follows it for each item answered: a trace item writes its line; a problem
+ * writes one of its own only when wrong, wherever it is answered, and its kind is then due the
+ * next day; a Parsons problem writes none. A first try is kept for every never-tried problem.
+ * The open kind's part moves on, and the turn passes.
  * @param {import('./decode.logic.js').Course} course
  * @param {import('./decode.logic.js').CppRecord} record
  * @param {import('./decode.logic.js').Asked} item
@@ -484,22 +584,49 @@ const dated = (record, id, right, day) => ({
 function gate1(course, record, item, right, day) {
   switch (item.step) {
     case 'recall':
-      return studied(dated(record, item.id, right, day), day)
+      return studied(recalled(record, item, right, day), day)
     case 'trace':
-      return partDone(dated(record, item.id, right, day), item.kind, { part: 'parsons' }, day)
+      return partDone(withLine(record, item.id, right, day), item.kind, { part: 'parsons' }, day)
     case 'parsons':
       return partDone(tried(record, item.id, right, false, day), item.kind, { part: 'alone' }, day)
     case 'alone': {
-      const first = dated(tried(record, item.id, right, false, day), item.id, right, day)
-      return gate3(course, first, item.kind, right, day)
+      const first = tried(record, item.id, right, false, day)
+      return gate3(
+        course,
+        right ? first : withLine(first, item.id, false, day),
+        item.kind,
+        right,
+        day
+      )
     }
     case 'mixed': {
       const first = tried(record, item.id, right, true, day)
-      return { ...studied(right ? first : dated(first, item.id, false, day), day), turn: 4 }
+      return { ...studied(right ? first : withLine(first, item.id, false, day), day), turn: 4 }
     }
     default:
       return unreachable(item)
   }
+}
+
+/**
+ * A due item answered: a trace writes its line. A problem writes its own line only when wrong;
+ * given by a retired kind, it writes the kind's line from this answer, and a never-tried one is a
+ * first try of mixed practice, counted in the solving share. A problem of a kind in its first run
+ * comes back alone and writes no kind's line.
+ * @param {import('./decode.logic.js').CppRecord} record
+ * @param {import('./decode.logic.js').Recall} item
+ * @param {boolean} right
+ * @param {string} day
+ * @returns {import('./decode.logic.js').CppRecord}
+ */
+function recalled(record, item, right, day) {
+  if (isTrace(item.id)) return withLine(record, item.id, right, day)
+  const fresh = !record.tries.some(t => t.id === item.id)
+  const own = right ? record : withLine(record, item.id, false, day)
+  const first = fresh ? tried(own, item.id, right, true, day) : own
+  return kindLine(record, item.kind)?.retired
+    ? withLine(first, kindKey(item.kind), right, day)
+    : first
 }
 
 /**

@@ -9,10 +9,10 @@ import { findLife, sentencesOf } from './lives.logic.js'
 import {
   addsItems,
   enterRecall,
-  forcedContested,
+  forcedWhy,
   notesFor,
-  score,
-  unchecked
+  WHY,
+  score
 } from './next.logic.js'
 
 /** @typedef {Readonly<{ t: 'say', text: string }>} Effect A line said through the page's status line. */
@@ -217,17 +217,21 @@ export function checkOf(s, at) {
   const picked = all.filter(x => p.chosen?.includes(x.id))
   const known = Boolean(forecastOf(s, found.lesson.id)?.known) || !found.lesson.question
   /** @param {import('./lives.logic.js').Numbered} x */
-  const verdictOf = x =>
-    unchecked(x) ? 'unchecked' : forcedContested(x) ? 'contested' : p.verdicts?.[x.id]
+  const whyOf = x => forcedWhy(x) ?? (p.verdicts?.[x.id] === 'contested' ? WHY.otherwise : undefined)
+  /** @param {import('./lives.logic.js').Numbered} x */
+  const verdictOf = x => (forcedWhy(x) ? 'contested' : p.verdicts?.[x.id])
   return {
     ...found,
     all,
     picked,
-    witnessed: picked.filter(x => !unchecked(x)),
+    witnessed: picked,
     notes: notesFor(s.items, at.life),
     known,
     verdictOf,
-    claims: picked.map(x => ({ id: x.id, verdict: verdictOf(x) }))
+    claims: picked.map(x => {
+      const why = whyOf(x)
+      return { id: x.id, verdict: verdictOf(x), ...(why === undefined ? {} : { why }) }
+    })
   }
 }
 
@@ -325,7 +329,8 @@ export function recordMove(s, ev) {
           sentence: x?.text ?? '',
           page: x?.page ?? '',
           witness: x?.passage?.witness ?? null,
-          ...(c.verdict === undefined ? {} : { verdict: c.verdict })
+          ...(c.verdict === undefined ? {} : { verdict: c.verdict }),
+          ...(c.why === undefined ? {} : { why: c.why })
         }
       }
     )

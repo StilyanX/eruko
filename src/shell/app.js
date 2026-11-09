@@ -73,7 +73,10 @@ async function show(url, same) {
   if (same && shown && 'reread' in shown && typeof shown.reread === 'function')
     return shown.reread()
   try {
-    view.replaceChildren(await pageAt(slug))
+    const page = pageAt(slug)
+    // The old page leaves at once; the Loading screen holds the place while the new one's code comes.
+    view.replaceChildren(document.createElement('shell-loading'))
+    view.replaceChildren(await page)
   } catch (error) {
     console.error(error)
     view.replaceChildren(failure(isChunkError(error) ? 'chunk' : 'content'))

@@ -83,7 +83,8 @@ int main()
 ## Alone 1
 Form: sanitizer
 Sanitizer: address
-Write a program that reads n rows of integers and prints the row with the largest sum.
+Exempt: R.3, R.12, R.20, ES.24
+Write a program that reads n rows of integers and prints the row with the largest sum. Keep each row in an array you get with new[] and free with delete[].
 Input: first line n, then n lines, each k followed by k integers.
 Output: one line, the integers of the row with the largest sum, separated by spaces; on a tie, the first such row.
 Limits: 1 ≤ n ≤ 100; 1 ≤ k ≤ 100; each integer is between -1000000 and 1000000.
@@ -125,7 +126,7 @@ int main()
             std::cin >> row[j];
             sum += row[j];
         }
-        if (best == nullptr || sum > best_sum) {
+        if (!best || sum > best_sum) {
             delete[] best;
             best = row;
             kept = k;
@@ -161,7 +162,7 @@ int main()
             std::cin >> row[j];
             sum += row[j];
         }
-        if (best == nullptr || sum > best_sum) {
+        if (!best || sum > best_sum) {
             best = row;
             kept = k;
             best_sum = sum;
@@ -209,7 +210,8 @@ int main()
 ## Alone 2
 Form: sanitizer
 Sanitizer: address
-Write a program that reads n rows of integers and prints, for each row, how many of its integers are greater than the average of the row.
+Exempt: R.3, R.12, R.20, ES.24
+Write a program that reads n rows of integers and prints, for each row, how many of its integers are greater than the average of the row. Keep each row in an array you get with new[] and free with delete[].
 Input: first line n, then n lines, each k followed by k integers.
 Output: n lines, the count for each row in order; a row with no integers has the count 0.
 Limits: 1 ≤ n ≤ 100; 0 ≤ k ≤ 100; each integer is between -1000000 and 1000000.

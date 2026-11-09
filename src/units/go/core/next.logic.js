@@ -4,10 +4,14 @@
 // a game to review; 3 the game; 4 mixed practice; 5 new material: a kind begun ahead, then a
 // rules item while a rules part is open, else the open kind's first run; 6 nothing left. A kind
 // opens once the first three rules parts and the kinds it uses are done. Gate 1 judges an answer,
-// gate 3 retires a kind, and the start gate opens rated games. Tested in tests/go-next.test.mjs.
+// gate 3 retires a kind, and the start gate opens rated games. A retired kind is the dated item,
+// as in Mathematics, and gives one problem when due (A kind's return); a rules item gives one of
+// its cases. Tested in tests/go-next.test.mjs.
 import { assert } from '../../../kernel/invariant.logic.js'
-import { isDue, nextOf, writeLine } from '../../../kernel/days.logic.js'
-import { isRulesItem, itemId } from './decode.logic.js'
+import { addDays, nextOf, writeLine } from '../../../kernel/days.logic.js'
+import { draw, kindLines } from '../../../kernel/practice.logic.js'
+import { kindId as mathsKind, problemId } from '../../../kernel/maths-decode.logic.js'
+import { isRulesItem, itemId, kindKey } from './decode.logic.js'
 import { oldestFirst } from './game.logic.js'
 import { kindLine, withKind, withPart } from './record.logic.js'
 import { untried } from './own.logic.js'
@@ -128,17 +132,17 @@ export const noKindBegun = (course, record) =>
 
 /**
  * What a kind that may not open yet waits on, by name: the first three rules parts while any
- * is open, then each kind it uses that is not retired.
+ * is open (`kind` null), then each kind it uses that is not retired.
  * @param {import('./own.logic.js').Course} course
  * @param {import('./decode.logic.js').GoRecord} record
  * @param {import('./decode.logic.js').Kind} kind
- * @returns {string[]}
+ * @returns {{ name: string, kind: import('./decode.logic.js').KindId | null }[]}
  */
 export const waitsOn = (course, record, kind) => [
-  ...(firstPartsDone(course, record) ? [] : ['the first three rules parts']),
+  ...(firstPartsDone(course, record) ? [] : [{ name: 'the first three rules parts', kind: null }]),
   ...kind.after.flatMap(id => {
     const before = course.kinds.find(k => k.id === id)
-    return before && !kindLine(record, id)?.retired ? [titled(before.name)] : []
+    return before && !kindLine(record, id)?.retired ? [{ name: titled(before.name), kind: id }] : []
   })
 ]
 
@@ -168,22 +172,140 @@ export function openKind(course, record) {
 }
 
 /**
- * The problems and rules items due today, the oldest date first.
- * @param {Pick<import('./decode.logic.js').GoRecord, 'recall'>} record
- * @param {string} day
+ * The problems a kind's return may give: every problem but its first, which is shown solved, and
+ * that one too in a kind of one problem.
+ * @param {import('./decode.logic.js').Kind} kind
  */
-export function dueToday(record, day) {
-  return Object.entries(record.recall)
-    .flatMap(([id, lines]) => {
-      const next = nextOf([...lines])
-      return next !== undefined && isDue([...lines], day) ? [{ id: itemId(id), next }] : []
-    })
-    .sort((a, b) => (a.next < b.next ? -1 : a.next > b.next ? 1 : a.id < b.id ? -1 : 1))
-    .map(x => x.id)
+const askable = kind => (kind.problems.length === 1 ? kind.problems : kind.problems.slice(1))
+
+/**
+ * A kind as Mathematics' practice code reads one (kernel/practice.logic.js): its lines kept under
+ * its key, its first read from `retired`, and its problems' lines. A problem right at its first
+ * try has no line of its own; its `tries` row is read in its place, so the problem seen longest ago is
+ * read from its newest line or its `tries` row.
+ * @param {import('./decode.logic.js').GoRecord} record
+ * @param {import('./decode.logic.js').Kind} kind
+ */
+function practiceOf(record, kind) {
+  const key = kindKey(kind.id)
+  const retired = kindLine(record, kind.id)?.retired
+  const tried = new Map(record.tries.map(t => [t.id, t.date]))
+  /** @type {Record<string, readonly import('../../../kernel/days.logic.js').Line[]>} */
+  const list = { [key]: record.recall[key] ?? [] }
+  for (const id of askable(kind)) {
+    const date = tried.get(id)
+    const lines = record.recall[id] ?? (date ? [{ date, right: true, next: '' }] : undefined)
+    if (lines) list[id] = lines
+  }
+  /** @type {import('../../../kernel/practice.logic.js').PracticeRecord} */
+  const practice = { list, retired: retired ? { [key]: retired } : {} }
+  const bank = askable(kind).map(id => ({ id: problemId(id), kind: mathsKind(key) }))
+  return { practice, bank, key: mathsKind(key) }
 }
 
 /**
- * The days the start gate's conditions were met: the practice game counted right, and each rules
+ * The problems of a kind whose newest line is wrong, each with the day it comes back.
+ * @param {import('./decode.logic.js').GoRecord} record
+ * @param {import('./decode.logic.js').Kind} kind
+ */
+const wrongOf = (record, kind) =>
+  askable(kind).flatMap(id => {
+    const last = record.recall[id]?.at(-1)
+    return last && !last.right ? [{ id, next: last.next }] : []
+  })
+
+/**
+ * Every item with a date: each rules item met; each retired kind, due on its own date or the day
+ * after one of its problems was answered wrong, whichever is first, and never twice in a day; and,
+ * in a kind still in its first run, each problem answered wrong, which comes back alone.
+ * @param {import('./own.logic.js').Course} course
+ * @param {import('./decode.logic.js').GoRecord} record
+ * @returns {{ id: string, next: string, kind: import('./decode.logic.js').Kind | null }[]}
+ */
+function dated(course, record) {
+  const rules = course.parts.flatMap(p =>
+    p.items.flatMap(id => {
+      const next = nextOf(record.recall[id])
+      return next ? [{ id: String(id), next, kind: null }] : []
+    })
+  )
+  const kinds = course.kinds.flatMap(kind => {
+    const wrong = wrongOf(record, kind)
+    /** @type {{ id: string, next: string, kind: import('./decode.logic.js').Kind | null }[]} */
+    const alone = wrong.map(w => ({ ...w, kind: null }))
+    if (!kindLine(record, kind.id)?.retired) return alone
+    const { practice, key } = practiceOf(record, kind)
+    const lines = kindLines(practice, key)
+    const last = lines.at(-1)
+    assert(last, `A retired kind has its first line: ${kind.id}`)
+    // a kind gives one problem a day: a problem left wrong brings it back the day after its last line
+    const after = addDays(last.date, 1)
+    const next = wrong.reduce((a, w) => {
+      const back = w.next < after ? after : w.next
+      return back < a ? back : a
+    }, last.next)
+    return [{ id: kindKey(kind.id), next, kind }]
+  })
+  return [...rules, ...kinds]
+}
+
+/**
+ * The case a due rules item asks: the one answered wrong last, when its newest line is wrong;
+ * else the first not yet asked; else the one asked longest ago.
+ * @param {readonly import('./decode.logic.js').GoLine[]} lines
+ * @param {number} cases
+ */
+export function caseOf(lines, cases) {
+  const last = lines.at(-1)
+  if (last && !last.right) return last.case ?? 0
+  /** @type {string[]} */
+  const asked = Array.from({ length: cases }, () => '')
+  for (const l of lines) asked[l.case ?? 0] = l.date
+  const never = asked.indexOf('')
+  if (never >= 0) return never
+  return asked.reduce((best, d, i) => (d < (asked[best] ?? '') ? i : best), 0)
+}
+
+/**
+ * How many cases a rules item holds.
+ * @param {import('./own.logic.js').Course} course
+ * @param {import('./decode.logic.js').RuleId} id
+ */
+const casesOf = (course, id) => {
+  const part = course.parts.find(p => p.items.includes(id))
+  return part?.cases?.[part.items.indexOf(id)] ?? 1
+}
+
+/**
+ * What is due today, the oldest date first, each as step 1 asks it: a due kind gives one problem
+ * by A kind's return, through Mathematics' draw (its problem last answered wrong, else a
+ * never-tried one in the order its problems entered, else the one seen longest ago); a rules
+ * item one case; a problem of a kind in its first run itself.
+ * @param {import('./own.logic.js').Course} course
+ * @param {import('./decode.logic.js').GoRecord} record
+ * @param {string} day
+ * @returns {import('./decode.logic.js').Recall[]}
+ */
+export function dueToday(course, record, day) {
+  return dated(course, record)
+    .filter(x => x.next <= day)
+    .sort((a, b) => (a.next < b.next ? -1 : a.next > b.next ? 1 : a.id < b.id ? -1 : 1))
+    .map(({ id, kind }) => {
+      if (kind) {
+        const { practice, bank, key } = practiceOf(record, kind)
+        const problem = draw(bank, practice, key)
+        assert(problem, `A kind holds a problem to give: ${kind.id}`)
+        return { n: 1, step: 'recall', id: itemId(problem.id), kind: kind.id }
+      }
+      const item = itemId(id)
+      if (isRulesItem(item))
+        return { n: 1, step: 'recall', id: item, kind: null, case: caseOf(record.recall[item] ?? [], casesOf(course, item)) }
+      return { n: 1, step: 'recall', id: item, kind: kindOf(course, id) ?? null }
+    })
+}
+
+/**
+ * The days the start gate's conditions were met: the practice game counted, right or wrong, and each rules
  * item's first right answer on a day after its first; null while any is not met.
  * @param {import('./own.logic.js').Course} course
  * @param {Pick<import('./decode.logic.js').GoRecord, 'recall' | 'start'>} record
@@ -197,7 +319,7 @@ function gateDays(course, record) {
 }
 
 /**
- * The start gate: every rules item right on a day after its first, and one practice game counted right.
+ * The start gate: every rules item right on a day after its first, and one practice game counted.
  * @param {import('./own.logic.js').Course} course
  * @param {Pick<import('./decode.logic.js').GoRecord, 'recall' | 'start'>} record
  */
@@ -239,7 +361,7 @@ function mixedToday(course, record, day) {
  * The oldest game whose pass is done and whose review list holds a position not yet answered.
  * @param {Pick<import('./decode.logic.js').GoRecord, 'games'>} record
  */
-export function toReview(record) {
+function toReview(record) {
   for (const game of [...record.games].sort(oldestFirst)) {
     if (game.reviewed || !game.list) continue
     const index = game.list.findIndex(x => !x.typed)
@@ -249,17 +371,27 @@ export function toReview(record) {
 }
 
 /**
+ * How many review positions wait, over every game whose review list is not done: the one count
+ * the unit page and the Review page both show.
+ * @param {Pick<import('./decode.logic.js').GoRecord, 'games'>} record
+ */
+export const positionsLeft = record =>
+  record.games
+    .filter(g => g.list && !g.reviewed)
+    .reduce((n, g) => n + (g.list ?? []).filter(x => !x.typed).length, 0)
+
+/**
  * The game step today: `{ practice }` when a game is to be posted, with `waiting` true when
  * today's challenge is posted and no one has ended a game; null when no game is owed today.
- * Nothing is owed before the server is set up, once a game was played today, once "Skip the
- * game today" was pressed today, or while the start gate is closed with a practice game
- * already counted right.
+ * Nothing is owed once a game was played today, once "Skip the game today" was pressed today,
+ * or while the start gate is closed with a practice game already counted. Before Start's set-up
+ * is done the first game is still owed: its screen asks for the set-up (`setUpLack`).
  * @param {import('./own.logic.js').Course} course
  * @param {import('./decode.logic.js').GoRecord} record
  * @param {string} day
  */
 export function gameToday(course, record, day) {
-  if (!record.server || record.games.some(g => g.date === day) || record.position.skipped === day)
+  if (record.games.some(g => g.date === day) || record.position.skipped === day)
     return null
   const waiting = record.position.posted === day
   if (!record.start.counted) return { practice: true, waiting }
@@ -304,14 +436,8 @@ function newMaterial(course, record) {
  */
 export function nextAction(course, record, day) {
   if (record.position.open) return record.position.open
-  const [due] = dueToday(record, day)
-  if (due !== undefined)
-    return {
-      n: 1,
-      step: 'recall',
-      id: due,
-      kind: isRulesItem(due) ? null : (kindOf(course, due) ?? null)
-    }
+  const [due] = dueToday(course, record, day)
+  if (due !== undefined) return due
   const review = record.engine && toReview(record)
   if (review) return { n: 2, step: 'review', ...review }
   const game = gameToday(course, record, day)
@@ -375,9 +501,42 @@ const gates = (course, item, right, day) => record => {
 }
 
 /**
- * An answer judged by gate 1: its line on the dated list, written from the day's first answer;
- * a problem's first try; gate 3 for a first run, and a rules part done. The item stays open with
- * its verdict until `closeItem`.
+ * The lines gate 1 writes, each from the day's first answer. A rules item's line names the case
+ * asked. A problem writes a line of its own when answered wrong, and from then on at each answer;
+ * a never-tried problem answered right writes none. A retired kind's problem in step 1 writes the
+ * kind's line too, after the first read from `retired`, as Mathematics writes it.
+ * @param {import('./own.logic.js').Course} course
+ * @param {import('./decode.logic.js').Asked} item
+ * @param {boolean} right
+ * @param {string} day
+ * @param {import('./decode.logic.js').GoRecord} record
+ * @returns {import('./decode.logic.js').GoRecord['recall']}
+ */
+function linesWritten(course, item, right, day, record) {
+  const { id } = item
+  const had = record.recall[id]
+  if (isRulesItem(id)) {
+    const lines = writeLine(had, right, day)
+    const line = lines.at(-1)
+    if (lines === had || !line) return record.recall
+    const asked = item.step === 'recall' ? (item.case ?? 0) : 0
+    return { ...record.recall, [id]: [...lines.slice(0, -1), { ...line, case: asked }] }
+  }
+  /** @type {Record<string, readonly import('./decode.logic.js').GoLine[]>} */
+  const recall = { ...record.recall }
+  if (had?.length || !right) recall[id] = writeLine(had, right, day)
+  const kind = item.kind === null ? undefined : course.kinds.find(k => k.id === item.kind)
+  if (item.step === 'recall' && kind && kindLine(record, kind.id)?.retired) {
+    const { practice, key } = practiceOf(record, kind)
+    recall[kindKey(kind.id)] = writeLine(kindLines(practice, key), right, day).slice(1)
+  }
+  return recall
+}
+
+/**
+ * An answer judged by gate 1: its lines on the dated list; a problem's first try, mixed when a
+ * due kind gave it; gate 3 for a first run, and a rules part done. The item stays open with its
+ * verdict until `closeItem`.
  * @param {import('./own.logic.js').Course} course
  * @param {import('./decode.logic.js').Asked} item
  * @param {boolean} right
@@ -388,17 +547,12 @@ const gates = (course, item, right, day) => record => {
 export const answerItem =
   (course, item, right, day, given = '') =>
   record => {
-    const { id } = item
     /** @type {import('./decode.logic.js').GoRecord} */
-    let next = {
-      ...record,
-      recall: { ...record.recall, [id]: writeLine(record.recall[id]?.slice(), right, day) }
-    }
-    if (item.step === 'mixed' || item.step === 'new')
-      next = {
-        ...next,
-        tries: [...next.tries, { id: item.id, date: day, right, mixed: item.step === 'mixed' }]
-      }
+    let next = { ...record, recall: linesWritten(course, item, right, day, record) }
+    const { id } = item
+    const fresh = !isRulesItem(id) && !record.tries.some(t => t.id === id)
+    if (fresh && (item.step === 'mixed' || item.step === 'new' || item.step === 'recall'))
+      next = { ...next, tries: [...next.tries, { id, date: day, right, mixed: item.step !== 'new' }] }
     next = gates(course, item, right, day)(next)
     return withPosition(next, {
       open: { ...item, right, given },
@@ -433,6 +587,12 @@ export const serverRead =
     withPosition(record, { read: { day, rating, deviation } })
 
 /**
+ * Set-up comes once, when the first game comes: the game waits on the engine and the user name.
+ * @param {import('./decode.logic.js').GoRecord} record
+ */
+export const setUpLack = record => !record.engine || !record.server
+
+/**
  * "Skip the game today": no game today, and the list moves on.
  * @param {string} day
  * @returns {(record: import('./decode.logic.js').GoRecord) => import('./decode.logic.js').GoRecord}
@@ -447,19 +607,23 @@ export const skipGame = day => record => withPosition(record, { skipped: day, po
 export const postGame = day => record => withPosition(record, { posted: day })
 
 /**
+ * Each dated item's next date, for the unit's dated list.
+ * @param {import('./own.logic.js').Course} course
+ * @param {import('./decode.logic.js').GoRecord} record
+ */
+export const datesOf = (course, record) => dated(course, record).map(x => x.next)
+
+/**
  * Why nothing is left, for the screen that says so: `later`, the day the next dated item comes
  * back ('' when none has a date).
+ * @param {import('./own.logic.js').Course} course
  * @param {import('./decode.logic.js').GoRecord} record
  * @param {string} day
  */
-export function restOf(record, day) {
-  const later =
-    Object.values(record.recall)
-      .flatMap(lines => {
-        const next = nextOf([...lines])
-        return next !== undefined && next > day ? [next] : []
-      })
-      .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0] ?? ''
+export function restOf(course, record, day) {
+  const later = datesOf(course, record)
+    .filter(next => next > day)
+    .sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))[0] ?? ''
   return { later }
 }
 

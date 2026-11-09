@@ -91,7 +91,8 @@ int main()
 ## Alone 1
 Form: sanitizer
 Sanitizer: address
-Write a program that reads two lists of integers and prints the longer list first and the other list second.
+Exempt: R.3, R.12, R.20, ES.24
+Write a program that reads two lists of integers and prints the longer list first and the other list second. Keep each list in an array you get with new[] and free with delete[].
 Input: first line n, then n integers; second line m, then m integers.
 Output: two lines, the longer list, then the other, integers separated by spaces; when n equals m, the first list comes first.
 Limits: 1 ≤ n, m ≤ 1000; each integer fits in an int.
@@ -212,7 +213,8 @@ int main()
 ## Alone 2
 Form: sanitizer
 Sanitizer: address
-Write a program that keeps at most one stored integer and carries out commands: set x stores x in place of what was stored, clear forgets the stored integer, and print prints it.
+Exempt: R.3, R.20, ES.24
+Write a program that keeps at most one stored integer and carries out commands: set x stores x in place of what was stored, clear forgets the stored integer, and print prints it. Keep the stored integer in memory you get with new and free with delete.
 Input: first line q, then q lines, each set x, clear or print.
 Output: one line for each print, the stored integer, or none when nothing is stored.
 Limits: 1 ≤ q ≤ 1000; x fits in an int.
@@ -258,7 +260,7 @@ int main()
         } else if (command == "clear") {
             delete stored;
             stored = nullptr;
-        } else if (stored == nullptr) {
+        } else if (!stored) {
             std::println("none");
         } else {
             std::println("{}", *stored);
@@ -288,7 +290,7 @@ int main()
             stored = new int {x};
         } else if (command == "clear") {
             delete stored;
-        } else if (stored == nullptr) {
+        } else if (!stored) {
             std::println("none");
         } else {
             std::println("{}", *stored);

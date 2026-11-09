@@ -125,12 +125,14 @@ export class ArithmeticFactDrill extends StepScreen {
   #begin(op) {
     const draws = Array.from({ length: 121 }, Math.random)
     send({ t: 'sheet-begin', op, draws, nowMs: Date.now(), day: today() })
-    this.focusSoon('h3')
+    // The clock runs from Start: typing begins in the first field, with no press to reach it.
+    firstField()
   }
 
   #check() {
     send({ t: 'sheet-check', nowMs: Date.now(), day: today() })
-    this.focusSoon('h3')
+    // Check is gone: focus goes to the checked sheet's live primary, Done.
+    this.focusSoon('.lrn-ss-primary')
   }
 
   /** @param {number} page */

@@ -25,6 +25,8 @@ export class AePages extends StepScreen {
   store = ''
   /** @type {readonly unknown[]} */
   items = []
+  /** Each item is finished once in view (a run read in order), so Next is the primary, which Enter presses. */
+  primary = false
   /** Draws one item, under the heading it is given. @type {(item: unknown, n: number, page: { heading: string }) => import('./view.dom.js').Child} */
   render = () => null
   /** @type {import('./maths-steps.dom.js').Send} */
@@ -81,6 +83,7 @@ export class AePages extends StepScreen {
           label: this.label || `${this.noun} pages`,
           at,
           count: total,
+          primary: this.primary,
           onTurn: n => this.#turn(n)
         })
     )

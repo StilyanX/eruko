@@ -40,6 +40,7 @@ export function topicLearning(topic, bank) {
       content: h('ae-pages', {
         '.noun': 'Idea',
         '.store': 'ideas',
+        '.primary': true,
         '.items': ideas,
         '.send': send,
         '.render': (
@@ -69,7 +70,7 @@ export function topicLearning(topic, bank) {
     topic.prove.length > 0 && {
       id: 'ar-prove',
       title: 'Statements to prove',
-      content: h('ae-statements', { '.topic': topic, '.send': send })
+      content: h('ae-statements', { '.topic': topic, '.send': send, '.proofsId': 'ar-proofs' })
     }
   ]
   return { sections: sections.filter(s => s !== false && s !== null && s !== undefined) }

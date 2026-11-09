@@ -5,14 +5,14 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { LINE_IDS, answersOf, entriesOf, entriesRight, paceItems, poolKey } from './end-lines.logic.js'
 
-test('eleven lines, in the spec\'s order', () => {
+test('eleven lines, in the order of Opens', () => {
   assert.deepEqual(LINE_IDS, [
     'facts',
+    'sums',
     'primes',
     'squares',
     'pi-multiples',
     'prime-multiples',
-    'sums',
     'product-3',
     'product-4',
     'estimates',

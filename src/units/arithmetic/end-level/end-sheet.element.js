@@ -8,7 +8,9 @@ import { clock, today } from '../../../parts/clock.dom.js'
 import { StepScreen, actionsAs, choice, step, verdict, whereIn } from '../../../parts/study.dom.js'
 import { unreachable } from '../../../kernel/invariant.logic.js'
 import { h } from '../../../parts/view.dom.js'
+import { drillToday } from '../../../kernel/facts.logic.js'
 import {
+  drillLine,
   lineInHand,
   lineNext,
   linePassed,
@@ -25,8 +27,11 @@ import {
   productOf,
   questionOf
 } from '../core/end-lines.logic.js'
-import { math, mathNow, send } from '../core/session.dom.js'
-import { endOpen } from '../core/unit.logic.js'
+import { facts, factsNow, math, mathNow, send } from '../core/session.dom.js'
+import { endGate } from '../core/unit.logic.js'
+
+/** The end level's gate today, from the unit's record and the number facts'. */
+const gateNow = () => endGate({ math: math.get(), facts: facts.get() }, today())
 
 /** @type {Readonly<Record<import('../core/end-level.logic.js').SheetKind, string>>} */
 const KINDS = {
@@ -64,13 +69,21 @@ function howTo(kind) {
 }
 
 /**
- * Where one line stands.
+ * Where one line stands: what it opens on, the line it waits for, or its sheets.
  * @param {import('../core/end-level.logic.js').EndRecord} end
  * @param {import('../core/end-lines.logic.js').LineId} id
+ * @param {import('../core/end-level.logic.js').Gate} gate
  */
-function standing(end, id) {
+function standing(end, id, gate) {
   const rec = end.lines?.[id]
   const next = lineNext(rec)
+  const { opens } = lineOf(id)
+  if (!gate.open.includes(id))
+    return 'set' in opens
+      ? `Opens once you pass the ${opens.set} facts.`
+      : `Opens once you pass every set of number facts and finish ${opens.section}.`
+  const hand = drillLine(end, gate)
+  if (!linePassed(rec) && hand !== id && hand) return `Opens after you pass ${lineOf(hand).title}.`
   if (rec?.misses?.length)
     return `${count(rec.misses.length, 'problem', 'problems')} you missed${next ? `, on ${dayName(next)}` : ' next'}.`
   if (linePassed(rec)) return next ? `Passed. Back for a check on ${dayName(next)}.` : 'Passed.'
@@ -136,6 +149,7 @@ export class ArithmeticEndSheet extends StepScreen {
 
   setup() {
     this.watch(math)
+    this.watch(facts)
     this.watch(clock)
   }
 
@@ -146,7 +160,7 @@ export class ArithmeticEndSheet extends StepScreen {
   /** The sheet in hand, or null. */
   #sheet() {
     const end = this.#end()
-    return sheetHeld(end.sheet, end, today()) ? end.sheet : null
+    return sheetHeld(end.sheet, end, today(), gateNow()) ? end.sheet : null
   }
 
   // A stored sheet that cannot be worked is dropped; a sheet in hand restarts its clock on return.
@@ -163,7 +177,7 @@ export class ArithmeticEndSheet extends StepScreen {
   }
 
   #begin() {
-    send({ t: 'end-begin', seed: Math.floor(Math.random() * 2 ** 31), nowMs: Date.now(), day: today() })
+    send({ t: 'end-begin', seed: Math.floor(Math.random() * 2 ** 31), nowMs: Date.now(), day: today(), gate: gateNow() })
     this.focusSoon('h3')
   }
 
@@ -241,7 +255,7 @@ export class ArithmeticEndSheet extends StepScreen {
           'next',
           choice({
             primary: true,
-            label: s.i + 1 < s.problems.length ? 'Next problem' : 'Retype your answers',
+            label: s.i + 1 < s.problems.length ? 'Next' : 'Retype your answers',
             onPress: () => send({ t: 'end-next', nowMs: Date.now(), day: today() })
           })
         )
@@ -326,23 +340,22 @@ export class ArithmeticEndSheet extends StepScreen {
   }
 
   view() {
-    const record = mathNow()
-    if (!endOpen(record))
-      return step(h('p', null, 'The end level opens once you finish every lesson.'))
+    const gate = gateNow()
+    if (!gate.open.length) return step(h('p', null, 'The end level opens once you pass the addition facts.'))
     const sheet = this.#sheet()
     if (sheet) return this.#sheetView(sheet)
-    const end = record.end ?? {}
-    const hand = lineInHand(end, today())
+    const end = this.#end()
+    const hand = lineInHand(end, today(), gate)
     return step([
       h(
         'p',
         { key: 'about' },
-        'Eleven kinds of problem, each passed the way the number facts are. First an untimed sheet: get every answer right. Then a timed sheet: no longer than the untimed one, and inside its own time limit. Problems show one at a time. After each sheet you retype your answers, and the typing time comes off.'
+        'Eleven kinds of problem, each passed the way the number facts are. You work one kind at a time, in the order below. First an untimed sheet: get every answer right. Then a timed sheet: no longer than the untimed one, and inside its own time limit. Problems show one at a time. After each sheet you retype your answers, and the typing time comes off.'
       ),
       h(
         'ul',
         { key: 'plan', class: 'lrn-ss-plan' },
-        LINES.map(l => h('li', { key: l.id }, h('span', null, l.title), h('span', null, standing(end, l.id))))
+        LINES.map(l => h('li', { key: l.id }, h('span', null, l.title), h('span', null, standing(end, l.id, gate))))
       ),
       hand
         ? actionsAs(
@@ -361,7 +374,9 @@ export class ArithmeticEndSheet extends StepScreen {
             { class: 'lrn-ss-note', key: 'none' },
             LINES.every(l => linePassed(end.lines?.[l.id]))
               ? `All ${LINES.length} passed. Each comes back for a check on its date.`
-              : 'Nothing left today. The end level continues tomorrow.'
+              : drillLine(end, gate) && drillToday(factsNow(), today())
+                ? "The number facts come first today. The end level gets any time left in their hour."
+                : 'Nothing left today. The end level continues tomorrow.'
           )
     ])
   }

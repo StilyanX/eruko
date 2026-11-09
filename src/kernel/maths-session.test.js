@@ -153,9 +153,15 @@ test('mixed practice: a wrong answer dates the problem and its kind for tomorrow
   assert.deepEqual(wrong.record.list?.[K], next)
   assert.deepEqual(wrong.record.mix, { day, id: P1.id, phase: 'wrong' })
   assert.deepEqual(says(wrong.effects), ['Wrong. Read the solution.'])
-  const bank = bankOf([{ id: 'k1-p1', kind: 'k1' }, { id: 'k1-p2', kind: 'k1' }])
+  const bank = bankOf([
+    { id: 'k1-p1', kind: 'k1' },
+    { id: 'k1-p2', kind: 'k1' }
+  ])
   assert.deepEqual(practiceOrder(bank, wrong.record, day), [])
-  assert.deepEqual(practiceOrder(bank, wrong.record, '2026-09-23').map(p => p.id), ['k1-p1'])
+  assert.deepEqual(
+    practiceOrder(bank, wrong.record, '2026-09-23').map(p => p.id),
+    ['k1-p1']
+  )
   // Right the next day: its next line is written (right), so it is no longer the one last answered wrong.
   const mended = answer(wrong.record, true, '2026-09-23')
   assert.equal(mended.record.list?.[P1.id]?.length, 2)
@@ -170,7 +176,13 @@ test('mixed practice: a wrong answer dates the problem and its kind for tomorrow
 
 test('mixed practice: a lost question keeps lines of its own and writes none for a kind', () => {
   const q = { id: problemId('tma01-q3'), kind: kindId('exam') }
-  const lost = mathsStep(practice({}), { t: 'mix-answer', problem: q, lost: 'feedback', right: false, day })
+  const lost = mathsStep(practice({}), {
+    t: 'mix-answer',
+    problem: q,
+    lost: 'feedback',
+    right: false,
+    day
+  })
   assert.deepEqual(lost.record.list, { [q.id]: [{ date: day, right: false, next: '2026-09-23' }] })
   assert.deepEqual(says(lost.effects), ["Wrong. Read the module's feedback on it again."])
   const changed = mathsStep(lost.record, { t: 'mix-change', problem: q, lost: 'script', day })
@@ -205,4 +217,25 @@ test("changing a mark writes today's lines again", () => {
 test('what a lost question is checked against, in words', () => {
   assert.equal(sourceOf('feedback'), "the module's feedback on it")
   assert.equal(readAgain(null), 'Read the solution.')
+})
+
+test("a line's reason or a problem's answer shown is kept in the place until the next move", () => {
+  const open = mathsStep(practice({}), { t: 'stage-open', kind: K, day })
+  assert.deepEqual(open.record.stage?.[K], { ...START, open: true, day })
+  const read = mathsStep(open.record, { t: 'example-line', kind, day })
+  assert.deepEqual(read.record.stage?.[K], { ...START, line: 1, day })
+})
+
+test('mixed practice: an answer shown holds the problem in hand until it is marked', () => {
+  const id = problemId('k1-p1')
+  const shown = mathsStep(practice({}), { t: 'mix-show', id, phase: 'shown', day })
+  assert.deepEqual(shown.record.mix, { day, id, phase: 'shown' })
+  const marked = mathsStep(shown.record, {
+    t: 'mix-answer',
+    problem: { id, kind: K },
+    lost: null,
+    right: true,
+    day
+  })
+  assert.equal(marked.record.mix?.phase, 'right')
 })

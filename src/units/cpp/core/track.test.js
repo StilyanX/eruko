@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { courseFrom, decodeRecord } from './decode.logic.js'
+import { trackAsked } from './track-decode.logic.js'
 import { nextAction, place, trackOpen, trackRows } from './next.logic.js'
 import { step } from './session.logic.js'
 import {
@@ -10,14 +11,18 @@ import {
   countRight,
   itemsOf,
   partsOf,
+  scanned,
+  scansOver,
   sideToday,
   trackAction,
   trackAnswered,
+  trackDates,
   trackDue,
   trackMixed,
   verdictRight,
   witnessAsks,
-  witnessJudged
+  witnessJudged,
+  withScans
 } from './track.logic.js'
 
 /** @param {string} id @param {Partial<import('./track-decode.logic.js').TrackKind>} [more] */
@@ -38,7 +43,7 @@ const kind = (id, more = {}) => ({
 
 const TRACK = [kind('1.01'), kind('1.02', { count: null }), kind('2.01')]
 const course = courseFrom(
-  [{ title: 'First kinds', first: 1, last: 1 }],
+  [{ title: 'Whole programs', first: 1, last: 1 }],
   [{ id: 1, name: 'a', after: [], plan: [], problems: ['1.01'], trace: 'T1' }],
   TRACK,
   [{ n: 1, title: 'The core language', book: 'Horton' }]
@@ -81,7 +86,7 @@ test('the track opens when every first kind is retired, the practice contest not
   assert.equal(trackOpen(course, recordWith()), false)
   assert.equal(trackOpen(course, recordWith(retired)), true)
   const rows = trackRows(course, recordWith(), '/w')
-  assert.equal(rows[0]?.opens, 'Opens once the twelve first kinds are retired.')
+  assert.equal(rows[0]?.opens, 'Opens once the twelve whole-program kinds are retired.')
   assert.equal(rows[0]?.to, undefined)
   assert.equal(trackRows(course, recordWith(retired), '/w')[0]?.to, '/w')
   assert.match(place(course, recordWith(retired)), /Track kind 1 of 3: Kind 1\.01\./)
@@ -155,7 +160,97 @@ test('step C runs the open kind in order: example, verdict, count, alone, witnes
     part: 'example',
     round: 0
   })
-  assert.equal(Object.keys(r.recall).length, 4, 'every track item answered writes a line')
+  // an item right writes no line of its own; each unit of the retired kind has its first line
+  const first = [{ date: day, right: true, next: '2026-10-06' }]
+  const trackLines = Object.fromEntries(
+    Object.entries(r.recall).filter(([id]) => id.startsWith('t'))
+  )
+  assert.deepEqual(trackLines, {
+    't1.01:verdict': first,
+    't1.01:count': first,
+    't1.01:alone': first,
+    't1.01:witness': first
+  })
+})
+
+test('a due unit of a retired kind gives its item last answered wrong, else a never-tried item, else the one seen longest ago; gate A dates the unit from its answer', () => {
+  const day = '2026-10-10'
+  const track = [
+    { kind: '1.02', opened: '2026-10-01', retired: '2026-10-03', part: 'witness', round: 0 }
+  ]
+  const line = (/** @type {string} */ date, right = true, next = day) => [{ date, right, next }]
+  const recall = {
+    't1.02:verdict': line('2026-10-03'),
+    't1.02:alone': line('2026-10-03'),
+    't1.02:witness': line('2026-10-03', true, '2026-10-20'),
+    't1.02a1': line('2026-10-02', false, '2026-10-03')
+  }
+  const tries = [
+    { id: 't1.02v1', date: '2026-10-01', right: true },
+    { id: 't1.02a1', date: '2026-10-02', right: false },
+    { id: 't1.02w1', date: '2026-10-02', right: true }
+  ]
+  const r = recordWith({ ...retired, track, recall, trackTries: tries })
+  assert.equal(r.recall['t1.02:verdict']?.length, 1, 'a unit key survives the decoder')
+  assert.deepEqual(
+    trackDue(TRACK, r, day),
+    ['t1.02v2', 't1.02a1'],
+    'no count unit where the kind holds no count item'
+  )
+  const seen = { ...r, trackTries: [...tries, { id: 't1.02v2', date: '2026-10-04', right: true }] }
+  assert.deepEqual(trackDue(TRACK, seen, day), ['t1.02v1', 't1.02a1'])
+  // right: the unit takes a later date, the never-tried item writes none
+  const v2 = trackAsked('t1.02v2', 'A')
+  const right = trackAnswered(TRACK, r, { item: v2, right: true, day })
+  assert.equal(right.recall['t1.02v2'], undefined)
+  assert.ok((right.recall['t1.02:verdict']?.at(-1)?.next ?? '') > '2026-10-11')
+  // right on the item last answered wrong: it writes its line, so it is not drawn as wrong again
+  const a1 = trackAnswered(TRACK, r, { item: trackAsked('t1.02a1', 'A'), right: true, day })
+  assert.equal(a1.recall['t1.02a1']?.at(-1)?.right, true)
+  assert.deepEqual(trackDue(TRACK, a1, day), ['t1.02v2'])
+  // wrong: the item and its unit come back the next day
+  const wrong = trackAnswered(TRACK, r, { item: v2, right: false, day })
+  assert.equal(wrong.recall['t1.02v2']?.at(-1)?.next, '2026-10-11')
+  assert.equal(wrong.recall['t1.02:verdict']?.at(-1)?.next, '2026-10-11')
+  // the alone unit, due since the 10th, comes first: the oldest date first
+  assert.deepEqual(trackDue(TRACK, wrong, '2026-10-11'), ['t1.02a1', 't1.02v2'])
+})
+
+test('step B dates nothing when right; wrong, the item and its unit come back the next day; a unit not due writes no line from a right answer', () => {
+  const day = '2026-10-10'
+  const track = [
+    { kind: '1.02', opened: '2026-10-01', retired: '2026-10-03', part: 'witness', round: 0 }
+  ]
+  const recall = { 't1.02:verdict': [{ date: '2026-10-03', right: true, next: '2026-10-20' }] }
+  const r = recordWith({ ...retired, track, recall })
+  const v1 = trackAsked('t1.02v1', 'B')
+  assert.deepEqual(trackAnswered(TRACK, r, { item: v1, right: true, day }).recall, r.recall)
+  const wrong = trackAnswered(TRACK, r, { item: v1, right: false, day }).recall
+  assert.equal(wrong['t1.02v1']?.at(-1)?.next, '2026-10-11')
+  assert.equal(wrong['t1.02:verdict']?.at(-1)?.next, '2026-10-11')
+})
+
+test("while a kind is not retired an item answered wrong comes back alone; a record from before unit lines reads each unit's first line from the day its kind retired", () => {
+  const day = '2026-10-10'
+  const recall = {
+    't1.01v1': [{ date: '2026-10-05', right: false, next: '2026-10-06' }],
+    't1.01v2': [{ date: '2026-10-05', right: true, next: '2026-10-06' }]
+  }
+  const open = [{ kind: '1.01', opened: '2026-10-05', retired: '', part: 'alone', round: 0 }]
+  assert.deepEqual(trackDue(TRACK, recordWith({ ...retired, track: open, recall }), day), [
+    't1.01v1'
+  ])
+  const old = [
+    { kind: '1.01', opened: '2026-10-05', retired: '2026-10-06', part: 'witness', round: 0 }
+  ]
+  const r = recordWith({ ...retired, track: old, recall })
+  assert.deepEqual(trackDue(TRACK, r, day), ['t1.01v1', 't1.01c', 't1.01a1', 't1.01w1'])
+  assert.deepEqual(trackDates(TRACK, r), Array(4).fill('2026-10-07'), 'the dates the list shows')
+  const next = trackAnswered(TRACK, r, { item: trackAsked('t1.01c', 'A'), right: true, day })
+  assert.deepEqual(
+    next.recall['t1.01:count']?.map(l => l.date),
+    ['2026-10-06', day]
+  )
 })
 
 test('gate C says No when the item alone or the witness was wrong: a fresh verdict item, then a fresh item alone and witness, no count again', () => {
@@ -357,8 +452,58 @@ test('a flag item is judged by acceptance at each stated level; a probes item by
       ['c++20', ['-c']]
     ]
   )
-  assert.equal(aloneJudged(flag, 'p', [{ compiled: false, error: '' }, done([])]).right, true)
-  assert.equal(aloneJudged(flag, 'p', [done([]), done([])]).first?.level, 'c++17')
+  const at7 = { compiled: /** @type {const} */ (false), error: 'main.cpp:7:3: error: x' }
+  assert.equal(aloneJudged(flag, 'p', [at7, done([])], [7]).right, true)
+  // a rejection is right only at exactly the lines typed before the run
+  assert.equal(aloneJudged(flag, 'p', [at7, done([])], [7, 9]).first?.given, 'rejected at line 7')
+  assert.equal(aloneJudged(flag, 'p', [at7, done([])]).right, false)
+  assert.equal(aloneJudged(flag, 'p', [done([]), done([])], [7]).first?.level, 'c++17')
+})
+
+test("a reading task's c++23 lines are asked at c++20 and right only at exactly the lines typed", () => {
+  // a reading task's c++23 lines: c++20 must reject at exactly the lines typed
+  const newer = { ...alone, newer: [3] }
+  const n = aloneAsks(newer, 'p').length
+  assert.equal(aloneAsks(newer, 'p').at(-1)?.std, 'c++20')
+  const ok = [...Array(n - 1)].map(() => done([out('12\n'), out('81\n')]))
+  assert.equal(
+    aloneJudged(
+      newer,
+      'p',
+      [...ok, { compiled: /** @type {const} */ (false), error: 'main.cpp:4:1: error: y' }],
+      [4]
+    ).right,
+    true
+  )
+  assert.equal(
+    aloneJudged(
+      newer,
+      'p',
+      [...ok, { compiled: /** @type {const} */ (false), error: 'main.cpp:4:1: error: y' }],
+      [3]
+    ).right,
+    false
+  )
+  // on the device too: nvcc compiles the host code at c++20 and names lines its own way
+  const onDevice = { ...newer, device: true, settings: { device: true } }
+  const dn = aloneAsks(onDevice, 'p')
+  assert.deepEqual(
+    [dn.at(-1)?.std, dn.at(-1)?.device, Object.keys(dn.at(-1)?.files ?? {})[0]],
+    ['c++20', true, 'main.cu']
+  )
+  const dok = [...Array(dn.length - 1)].map(() => done([out('12\n'), out('81\n')]))
+  assert.equal(
+    aloneJudged(
+      onDevice,
+      'p',
+      [...dok, { compiled: /** @type {const} */ (false), error: 'main.cu(4): error: y' }],
+      [4]
+    ).right,
+    true
+  )
+})
+
+test('a probes item is judged by each probe at its own line', () => {
   /** @type {import('./track-decode.logic.js').AloneItem} */
   const probes = {
     ...alone,
@@ -393,6 +538,18 @@ test('a witness is right when the right version gives its result cleanly and the
   assert.equal(witnessJudged(alone, [loud, loud]).right, false)
 })
 
+test("an orders item settled by its stored verdict: its witness is right when the wrong version's stored results hold one the reference does not give", () => {
+  /** @type {import('./track-decode.logic.js').AloneItem} */
+  const fence = { ...alone, form: 'orders', settings: { flags: ['-pthread'] }, forbids: ['0'] }
+  const same = done([out('7\n')])
+  const j = witnessJudged(fence, [same, same])
+  assert.equal(j.right, true)
+  assert.equal(j.wrong_gave, '7 or 0')
+  const zero = done([out('0\n')])
+  assert.equal(witnessJudged(fence, [zero, zero]).right, false)
+  assert.equal(witnessJudged(fence, [{ compiled: false, error: 'e' }, same]).right, false)
+})
+
 test('a count read from a report: symbols by nm, instructions by opcode, registers and spills by kernel', () => {
   const nm =
     '0000000000001139 W void f<int>(int)\n0000000000001149 W void f<double>(double)\n                 U puts\n0000000000001159 T main\n'
@@ -423,4 +580,96 @@ test('gate C reads the first submit: an item alone wrong first and right on reca
   const next = trackAnswered(TRACK, r, { item: witness, right: true, day })
   assert.equal(next.track[0]?.retired, '')
   assert.equal(next.track[0]?.round, 1)
+})
+
+test("a stage 7 scan reads every answer once its kind is retired, and its own kind's items before; a hit makes the answer wrong and names the rule and line", () => {
+  const f48 = { rule: 'F.48', warning: ['-Wpessimizing-move'] }
+  const es87 = { rule: 'ES.87', pattern: '!=\\s*nullptr' }
+  const kinds = [kind('7.01', { scan: f48 }), kind('7.02', { scan: es87 }), kind('8.01')]
+  const record = {
+    track: [
+      {
+        kind: '7.01',
+        opened: 'd',
+        retired: '2026-11-01',
+        part: /** @type {const} */ ('witness'),
+        round: 0
+      }
+    ],
+    trackReading: { round: 0, task: 0, at: 0, wrong: [], done: '', reopened: [] }
+  }
+  const asked = (/** @type {string} */ id) => ({
+    ...partsOf(id),
+    n: /** @type {const} */ ('A'),
+    step: /** @type {const} */ ('track'),
+    id: /** @type {never} */ (id)
+  })
+  assert.deepEqual(
+    scansOver(kinds, record, asked('t8.01a1'), alone),
+    [f48],
+    "a retired kind's scan"
+  )
+  assert.deepEqual(
+    scansOver(kinds, record, asked('t7.02a1'), alone),
+    [f48, es87],
+    "and the open kind's own"
+  )
+  assert.deepEqual(
+    scansOver(kinds, record, asked('t8.01a1'), { ...alone, exempt: ['F.48'] }),
+    [],
+    'a rule the statement asks to break'
+  )
+  const sw = { ...alone, witness: { kind: /** @type {const} */ ('scan'), text: '' } }
+  assert.deepEqual(
+    scansOver(kinds, record, asked('t7.02w1'), sw),
+    [f48, es87],
+    'a stage 7 witness: every scan that reads answers'
+  )
+  const reopened = {
+    ...record,
+    track: [],
+    trackReading: { ...record.trackReading, reopened: ['7.01'] }
+  }
+  assert.deepEqual(
+    scansOver(kinds, reopened, asked('t8.01a1'), alone),
+    [f48],
+    'a kind a reading opened again keeps its scan'
+  )
+})
+
+test('a scan adds one compile, the one it was entered on; a hit makes the answer wrong and counts as one more check', () => {
+  const f48 = { rule: 'F.48', warning: ['-Wpessimizing-move'] }
+  const es87 = { rule: 'ES.87', pattern: '!=\\s*nullptr' }
+  const sw = { ...alone, witness: { kind: /** @type {const} */ ('scan'), text: '' } }
+  const asks = withScans(aloneAsks(alone, 'mine'), [f48], false)
+  assert.equal(asks.length, 3, 'one more compile, the one the scan was entered on')
+  assert.deepEqual(asks[2]?.flags, ['-c', '-Wpessimizing-move'])
+  assert.deepEqual([asks[2]?.std, asks[2]?.report], ['c++23', ['resource-usage']])
+  assert.equal(asks[0]?.flags, undefined, "the item's own runs stay as they are")
+  const said = {
+    compiled: /** @type {const} */ (true),
+    runs: [],
+    reports: {
+      'resource-usage': 'main.cpp:4:21: warning: moving a local object [-Wpessimizing-move]'
+    }
+  }
+  assert.deepEqual(scanned({ right: true }, [f48], 'x', [said], false), {
+    right: false,
+    scan: 'F.48 flags line 4'
+  })
+  assert.deepEqual(
+    scanned({ right: true, passed: 3, total: 3 }, [f48], 'x', [said], false),
+    { right: false, passed: 3, total: 4, scan: 'F.48 flags line 4' },
+    'the scans count as one more check'
+  )
+  assert.deepEqual(scanned({ right: true }, [es87], 'if (p != nullptr) {\n}\n', [], false), {
+    right: false,
+    scan: 'ES.87 flags line 1'
+  })
+  assert.deepEqual(scanned({ right: true }, [es87], 'if (p) {\n}\n', [], false), { right: true })
+  const w = witnessAsks(sw, 'int f();\n')
+  assert.equal(w.length, 1)
+  assert.deepEqual(w[0]?.flags, ['-c'])
+  assert.equal(witnessJudged(sw, [{ compiled: true, runs: [] }]).right, true)
+  assert.equal(witnessJudged(sw, [{ compiled: false, error: 'e' }]).right, false)
 })

@@ -2,11 +2,11 @@
 // (next.logic.js): what each screen shows in the paper's fixed words (Worked example, Trace item,
 // Parsons problem, Problem, Result, Contest, Reading), which event each press sends
 // (session.dom.js), and what the learner has typed, held here while the item is open and written
-// to the record when they press Run or Submit or leave the screen. Before the next item, a
+// to the record when they press Run or Check or leave the screen. Before the next item, a
 // compiler the runner newly reports runs every reference solution (the runtime change step).
 import { unreachable } from '../../../kernel/invariant.logic.js'
 import { clock, today } from '../../../parts/clock.dom.js'
-import { StepScreen, actionsAs, choice, say, step } from '../../../parts/study.dom.js'
+import { StepScreen, actionsAs, choice, say, step, verdict } from '../../../parts/study.dom.js'
 import { h } from '../../../parts/view.dom.js'
 import {
   contestRows,
@@ -16,8 +16,14 @@ import {
   traceForm,
   zoneDay
 } from '../core/decode.logic.js'
-import { parsonsProgram } from '../core/judge.logic.js'
-import { contestToday, nextAction, startGate, waitsForProblems } from '../core/next.logic.js'
+import { callOf, catch2Cases, parsonsProgram } from '../core/judge.logic.js'
+import {
+  contestToday,
+  nextAction,
+  startGate,
+  traceOn,
+  waitsForProblems
+} from '../core/next.logic.js'
 import { cutParsons, shuffleBy } from '../core/parsons.logic.js'
 import { runtimeChanged } from '../core/record.logic.js'
 import { RUNNER_DOWN } from '../core/session.logic.js'
@@ -30,7 +36,7 @@ import {
   cppStore,
   cppView,
   errorText,
-  examples,
+  examplesOf,
   filledTrace,
   heading,
   kindNow,
@@ -57,6 +63,7 @@ import {
   trackKept,
   trackRunnerDown,
   trackWaits,
+  readingGaps,
   unitOf
 } from './track.dom.js'
 
@@ -65,7 +72,7 @@ import {
  * output, the Parsons lines placed and blanks filled, a pasted record, and the refusal said.
  * `key` names the item: a new item starts it afresh from what the record kept.
  * `track` is what is typed on a track item.
- * @typedef {{ key: string, code: string, cells: string[][], output: string, order: number[], fills: string[], paste: string, why: string, shown: number, track: import('./track.dom.js').TrackForm }} Form
+ * @typedef {{ key: string, code: string, cells: string[][], output: string, order: number[], fills: string[], paste: string, why: string, track: import('./track.dom.js').TrackForm }} Form
  */
 
 /** @param {import('../core/next.logic.js').Action} a */
@@ -90,8 +97,7 @@ function formOf(a) {
     order: [...parsons.order],
     fills: [...parsons.fills],
     paste: '',
-    why: '',
-    shown: 1
+    why: ''
   }
 }
 
@@ -210,6 +216,34 @@ const ran = (tests, runs) =>
   })
 
 /**
+ * A function problem's example run: each assertion of its case as a call, with the value it
+ * must give beside the value it gave; or what the case ended on.
+ * @param {string} xml Catch2's report of the example case
+ */
+const ranCalls = xml => {
+  const c = catch2Cases(xml)[0]
+  if (!c) return errorText('The example did not finish.', 'Error text')
+  return [
+    c.assertions.map((a, i) => {
+      const shown = callOf(a.type, a.original, a.expanded)
+      return h(
+        'div',
+        { key: `ran ${i}` },
+        label('Call'),
+        printed(shown.call, 'Call'),
+        h(
+          'div',
+          { class: 'cpp-pair' },
+          h('div', null, label('Expected'), printed(shown.expected, 'Expected')),
+          h('div', null, label('Given'), printed(a.ok ? shown.expected : shown.given, 'Given'))
+        )
+      )
+    }),
+    c.error && errorText(c.error, 'Error text')
+  ]
+}
+
+/**
  * What a run wrote to its error stream, or the signal that ended it, as the program's own text.
  * @param {import('../core/decode.logic.js').Output} run
  */
@@ -226,9 +260,9 @@ const runErrors = runs =>
  * The first failed test: its input, the output expected, the output given.
  * @param {import('../core/decode.logic.js').Failed} f
  */
-const failed = f => [
-  label('Input'),
-  printed(f.input, 'Input'),
+const failed = (f, fn = false) => [
+  label(fn ? 'Call' : 'Input'),
+  printed(f.input, fn ? 'Call' : 'Input'),
   h(
     'div',
     { class: 'cpp-pair', key: 'failed' },
@@ -249,14 +283,14 @@ function result(item, problem) {
   const error = v?.error || v?.failed?.error
   return [
     heading('Result'),
-    h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+    verdict(item.right),
     v && h('p', { key: 'count' }, stopped ? 'Stopped.' : `${v.passed} of ${v.total} tests passed.`),
     error && [
       label('Your program'),
       codeBlock({ lines: item.code.split('\n'), name: 'Your program' }),
       errorText(error, 'Error text')
     ],
-    v?.failed && failed(v.failed),
+    v?.failed && failed(v.failed, Boolean(problem.fn)),
     label('The reference solution'),
     codeBlock({
       lines: problem.solution.lines,
@@ -278,7 +312,7 @@ function traced(item, trace) {
   const answered = item.code !== ''
   return [
     heading('Trace item'),
-    h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+    verdict(item.right),
     codeBlock({ lines: trace.lines, numbered: true, name: 'The program' }),
     h(
       'div',
@@ -418,7 +452,10 @@ export class CppWorkList extends StepScreen {
     const waits = waitsForProblems(course, record)
     return [
       ahead && step(contest(server), { key: 'contest' }),
-      waits && step(h('p', null, `${waits.name} waits for new problems.`), { key: 'waits' }),
+      waits &&
+        step(h('p', null, `${waits.name} opens again once Eruko adds new problems to it.`), {
+          key: 'waits'
+        }),
       step(this.#screen(item, record, day), { key: `item ${this.#f.key}` })
     ]
   }
@@ -447,7 +484,10 @@ export class CppWorkList extends StepScreen {
       case 'track-example':
         return trackExample(cppView().course, item.kind, day)
       case 'track-waits':
-        return trackWaits(cppView().course, item.kind)
+        return [
+          trackWaits(cppView().course, item.kind),
+          item.kind === 'reading' && readingGaps(cppView().course)
+        ]
       case 'track-setup':
         return h('cpp-track-setup', null)
       case 'track': {
@@ -517,8 +557,10 @@ export class CppWorkList extends StepScreen {
         next(() => send({ t: 'example-read', kind: item.kind, day }))
       ]
     if (!('id' in item)) return null
-    if (isTrace(item.id))
-      return 'right' in item ? traced(item, content.trace) : this.#trace(item, content.trace, day)
+    if (isTrace(item.id)) {
+      const trace = traceOn(content, cppView().record.recall[item.id], day)
+      return 'right' in item ? traced(item, trace) : this.#trace(item, trace, day)
+    }
     const problem = content.problems[item.id]
     if (!problem) return h('p', null, NOT_LOADED)
     if ('right' in item) return result(item, problem)
@@ -534,12 +576,12 @@ export class CppWorkList extends StepScreen {
    */
   #start(start, day) {
     if (!start) return h('p', null, NOT_LOADED)
-    const f = this.#f
+    const { shown } = cppView().record.position
     const onRow = () => {
-      say(rowSaid(start, f.shown))
-      this.#set({ shown: f.shown + 1 })
+      say(rowSaid(start, shown))
+      send({ t: 'start-row' })
     }
-    return filledTrace(start, f.shown, { onRow, onNext: () => send({ t: 'start-read', day }) })
+    return filledTrace(start, shown, { onRow, onNext: () => send({ t: 'start-read', day }) })
   }
 
   /**
@@ -552,6 +594,8 @@ export class CppWorkList extends StepScreen {
   #trace(item, trace, day) {
     const f = this.#f
     const width = trace.columns.length + 1
+    // Check stays locked while nothing is typed: an empty answer is no try ("No further step" is)
+    const traced = () => Boolean(f.output.trim()) || f.cells.some(r => r.some(c => c.trim()))
     f.cells = trace.rows.map((_, r) =>
       Array.from({ length: width }, (_, c) => f.cells[r]?.[c] ?? '')
     )
@@ -569,15 +613,19 @@ export class CppWorkList extends StepScreen {
           rows: f.cells,
           name: 'Your state table',
           edit: (r, c, v) => {
+            const was = traced()
             const row = f.cells[r]
             if (row) row[c] = v
+            if (was !== traced()) this.update()
           }
         })
       ),
       label('Input 2'),
       printed(trace.inputs[1] ?? '', 'Input 2'),
       printedField(f.output, v => {
+        const was = traced()
         f.output = v
+        if (was !== traced()) this.update()
       }),
       actionsAs(
         'answer',
@@ -587,7 +635,9 @@ export class CppWorkList extends StepScreen {
         }),
         choice({
           primary: true,
-          label: 'Answer',
+          label: 'Check',
+          disabled: !traced(),
+          why: 'Fill the state table first.',
           onPress: () =>
             send({ t: 'trace-answered', item, trace, cells: f.cells, output: f.output, day })
         })
@@ -605,7 +655,7 @@ export class CppWorkList extends StepScreen {
   }
 
   /**
-   * A problem: the statement, its examples, the editor; "Run on the examples", "Submit", and
+   * A problem: the statement, its examples, the editor; "Run on the examples", "Check", and
    * beside them "No further step"; while a program runs, "Stop". The compiler's text stands
    * under the program, and each example's output beside what it expects.
    * @param {import('../core/decode.logic.js').Asked} item
@@ -620,13 +670,17 @@ export class CppWorkList extends StepScreen {
     return [
       heading('Problem'),
       statement(problem),
-      examples(problem.examples),
+      examplesOf(problem),
       editor(f.code, v => {
+        const was = !f.code.trim()
         f.code = v
+        if (was !== !v.trim()) this.update()
       }),
       last && !last.compiled && errorText(last.error, 'Error text'),
-      last && last.compiled && runErrors(last.runs),
-      last && last.compiled && ran(problem.examples, last.runs),
+      last && last.compiled && !problem.fn && runErrors(last.runs),
+      last &&
+        last.compiled &&
+        (problem.fn ? ranCalls(last.runs[0]?.stdout ?? '') : ran(problem.examples, last.runs)),
       runnerDown.get() && why(RUNNER_DOWN, 'cpp-runner-why'),
       this.#running(item, open?.running ?? null, all.length, day) ??
         actionsAs(
@@ -637,11 +691,15 @@ export class CppWorkList extends StepScreen {
           }),
           choice({
             label: 'Run on the examples',
+            disabled: !f.code.trim(),
+            why: 'Write your program first.',
             onPress: () => send({ t: 'run-examples', item, code: f.code, tests: problem.examples })
           }),
           choice({
             primary: true,
-            label: 'Submit',
+            label: 'Check',
+            disabled: !f.code.trim(),
+            why: 'Write your program first.',
             onPress: () => send({ t: 'submit', item, code: f.code, tests: all })
           })
         )
@@ -668,7 +726,7 @@ export class CppWorkList extends StepScreen {
 
   /**
    * A Parsons problem: the statement, its examples, the shuffled lines to put in order with their
-   * blanks to fill, and "Submit"; beside it "No further step".
+   * blanks to fill, and "Check"; beside it "No further step".
    * @param {import('../core/decode.logic.js').Asked} item
    * @param {import('../core/decode.logic.js').Problem} problem
    * @param {string} day
@@ -678,17 +736,17 @@ export class CppWorkList extends StepScreen {
     const parsons = cutParsons(problem, shuffleBy(problem.id))
     const open = this.#working(item)
     const all = [...problem.examples, ...problem.tests]
-    const submit = () => {
-      if (f.order.length < parsons.lines.length)
-        return this.#set({ why: 'Put every line in its place first.' })
-      const code = parsonsProgram(problem.solution, f.order, f.fills)
-      this.#set({ why: '' })
-      send({ t: 'submit', item, code, tests: all })
-    }
+    const submit = () =>
+      send({
+        t: 'submit',
+        item,
+        code: parsonsProgram(problem.solution, f.order, f.fills),
+        tests: all
+      })
     return [
       heading('Parsons problem'),
       statement(problem),
-      examples(problem.examples),
+      examplesOf(problem),
       h(
         'p',
         { key: 'how' },
@@ -698,13 +756,16 @@ export class CppWorkList extends StepScreen {
         parsons,
         order: f.order,
         fills: f.fills,
-        onPlace: at => this.#set({ order: [...f.order, at], why: '' }),
+        onPlace: at => {
+          this.#set({ order: [...f.order, at] })
+          // the next line to place, or once all are placed, the first blank
+          this.focusSoon(f.order.length < parsons.lines.length ? '.cpp-pool-line' : '.cpp-blank')
+        },
         onTake: slot => this.#set({ order: f.order.filter((_, k) => k !== slot) }),
         onFill: (blank, text) => {
           f.fills[blank] = text
         }
       }),
-      why(f.why, 'cpp-parsons-why'),
       runnerDown.get() && why(RUNNER_DOWN, 'cpp-runner-why'),
       this.#running(item, open?.running ?? null, all.length, day) ??
         actionsAs(
@@ -713,7 +774,13 @@ export class CppWorkList extends StepScreen {
             label: 'No further step',
             onPress: () => send({ t: 'no-further-step', item, code: '', day })
           }),
-          choice({ primary: true, label: 'Submit', onPress: submit })
+          choice({
+            primary: true,
+            label: 'Check',
+            onPress: submit,
+            disabled: f.order.length < parsons.lines.length,
+            why: 'Put every line in its place first.'
+          })
         )
     ]
   }

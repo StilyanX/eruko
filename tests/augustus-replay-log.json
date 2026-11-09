@@ -108,6 +108,13 @@
   "id": "id11"
  },
  {
+  "t": "check-done",
+  "life": "augustus",
+  "lesson": 0,
+  "day": "2026-10-01",
+  "id": "id11"
+ },
+ {
   "t": "claim-text",
   "life": "augustus",
   "lesson": 0,

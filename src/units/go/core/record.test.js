@@ -23,8 +23,10 @@ test('an empty record holds every field of the paper, and the course in order', 
     { opened: '', retired: '', kind: 1, after: [] },
     { opened: '', retired: '', kind: 2, after: [1] }
   ])
-  assert.equal(r.start.counted, '')
+  assert.deepEqual(r.start, { counted: '', equal: '' })
   assert.equal(r.position.open, null)
+  // a record from before `equal` reads it as empty
+  assert.deepEqual(recordOf({ ...r, start: { counted: '2026-10-03' } }, course).start, { counted: '2026-10-03', equal: '' })
 })
 
 test('a record keeps its state when the course grows, and reads the same twice', () => {

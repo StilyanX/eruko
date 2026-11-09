@@ -118,10 +118,9 @@ test("the course's own counts the paper gives, where the course has not moved si
   })
 })
 
-// The paper counts nine chapters printed whole, chapters 6 and 17 left out with gaps; the
-// transcription as fetched prints chapter 17 whole in both languages (no question mark, no run of
-// dots), so the Original job keeps it: ten chapters, 19 keys, and chapter 6's one sentence the tenth.
-test('the Reading: eleven chapters cited alone, ten printed whole, 19 keys and the tenth from chapter 6, chapter 5 from lesson 36 so lesson 35 stays a Gaps decision', () => {
+// Chapter 17 prints whole in the stored transcription, so the Reading has ten chapters, 19 keys, and
+// chapter 6's one sentence the eleventh (21.01 b665ce8, row Reading).
+test('the Reading: eleven chapters cited alone, ten printed whole, 19 keys and the eleventh from chapter 6, chapter 5 from lesson 36 so lesson 35 stays a Gaps decision', () => {
   assert.deepEqual(readingChapters(life), [1, 5, 6, 10, 15, 16, 17, 25, 27, 34, 35])
   assert.deepEqual(
     ORIGINAL.chapters.map(c => c.n),
@@ -138,14 +137,14 @@ test('the Reading: eleven chapters cited alone, ten printed whole, 19 keys and t
     [36]
   )
   assert.deepEqual(
-    p.tenth.map(id => at(id).lesson + 1),
+    p.eleventh.map(id => at(id).lesson + 1),
     [42]
   )
   assert.ok(p.sections[3]?.includes(34), 'lesson 35 is drawn for Gaps')
 })
 
 test('Gaps draws from the lessons the paper lists, save a lesson that holds a sentence the Reading lists', () => {
-  const reading = new Set([...Object.values(p.keys).flat(), ...p.tenth].map(id => at(id).lesson))
+  const reading = new Set([...Object.values(p.keys).flat(), ...p.eleventh].map(id => at(id).lesson))
   GAPS_SECTIONS.forEach((list, k) =>
     assert.deepEqual(
       p.sections[k],
@@ -156,7 +155,7 @@ test('Gaps draws from the lessons the paper lists, save a lesson that holds a se
 
 test('the pools: Witnesses at odd places and Footing at even, none from a Gaps lesson or the Reading, none whose own words give the answer, Footing no hedge', () => {
   const gaps = new Set(p.sections.flat())
-  const reading = new Set([...Object.values(p.keys).flat(), ...p.tenth])
+  const reading = new Set([...Object.values(p.keys).flat(), ...p.eleventh])
   for (const w of WITNESSES)
     for (const s of p.witnesses[w] ?? []) {
       assert.equal(s.place % 2, 1)
@@ -177,9 +176,15 @@ test('the pools: Witnesses at odd places and Footing at even, none from a Gaps l
         /\b(probably|perhaps|possibly|apparently|scholars|Scholars|may have)\b/
       )
     }
-  assert.ok(
-    WITNESSES.every(w => (p.witnesses[w]?.length ?? 0) >= 1),
-    'every witness can be drawn'
+  assert.deepEqual(
+    WITNESSES.map(w => p.witnesses[w]?.length),
+    [58, 57, 22, 3, 3, 26, 2, 3],
+    'the pools of row Witnesses'
+  )
+  assert.deepEqual(
+    FOOTINGS.map(f => p.footing[f].length),
+    [9, 19, 214],
+    'the pools of row Footing'
   )
   assert.ok(
     FOOTINGS.every(f => p.footing[f].length >= 3),
@@ -201,7 +206,7 @@ const keyed = draw => ({
 
 /**
  * One round's walls: the parts' sizes, no sentence in two parts, none from a Gaps lesson, one of
- * each witness, three of each class, a key for each chapter and one tenth, and the turn of Gaps.
+ * each witness, three of each class, a key for each chapter and one eleventh, and the turn of Gaps.
  * @param {import('./decode.logic.js').Draw} draw
  * @param {number} m the lines the round has
  */
@@ -232,7 +237,7 @@ function walls(draw, m) {
       'three of each class'
     )
   for (const c of draw.chapters) assert.ok(readingKey(p, draw, c), `chapter ${c} has its key`)
-  assert.equal(draw.list.filter(id => p.tenth.includes(id)).length, 1)
+  assert.equal(draw.list.filter(id => p.eleventh.includes(id)).length, 1)
   const drawn = new Set(draw.gaps.map(i => i + 1))
   assert.equal(drawn.has(31), m % 4 === 0)
   assert.equal(drawn.has(35), m % 4 === 1)
@@ -257,12 +262,25 @@ function anew(draw, prev) {
     if ((p.keys[c]?.length ?? 0) > 1)
       assert.ok(k && !prev.list.includes(k), `chapter ${c} takes a new key`)
   }
-  const tenth = draw.list.find(id => p.tenth.includes(id))
-  if (p.tenth.length > 1)
+  const eleventh = draw.list.find(id => p.eleventh.includes(id))
+  if (p.eleventh.length > 1)
     assert.ok(
-      tenth && !prev.list.includes(tenth),
-      'the tenth is the one the round before did not list'
+      eleventh && !prev.list.includes(eleventh),
+      'the eleventh is the one the round before did not list'
     )
+}
+
+/**
+ * The Reading's languages against the round before: on an odd number of lines every chapter swaps
+ * language; on an even number the five in Latin are any five but the round before's.
+ * @param {import('./decode.logic.js').Draw} draw
+ * @param {import('./decode.logic.js').Draw} prev
+ * @param {number} m the lines the round has
+ */
+function languages(draw, prev, m) {
+  const same = draw.latin.filter(c => prev.latin.includes(c)).length
+  if (m % 2 === 1) assert.equal(same, 0, 'odd: each chapter in the language it did not have')
+  else assert.ok(same < 5, 'even: not the five of the round before')
 }
 
 /**
@@ -280,21 +298,26 @@ function leastShown(end) {
   }
 }
 
-test('200 rounds from the first: no sentence in two parts, the turn of Gaps, no item of the round before where its pool holds more, and the least-shown draw', () => {
+test('200 rounds from the first: no sentence in two parts, the turn of Gaps, no item of the round before where its pool holds more, the languages swapped or drawn anew, and the least-shown draw', () => {
   let end = NO_END
   /** @type {import('./decode.logic.js').Draw | null} */
   let before = null
   for (let r = 0; r < 200; r++) {
     const draw = drawRound(p, end, `round-${r}`)
     walls(draw, end.lines.length)
-    if (before) anew(draw, before)
+    if (before) {
+      anew(draw, before)
+      languages(draw, before, end.lines.length)
+    }
     leastShown(end)
     // Right on even rounds, wrong on odd, so both lines are written.
     const answers = keyed(draw)
     const mark = markRound(life, p, draw, r % 2 === 0 ? answers : { ...answers, gaps: [] })
     assert.equal(mark.right, r % 2 === 0)
     const day = `2027-${String(1 + Math.floor(r / 28)).padStart(2, '0')}-${String(1 + (r % 28)).padStart(2, '0')}`
-    end = roundDone(end, draw, mark.right, day, lessons)
+    const answered = { gaps: [], witnesses: {}, footing: {}, reading: {} }
+    const round = { date: day, draw, answers: answered, part: 4, screen: 0, done: day }
+    end = { ...roundDone(end, draw, mark.right, day, lessons), round }
     before = draw
   }
   assert.equal(end.lines.length, 200)
@@ -421,11 +444,16 @@ test('Augustus done: closed, Judgment held, and the latest line right', () => {
   assert.equal(endDone({ ...NO_END, judged: '2026-12-01', lines }, undefined), false)
 })
 
-// The paper's 120 and 23, 85 and 80 were counted on a copy that split words at the line numbers;
-// the transcription's own words give chapter 15 105 and 21 in Latin and 112 and 16 in Greek.
+// The figures of row Reading (21.01 b665ce8), counted at the spaces of the transcription.
 test('the Reading pages at the end of a sentence past 150 words or 17 lines: chapter 15 into 105 and 21 words in Latin and 112 and 16 in Greek; no other passage is paged', () => {
   /** @param {string} t */
   const words = t => t.split(' ').length
+  const sum = (/** @type {'latin' | 'greek'} */ k) =>
+    ORIGINAL.chapters.reduce((n, c) => n + words(c[k]), 0)
+  assert.deepEqual([ORIGINAL.chapters.length, sum('latin'), sum('greek')], [10, 854, 888])
+  const others = ORIGINAL.chapters.filter(c => c.n !== 15)
+  assert.equal(Math.max(...others.flatMap(c => [words(c.latin), words(c.greek)])), 119)
+  assert.equal(Math.max(...others.flatMap(c => [linesOf(c.latin), linesOf(c.greek)])), 16)
   const c15 = ORIGINAL.chapters.find(c => c.n === 15)
   assert.ok(c15)
   assert.deepEqual(passagePages(c15.latin).map(words), [105, 21])

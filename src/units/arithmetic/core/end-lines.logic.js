@@ -26,23 +26,31 @@ import {
 /** An item of a pace line's fixed sheet: its question and its answer as written. @typedef {Readonly<{ q: string, a: string }>} PaceItem */
 
 /**
- * A line: its title, its kind, and for a pace line its step in hundredths of a second.
- * @typedef {Readonly<{ id: LineId, title: string, kind: LineKind, step?: number }>} Line
+ * A line: its title, its kind, for a pace line its step in hundredths of a second, and what it
+ * opens on (Mathematics, "The end level", Opens): its own number-facts set, or every set passed
+ * and the section of the course its items use finished.
+ * @typedef {Readonly<{
+ *   id: LineId,
+ *   title: string,
+ *   kind: LineKind,
+ *   step?: number,
+ *   opens: Readonly<{ set: import('../../../kernel/facts.logic.js').Operation } | { section: string }>
+ * }>} Line
  */
 
-/** @type {readonly Line[]} */
+/** In the order of Opens, the order a line is taken in. @type {readonly Line[]} */
 export const LINES = [
-  { id: 'facts', title: 'Facts', kind: 'pace', step: 126 },
-  { id: 'primes', title: 'Primes', kind: 'pace', step: 126 },
-  { id: 'squares', title: 'Squares', kind: 'pace', step: 126 },
-  { id: 'pi-multiples', title: 'Multiples of π', kind: 'pace', step: 126 },
-  { id: 'prime-multiples', title: 'Prime multiples', kind: 'pace', step: 126 },
-  { id: 'sums', title: 'Sums', kind: 'pace', step: 110 },
-  { id: 'product-3', title: '3 × 3 products', kind: 'product' },
-  { id: 'product-4', title: '4 × 4 products', kind: 'product' },
-  { id: 'estimates', title: 'Estimates', kind: 'estimate' },
-  { id: 'pi-estimates', title: 'π estimates', kind: 'pi' },
-  { id: 'factoring', title: 'Factoring', kind: 'factor' }
+  { id: 'facts', title: 'Facts', kind: 'pace', step: 126, opens: { set: 'multiplication' } },
+  { id: 'sums', title: 'Sums', kind: 'pace', step: 110, opens: { set: 'addition' } },
+  { id: 'primes', title: 'Primes', kind: 'pace', step: 126, opens: { section: 'Number theory' } },
+  { id: 'squares', title: 'Squares', kind: 'pace', step: 126, opens: { section: 'Whole numbers' } },
+  { id: 'pi-multiples', title: 'Multiples of π', kind: 'pace', step: 126, opens: { section: 'Fractions, percent and ratio' } },
+  { id: 'prime-multiples', title: 'Prime multiples', kind: 'pace', step: 126, opens: { section: 'Whole numbers' } },
+  { id: 'product-3', title: '3 × 3 products', kind: 'product', opens: { section: 'Whole numbers' } },
+  { id: 'product-4', title: '4 × 4 products', kind: 'product', opens: { section: 'Whole numbers' } },
+  { id: 'estimates', title: 'Estimates', kind: 'estimate', opens: { section: 'Fractions, percent and ratio' } },
+  { id: 'pi-estimates', title: 'π estimates', kind: 'pi', opens: { section: 'Fractions, percent and ratio' } },
+  { id: 'factoring', title: 'Factoring', kind: 'factor', opens: { section: 'Number theory' } }
 ]
 
 /** @type {readonly LineId[]} */
@@ -52,7 +60,7 @@ export const LINE_IDS = LINES.map(l => l.id)
  * @param {LineId} id
  * @returns {Line}
  */
-export const lineOf = id => LINES.find(l => l.id === id) ?? { id, title: id, kind: 'pace' }
+export const lineOf = id => LINES.find(l => l.id === id) ?? { id, title: id, kind: 'pace', opens: { section: '' } }
 
 /** @param {unknown} v @returns {v is LineId} */
 export const isLineId = v => LINE_IDS.some(id => id === v)

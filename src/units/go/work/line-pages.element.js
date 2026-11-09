@@ -79,7 +79,8 @@ export class GoLinePages extends Screen {
         numbers: page.numbers,
         last: page.played ?? undefined,
         plays: playsAfter(pages, at),
-        keys: e => this.#key(e, at, turn)
+        keys: e => this.#key(e, at, turn),
+        what: 'Line of play'
       }),
       h('p', { key: 'now', class: 'lrn-ss-note', 'aria-live': 'polite' }, pageLine(pages, at)),
       h(

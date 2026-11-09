@@ -52,13 +52,16 @@ export const typed = e =>
 export const ticked = e => e.target instanceof HTMLInputElement && e.target.checked
 
 /**
- * One screen of the account: its date line and its text.
+ * One screen of the account: its date line, the heading focus goes to when the screen is turned,
+ * and its text.
  * @param {import('./decode.logic.js').ScreenData} screen
  * @param {import('./decode.logic.js').HistDate} born
+ * @param {string} key names the screen: each screen's date line is a new node, so focus put on
+ *   it after a turn is never the node that held focus before
  */
-export const screenView = (screen, born) => [
-  h('p', { class: 'lrn-bio-date', tabindex: '-1' }, dateLine(screen.date, born)),
-  h('p', { class: 'lrn-bio-text' }, screen.sentences.map(s => s.text).join(' '))
+export const screenView = (screen, born, key) => [
+  h('h3', { key: `date-${key}`, class: 'lrn-bio-date', tabindex: '-1' }, dateLine(screen.date, born)),
+  h('p', { key: `text-${key}`, class: 'lrn-bio-text' }, screen.sentences.map(s => s.text).join(' '))
 ]
 
 /**

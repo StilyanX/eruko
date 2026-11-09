@@ -4,12 +4,13 @@
 // each shows once answered: the course's two lines with "levels" or "counts" in place of "tests",
 // the first wrong level or count with your answer and the stored one, and the clause under it.
 // What is typed is held by the work list's form; each press sends one event (session.dom.js).
-import { actionsAs, choice } from '../../../parts/study.dom.js'
+import { actionsAs, choice, verdict } from '../../../parts/study.dom.js'
 import { h } from '../../../parts/view.dom.js'
 import {
   NOT_LOADED,
   busy,
   codeBlock,
+  codeSpans,
   errorText,
   examples,
   heading,
@@ -23,11 +24,12 @@ import { send } from '../core/session.dom.js'
 import { RUNNER_DOWN } from '../core/session.logic.js'
 import { VERDICTS, aloneAsks, slotsTyped, witnessAsks } from '../core/track.logic.js'
 import { firstOf, partsOf } from '../core/track-decode.logic.js'
+import { tasksOf } from '../core/track-decode.logic.js'
 
 /**
  * What the track's form holds while an item is answered: the verdict typed at each level, the
  * count table's cells, the program or witness typed.
- * @typedef {{ levels: Record<string, import('../core/track.logic.js').LevelAnswer>, cells: string[][], code: string }} TrackForm
+ * @typedef {{ levels: Record<string, import('../core/track.logic.js').LevelAnswer>, cells: string[][], code: string, lines: string }} TrackForm
  */
 
 /**
@@ -38,8 +40,8 @@ import { firstOf, partsOf } from '../core/track-decode.logic.js'
  */
 export function trackFormOf(kept, unit) {
   /** @type {TrackForm} */
-  const form = { levels: {}, cells: [], code: '' }
-  if (unit === 'alone' || unit === 'witness') return { ...form, code: kept }
+  const form = { levels: {}, cells: [], code: '', lines: '' }
+  if (unit === 'alone' || unit === 'witness' || unit === 'bound') return { ...form, code: kept }
   try {
     const raw = JSON.parse(kept || 'null')
     if (unit === 'verdict' && raw && typeof raw === 'object') form.levels = raw
@@ -57,7 +59,7 @@ export function trackFormOf(kept, unit) {
  * @param {import('../core/track-decode.logic.js').Unit} unit
  */
 export const trackKept = (f, unit) =>
-  unit === 'alone' || unit === 'witness'
+  unit === 'alone' || unit === 'witness' || unit === 'bound'
     ? f.code
     : unit === 'verdict'
       ? Object.keys(f.levels).length
@@ -107,6 +109,14 @@ const clause = names =>
  * @param {string} kind
  */
 const kindLine = (course, kind) => {
+  const task = course.reading.find(t => t.id === kind)
+  const round = task ? tasksOf(course.reading, task.round ?? 0) : []
+  if (task)
+    return h(
+      'p',
+      { class: 'lrn-ss-note', key: 'kind' },
+      `The reading, task ${round.indexOf(task) + 1} of ${round.length}: ${task.name}.`
+    )
   const k = course.track.find(t => t.id === kind)
   return (
     k &&
@@ -132,6 +142,7 @@ export function trackExample(course, kind, day) {
   return [
     heading('Worked example'),
     kindLine(course, kind),
+    stageRules(course, k),
     codeBlock({
       lines: content.example.lines,
       labels: content.example.labels,
@@ -143,12 +154,64 @@ export function trackExample(course, kind, day) {
 }
 
 /**
+ * When a stage that lists its rules opens (stage 7), the list, above its first kind's example.
+ * @param {import('../core/decode.logic.js').Course} course
+ * @param {import('../core/track-decode.logic.js').TrackKind} k
+ */
+function stageRules(course, k) {
+  const rules = course.stages.find(s => s.n === k.stage)?.rules
+  const first = course.track.find(t => t.stage === k.stage) === k
+  return (
+    rules &&
+    first && [
+      label('The rules of this stage'),
+      h(
+        'ul',
+        { key: 'rules' },
+        rules.map(r => h('li', { key: r }, r.replace(/^- /, '')))
+      )
+    ]
+  )
+}
+
+/**
  * The open track kind waits for a fresh item Eruko has not written yet.
  * @param {import('../core/decode.logic.js').Course} course
  * @param {string} kind
  */
 export const trackWaits = (course, kind) =>
-  h('p', null, `${course.track.find(t => t.id === kind)?.name ?? 'This kind'} waits for new items.`)
+  h(
+    'p',
+    null,
+    kind === 'reading'
+      ? 'The next reading opens once Eruko adds its new tasks.'
+      : `${course.track.find(t => t.id === kind)?.name ?? 'This kind'} opens again once Eruko adds new items to it.`
+  )
+
+/**
+ * The gap rule: each task of the reading for which nothing passed its entry check, by name; it is
+ * not read and is left out of the claim.
+ * @param {import('../core/decode.logic.js').Course} course
+ */
+export const readingGaps = (course, round = 0) => {
+  const gaps = course.readingGaps.filter(g => (g.round ?? 0) === round)
+  return (
+    gaps.length > 0 && [
+      label('Not read'),
+      h(
+        'ul',
+        { key: 'gaps' },
+        gaps.map(g =>
+          h(
+            'li',
+            { key: g.n },
+            `Task ${g.n}, ${g.task}: no task passed its entry check, so the reading leaves it out.`
+          )
+        )
+      )
+    ]
+  )
+}
 
 /** @typedef {{ form: TrackForm, set: (change: Partial<TrackForm>) => void, running: boolean, day: string }} Ctx */
 
@@ -159,8 +222,18 @@ export const trackWaits = (course, kind) =>
  * @param {Ctx} ctx
  */
 export function trackItem(course, item, ctx) {
+  const task = course.reading.find(t => t.id === item.kind)
+  if (task && item.unit === 'bound')
+    return [
+      heading(TITLES.bound),
+      kindLine(course, item.kind),
+      tasksOf(course.reading, task.round ?? 0)[0] === task &&
+        !('right' in item) &&
+        readingGaps(course, task.round ?? 0),
+      boundScreen(item, task, ctx)
+    ]
   const content = trackItemNow(item)
-  const k = course.track.find(t => t.id === item.kind)
+  const k = course.track.find(t => t.id === item.kind) ?? task
   if (!k) return h('p', null, NOT_LOADED)
   if (!content) return trackKindNow(item.kind) === 'failed' ? h('p', null, NOT_LOADED) : null
   const judged = 'right' in item ? item : null
@@ -179,7 +252,57 @@ const TITLES = {
   verdict: 'Verdict item',
   count: 'Count item',
   alone: 'Item alone',
-  witness: 'Witness'
+  witness: 'Witness',
+  bound: 'The bound'
+}
+
+/**
+ * A reading task's bound: the task in plain words and the count it bounds, typed before any run;
+ * once answered, the stored count, the library file it comes from and its two derivations.
+ * @param {import('../core/track-decode.logic.js').TrackAsked | import('../core/decode.logic.js').TrackJudged | import('../core/decode.logic.js').TrackWorking} item
+ * @param {import('../core/track-decode.logic.js').ReadingTask} task
+ * @param {Ctx} ctx
+ */
+function boundScreen(item, task, ctx) {
+  const intro = task.intro.map(line => h('p', { key: line }, line))
+  if ('right' in item)
+    return [
+      intro,
+      h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+      h('p', { key: 'given' }, `Your count: ${item.code || 'none'}.`),
+      h('p', { key: 'stored' }, `Stored: ${task.bound.answer}.`),
+      label('Where it comes from'),
+      h('p', { key: 'source' }, task.bound.source),
+      label('Two derivations, written apart'),
+      task.bound.derivations.map((d, i) => h('p', { key: `d${i}` }, d)),
+      next(() => send({ t: 'next' }))
+    ]
+  return [
+    intro,
+    h(
+      'div',
+      { key: 'bound' },
+      h('label', { class: 'label', for: 'cpp-bound' }, `State ${task.bound.count}.`),
+      h('input', {
+        id: 'cpp-bound',
+        class: 'field',
+        inputmode: 'numeric',
+        autocomplete: 'off',
+        '.value': ctx.form.code,
+        oninput: (/** @type {Event} */ e) => {
+          if (e.target instanceof HTMLInputElement) ctx.form.code = e.target.value
+        }
+      })
+    ),
+    actionsAs(
+      'answer',
+      choice({
+        primary: true,
+        label: 'Check',
+        onPress: () => send({ t: 'track-bound', item, typed: ctx.form.code, day: ctx.day })
+      })
+    )
+  ]
 }
 
 /** The six verdicts, in the paper's order. */
@@ -213,7 +336,7 @@ function verdictAsked(item, v, ctx) {
       'answer',
       choice({
         primary: true,
-        label: 'Answer',
+        label: 'Check',
         onPress: () => send({ t: 'track-verdict', item, content: v, typed: f.levels, day: ctx.day })
       })
     )
@@ -327,7 +450,7 @@ const seenLine = s =>
  * @param {string} noun
  */
 const twoLines = (right, passed, total, noun) => [
-  h('p', { key: 'verdict' }, right ? 'Right.' : 'Wrong.'),
+  verdict(right),
   h('p', { key: 'count' }, `${passed} of ${total} ${noun} right.`)
 ]
 
@@ -404,7 +527,7 @@ function countAsked(item, c, ctx) {
       'answer',
       choice({
         primary: true,
-        label: 'Answer',
+        label: 'Check',
         onPress: () => send({ t: 'track-count', item, content: c, typed: f.cells, day: ctx.day })
       })
     )
@@ -516,13 +639,15 @@ function countJudged(item, c, k) {
  * @param {import('../core/track-decode.logic.js').AloneItem} a
  */
 const witnessHow = a =>
-  a.witness.kind === 'input'
-    ? 'Write an input on which the right program and a program that gets this part wrong give different results.'
-    : 'Write lines to add at the end of the program: the right version and a version that gets this part wrong must not both accept them, or both reject them.'
+  a.witness.kind === 'scan'
+    ? "Write a program on which this rule's scan is silent. The scan is loud on the rule's bad example below."
+    : a.witness.kind === 'input'
+      ? 'Write an input on which the right program and a program that gets this part wrong give different results.'
+      : 'Write lines to add at the end of the program: the right version and a version that gets this part wrong must not both accept them, or both reject them.'
 
 /**
  * An item alone or a witness asked: the statement, its examples, then the editor for the
- * program, or the field for the witness; "Submit", and "Stop" while it runs.
+ * program, or the field for the witness; "Check", and "Stop" while it runs.
  * @param {import('../core/track-decode.logic.js').TrackAsked} item
  * @param {import('../core/track-decode.logic.js').AloneItem} a
  * @param {Ctx} ctx
@@ -533,17 +658,35 @@ function aloneAsked(item, a, ctx) {
     h(
       'div',
       { key: 'statement' },
-      a.statement.map(line => h('p', { key: line }, line))
+      a.statement.map(line => h('p', { key: line }, codeSpans(line)))
     ),
     examples(a.examples),
     probesShown(a),
-    witness && [
-      h('p', { key: 'witness-how' }, witnessHow(a)),
-      label('The right version'),
-      codeBlock({ lines: a.reference, numbered: true, name: 'The right version' })
-    ],
+    witness && [h('p', { key: 'witness-how' }, witnessHow(a)), witnessGiven(item, a)],
     !witness && a.form === 'orders' ? ordersFields(a, ctx) : editorField(a, witness, ctx),
+    !witness && linesAsked(a) && linesTyped(a, ctx),
     submitRow(item, a, ctx)
+  ]
+}
+
+/**
+ * What a witness is written against: the right version, or for a stage 7 kind the rule's own
+ * bad example, which its scan flags.
+ * @param {import('../core/track-decode.logic.js').TrackAsked} item
+ * @param {import('../core/track-decode.logic.js').AloneItem} a
+ */
+function witnessGiven(item, a) {
+  const k = trackKindNow(item.kind)
+  if (a.witness.kind === 'scan') {
+    const bad = k && k !== 'failed' ? (k.scan?.bad ?? []) : []
+    return [
+      label("The rule's bad example"),
+      codeBlock({ lines: bad, numbered: true, name: "The rule's bad example" })
+    ]
+  }
+  return [
+    label('The right version'),
+    codeBlock({ lines: a.reference, numbered: true, name: 'The right version' })
   ]
 }
 
@@ -576,14 +719,18 @@ const editorField = (a, witness, ctx) =>
     h(
       'label',
       { class: 'label', for: 'cpp-track-editor' },
-      witness ? (a.witness.kind === 'input' ? 'Your input' : 'Your lines') : 'Your program'
+      witness && a.witness.kind !== 'scan'
+        ? a.witness.kind === 'input'
+          ? 'Your input'
+          : 'Your lines'
+        : 'Your program'
     ),
     h('textarea', {
       id: 'cpp-track-editor',
       class: 'field cpp-editor',
       '.value': ctx.form.code,
       wrap: 'off',
-      rows: witness ? 4 : 14,
+      rows: witness && a.witness.kind !== 'scan' ? 4 : 14,
       spellcheck: 'false',
       autocomplete: 'off',
       autocapitalize: 'none',
@@ -594,7 +741,50 @@ const editorField = (a, witness, ctx) =>
   )
 
 /**
- * "Submit", or while the checks run, what runs and "Stop".
+ * Whether an item alone asks lines typed with the program: a flag item's rejected lines, or the
+ * lines of a reading task's program that use c++23.
+ * @param {import('../core/track-decode.logic.js').AloneItem} a
+ */
+const linesAsked = a => a.form === 'flag' || Boolean(a.newer?.length)
+
+/** @param {string} text "7, 9" */
+const lineNumbers = text =>
+  text
+    .split(/[\s,]+/)
+    .filter(Boolean)
+    .map(Number)
+    .filter(n => Number.isInteger(n) && n > 0)
+
+/**
+ * The lines typed with the program, before the run.
+ * @param {import('../core/track-decode.logic.js').AloneItem} a
+ * @param {Ctx} ctx
+ */
+const linesTyped = (a, ctx) =>
+  h(
+    'div',
+    { key: 'lines' },
+    h(
+      'label',
+      { class: 'label', for: 'cpp-track-lines' },
+      a.form === 'flag'
+        ? 'The lines where the compiler rejects your program, such as 7, 9'
+        : 'The lines of your program that use C++23, such as 7, 9'
+    ),
+    h('input', {
+      id: 'cpp-track-lines',
+      class: 'field',
+      inputmode: 'numeric',
+      autocomplete: 'off',
+      '.value': ctx.form.lines,
+      oninput: (/** @type {Event} */ e) => {
+        if (e.target instanceof HTMLInputElement) ctx.form.lines = e.target.value
+      }
+    })
+  )
+
+/**
+ * "Check", or while the checks run, what runs and "Stop".
  * @param {import('../core/track-decode.logic.js').TrackAsked} item
  * @param {import('../core/track-decode.logic.js').AloneItem} a
  * @param {Ctx} ctx
@@ -614,8 +804,16 @@ function submitRow(item, a, ctx) {
     'answer',
     choice({
       primary: true,
-      label: 'Submit',
-      onPress: () => send({ t: 'track-submit', item, code: ctx.form.code, asks: asks() })
+      label: 'Check',
+      onPress: () =>
+        send({
+          t: 'track-submit',
+          item,
+          code: ctx.form.code,
+          ...(!witness && linesAsked(a) ? { lines: lineNumbers(ctx.form.lines) } : {}),
+          content: a,
+          asks: asks()
+        })
     })
   )
 }
@@ -704,10 +902,11 @@ function aloneJudged(item, a, k) {
  */
 function witnessJudgedView(item, a, k) {
   const r = item.verdict ?? {}
+  if (a.witness.kind === 'scan') return scanWitnessJudged(item, k, r)
   const stopped = r.stopped === true
   const show = (/** @type {string} */ t) => printed(typeof r[t] === 'string' ? r[t] : '', t)
   return [
-    h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+    verdict(item.right),
     stopped
       ? h('p', { key: 'count' }, 'Stopped.')
       : h(
@@ -716,6 +915,7 @@ function witnessJudgedView(item, a, k) {
           h('div', null, label('The right version gave'), show('right_gave')),
           h('div', null, label('The wrong version gave'), show('wrong_gave'))
         ),
+    scanLine(r),
     label('Your witness'),
     printed(item.code, 'Your witness'),
     h(
@@ -732,6 +932,44 @@ function witnessJudgedView(item, a, k) {
         null,
         label('The wrong version'),
         codeBlock({ lines: a.wrong, numbered: true, name: 'The wrong version' })
+      )
+    ),
+    clause(k.clause),
+    next(() => send({ t: 'next' }))
+  ]
+}
+
+/**
+ * A stage 7 witness judged: whether it builds and its scan is silent, your program, and the
+ * rule's own bad and good examples.
+ * @param {import('../core/decode.logic.js').TrackJudged} item
+ * @param {import('../core/track-decode.logic.js').TrackKind} k
+ * @param {Readonly<Record<string, unknown>>} r
+ */
+function scanWitnessJudged(item, k, r) {
+  const own = trackKindNow(k.id)
+  const ex = own && own !== 'failed' ? own.scan : undefined
+  return [
+    h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+    r.stopped === true && h('p', { key: 'count' }, 'Stopped.'),
+    scanLine(r),
+    typeof r.error === 'string' && r.error && errorText(r.error),
+    label('Your witness'),
+    codeBlock({ lines: item.code.split('\n'), numbered: true, name: 'Your witness' }),
+    h(
+      'div',
+      { class: 'cpp-pair', key: 'examples' },
+      h(
+        'div',
+        null,
+        label("The rule's bad example"),
+        codeBlock({ lines: ex?.bad ?? [], numbered: true, name: "The rule's bad example" })
+      ),
+      h(
+        'div',
+        null,
+        label("The rule's good example"),
+        codeBlock({ lines: ex?.good ?? [], numbered: true, name: "The rule's good example" })
       )
     ),
     clause(k.clause),
@@ -759,9 +997,9 @@ function aloneResult(item, a, k, r, stopped) {
   const first = firstOf(r)
   return [
     stopped
-      ? [h('p', { key: 'verdict' }, 'Wrong.'), h('p', { key: 'count' }, 'Stopped.')]
+      ? [verdict(false), h('p', { key: 'count' }, 'Stopped.')]
       : [
-          h('p', { key: 'verdict' }, item.right ? 'Right.' : 'Wrong.'),
+          verdict(item.right),
           h('p', { key: 'count' }, `${field(r, 'passed')} of ${field(r, 'total')} ${noun} passed.`)
         ],
     typeof r.error === 'string' &&
@@ -783,12 +1021,20 @@ function aloneResult(item, a, k, r, stopped) {
       first.report && h('p', { key: 'report' }, `The sanitizer reports ${first.report}.`),
       first.error && errorText(first.error, 'Error text')
     ],
+    scanLine(r),
     label('The reference'),
     codeBlock({ lines: a.reference, numbered: true, name: 'The reference' }),
     clause(k.clause),
     next(() => send({ t: 'next' }))
   ]
 }
+
+/**
+ * A scan's hit on the answer: the rule's number and the line.
+ * @param {Readonly<Record<string, unknown>>} r
+ */
+const scanLine = r =>
+  typeof r.scan === 'string' && h('p', { key: 'scan' }, `The scan of rule ${r.scan}.`)
 
 /** What the screen says while the runner does not answer. */
 export const trackRunnerDown = () => why(RUNNER_DOWN, 'cpp-runner-why')

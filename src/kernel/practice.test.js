@@ -170,7 +170,7 @@ test('the shared record as stored: a field not of its shape reads as not there, 
     list: { a: [{ date: day, right: true, next: day }, { date: 1 }], b: 'x' },
     used: ['a', 3],
     stage: {
-      k1: { form: 0, stage: 2, next: 1, line: 0, problem: 'fade-0-0', streak: 1, shown: true, day },
+      k1: { form: 0, stage: 2, next: 1, line: 0, problem: 'fade-0-0', streak: 1, shown: true, open: true, day },
       k2: { day },
       k3: { form: 0, stage: 9, next: 1, line: 0 },
       k4: { form: 1, stage: 3, next: 2, line: 0, problem: null }
@@ -180,12 +180,13 @@ test('the shared record as stored: a field not of its shape reads as not there, 
     lastKind: { day, kind: 'k1' },
     mix: { day, id: 'a', phase: 'right' },
     pages: { '/p#ideas': 2, '/p#x': 'two' },
-    short: ['k1', null]
+    short: ['k1', null],
+    draft: { k1: 'Every number has a successor.', k2: 4 }
   })
   assert.deepEqual(r.list, { a: [{ date: day, right: true, next: day }] })
   assert.deepEqual(r.used, ['a'])
   assert.deepEqual(r.stage, {
-    k1: { form: 0, stage: 2, next: 1, line: 0, day, problem: 'fade-0-0', streak: 1, shown: true },
+    k1: { form: 0, stage: 2, next: 1, line: 0, day, problem: 'fade-0-0', streak: 1, shown: true, open: true },
     k2: { day },
     k4: { form: 1, stage: 3, next: 2, line: 0, day: '', problem: null }
   })
@@ -195,7 +196,9 @@ test('the shared record as stored: a field not of its shape reads as not there, 
   assert.deepEqual(r.mix, { day, id: 'a', phase: 'right' })
   assert.deepEqual(r.pages, { '/p#ideas': 2 })
   assert.deepEqual(r.short, ['k1'])
+  assert.deepEqual(r.draft, { k1: 'Every number has a successor.' })
   assert.equal(decodePractice({ mix: null }).mix, null)
+  assert.deepEqual(decodePractice({ mix: { day, id: 'a', phase: 'shown' } }).mix, { day, id: 'a', phase: 'shown' })
   assert.equal(decodePractice({ mix: { day, id: 'a', phase: 'solve' } }).mix, undefined)
   assert.equal(decodePractice({ lastKind: 'k1', list: [] }).lastKind, undefined)
 })

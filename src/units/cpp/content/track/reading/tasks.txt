@@ -1,0 +1,9 @@
+1 a field type with the accessor of one precision: the layout, the sectors one warp touches, the bytes per element
+2 a nearest-neighbour operator on a periodic four-dimensional lattice split by parity: a 3 by 3 complex matrix times a 3-vector from each neighbour, in a kernel, with its block size chosen by the counts of blocks per multiprocessor
+3 the same operator split into an interior kernel and a face kernel, the face gathered into a buffer and applied after the interior in a second stream, the sum equal to the result of task 2
+4 a dot product in `double` over `float` data, in a fixed order
+5 a conjugate gradient solve in mixed precision with reliable updates, on the operator of task 2
+6 a two-level cycle on the operator of task 2: aggregates, a coarse operator, a smoother, and the iterations against one level
+7 the last block to arrive reduces the partial sums of the others, through a counter and a fence, with the order and scope of each atomic typed
+8 the host side of a library: a field over `std::mdspan` with a layout policy of your own, kernels constrained by concepts, and a run-time precision turned into template arguments
+9 the storage of numbers: a half-precision or fixed-point field and a compensated sum

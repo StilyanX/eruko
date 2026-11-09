@@ -5,10 +5,10 @@
 // (own.logic.js) share it.
 import { assert } from '../../../kernel/invariant.logic.js'
 import { fail, ok } from '../../../kernel/result.logic.js'
-import { BLACK, WHITE, byPoint, groupAt, place } from './rules.logic.js'
+import { BLACK, WHITE, byPoint, groupAt, parseCoord, place } from './rules.logic.js'
 import { solve } from './solve.logic.js'
 import { reasonFor } from './reasons.logic.js'
-import { boardOf, viewOf, whereOf } from './diagram.logic.js'
+import { boardOf, viewOf } from './diagram.logic.js'
 
 /**
  * @typedef {Readonly<{ diagram: import('./diagram.logic.js').StoredDiagram, region: readonly string[], side: 'B' | 'W', target: string, threats?: import('./solve.logic.js').Threats, beyond?: 'both' }>} Drawing The position a problem is built from
@@ -161,21 +161,27 @@ function koChanges({ board, side, target, threats, options, s }) {
 }
 
 /**
- * The group asked about, by where it stands; by a point of it when the diagram holds another
- * group of its colour.
+ * The group asked about, named by its stone on the highest row and, of those, the leftmost, as
+ * "the white group that includes C2" names it, a lone stone too.
  * @param {Search} found
- * @param {import('./diagram.logic.js').StoredDiagram} diagram
  */
-function groupOf({ board, target, name, s }, diagram) {
+function groupOf({ board, target, name, s }) {
   const group = groupAt(board, target)
   /** @type {import('./decode.logic.js').Colour} */
   const colour = s.defender === BLACK ? 'black' : 'white'
-  const alone = (colour === 'black' ? diagram.black : diagram.white).length === group.stones.length
-  // groupAt holds the stone it starts from, so a group has a first stone
-  const at = group.stones.map(name).sort(byPoint)[0] ?? name(target)
-  const where = whereOf(diagram)
-  return { colour, at, where: alone ? `${/ side$/.test(where) ? 'on' : 'in'} the ${where}` : null }
+  return { colour, at: namingStone(group.stones.map(name)) ?? name(target) }
 }
+
+/**
+ * The stone a group is named by: on the highest row, and of those the leftmost.
+ * @param {readonly string[]} stones
+ */
+const namingStone = stones =>
+  [...stones].sort((a, b) => {
+    const [ax = 0, ay = 0] = parseCoord(a) ?? []
+    const [bx = 0, by = 0] = parseCoord(b) ?? []
+    return by - ay || ax - bx
+  })[0]
 
 /**
  * A problem from a position, or why it makes none. `drawing` is `{ diagram, region, side,
@@ -208,7 +214,7 @@ export function problemFrom(drawing, id, kind, source = 'aether', budget = 3e6) 
     region: region.map(name).sort(byPoint),
     ...(drawing.beyond === 'both' ? { beyond: drawing.beyond } : {}),
     toMove: drawing.side === 'B' ? 'black' : 'white',
-    group: groupOf(found.value, diagram),
+    group: groupOf(found.value),
     ko: koSentence(found.value.threats),
     answers: s.best.map(name).sort(byPoint),
     result: s.result,

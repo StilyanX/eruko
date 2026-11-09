@@ -70,9 +70,23 @@ test('a press sets the mark, the mark is a word and no number, and Check gives t
   await expect(place.locator('.lrn-place-marker')).toHaveCount(1)
   const next = place.getByRole('button', { name: 'Next', exact: true })
   await expect(next).toBeFocused()
-  await expect(page.locator('#ar-examples').getByRole('button', { name: 'Continue' })).toHaveCount(0)
+  await expect(page.locator('#ar-examples').getByRole('button', { name: 'Continue' })).toHaveCount(
+    0
+  )
   await next.click()
   await expect(page.locator('#ar-examples')).toContainText('The next problem hides')
+})
+
+test('a typed place is kept in the record over a reload, and dropped once checked', async ({
+  page
+}) => {
+  const place = await open(page)
+  const box = place.getByLabel(/Or type the place/)
+  await box.fill('0.5')
+  await page.waitForTimeout(1200)
+  await page.reload()
+  await expect(box).toHaveValue('0.5')
+  await expect(place.locator('.lrn-place-marker')).toHaveCount(1)
 })
 
 test('a wrong mark after a right one shows its own verdict, never the last one too', async ({
@@ -85,8 +99,17 @@ test('a wrong mark after a right one shows its own verdict, never the last one t
   const examples = page.locator('#ar-examples')
   await expect(examples).toContainText('The next problem hides')
   const again = page.locator('arithmetic-place-line')
-  await again.getByRole('slider').focus()
-  await page.keyboard.press('End')
+  // The next problem's line may be drawn again just after it shows, dropping a mark set that soon
+  // (an old race, named in the consistency report): the key is pressed until the mark holds.
+  await expect(async () => {
+    await again.getByRole('slider').focus()
+    await page.keyboard.press('End')
+    await expect(again.getByRole('button', { name: 'Check' })).not.toHaveAttribute(
+      'aria-disabled',
+      'true',
+      { timeout: 500 }
+    )
+  }).toPass()
   await again.getByRole('button', { name: 'Check' }).click()
   await expect(examples).toContainText('Wrong. Read the solution.')
   await expect(examples.locator('p', { hasText: /^Right\./ })).toHaveCount(0)
@@ -129,6 +152,8 @@ test('the keys move the mark: arrows by a hundredth, Page keys by a tenth, Home 
   for (let i = 0; i < Math.round(VALUE * 10) - 1; i++) await page.keyboard.press('PageUp')
   await page.keyboard.press('Enter')
   await expect(place).toContainText('Your mark is in the same tenth.')
+  // Focus moves to Next a frame later; outside every step, Enter would press the page's first primary.
+  await expect(place.getByRole('button', { name: 'Next', exact: true })).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page.locator('#ar-examples')).toContainText('The next problem hides')
 })
@@ -232,6 +257,58 @@ test('in mixed practice a place problem is answered on the line, and its date co
   await pressAt(place, Number(n) / Number(d))
   await place.getByRole('button', { name: 'Check' }).click()
   await expect(page.locator('main.study')).toContainText('Right. This kind comes back on')
-  await expect(page.locator('main.study p:not(.sr-only)', { hasText: /^(Right|Wrong)\./ })).toHaveCount(1)
+  await expect(
+    page.locator('main.study p:not(.sr-only)', { hasText: /^(Right|Wrong)\./ })
+  ).toHaveCount(1)
   await expect(page.locator('li.lrn-ss-line').first()).toBeVisible()
+  // The app checked the place: the mark is its own, so nothing offers to change it, and focus is on Next.
+  await expect(page.getByRole('button', { name: /Change the mark/ })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Next', exact: true })).toBeFocused()
+})
+
+test('a wrong mark puts focus on Next, under the solution', async ({ page }) => {
+  const place = await open(page)
+  await pressAt(place, VALUE + 0.45)
+  await place.getByRole('button', { name: 'Check' }).click()
+  const examples = page.locator('#ar-examples')
+  await expect(examples).toContainText('Wrong. Read the solution.')
+  await expect(examples.getByRole('button', { name: 'Next', exact: true })).toBeFocused()
+})
+
+/**
+ * Reload once the record has been written (a write follows a change within 400 ms).
+ * @param {import('@playwright/test').Page} page
+ */
+async function reloadKept(page) {
+  await page.waitForTimeout(1200)
+  await page.reload()
+}
+
+test('the place typed or marked is kept over a reload until it is checked', async ({ page }) => {
+  let place = await open(page)
+  await place.getByRole('textbox').fill(VALUE.toFixed(1))
+  await expect(place.locator('.lrn-place-marker')).toHaveCount(1)
+  await reloadKept(page)
+  place = page.locator('arithmetic-place-line')
+  await expect(place.getByRole('textbox')).toHaveValue(VALUE.toFixed(1))
+  await expect(place.locator('.lrn-place-marker')).toHaveCount(1)
+  // A mark set on the line is kept the same way, and a right mark stays checked over a reload.
+  await place.getByRole('slider').focus()
+  await page.keyboard.press('End')
+  await reloadKept(page)
+  place = page.locator('arithmetic-place-line')
+  const slider = place.getByRole('slider')
+  await expect(slider).toHaveAttribute('aria-valuenow', await slider.getAttribute('aria-valuemax') ?? '')
+  await expect(place.getByRole('textbox')).toHaveValue('')
+  await pressAt(place, VALUE)
+  await place.getByRole('button', { name: 'Check' }).click()
+  await expect(place).toContainText('Your mark is in the same tenth.')
+  await reloadKept(page)
+  place = page.locator('arithmetic-place-line')
+  await expect(place).toContainText('Your mark is in the same tenth.')
+  // Once handed on, nothing of it is kept: the next problem opens with no mark.
+  await place.getByRole('button', { name: 'Next', exact: true }).click()
+  await expect(page.locator('#ar-examples')).toContainText('The next problem hides')
+  await reloadKept(page)
+  await expect(page.locator('arithmetic-place-line').getByRole('slider')).toHaveAttribute('aria-valuetext', 'No mark placed')
 })

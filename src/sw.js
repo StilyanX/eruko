@@ -65,7 +65,8 @@ worker.addEventListener('install', event => {
       Promise.all([
         // The page itself, fresh: the first visit never passed through this worker. Not reached
         // now, it is kept on the next visit online.
-        cache.add(SHELL).then(
+        // Past the browser's own copy too: a host may let it keep the page for minutes.
+        cache.add(new Request(SHELL, { cache: 'no-cache' })).then(
           () => true,
           () => false
         ),

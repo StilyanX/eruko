@@ -37,14 +37,17 @@ export function studyStore() {
 }
 
 /**
- * Mark maths wider than its line as a scrollable, focusable region (WCAG 1.4.10, 2.1.1).
+ * Mark maths wider than its line as a scrollable, focusable region (WCAG 1.4.10, 2.1.1), read as
+ * the formula it holds and described as scrolling sideways.
  * @param {Element | null | undefined} el
  */
 export function markWide(el) {
   el?.querySelectorAll('math:not([tabindex])').forEach(m => {
     const line = m.closest('p, li, div')
-    if (m instanceof MathMLElement && line && m.getBoundingClientRect().width > line.clientWidth)
+    if (m instanceof MathMLElement && line && m.getBoundingClientRect().width > line.clientWidth) {
       m.tabIndex = 0
+      m.setAttribute('aria-description', 'Formula, scrolls sideways')
+    }
   })
 }
 
@@ -154,7 +157,9 @@ export const choice = p =>
  * the right, under the one sentence that says what counts as right. Given `onWrong`/`onRight`,
  * one press marks. Given `value`/`onChange`, the mark is one of many kept until a later Done: a
  * pair of choices named `name`, arrow keys moving between them. `labels` names the pair where
- * the step's own words differ (a witness that is contested or agrees).
+ * the step's own words differ (a witness that is contested or agrees). `labelledBy` names the
+ * pair by the ids of what it marks, where many marks stand on one page, its sentence then its
+ * description.
  * @param {{
  *   when: string,
  *   onWrong?: () => void,
@@ -162,6 +167,7 @@ export const choice = p =>
  *   value?: boolean | null,
  *   onChange?: (right: boolean) => void,
  *   name?: string,
+ *   labelledBy?: string,
  *   disabled?: boolean,
  *   why?: string,
  *   labels?: [string, string]
@@ -169,7 +175,8 @@ export const choice = p =>
  */
 export function mark(p) {
   const [no, yes] = p.labels ?? ['Wrong', 'Right']
-  const legend = h('legend', { class: 'label' }, p.when)
+  const by = p.labelledBy && p.name ? `${p.name}-when` : undefined
+  const legend = h('legend', { class: 'label', id: by }, p.when)
   /** @type {[string, boolean][]} */
   const pair = [
     [no, false],
@@ -179,7 +186,9 @@ export function mark(p) {
   if (onChange)
     return h(
       'fieldset',
-      { class: 'mark' },
+      by
+        ? { class: 'mark', 'aria-labelledby': p.labelledBy, 'aria-describedby': by }
+        : { class: 'mark' },
       legend,
       h(
         'div',

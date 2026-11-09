@@ -145,7 +145,7 @@ Expect:
 
 struct Buffer {
     std::unique_ptr<int> value;
-    Buffer(int v) : value {new int {v}}
+    Buffer(int v) : value(new int {v})
     {
     }
     Buffer(Buffer&& other) = default;
@@ -172,7 +172,7 @@ int main()
 
 struct Buffer {
     std::unique_ptr<int> value;
-    Buffer(int v) : value {new int {v}}
+    Buffer(int v) : value(new int {v})
     {
     }
     Buffer(Buffer&& other) = default;

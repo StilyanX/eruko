@@ -33,6 +33,8 @@ test('g++ always runs with -pedantic-errors at the stated level; a sanitizer add
   assert.ok(hostArgs({ sanitize: 'thread' }).includes('-fsanitize=thread'))
   assert.equal(badFlag(['-O2', '-ffp-contract=off']), null)
   assert.equal(badFlag(['-fpermissive']), '-fpermissive', 'no flag is added to make an item pass')
+  assert.equal(badFlag(['-Wold-style-cast', '-Xcompiler=-Wvla']), null, 'a scan reads a warning')
+  assert.equal(badFlag(['-Werror']), '-Werror')
 })
 
 test('nvcc takes g++ as its host compiler, the toolkit headers, the device architecture and line information', () => {
@@ -40,7 +42,7 @@ test('nvcc takes g++ as its host compiler, the toolkit headers, the device archi
   assert.deepEqual(a.slice(0, 3), ['-ccbin', '/bin/g++', '-I/cuda/include'])
   assert.ok(
     a.includes('-std=c++20') &&
-      a.includes('-arch=sm_89') &&
+      a.includes('-arch=native') &&
       a.includes('-lineinfo') &&
       a.includes('-fmad=false')
   )
@@ -69,6 +71,12 @@ test("a host sanitizer's report: its tool, its kind and the program's line", () 
     ),
     { tool: 'thread', kind: 'data race', line: 11 }
   )
+  assert.deepEqual(
+    hostReport(
+      'SUMMARY: ThreadSanitizer: lock-order-inversion (potential deadlock) /t/main.cpp:14 in f\n'
+    ),
+    { tool: 'thread', kind: 'lock-order-inversion (potential deadlock)', line: 14 }
+  )
   assert.equal(hostReport('all fine\n'), null)
 })
 
@@ -87,6 +95,11 @@ test("compute-sanitizer's report, by its tool; silent when it counts no error", 
     kind: 'Race reported',
     line: 10
   })
+  assert.equal(
+    deviceReport(race.replace('Error: Race', 'Warning: Race'), 'racecheck')?.kind,
+    'Race reported',
+    'racecheck files a race within a warp as a warning'
+  )
   assert.equal(deviceReport('========= ERROR SUMMARY: 0 errors\n', 'initcheck'), null)
 })
 

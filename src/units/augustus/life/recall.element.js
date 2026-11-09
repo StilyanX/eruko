@@ -3,7 +3,7 @@
 // (session.logic.js). The telling and its marks are kept in the record (`telling`), so a reload
 // or the end of a session loses none of them.
 import { unreachable } from '../../../kernel/invariant.logic.js'
-import { claimVerdict, learningNow, recallItems, yearName } from '../core/next.logic.js'
+import { claimVerdict, claimWhy, learningNow, recallItems, yearName } from '../core/next.logic.js'
 import { tellingOf } from '../core/session.logic.js'
 import { nameSoFar } from '../core/unit.logic.js'
 import { lifeId } from '../core/decode.logic.js'
@@ -39,7 +39,7 @@ function counts(i, life) {
     case 'claim':
       return claimVerdict(i) === 'contested'
         ? {
-            what: `Claim${year} · contested`,
+            what: `Claim${year} · contested${claimWhy(i) ? `: ${claimWhy(i)}` : ''}`,
             say: [['Claim', i.text]],
             by: 'Right when you told the fact, its year if it has one, and the word contested.'
           }
@@ -165,7 +165,11 @@ export class AugustusRecall extends LifeScreen {
         retry ? 'Tell again only the items marked wrong' : 'Check it against the record'
       ),
       retry
-        ? h('p', null, 'For each item, tell it from memory, then show it and mark it.')
+        ? h(
+            'p',
+            null,
+            'For each item, tell it from memory, aloud or on paper, then show it and mark it.'
+          )
         : h(
             'p',
             null,
@@ -198,7 +202,7 @@ export class AugustusRecall extends LifeScreen {
           key: 'next',
           primary: true,
           disabled: firstUnmarked >= 0,
-          why: `Mark every item. Item ${firstUnmarked + 1} of ${shownItems.length} has no mark.`,
+          why: `Mark every item, from item ${firstUnmarked + 1}.`,
           label: 'Done',
           onPress: () => send({ t: retry ? 'retry-done' : 'judge', life })
         })
@@ -231,17 +235,27 @@ export class AugustusRecall extends LifeScreen {
           })
         )
       )
+    const marks = mark({
+      when: c.by,
+      name: `mark-${i.id}`,
+      labelledBy: `au-said-${i.id} au-say-${i.id}`,
+      value: t.marks[i.id] ?? null,
+      onChange: right => send({ t: 'mark', life, item: i.id, right })
+    })
     return h(
       'li',
       { key: i.id },
       h('p', { class: 'lrn-ss-note', id: `au-said-${i.id}`, tabindex: '-1' }, c.what),
-      c.say.map(([field, text]) => h('p', { key: field, class: 'lrn-bio-say' }, field, ': ', text)),
-      mark({
-        when: c.by,
-        name: `mark-${i.id}`,
-        value: t.marks[i.id] ?? null,
-        onChange: right => send({ t: 'mark', life, item: i.id, right })
-      })
+      c.say.map(([field, text], k) =>
+        h(
+          'p',
+          { key: field, class: 'lrn-bio-say', id: k ? undefined : `au-say-${i.id}` },
+          field,
+          ': ',
+          text
+        )
+      ),
+      marks
     )
   }
 }

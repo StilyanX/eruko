@@ -36,7 +36,7 @@ const radios = (name, options, value, onPick) =>
  * @type {Record<import('../kernel/backup.logic.js').BackupError, string>}
  */
 const BACKUP_ERRORS = {
-  'not-backup': 'This file is not an Eruko backup.',
+  'not-backup': 'This file is not an Eruko backup. Choose a file saved with Save a backup file.',
   newer: 'This backup comes from a newer Eruko. Reload the page to update, then load it.',
   empty: 'This backup holds no record, so Eruko loads nothing.'
 }
@@ -77,6 +77,13 @@ export class ShellSettings extends Screen {
         this.ask = null
         this.msg = ''
         this.update()
+        // Closed by a press outside on no control: focus goes back to Settings, as Esc sends it.
+        requestAnimationFrame(() => {
+          const at = document.activeElement
+          const button = document.querySelector('.lv-topbar-button')
+          if (!at || at === document.body || at.id === 'main' || this.contains(at))
+            if (button instanceof HTMLElement) button.focus()
+        })
       }
     })
   }
@@ -144,6 +151,11 @@ export class ShellSettings extends Screen {
       }
     }
     this.update()
+    // The question comes in place of the row pressed: focus goes into it, on the safe answer.
+    requestAnimationFrame(() => {
+      const keep = this.querySelector('.set-ask button')
+      if (keep instanceof HTMLElement) keep.focus()
+    })
   }
 
   /** The head: the title and Close. */
@@ -201,8 +213,8 @@ export class ShellSettings extends Screen {
       ask &&
       h(
         'div',
-        { class: 'set-ask' },
-        h('p', null, ask.text),
+        { class: 'set-ask', role: 'group', 'aria-labelledby': 'set-ask-text' },
+        h('p', { id: 'set-ask-text' }, ask.text),
         h(
           'div',
           { class: 'actions' },

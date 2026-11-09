@@ -1,14 +1,15 @@
 // Hides: the check of a lesson's claims. It shows every sentence of the lesson on one list, under
 // each screen's date line, each open to choice. It then shows each chosen claim that has a witness
 // beside it, and then the decision's shape. Beside each sentence stand the dispute the account's
-// notes record over it and the evidence its page names. A claim with no second account stays unchecked and is
-// not shown. A claim the notes dispute is contested, with no choice. What is chosen is kept in the
+// notes record over it and the evidence its page names. A claim the notes dispute, one no second
+// account holds ("No second account."), or one whose only witness has a stake is contested, with
+// no choice, and says why. What is chosen is kept in the
 // record as it is chosen (the position's `chosen`, `verdicts`, `shape` and `beside`).
 import { checkOf, positionIn } from '../core/lesson.logic.js'
-import { dateLine, forcedContested, pageName } from '../core/next.logic.js'
+import { dateLine, forcedWhy, pageName } from '../core/next.logic.js'
 import { screensOf } from '../core/lives.logic.js'
 import { record, send } from '../core/session.dom.js'
-import { actions, choice, mark, step } from '../../../parts/study.dom.js'
+import { actions, actionsAs, choice, mark, step } from '../../../parts/study.dom.js'
 import { h } from '../../../parts/view.dom.js'
 import { LifeScreen, ticked } from '../core/screens.dom.js'
 
@@ -127,9 +128,13 @@ export class AugustusCheck extends LifeScreen {
       ),
       c.witnessed.map(x => this.#witness(at, x)),
       notes.length > 0 && this.#notes(at, notes, shape),
-      actions(
-        choice({ label: 'Previous', onPress: () => send({ t: 'beside-back', ...at }) }),
+      // a row of its own: the Done just pressed is gone, so focus goes to the first field, never
+      // to a Previous drawn in its place, which Enter by habit would press
+      actionsAs(
+        'beside',
+        choice({ key: 'previous', label: 'Previous', onPress: () => send({ t: 'beside-back', ...at }) }),
         choice({
+          key: 'done',
           primary: true,
           disabled: !judged || (notes.length > 0 && !shape),
           why: judged ? 'Choose a note, or write a new one.' : 'Mark every claim.',
@@ -147,7 +152,7 @@ export class AugustusCheck extends LifeScreen {
    */
   #witness(at, x) {
     const passage = x.passage
-    if (!passage) return null
+    const why = forcedWhy(x)
     const verdict = positionIn(record(), at).verdicts?.[x.id]
     return h(
       'div',
@@ -164,20 +169,24 @@ export class AugustusCheck extends LifeScreen {
       h(
         'div',
         null,
-        h(
-          'p',
-          { class: 'lrn-ss-note' },
-          passage.witness,
-          ', ',
-          passage.written,
-          '. At stake for the writer: ',
-          passage.stake,
-          '.'
-        ),
-        h('p', null, '"', passage.words, '" (in translation)'),
-        passage.note && h('p', { class: 'lrn-ss-note' }, passage.note),
-        forcedContested(x)
-          ? h('p', null, 'Contested.')
+        passage
+          ? [
+              h(
+                'p',
+                { class: 'lrn-ss-note' },
+                passage.witness,
+                ', ',
+                passage.written,
+                '. At stake for the writer: ',
+                passage.stake,
+                '.'
+              ),
+              h('p', null, '"', passage.words, '" (in translation)'),
+              passage.note && h('p', { class: 'lrn-ss-note' }, passage.note)
+            ]
+          : h('p', null, 'No second account.'),
+        why
+          ? h('p', null, 'Contested: ', why, '.')
           : mark({
               labels: ['Contested', 'Agrees'],
               when: 'Does the other account state the same event, date, and person?',

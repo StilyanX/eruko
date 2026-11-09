@@ -5,7 +5,7 @@
 
 /**
  * A course from a test's literal: parts with their items' ids, kinds with their problems.
- * @param {{ parts: { n: number, name: string, items: string[] }[], kinds: { id: number, name: string, after: number[], problems: string[], source?: string, seqs?: string[], term?: string }[] }} course
+ * @param {{ parts: { n: number, name: string, items: string[], cases?: number[] }[], kinds: { id: number, name: string, after: number[], problems: string[], source?: string, seqs?: string[], term?: string }[] }} course
  * @returns {import('../../src/units/go/core/own.logic.js').Course}
  */
 export const courseFrom = course =>

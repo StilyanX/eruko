@@ -14,7 +14,7 @@ import { points } from '../src/units/go/core/review.logic.js'
 const BANNED = /\b(any|easy|simple|hard|difficult|tricky|clearly|obviously|trivially|well done|nice|great|let's|we|usually|might|maybe|alive|killed|unsettled|living dead)\b/i
 const text = [
   ...PROBLEMS.flatMap(p => [p.ko ?? '']),
-  ...RULES_ITEMS.flatMap(i => [i.question, i.rule]),
+  ...RULES_ITEMS.flatMap(i => [...i.cases.map(c => c.question), i.rule]),
   ...KINDS.map(k => k.name),
   ...PARTS.map(p => p.name),
   ...REASONS.map(([, clause]) => clause ?? '')
@@ -40,7 +40,7 @@ test('coordinates take one form: a capital letter A to T without I and a number,
   for (const p of PROBLEMS)
     for (const at of [...p.black, ...p.white, ...p.answers, p.group.at, ...p.solution.lines.flatMap(l => l.moves.map(m => m.at)).filter(/** @param {string | null} a @returns {a is string} */ a => Boolean(a))])
       assert.match(at, /^[A-HJ-T]([1-9]|1[0-9])$/, `${p.id} ${at}`)
-  for (const i of RULES_ITEMS) assert.ok(!/\b[a-hj-t]\d\b/.test(i.question), i.question)
+  for (const c of RULES_ITEMS.flatMap(i => i.cases)) assert.ok(!/\b[a-hj-t]\d\b/.test(c.question), c.question)
 })
 
 test('ko and atari are each defined in exactly one rules item', () => {

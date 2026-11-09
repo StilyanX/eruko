@@ -192,7 +192,7 @@ Expect:
 
 struct Cache {
     std::unique_ptr<int> value;
-    Cache(int v) : value {new int {v}}
+    Cache(int v) : value(new int {v})
     {
     }
     Cache(Cache&& other) = default;
@@ -217,7 +217,7 @@ int main()
 
 struct Cache {
     std::unique_ptr<int> value;
-    Cache(int v) : value {new int {v}}
+    Cache(int v) : value(new int {v})
     {
     }
     Cache& operator=(const Cache& other)

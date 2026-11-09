@@ -8,7 +8,7 @@ import { h } from '../../../parts/view.dom.js'
 import { dayName } from '../../../kernel/days.logic.js'
 import { laterDate } from '../core/next.logic.js'
 import { readingLines } from '../core/readings.logic.js'
-import { HOME, away, heading, seriesName, startText } from '../core/screens.dom.js'
+import { HOME, away, cppView, heading, seriesName, startText } from '../core/screens.dom.js'
 
 /**
  * The Contest screen: the series, its start in the stored zone, and the server's list of
@@ -119,7 +119,7 @@ export const checking = (version, at) => [
  * @param {string} day
  */
 export function nothingLeft(record, day) {
-  const later = laterDate(record, day)
+  const later = laterDate(cppView().course, record, day)
   return [
     h('p', { key: 'none' }, 'Nothing left.'),
     later && h('p', { key: 'later' }, `The next item comes back on ${dayName(later)}.`),
@@ -130,7 +130,6 @@ export function nothingLeft(record, day) {
         'The runner and the contests wait on ',
         h('a', { href: linkTo(`${HOME}/start`) }, 'Start'),
         '.'
-      ),
-    h('p', { key: 'home' }, h('a', { href: linkTo(HOME) }, 'Go to C++ course'))
+      )
   ]
 }

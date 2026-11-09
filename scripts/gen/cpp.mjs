@@ -5,7 +5,8 @@
 //   src/units/cpp/core/course.gen.js     the sections and each kind's name, plan, problem ids and
 //                                        trace id (small: the unit page and the work list read it)
 //   src/units/cpp/content/kNN.gen.js     one per kind folder: its worked example, its trace item
-//                                        with the recorded table, its problems with their tests
+//                                        with the recorded table, its returning traces, its
+//                                        problems with their tests
 // Run after changing a source: node scripts/gen/cpp.mjs (needs g++, and gdb or nix-shell). While
 // kinds are being written, --draft (or CPP_DRAFT=1) skips the one check that a kind holds 10
 // problems; npm run gen runs without it.
@@ -65,7 +66,8 @@ for (const kind of kinds)
       GEN,
       `// From content/kinds/${String(kind.id).padStart(2, '0')}-*/. KIND: the worked example, the trace item (its
 // program, inputs, columns, the table recorded for the first input and what the program prints
-// for the second) and the problems, each with its hidden tests' outputs made by the reference.
+// for the second), its returning traces made the same way from its problems' reference
+// solutions, and the problems, each with its hidden tests' outputs made by the reference.
 // prettier-ignore
 export const KIND = ${JSON.stringify(kind)}
 `
@@ -86,13 +88,22 @@ writeFileSync(
     GEN,
     `// From content/track/. STAGES: the nine stages, each with its book. TRACK: the language track's
 // kinds in track order, each with its stage, part, the kinds it needs, its clauses, its levels and
-// its items' ids.
+// its items' ids. READING: the nine tasks of the track's reading, each with its bound and the kind
+// each of its checks is tagged with (content/t0.gen.js holds their items).
 /** @type {readonly import('./track-decode.logic.js').Stage[]} */
 // prettier-ignore
 export const STAGES = ${JSON.stringify(track.stages)}
 /** @type {readonly import('./track-decode.logic.js').TrackKind[]} */
 // prettier-ignore
 export const TRACK = ${JSON.stringify(track.kinds)}
+/** @type {readonly import('./track-decode.logic.js').ReadingTask[]} */
+// prettier-ignore
+export const READING = ${JSON.stringify(track.reading)}
+// READING_GAPS: the tasks of the paper's nine for which nothing passed its entry check; each is
+// shown by name, not read, and left out of the claim.
+/** @type {readonly Readonly<{ n: number, task: string }>[]} */
+// prettier-ignore
+export const READING_GAPS = ${JSON.stringify(track.gaps)}
 `
   )
 )
@@ -101,7 +112,7 @@ for (const [stage, kindsOf] of Object.entries(track.content))
     path.join(CONTENT, `t${stage}.gen.js`),
     generated(
       GEN,
-      `// From content/track/${stage}/. KINDS: each kind of the stage by its id: its worked example, its
+      `// From content/track/${stage === '0' ? 'reading' : stage}/. KINDS: each kind of the stage by its id: its worked example, its
 // verdict items with what g++ and the sanitizer gave at each level, its count item with the
 // counts recorded, and its items alone with their wrong versions, each through its entry check.
 // prettier-ignore

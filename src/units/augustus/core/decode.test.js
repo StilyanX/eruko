@@ -90,6 +90,17 @@ test('the decoder reads each odd part as empty and keeps a field it does not nam
   assert.equal(decodeLives({ telling: null }).telling, null)
   assert.equal(decodeLives({ telling: { phase: 'tell' } }).telling, null)
   assert.equal(decodeLives({ pair: {} }).pair, undefined)
+  assert.deepEqual(
+    decodeLives({
+      checklist: {
+        note: 'n1',
+        people: ['A', 'B', 'C'],
+        nextNote: { note: 'n2', answers: [true, 'x', false] }
+      }
+    }).checklist?.nextNote,
+    { note: 'n2', answers: [true] },
+    'an odd answer ends the answers, so the question resumes there'
+  )
 })
 
 test('a round an older page ended reads as after its last press: told again while short, else closed', () => {
@@ -107,7 +118,7 @@ test('a round an older page ended reads as after its last press: told again whil
   assert.equal(decodeLives({ telling: done }).telling, null)
 })
 
-test('the last mark and the lesson read again are read, or left out when odd', () => {
+test('the last mark is read, or left out when odd; a lesson read again kept by an older record is dropped', () => {
   const r = decodeLives({
     lastMark: { day: '2026-10-01', life: 'aug', telling: { life: 'aug', phase: 'judge' } },
     reread: { life: 'aug', lesson: 2, screen: 'x' }
@@ -119,9 +130,9 @@ test('the last mark and the lesson read again are read, or left out when odd', (
     recall: null,
     closed: null
   })
-  assert.deepEqual(r.reread, { life: 'aug', lesson: 2, screen: 0 })
+  assert.equal('reread' in r, false)
   const odd = decodeLives({ lastMark: { day: 3 }, reread: {} })
-  assert.deepEqual([odd.lastMark, odd.reread], [undefined, undefined])
+  assert.equal(odd.lastMark, undefined)
 })
 
 test('a chance of yes is read as people write it', () => {

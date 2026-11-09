@@ -8,11 +8,10 @@ import {
   lifeAction,
   inHand,
   nextBuilt,
+  orderList,
   closeStuck,
   dateLine,
-  endRow,
   gateFour,
-  lessonRows,
   pageName,
   pairLives,
   sideBySide,
@@ -22,7 +21,9 @@ import {
   enterRecall,
   claimVerdict,
   forcedContested,
-  unchecked,
+  forcedWhy,
+  claimWhy,
+  WHY,
   levelGate,
   levelLine,
   levelLines,
@@ -44,7 +45,8 @@ import { studyDay } from '../../../kernel/days.logic.js'
 import { decodeLives, lifeId, readChance } from './decode.logic.js'
 
 /** The record as the logic reads it, decoded from what is stored. @param {Record<string, unknown>} [json] */
-const rec = (json = {}) => decodeLives(json)
+/** A record with your field and post typed, so the work list goes past case 6. */
+const rec = (json = {}) => decodeLives({ you: { field: '', rank: '' }, ...json })
 /** The record's items, decoded. @param {unknown[]} list */
 const items = list => rec({ items: list }).items
 /** A note, decoded. @param {Record<string, unknown>} json */
@@ -243,12 +245,12 @@ test('recall asks back forecasts (known ones too), claims, setbacks and rules, n
   )
 })
 
-test('a claim is contested with no choice on a dispute or a witness who served him', () => {
+test('a claim is contested with no choice on a dispute, no second account, or a witness who served him', () => {
   assert.equal(
     forcedContested(sentence({ dispute: 'The sources differ.', passage: passage() })),
     true
   )
-  assert.equal(forcedContested(sentence({ dispute: '', passage: null })), false)
+  assert.equal(forcedContested(sentence({ dispute: '', passage: null })), true)
   assert.equal(
     forcedContested(sentence({ dispute: '', passage: passage({ witness: 'Livy' }) })),
     false
@@ -401,6 +403,14 @@ test('next action: after the last lesson, the level check, then the next-life ch
   assert.equal(lifeAction(checked, COURSE, '2026-10-01').kind, 'next-life')
 })
 
+test('the next-life list: those who share the next note first, each group in the order met', () => {
+  const met = ['A', 'B', 'C', 'D']
+  assert.deepEqual(orderList(met, [false, true, false, true]), ['B', 'D', 'A', 'C'])
+  assert.deepEqual(orderList(['A'], [true]), ['A'])
+  assert.equal(orderList(met), met, 'nothing asked: the order met stands')
+  assert.equal(orderList(met, [true, false]), met, 'under way: the order met stands')
+})
+
 // The record's other rules and the screens' helpers
 
 test('a day joins sessions once, on its first write', () => {
@@ -477,73 +487,21 @@ test('next action: a life closed as stuck no longer gives the stuck screen', () 
   assert.notEqual(lifeAction(closed, course, '2026-10-01').kind, 'stuck')
 })
 
-test('with no second account a claim is unchecked, not contested', () => {
-  const noPassage = sentence({ passage: null, dispute: '' })
-  const noPassageDisputed = sentence({ passage: null, dispute: 'd' })
-  assert.equal(forcedContested(noPassage), false)
-  assert.equal(forcedContested(noPassageDisputed), false)
-  assert.equal(forcedContested(sentence({ passage: passage(), dispute: '' })), false)
-  assert.equal(forcedContested(sentence({ passage: passage(), dispute: 'd' })), true)
+test('a claim is contested with no choice, the first reason that applies: a dispute, no second account, a stake (21.01 <bu-bi-checks> Contested)', () => {
+  assert.equal(forcedWhy(sentence({ passage: null, dispute: '' })), WHY.none)
+  assert.equal(forcedWhy(sentence({ passage: null, dispute: 'd' })), WHY.dispute)
+  assert.equal(forcedWhy(sentence({ passage: passage(), dispute: '' })), null)
+  assert.equal(forcedWhy(sentence({ passage: passage(), dispute: 'd' })), WHY.dispute)
+  assert.equal(forcedWhy(sentence({ passage: passage({ served: true }), dispute: '' })), WHY.stake)
+  assert.equal(forcedContested(sentence({ passage: null, dispute: '' })), true)
 })
 
-test('the unit page lists every lesson by the years it covers, never by its decision', () => {
-  const course = {
-    lives: [{ id: 'augustus', name: 'Augustus', lessons: 3 }],
-    born: { y: -63, m: 9, d: 23 },
-    lessons: [
-      {
-        date: { y: -47, m: 12 },
-        from: -63,
-        question: 'By the end of December 47 BC, has Octavian gone with Caesar?'
-      },
-      { date: { y: -45, m: 1 }, from: -45, question: 'By 1 January 45 BC, has Octavian sailed?' },
-      { date: { y: 13 }, from: -12, question: null }
-    ]
-  }
-  const fresh = lessonRows(course, rec(), '/life')
-  assert.deepEqual(
-    fresh.map(r => [r.title, r.to, r.done]),
-    [
-      ['63 to 47 BC', '/life', false],
-      ['45 BC · age 17', undefined, false],
-      ['12 BC to AD 13', undefined, false]
-    ]
-  )
-  const one = lessonRows(course, rec({ lives: { augustus: { lastLesson: 0 } } }), '/life')
-  assert.deepEqual(
-    one.map(r => [r.title, r.to, r.done]),
-    [
-      ['63 to 47 BC', '/life?lesson=1', true],
-      ['45 BC · age 17', '/life', false],
-      ['12 BC to AD 13', undefined, false]
-    ]
-  )
-  const all = lessonRows(course, rec({ lives: { augustus: { lastLesson: 2 } } }), '/life')
-  assert.deepEqual(all.at(-1), {
-    key: 'lesson-3',
-    title: '12 BC to AD 13',
-    to: '/life?lesson=3',
-    done: true
-  })
-})
-
-test('the unit page ends on one row that opens once every lesson is done', () => {
-  const course = { lives: [{ id: 'augustus', name: 'Augustus', lessons: 3 }], lessons: [] }
-  assert.equal(endRow(course, rec(), '/life').to, undefined)
-  assert.equal(
-    endRow(course, rec({ lives: { augustus: { lastLesson: 1 } } }), '/life').to,
-    undefined
-  )
-  const done = endRow(course, rec({ lives: { augustus: { lastLesson: 2 } } }), '/life', true)
-  assert.deepEqual(done, { key: 'after', title: 'After the last lesson', to: '/life', done: true })
-})
-
-test('a claim with no second account is unchecked, and one saved contested without a witness reads as unchecked', () => {
-  assert.equal(unchecked(sentence({ passage: null })), true)
-  assert.equal(unchecked(sentence({ passage: passage({ witness: 'Livy' }) })), false)
-  assert.equal(claimVerdict(claimOf({ verdict: 'contested', witness: null })), 'unchecked')
-  assert.equal(claimVerdict(claimOf({ verdict: 'contested', witness: 'Livy' })), 'contested')
+test("an older record's unchecked claim reads as contested, no second account holding it", () => {
+  assert.equal(claimVerdict(claimOf({ verdict: 'unchecked', witness: null })), 'contested')
+  assert.equal(claimWhy(claimOf({ verdict: 'unchecked', witness: null })), WHY.none)
+  assert.equal(claimWhy(claimOf({ verdict: 'contested', witness: null, why: WHY.dispute })), WHY.dispute)
   assert.equal(claimVerdict(claimOf({ verdict: 'agrees', witness: 'Livy' })), 'agrees')
+  assert.equal(claimWhy(claimOf({ verdict: 'agrees', witness: 'Livy' })), '')
 })
 
 test('the level check shows five lines in plain words: score, chance of yes, how often yes came true, always 50%, and the counts', () => {
@@ -611,7 +569,7 @@ test('a position past the lesson after the last one done never skips a lesson', 
     lives: { aug: { lastLesson: 0 } },
     position: { life: 'aug', lesson: 999, step: 'situation', screen: 0 }
   }
-  assert.deepEqual(lifeAction(decodeLives(record), COURSE, '2026-10-01'), {
+  assert.deepEqual(lifeAction(rec(record), COURSE, '2026-10-01'), {
     kind: 'lesson',
     life: 'aug',
     lesson: 1
@@ -619,7 +577,7 @@ test('a position past the lesson after the last one done never skips a lesson', 
 })
 
 test('a record whose parts hold other values still gives a next action', () => {
-  const odd = decodeLives({ items: 'x', lives: 5, recall: [], position: 'p', level: 3 })
+  const odd = decodeLives({ you: {}, items: 'x', lives: 5, recall: [], position: 'p', level: 3 })
   assert.deepEqual(lifeAction(odd, COURSE, '2026-10-01'), {
     kind: 'lesson',
     life: 'aug',
@@ -629,7 +587,7 @@ test('a record whose parts hold other values still gives a next action', () => {
   assert.deepEqual(odd.lives, {})
   assert.equal(odd.position, undefined)
   assert.equal(odd.level, undefined)
-  assert.equal(lifeAction(decodeLives(), COURSE, '2026-10-01').kind, 'lesson')
+  assert.equal(lifeAction(rec(), COURSE, '2026-10-01').kind, 'lesson')
 })
 
 test('a life still being learned waits on the day it entered, so Review counts it', () => {
@@ -658,7 +616,7 @@ test('the level check is recorded with no press, once, and its result read back'
     { id: 'f2', life: 'aug', kind: 'forecast', p: 50, answer: 0, score: 0.5 },
     { id: 'f3', life: 'aug', kind: 'forecast', known: true }
   ]
-  const record = decodeLives({ items, lives: { aug: { lastLesson: 2 } } })
+  const record = rec({ items, lives: { aug: { lastLesson: 2 } } })
   const aug = lifeId('aug')
   assert.equal(lifeAction(record, COURSE, '2026-10-01').kind, 'level')
   const checked = recordLevel(record, aug, '2026-10-01')
@@ -722,4 +680,13 @@ test('next action: a later life opened is the life in hand; one closed as stuck 
     lifeAction(rec({ lives: { aug: { stuck: '2026-11-01' } } }), fails, '2026-11-01').kind,
     'next-life'
   )
+})
+
+test('no life in hand: your field and post first (case 6), then the first lesson', () => {
+  const course = { lives: [{ id: 'aug', name: 'A', lessons: 2 }] }
+  assert.deepEqual(lifeAction(decodeLives({}), course, '2026-10-01'), { kind: 'you' })
+  const typed = rec({})
+  assert.deepEqual(lifeAction(typed, course, '2026-10-01'), { kind: 'lesson', life: aug, lesson: 0 })
+  const opened = decodeLives({ lives: { aug: { opened: '2026-10-01' } } })
+  assert.equal(lifeAction(opened, course, '2026-10-01').kind, 'lesson', 'a life opened before needs no form')
 })

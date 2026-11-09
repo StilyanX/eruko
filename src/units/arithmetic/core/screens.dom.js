@@ -70,6 +70,8 @@ export const mixedPractice = bank =>
     '.written': placeWritten,
     '.order': practiceOrder,
     '.proof': proofProblem(PROOF_FORM),
+    // A place on the line is checked by the app: no Change the mark follows it.
+    '.checked': (/** @type {import('../../../kernel/maths-decode.logic.js').BankProblem} */ p) => p.form === PLACE_FORM,
     '.setAnswer': setAnswer,
     '.setForm': setForm,
     '.send': send

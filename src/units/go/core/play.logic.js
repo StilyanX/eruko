@@ -67,7 +67,9 @@ export const gameEnded = (course, games, player, day, practice) => record => {
 
 /**
  * The practice game's count: the learner's count of the board by area against Eruko's count of
- * the server's final board by the same rule. Equal: the game is counted right.
+ * the server's final board by the same rule. The first count checked, right or wrong, sets
+ * `start.counted`, the start gate's; the first right one sets `start.equal`, the first stage's end.
+ * A game whose record does not replay sets neither.
  * @param {import('./decode.logic.js').GameId} id
  * @param {number} typed the learner's count, read by decode.logic.js `readCount`
  * @param {string} day
@@ -80,7 +82,10 @@ export const gameCounted = (id, typed, day) => record => {
   const right = count !== null && typed === count
   return {
     ...record,
-    start: right && !record.start.counted ? { counted: day } : record.start,
+    start: {
+      counted: record.start.counted || (count !== null ? day : ''),
+      equal: record.start.equal || (right ? day : '')
+    },
     position: {
       ...record.position,
       open: { n: 3, step: 'count', game: id, typed, count, right }

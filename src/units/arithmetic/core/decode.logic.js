@@ -1,5 +1,6 @@
 // Hides: how Arithmetic's values from outside its code enter it: its part of the record as stored, read once into its types (the fields every maths unit
-// keeps, then its proofs read and its statements proved, then its end level); its course as generated, its ids made by
+// keeps, then its proofs read and its statements proved, then its end level and the place typed
+// or marked on a number line not yet checked); its course as generated, its ids made by
 // their constructors; a topic's content module as an import of it gives it; and a number line's
 // spec as a figure file gives it.
 import { isRecord } from '../../../kernel/decode.logic.js'
@@ -11,10 +12,30 @@ import { TOPICS } from './course.gen.js'
 import { decodeEnd } from './end-level.logic.js'
 
 /**
- * The learner's Arithmetic record: the fields every maths unit keeps, then each proof read and
- * each statement proved, then the end level (`end`).
- * @typedef {import('../../../kernel/practice.logic.js').PracticeRecord & import('../../../kernel/proofs-decode.logic.js').ProofsRecord & { end?: import('./end-level.logic.js').EndRecord }} ArithmeticRecord
+ * A place on the number line not yet checked: its problem (`key`, its id or
+ * prompt), the mark in hundredths or none, what is typed in the box, and whether a right mark in
+ * fading stands checked before its Next.
+ * @typedef {Readonly<{ key: string, mark: number | null, typed: string, shown?: true }>} PlaceDraft
  */
+
+/**
+ * The learner's Arithmetic record: the fields every maths unit keeps, then each proof read and
+ * each statement proved, then the end level (`end`) and the place not yet checked (`place`,
+ * null once checked).
+ * @typedef {import('../../../kernel/practice.logic.js').PracticeRecord & import('../../../kernel/proofs-decode.logic.js').ProofsRecord & { end?: import('./end-level.logic.js').EndRecord, place?: PlaceDraft | null }} ArithmeticRecord
+ */
+
+/**
+ * A stored place not yet checked, or undefined.
+ * @param {unknown} v
+ * @returns {PlaceDraft | undefined}
+ */
+function placeOf(v) {
+  if (!isRecord(v) || typeof v.key !== 'string' || typeof v.typed !== 'string') return undefined
+  const { mark } = v
+  if (mark !== null && !(typeof mark === 'number' && Number.isInteger(mark) && mark >= 0)) return undefined
+  return { key: v.key, mark, typed: v.typed, ...(v.shown === true ? { shown: true } : {}) }
+}
 
 /**
  * Arithmetic's part of the record as stored, read into its types: a field missing or not of its
@@ -22,11 +43,15 @@ import { decodeEnd } from './end-level.logic.js'
  * @param {import('../../../kernel/decode.logic.js').JsonRecord} json
  * @returns {ArithmeticRecord}
  */
-export const decodeArithmetic = json => ({
-  ...decodePractice(json),
-  ...decodeProofs(json),
-  ...(json.end === undefined ? {} : { end: decodeEnd(json.end) })
-})
+export function decodeArithmetic(json) {
+  const place = placeOf(json.place)
+  return {
+    ...decodePractice(json),
+    ...decodeProofs(json),
+    ...(json.end === undefined ? {} : { end: decodeEnd(json.end) }),
+    ...(place ? { place } : {})
+  }
+}
 
 /**
  * The course's topics in order, as scripts/gen/arithmetic.mjs wrote them, their ids made.

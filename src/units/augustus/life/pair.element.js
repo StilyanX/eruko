@@ -3,7 +3,15 @@
 // second below the width that holds three. The learner types every cell beside the record, then
 // one rule under them that rests only on checked claims; Done, or Enter in a field, saves it. What
 // is typed is kept in the record as it is typed (`pair`, session.logic.js).
-import { claimVerdict, gateFour, restable, sideBySide, yearName } from '../core/next.logic.js'
+import {
+  claimVerdict,
+  claimWhy,
+  dateLine,
+  gateFour,
+  restable,
+  sideBySide,
+  yearName
+} from '../core/next.logic.js'
 import { pairOf } from '../core/session.logic.js'
 import { findLife } from '../core/lives.logic.js'
 import { itemId } from '../core/decode.logic.js'
@@ -29,6 +37,40 @@ const ROWS = [
  */
 const nameOf = (record, id) => record.lives[id]?.name || findLife(id)?.name || 'A life with no name'
 
+/** @typedef {typeof import('../content/era.gen.js').ERA} Era */
+
+/**
+ * At the raised level, the era of a decision of an earlier life: its screens, each under its date
+ * line, marked where they restate the main account, then its map with the list of its places.
+ * @param {import('../core/decode.logic.js').LessonId} lesson
+ * @param {import('../core/decode.logic.js').HistDate | null | undefined} born
+ * @param {Era | null} all the era screens, once loaded
+ */
+function eraView(lesson, born, all) {
+  if (!all) return null
+  const era = Object.entries(all.lessons).find(([k]) => k === lesson)?.[1]
+  const said = new Map(Object.entries(all.sentences))
+  if (!era) return null
+  return h(
+    'div',
+    { key: `era-${lesson}` },
+    h('p', { class: 'lrn-ss-note' }, 'The era at this decision'),
+    era.from === 'main' && h('p', { class: 'lrn-ss-note' }, 'From the main account.'),
+    era.screens.map((sc, k) =>
+      h(
+        'div',
+        { key: k },
+        h('p', { class: 'lrn-bio-date' }, dateLine(sc.date, born ?? null)),
+        h('p', null, sc.sentences.map(id => said.get(id)?.text ?? '').join(' '))
+      )
+    ),
+    era.map && [
+      h('div', { class: 'lrn-bio-map', '.innerHTML': era.map.file, 'aria-hidden': 'true' }),
+      h('ul', null, era.map.alt.map((line, k) => h('li', { key: k }, line)))
+    ]
+  )
+}
+
 export class AugustusPair extends LifeScreen {
   /** The shape note's id. */
   shape = itemId('')
@@ -36,6 +78,8 @@ export class AugustusPair extends LifeScreen {
   widthPx = innerWidth
   /** The third life is in view in place of the second. */
   third = false
+  /** The era screens, loaded once the pair is at the raised level. @type {Era | null} */
+  era = null
 
   setup() {
     super.setup()
@@ -51,6 +95,11 @@ export class AugustusPair extends LifeScreen {
     const pair = pairOf(record(), this.shape)
     if (!pair) return null
     const { shape, draft, lives } = pair
+    if (pair.level === 'raised' && !this.era)
+      void import('../content/era.gen.js').then(m => {
+        this.era = m.ERA
+        this.update()
+      })
     const paged =
       sideBySide(lives.length - draft.extra.length, this.widthPx) < lives.length &&
       !draft.extra.length
@@ -151,7 +200,7 @@ export class AugustusPair extends LifeScreen {
           })
         )
       ),
-      forecasts.map(f =>
+      forecasts.map(f => [
         h(
           'p',
           { key: f.id, class: 'lrn-ss-note' },
@@ -161,8 +210,9 @@ export class AugustusPair extends LifeScreen {
           f.question,
           ' ',
           f.answer ? 'Yes.' : 'No.'
-        )
-      )
+        ),
+        pair.level === 'raised' && eraView(f.lesson, findLife(l)?.born, this.era)
+      ])
     )
   }
 
@@ -190,7 +240,7 @@ export class AugustusPair extends LifeScreen {
                 send({ t: 'rest', shape, claim: c.id, on: ticked(e) })
             }),
             c.text,
-            claimVerdict(c) === 'contested' ? ' (contested)' : ''
+            claimVerdict(c) === 'contested' ? ` (contested${claimWhy(c) ? `: ${claimWhy(c)}` : ''})` : ''
           )
         )
       )

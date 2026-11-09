@@ -84,7 +84,7 @@ for (const theme of [
   const block = theme === "[data-theme='dark']" ? tokens : blockOf(themes, theme)
   const bg = declOf(block, '--bg')
   const ink = declOf(block, '--text')
-  const sel = `html${theme}`.replace(/[[\]]/g, '\\$&')
+  const sel = `html${theme}`.replace(/[[\]\\]/g, '\\$&')
   const rule = html.match(new RegExp(`${sel}[^{]*\\{([^}]*)\\}`))?.[1]
   if (!bg || !ink || !rule) {
     failures.push(`index.html / styles: could not read the ${theme} palette on both sides`)

@@ -8,11 +8,9 @@ import { COURSE } from '../src/units/augustus/core/course.gen.js'
 import { UNIT } from '../src/units/augustus/core/entry.logic.js'
 import { LIVES } from '../src/units/augustus/core/lives.logic.js'
 import {
-  ageAt,
   dateLine,
-  forcedContested,
   pageName,
-  unchecked
+  forcedWhy
 } from '../src/units/augustus/core/next.logic.js'
 
 /** @typedef {(typeof LIVES)[number]['lessons'][number]} Lesson */
@@ -143,12 +141,11 @@ test('each question is answered yes or no by a date, and the coin toss leaves ab
   assert.ok(yes > 0.3 && yes < 0.7, `share of yes ${yes}`)
 })
 
-test('no second account is to hand, so every claim is unchecked', () => {
+test('no second account is to hand, so every claim is contested with no choice', () => {
   assert.equal(life.accounts.second, null)
   for (const s of sentences) {
     assert.equal(s.passage, null, s.text)
-    assert.ok(unchecked(s), s.text)
-    assert.ok(!forcedContested(s), s.text)
+    assert.ok(forcedWhy(s), s.text)
   }
 })
 
@@ -166,38 +163,11 @@ test('the course names every life in reading order, with its number of lessons',
   )
 })
 
-test('the course gives each lesson its date and question, and sections by age band', () => {
-  assert.deepEqual(COURSE.born, life.born)
+test('the course gives each lesson its date and question, and the unit page no section', () => {
   assert.deepEqual(
     COURSE.lessons,
-    life.lessons.map(l => {
-      const head = l.situation[0] ?? l.outcome?.[0]
-      assert.ok(head)
-      return { date: l.date, from: head.date.y, question: l.question?.text ?? null }
-    })
+    life.lessons.map(l => ({ date: l.date, question: l.question?.text ?? null }))
   )
-  // Each section is a run of lessons whose lower date-line age falls in its ten-year band.
-  let next = 1
-  for (const s of COURSE.sections) {
-    assert.equal(s.first, next, s.title)
-    next = s.last + 1
-    // The first band holds ages 0 to 19.
-    assert.match(s.title, s.first === 1 ? /^Birth to age 19$/ : /^Age \d+ to \d+$/)
-    const [lo, hi] = s.first === 1 ? [0, 19] : (s.title.match(/\d+/g) ?? []).map(Number)
-    assert.ok(lo !== undefined && hi !== undefined, s.title)
-    for (let n = s.first; n <= s.last; n++) {
-      /** @type {Lesson | undefined} */
-      const lesson = life.lessons[n - 1]
-      assert.ok(lesson)
-      const age = parseInt(ageAt(lesson.date, life.born))
-      assert.ok(age >= lo && age <= hi, `${s.title}: lesson ${n} is ${age}`)
-    }
-  }
-  assert.equal(next - 1, life.lessons.length)
-  // The last band ends at the age he died at, 75 (19 August AD 14), not at the end of its ten years.
-  assert.equal(COURSE.sections.at(-1)?.title, 'Age 70 to 75')
-})
-
-test("the unit page's last section ends on the life's last lesson", () => {
-  assert.equal(UNIT.sections?.at(-1)?.last, COURSE.lives[0]?.lessons)
+  // The life is one page: its unit page lists no lesson.
+  assert.equal(UNIT.sections, undefined)
 })

@@ -13,8 +13,10 @@ import {
   exampleRead,
   firstKindsRetired,
   firstRunPart,
+  kindGives,
   kindOf,
   laterDate,
+  traceOn,
   waitsForProblems,
   mixedDraw,
   nextAction,
@@ -46,7 +48,7 @@ const typed = value => /** @type {T} */ (value)
 const day = '2026-10-08'
 const course = courseFrom(
   [
-    { title: 'First kinds', first: 1, last: 2 },
+    { title: 'Whole programs', first: 1, last: 2 },
     { title: 'Kinds after', first: 3, last: 3 }
   ],
   [
@@ -158,7 +160,7 @@ test("the first run's parts in order: start, example, trace, parsons, alone; eac
   ])
 })
 
-test('gate 1: the trace item and the problem alone write a line, the Parsons problem none', () => {
+test('gate 1: the trace item writes a line, the problem alone one only when wrong, the Parsons problem none', () => {
   let r = setUp()
   for (let i = 0; i < 5; i++) r = work(r, day, false)
   assert.deepEqual(Object.keys(r.recall).sort(), ['1.02', 'T1'])
@@ -169,10 +171,11 @@ test('gate 1: the trace item and the problem alone write a line, the Parsons pro
   assert.deepEqual(nextAction(course, r, day), { n: 5, step: 'parsons', id: '1.03', kind: 1 })
   r = work(r, day, false)
   assert.deepEqual(nextAction(course, r, day), { n: 5, step: 'alone', id: '1.04', kind: 1 })
-  // the problem alone right writes its line too, since it retires the kind
+  // the problem alone right writes none of its own; the kind retires, its first line that day, right
   r = work(r, day, true)
-  assert.equal(r.recall['1.04']?.[0]?.right, true)
+  assert.equal(r.recall['1.04'], undefined)
   assert.equal(kindLine(r, kindId(1))?.retired, day)
+  assert.deepEqual(r.recall.K1, [{ date: day, right: true, next: '2026-10-09' }])
 })
 
 test('an answer is held open with its verdict until Next; the submit is kept with its program', () => {
@@ -195,18 +198,119 @@ test('an answer is held open with its verdict until Next; the submit is kept wit
 
 test("a submit older than the item's latest dated line drops its program", () => {
   let r = retiredTo(1)
-  const on = '2026-10-09'
-  // the problem alone and the trace item are due the next day, the problem first
-  assert.deepEqual(nextAction(course, r, on), { n: 2, step: 'recall', id: '1.02', kind: 1 })
+  const [on, after] = ['2026-10-09', '2026-10-10']
   /** @type {import('./decode.logic.js').Asked} */
-  const recall = { n: 2, step: 'recall', id: itemId('1.02'), kind: kindId(1) }
-  r = answered(course, r, { item: recall, right: true, code: 'later', verdict: pass, day: on })
+  const recall = { n: 2, step: 'recall', id: itemId('1.03'), kind: kindId(1) }
+  assert.deepEqual(nextAction(course, r, on), recall)
+  r = answered(course, r, { item: recall, right: false, code: 'first', verdict: fail, day: on })
+  r = answered(course, r, { item: recall, right: false, code: 'later', verdict: fail, day: after })
   assert.deepEqual(
-    r.runs.filter(x => x.id === '1.02'),
+    r.runs.filter(x => x.id === '1.03'),
     [
-      { id: '1.02', date: day, passed: 3, total: 3 },
-      { id: '1.02', date: on, passed: 3, total: 3, code: 'later' }
+      { id: '1.03', date: on, passed: 1, total: 3 },
+      { id: '1.03', date: after, passed: 1, total: 3, code: 'later' }
     ]
+  )
+})
+
+test("Kind's return: a retired kind is due, not its problem; it gives a never-tried problem, a first try of mixed practice, and right writes the kind's line alone", () => {
+  let r = retiredTo(1)
+  const on = '2026-10-09'
+  // the kind and its trace are due the next day, the kind first; the problem alone is not
+  assert.deepEqual(dueToday(course, r, on), ['K1', 'T1'])
+  assert.equal(kindGives(course.kinds[0] ?? assert.fail(), r), '1.03')
+  r = work(r, on, true)
+  assert.deepEqual(r.recall.K1?.at(-1), { date: on, right: true, next: r.recall.K1?.at(-1)?.next })
+  assert.ok((r.recall.K1?.at(-1)?.next ?? '') > on, 'the kind comes back by the return rule')
+  assert.equal(r.recall['1.03'], undefined, 'a never-tried problem right writes no line of its own')
+  assert.deepEqual(r.tries.at(-1), { id: '1.03', date: on, right: true, mixed: true })
+  // the problem itself does not come back: the kind's next return gives a fresh one
+  assert.deepEqual(dueToday(course, r, on), ['T1'])
+  assert.equal(kindGives(course.kinds[0] ?? assert.fail(), r), '1.04')
+})
+
+test("Kind's return wrong: the problem and its kind come back the next day, the kind giving that problem; right, the kind moves on", () => {
+  let r = work(retiredTo(1), '2026-10-09', false)
+  assert.equal(r.recall['1.03']?.at(-1)?.next, '2026-10-10')
+  assert.equal(r.recall.K1?.at(-1)?.next, '2026-10-10')
+  // the trace, due since the day before, comes first
+  assert.deepEqual(dueToday(course, r, '2026-10-10'), ['T1', 'K1'])
+  r = work(r, '2026-10-10', true)
+  assert.deepEqual(nextAction(course, r, '2026-10-10'), {
+    n: 2,
+    step: 'recall',
+    id: '1.03',
+    kind: 1
+  })
+  r = work(r, '2026-10-10', true)
+  assert.equal(r.recall['1.03']?.length, 1, 'right writes no line of its own')
+  assert.equal(kindGives(course.kinds[0] ?? assert.fail(), r), '1.04')
+  assert.ok(!dueToday(course, r, '2026-10-11').includes('1.03'))
+})
+
+test('a problem answered wrong in mixed practice makes its retired kind due the next day, before its own date', () => {
+  const r = retiredTo(2)
+  const kind1 = {
+    ...r,
+    recall: { ...r.recall, K1: [{ date: day, right: true, next: '2026-11-01' }] }
+  }
+  /** @type {import('./decode.logic.js').Mixed} */
+  const item = { n: 4, step: 'mixed', id: problemId('1.03'), kind: kindId(1) }
+  const wrong = answered(course, kind1, { item, right: false, code: '', verdict: fail, day })
+  assert.equal(wrong.recall.K1?.length, 1, "mixed practice writes no kind's line")
+  assert.ok(dueToday(course, wrong, '2026-10-09').includes('K1'))
+  assert.equal(kindGives(course.kinds[0] ?? assert.fail(), wrong), '1.03')
+})
+
+test('while its first run is open, a problem answered wrong comes back alone; right, it writes nothing and is not due again', () => {
+  let r = setUp()
+  for (let i = 0; i < 5; i++) r = work(r, day, i < 4)
+  assert.equal(kindLine(r, kindId(1))?.retired, '')
+  const on = '2026-10-09'
+  assert.deepEqual(dueToday(course, r, on), ['1.02', 'T1'])
+  r = work(r, on, true)
+  assert.equal(r.recall['1.02']?.length, 1)
+  assert.equal(r.recall.K1, undefined)
+  assert.deepEqual(dueToday(course, r, on), ['T1'])
+})
+
+test("Kind's return with every problem tried: the one seen longest ago, a tie to the earlier", () => {
+  const kind = course.kinds[1] ?? assert.fail()
+  const tries = [
+    { id: '2.01', date: '2026-10-03', right: true, mixed: true },
+    { id: '2.02', date: '2026-10-01', right: true, mixed: true },
+    { id: '2.03', date: '2026-10-01', right: true, mixed: true }
+  ]
+  const r = recordOf({ tries }, course)
+  assert.equal(kindGives(kind, r), '2.02')
+  const runs = [{ id: '2.02', date: '2026-10-05', passed: 3, total: 3 }]
+  assert.equal(kindGives(kind, recordOf({ tries, runs }, course)), '2.03')
+})
+
+test("Trace per kind: the first run on the kind's trace; right on an earlier day, the next program, round again; wrong, the same", () => {
+  const trace = (/** @type {string} */ id) => typed({ id, lines: [id] })
+  /** @type {import('./decode.logic.js').KindContent} */
+  const content = typed({ trace: trace('own'), traces: [trace('a'), trace('b')] })
+  const at = (/** @type {boolean[]} */ ...rights) =>
+    traceOn(
+      content,
+      rights.map((right, i) => ({ date: `2026-10-0${i + 1}`, right, next: '' })),
+      day
+    ).lines[0]
+  assert.equal(at(), 'own')
+  assert.equal(at(true), 'a')
+  assert.equal(at(true, false), 'a')
+  assert.equal(at(true, false, true), 'b')
+  assert.equal(at(true, true, true), 'own')
+  // the day's own answer does not move it, so the judged trace is the one answered
+  assert.equal(traceOn(content, [{ date: day, right: true, next: '' }], day).lines[0], 'own')
+  assert.equal(
+    traceOn(
+      { trace: trace('own'), traces: [] },
+      [{ date: '2026-10-01', right: true, next: '' }],
+      day
+    ).lines[0],
+    'own'
   )
 })
 
@@ -364,7 +468,8 @@ test('a problem refused under the runtime is not used: not drawn, not due, its d
     about,
     [problemId('1.01')]
   )
-  assert.deepEqual(dueToday(course, r, day), ['1.02'])
+  assert.deepEqual(dueToday(course, r, day), ['K1'])
+  assert.equal(kindGives(course.kinds[0] ?? assert.fail(), r), '1.02')
   assert.deepEqual(untried(course.kinds[0] ?? assert.fail(), r), ['1.02', '1.03', '1.04', '1.05'])
   assert.deepEqual(mixedDraw(course, r), { n: 4, step: 'mixed', id: '1.02', kind: 1 })
   assert.deepEqual(r.recall['1.01'], lines)
@@ -379,6 +484,8 @@ test('the contest day, once the start gate is open; the first date an item comes
   assert.equal(contestToday(course, typedNext, '2026-10-09'), false)
   assert.equal(contestToday(course, nextTyped(retired, '2026-10-10T13:00'), '2026-10-10'), false)
   assert.equal(contestToday(course, setUp(), '2026-10-10'), false)
+  // on it the contest is all that waits today
+  assert.equal(waitingToday(course, typedNext, '2026-10-10'), 1)
   // the contest's day is read in the stored zone: past there, though not yet on the device
   assert.deepEqual(nextAction(course, typedNext, '2026-10-10', '2026-10-11'), {
     n: 1,
@@ -390,8 +497,8 @@ test('the contest day, once the start gate is open; the first date an item comes
     { recall: { 1.01: lines('2026-10-12'), T1: lines('2026-10-09'), 1.02: lines(day) } },
     course
   )
-  assert.equal(laterDate(r, day), '2026-10-09')
-  assert.equal(laterDate(r, '2026-10-12'), '')
+  assert.equal(laterDate(course, r, day), '2026-10-09')
+  assert.equal(laterDate(course, r, '2026-10-12'), '')
 })
 
 test('an open kind with no never-tried problem left waits for new problems: case 5 has nothing, case 4 takes the turn, its row says so', () => {

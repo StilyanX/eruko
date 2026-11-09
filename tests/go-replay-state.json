@@ -81,8 +81,8 @@
    ]
   },
   {
-   "opened": "2026-10-04",
-   "retired": "2026-10-04",
+   "opened": "2026-10-01",
+   "retired": "2026-10-01",
    "kind": 6,
    "after": [
     1,
@@ -91,8 +91,8 @@
    ]
   },
   {
-   "opened": "2026-10-04",
-   "retired": "2026-10-04",
+   "opened": "2026-10-01",
+   "retired": "2026-10-01",
    "kind": 7,
    "after": [
     1,
@@ -100,8 +100,8 @@
    ]
   },
   {
-   "opened": "2026-10-04",
-   "retired": "2026-10-04",
+   "opened": "2026-10-01",
+   "retired": "2026-10-01",
    "kind": 8,
    "after": [
     1,
@@ -135,7 +135,7 @@
   },
   {
    "opened": "2026-10-04",
-   "retired": "",
+   "retired": "2026-10-04",
    "kind": 17,
    "after": [
     1,
@@ -143,8 +143,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 11,
    "after": [
     1,
@@ -155,14 +155,14 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 12,
    "after": []
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 21,
    "after": [
     1,
@@ -176,8 +176,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 13,
    "after": [
     1,
@@ -193,8 +193,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 14,
    "after": [
     1,
@@ -208,8 +208,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 15,
    "after": [
     1,
@@ -222,8 +222,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 16,
    "after": [
     1,
@@ -235,8 +235,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 18,
    "after": [
     2,
@@ -245,8 +245,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 19,
    "after": [
     1,
@@ -262,8 +262,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 20,
    "after": [
     1,
@@ -278,8 +278,8 @@
    ]
   },
   {
-   "opened": "",
-   "retired": "",
+   "opened": "2026-10-04",
+   "retired": "2026-10-04",
    "kind": 22,
    "after": [
     1,
@@ -301,450 +301,443 @@
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
-   },
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-09"
-   }
-  ],
-  "R1.2": [
-   {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
-   },
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-09"
-   }
-  ],
-  "R1.3": [
-   {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 1
    },
    {
     "date": "2026-10-04",
     "right": true,
-    "next": "2026-10-07"
+    "next": "2026-10-07",
+    "case": 1
    }
   ],
   "R1.4": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R1.5": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R1.6": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": false,
+    "next": "2026-10-05",
+    "case": 0
    }
   ],
   "R1.7": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-07"
+    "right": false,
+    "next": "2026-10-05",
+    "case": 0
    }
   ],
   "R2.1": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R2.2": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R2.3": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-10",
+    "case": 0
    }
   ],
   "R2.4": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
     "right": true,
-    "next": "2026-10-07"
+    "next": "2026-10-07",
+    "case": 0
    }
   ],
   "R2.5": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R2.6": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R2.7": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-10",
+    "case": 0
    }
   ],
   "R2.8": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
+    "right": true,
+    "next": "2026-10-07",
+    "case": 0
    }
   ],
   "R3.1": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R3.2": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R3.3": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-10",
+    "case": 0
    }
   ],
   "R3.4": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
     "right": true,
-    "next": "2026-10-07"
+    "next": "2026-10-07",
+    "case": 0
    }
   ],
   "R4.1": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R4.2": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R4.3": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": false,
+    "next": "2026-10-05",
+    "case": 0
    }
   ],
   "R5.1": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-07"
+    "right": false,
+    "next": "2026-10-05",
+    "case": 0
    }
   ],
   "R5.2": [
    {
     "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
+    "right": true,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R5.3": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-09",
+    "case": 0
    }
   ],
   "R5.4": [
    {
     "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "right": false,
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04",
+    "case": 0
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-10",
+    "case": 0
    }
   ],
   "R5.5": [
    {
     "date": "2026-10-01",
     "right": true,
-    "next": "2026-10-02"
+    "next": "2026-10-02",
+    "case": 0
    },
    {
     "date": "2026-10-02",
     "right": false,
-    "next": "2026-10-03"
+    "next": "2026-10-03",
+    "case": 0
    },
    {
     "date": "2026-10-04",
     "right": true,
-    "next": "2026-10-07"
-   }
-  ],
-  "1.2": [
-   {
-    "date": "2026-10-01",
-    "right": false,
-    "next": "2026-10-02"
-   },
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-04"
-   },
-   {
-    "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
-   }
-  ],
-  "1.3": [
-   {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
-   },
-   {
-    "date": "2026-10-02",
-    "right": false,
-    "next": "2026-10-03"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-07"
-   }
-  ],
-  "2.2": [
-   {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
-   },
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-07",
+    "case": 0
    }
   ],
   "3.2": [
    {
     "date": "2026-10-01",
-    "right": true,
+    "right": false,
     "next": "2026-10-02"
    },
    {
     "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-09"
+    "next": "2026-10-04"
    }
   ],
-  "4.2": [
+  "6.2": [
    {
     "date": "2026-10-01",
     "right": false,
@@ -754,19 +747,42 @@
     "date": "2026-10-02",
     "right": true,
     "next": "2026-10-04"
-   },
+   }
+  ],
+  "k1": [
    {
-    "date": "2026-10-04",
+    "date": "2026-10-02",
     "right": true,
-    "next": "2026-10-10"
+    "next": "2026-10-09"
+   }
+  ],
+  "k2": [
+   {
+    "date": "2026-10-02",
+    "right": true,
+    "next": "2026-10-09"
+   }
+  ],
+  "k3": [
+   {
+    "date": "2026-10-02",
+    "right": true,
+    "next": "2026-10-09"
    }
   ],
   "4.3": [
    {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
+    "date": "2026-10-02",
+    "right": false,
+    "next": "2026-10-03"
    },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-06"
+   }
+  ],
+  "k4": [
    {
     "date": "2026-10-02",
     "right": false,
@@ -778,152 +794,69 @@
     "next": "2026-10-07"
    }
   ],
-  "5.2": [
-   {
-    "date": "2026-10-01",
-    "right": true,
-    "next": "2026-10-02"
-   },
+  "k5": [
    {
     "date": "2026-10-02",
     "right": true,
     "next": "2026-10-09"
    }
   ],
+  "k6": [
+   {
+    "date": "2026-10-02",
+    "right": true,
+    "next": "2026-10-09"
+   }
+  ],
+  "k7": [
+   {
+    "date": "2026-10-02",
+    "right": true,
+    "next": "2026-10-09"
+   }
+  ],
+  "8.3": [
+   {
+    "date": "2026-10-02",
+    "right": false,
+    "next": "2026-10-03"
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-06"
+   }
+  ],
+  "k8": [
+   {
+    "date": "2026-10-02",
+    "right": false,
+    "next": "2026-10-03"
+   },
+   {
+    "date": "2026-10-04",
+    "right": true,
+    "next": "2026-10-07"
+   }
+  ],
+  "3.5": [
+   {
+    "date": "2026-10-04",
+    "right": false,
+    "next": "2026-10-05"
+   }
+  ],
   "4.4": [
    {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-03"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-15"
-   }
-  ],
-  "5.3": [
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-03"
-   },
-   {
     "date": "2026-10-04",
     "right": false,
     "next": "2026-10-05"
    }
   ],
-  "1.4": [
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-03"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-15"
-   }
-  ],
-  "2.3": [
-   {
-    "date": "2026-10-02",
-    "right": false,
-    "next": "2026-10-03"
-   },
+  "17.2": [
    {
     "date": "2026-10-04",
     "right": false,
-    "next": "2026-10-05"
-   }
-  ],
-  "3.3": [
-   {
-    "date": "2026-10-02",
-    "right": true,
-    "next": "2026-10-03"
-   },
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-15"
-   }
-  ],
-  "2.4": [
-   {
-    "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
-   }
-  ],
-  "3.4": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "1.5": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "4.5": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "5.4": [
-   {
-    "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
-   }
-  ],
-  "6.2": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "7.2": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "8.2": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "9.2": [
-   {
-    "date": "2026-10-04",
-    "right": false,
-    "next": "2026-10-05"
-   }
-  ],
-  "9.3": [
-   {
-    "date": "2026-10-04",
-    "right": true,
-    "next": "2026-10-05"
-   }
-  ],
-  "10.2": [
-   {
-    "date": "2026-10-04",
-    "right": true,
     "next": "2026-10-05"
    }
   ]
@@ -931,12 +864,6 @@
  "tries": [
   {
    "id": "1.2",
-   "date": "2026-10-01",
-   "right": false,
-   "mixed": false
-  },
-  {
-   "id": "1.3",
    "date": "2026-10-01",
    "right": true,
    "mixed": false
@@ -950,17 +877,17 @@
   {
    "id": "3.2",
    "date": "2026-10-01",
+   "right": false,
+   "mixed": false
+  },
+  {
+   "id": "3.3",
+   "date": "2026-10-01",
    "right": true,
    "mixed": false
   },
   {
    "id": "4.2",
-   "date": "2026-10-01",
-   "right": false,
-   "mixed": false
-  },
-  {
-   "id": "4.3",
    "date": "2026-10-01",
    "right": true,
    "mixed": false
@@ -972,9 +899,45 @@
    "mixed": false
   },
   {
-   "id": "4.4",
+   "id": "6.2",
+   "date": "2026-10-01",
+   "right": false,
+   "mixed": false
+  },
+  {
+   "id": "6.3",
+   "date": "2026-10-01",
+   "right": true,
+   "mixed": false
+  },
+  {
+   "id": "7.2",
+   "date": "2026-10-01",
+   "right": true,
+   "mixed": false
+  },
+  {
+   "id": "8.2",
+   "date": "2026-10-01",
+   "right": true,
+   "mixed": false
+  },
+  {
+   "id": "1.3",
    "date": "2026-10-02",
    "right": true,
+   "mixed": true
+  },
+  {
+   "id": "2.3",
+   "date": "2026-10-02",
+   "right": true,
+   "mixed": true
+  },
+  {
+   "id": "4.3",
+   "date": "2026-10-02",
+   "right": false,
    "mixed": true
   },
   {
@@ -984,19 +947,25 @@
    "mixed": true
   },
   {
-   "id": "1.4",
+   "id": "7.3",
    "date": "2026-10-02",
    "right": true,
    "mixed": true
   },
   {
-   "id": "2.3",
+   "id": "8.3",
    "date": "2026-10-02",
    "right": false,
    "mixed": true
   },
   {
-   "id": "3.3",
+   "id": "6.4",
+   "date": "2026-10-02",
+   "right": true,
+   "mixed": true
+  },
+  {
+   "id": "3.4",
    "date": "2026-10-02",
    "right": true,
    "mixed": true
@@ -1004,59 +973,53 @@
   {
    "id": "2.4",
    "date": "2026-10-04",
+   "right": true,
+   "mixed": true
+  },
+  {
+   "id": "8.4",
+   "date": "2026-10-04",
+   "right": true,
+   "mixed": true
+  },
+  {
+   "id": "3.5",
+   "date": "2026-10-04",
    "right": false,
    "mixed": true
   },
   {
-   "id": "3.4",
+   "id": "1.4",
    "date": "2026-10-04",
    "right": true,
    "mixed": true
   },
   {
-   "id": "1.5",
+   "id": "6.5",
    "date": "2026-10-04",
    "right": true,
    "mixed": true
   },
   {
-   "id": "4.5",
+   "id": "7.4",
    "date": "2026-10-04",
    "right": true,
+   "mixed": true
+  },
+  {
+   "id": "4.4",
+   "date": "2026-10-04",
+   "right": false,
    "mixed": true
   },
   {
    "id": "5.4",
    "date": "2026-10-04",
-   "right": false,
+   "right": true,
    "mixed": true
   },
   {
-   "id": "6.2",
-   "date": "2026-10-04",
-   "right": true,
-   "mixed": false
-  },
-  {
-   "id": "7.2",
-   "date": "2026-10-04",
-   "right": true,
-   "mixed": false
-  },
-  {
-   "id": "8.2",
-   "date": "2026-10-04",
-   "right": true,
-   "mixed": false
-  },
-  {
    "id": "9.2",
-   "date": "2026-10-04",
-   "right": false,
-   "mixed": false
-  },
-  {
-   "id": "9.3",
    "date": "2026-10-04",
    "right": true,
    "mixed": false
@@ -1066,17 +1029,30 @@
    "date": "2026-10-04",
    "right": true,
    "mixed": false
+  },
+  {
+   "id": "17.2",
+   "date": "2026-10-04",
+   "right": false,
+   "mixed": false
+  },
+  {
+   "id": "17.3",
+   "date": "2026-10-04",
+   "right": true,
+   "mixed": false
   }
  ],
  "games": [],
  "readings": [],
  "first": null,
  "start": {
-  "counted": ""
+  "counted": "",
+  "equal": ""
  },
  "position": {
   "open": null,
-  "last": 10,
+  "last": 17,
   "skipped": "2026-10-04",
   "posted": "",
   "read": {

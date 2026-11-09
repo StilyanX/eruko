@@ -21,7 +21,7 @@ import {
 import { courseFrom, kindId, problemId } from './decode.logic.js'
 
 const course = courseFrom(
-  [{ title: 'First kinds', first: 1, last: 1 }],
+  [{ title: 'Whole programs', first: 1, last: 1 }],
   [{ id: 1, name: 'a', after: [], plan: [], problems: ['1.01'], trace: 'T1' }]
 )
 const about = { compiler: 'g++', version: BUILT_WITH.version, standard: 'c++23' }
@@ -41,6 +41,7 @@ test("an empty record holds every field of the paper's table, and the track's ow
     'sessions',
     'side',
     'track',
+    'trackReading',
     'trackTries',
     'trackTurn',
     'tries',

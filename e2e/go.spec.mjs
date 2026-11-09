@@ -191,37 +191,37 @@ test('set up again, for a changed computer or account: kept, then cleared', asyn
   expect(r.first).toEqual(first)
 })
 
-test('Review counts what waits today, and each row with something leads to the work list', async ({ page }) => {
+test('Review is the one Review page: the work list in one row with what waits today, no later date', async ({ page }) => {
   await setUp(page, RECORDS.midCourse())
   await page.goto(`${G}/review`)
   await expect(page.locator('h1')).toHaveText('Review')
   const table = page.locator('table.lrn-rv')
-  await expect(table.getByRole('row', { name: /Problems due/ })).toBeVisible()
-  await expect(table.getByRole('rowheader', { name: 'Rated game' })).toBeVisible()
-  await table.getByRole('link', { name: 'Problems due' }).click()
+  await expect(table.getByRole('row')).toHaveCount(2)
+  await expect(page.locator('#rv-due')).not.toContainText('comes back from')
+  await table.getByRole('link', { name: 'Work list' }).click()
   await expect(page.locator('h1')).toHaveText('Work list')
 })
 
-test('Review says where the engine pass stands, and when the relay is absent', async ({ page }) => {
+test('the work list says where the engine pass stands, and when the relay is absent', async ({ page }) => {
   await setUp(page, RECORDS.reviewing(), { relay: 'down' })
-  await page.goto(`${G}/review`)
-  await expect(page.locator('#rv-due')).toContainText(
+  await page.goto(`${G}/work`)
+  await expect(page.locator('main')).toContainText(
     'Game review is waiting for the engine. Start it from the Start page.'
   )
-  await expect(page.locator('#rv-due')).not.toContainText('relay')
-  await expect(page.locator('#rv-due')).toContainText('Rated games counted: 2. The next reading comes at 15.')
   await noViolation(page)
-  await page.getByRole('link', { name: 'Start page' }).click()
+  await page.getByRole('link', { name: 'Start page' }).first().click()
   await expect(page.locator('h1')).toHaveText('Start')
 })
 
 test('the engine pass reads each position through the relay, and the game is done', async ({ page }) => {
   await setUp(page, RECORDS.reviewing(), { relay: 'ok' })
-  await page.goto(`${G}/review`)
-  await expect(page.locator('#rv-due')).not.toContainText('The engine is reading your game', { timeout: 15000 })
-  const game = (await stored(page)).games.find((/** @type {{ id: number }} */ g) => g.id === 502)
-  expect(game.pass.length).toBe(11)
-  expect(game.reviewed).toBe(true)
+  await page.goto(`${G}/work`)
+  // Polled: the reading line can be absent before the pass starts, so its absence alone is no end.
+  const game = async () =>
+    (await stored(page))?.games?.find((/** @type {{ id: number }} */ g) => g.id === 502)
+  await expect.poll(async () => (await game())?.reviewed, { timeout: 15000 }).toBe(true)
+  expect((await game())?.pass.length).toBe(11)
+  await expect(page.locator('main')).not.toContainText('The engine is reading your game')
 })
 
 test('a rules item first met: typed with the keyboard, refused in the wrong form, then right, then Next', async ({
@@ -230,6 +230,12 @@ test('a rules item first met: typed with the keyboard, refused in the wrong form
   await setUp(page)
   await page.goto(`${G}/work`)
   const work = page.locator('#go-work')
+  // set-up comes when the first game comes: the game is first, its screen sends to Start
+  await expect(work).toContainText(
+    'Set up Go on the Start page first: choose the network file, check the engine, and type your OGS user name.'
+  )
+  await expect(work.getByRole('link', { name: 'Start page' })).toHaveAttribute('href', /\/start$/)
+  await button(work, 'Skip the game today').click()
   await expect(work).toContainText('How many points lie next to A1?')
   await expect(work).not.toContainText('R1.1')
   await expect(work).toContainText('Keep trying until you see no further move.')
@@ -245,8 +251,19 @@ test('a rules item first met: typed with the keyboard, refused in the wrong form
   await noViolation(page)
   // Enter presses the step's Next
   await page.keyboard.press('Enter')
-  await expect(work).toContainText('How many points lie next to C1?')
+  await expect(work).toContainText('No stone is on the board. Black plays C3. Is it legal?')
   await expect(work).not.toContainText('Keep trying')
+  // Check waits for the answer, so focus goes to the field, not to Check
+  await expect(page.locator('#go-rule')).toBeFocused()
+  await expect(button(work, 'Check')).toHaveAttribute('aria-disabled', 'true')
+  await expect(work).toContainText('Fill in every field.')
+  // what is typed is kept in the record over a reload, until it is answered
+  await page.locator('#go-rule').fill('yes')
+  await reloadKept(page)
+  await expect(page.locator('#go-rule')).toHaveValue('yes')
+  await page.locator('#go-rule').press('Enter')
+  await expect(work).toContainText('You typed yes.')
+  expect((await stored(page)).position.draft).toBeUndefined()
 })
 
 test('a rules item answered by points: each click adds a point or takes it out, and typing still works', async ({
@@ -271,13 +288,14 @@ test('a rules item due: No further move counts as wrong, and a reload keeps the 
   await setUp(page, RECORDS.firstRules())
   await page.goto(`${G}/work`)
   const work = page.locator('#go-work')
-  await expect(work).toContainText('How many points lie next to A1?')
+  // the item comes back on another case its rule decides
+  await expect(work).toContainText('How many points lie next to C1?')
   await button(work, 'No further move').click()
   await expect(work).toContainText('Wrong. No further move counts as wrong.')
   await reloadKept(page)
   await expect(work).toContainText('Wrong. No further move counts as wrong.')
   await button(work, /^Next$/).click()
-  await expect(work).toContainText('How many points lie next to C1?')
+  await expect(work).toContainText('No stone is on the board. Black plays C3. Is it legal?')
 })
 
 test('a worked example is read, then its kind asks a problem', async ({ page }) => {
@@ -305,7 +323,7 @@ test('a problem: each refusal, then a right answer and its solution', async ({ p
   await setUp(page, RECORDS.firstProblem())
   await page.goto(`${G}/work`)
   const work = page.locator('#go-work')
-  await expect(work).toContainText('Black plays first. What happens to the white group in the bottom right?')
+  await expect(work).toContainText('Black plays first. What happens to the white group that includes R1?')
   await expect(work).not.toContainText('1.2 ·')
   // a click on an empty point fills the move; a click on a stone does nothing
   await clickPoint(work, [14, 0, 5, 3], 'Q1')
@@ -313,10 +331,13 @@ test('a problem: each refusal, then a right answer and its solution', async ({ p
   await expect(work.locator('.go-chosen')).toHaveCount(1)
   await clickPoint(work, [14, 0, 5, 3], 'R1')
   await expect(page.locator('#go-move')).toHaveValue('Q1')
+  // Check waits for both fields, and says so
+  await expect(work).toContainText('Fill in every field.')
+  await page.locator('#go-result').fill('dies')
   await page.locator('#go-move').fill('I4')
   await page.locator('#go-move').press('Enter')
   await expect(page.locator('#go-why')).toContainText('There is no column I.')
-  await expect(page.locator('#go-move')).toHaveAttribute('aria-describedby', 'go-why')
+  await expect(page.locator('#go-move')).toHaveAttribute('aria-describedby', 'go-q go-why')
   await page.locator('#go-move').fill('A1')
   await page.locator('#go-move').press('Enter')
   await expect(page.locator('#go-why')).toHaveText('That point is not on this diagram.')
@@ -520,7 +541,10 @@ test('the practice game: its number refused, read, then its count', async ({ pag
   await expect(page.locator('#go-why')).toContainText('Type the game number')
   await noViolation(page)
   await page.locator('#go-number').fill('https://online-go.com/game/778')
-  await button(work, 'Game ended').click()
+  // the number typed is kept over a reload, and Enter in its field presses Game ended
+  await reloadKept(page)
+  await expect(page.locator('#go-number')).toHaveValue('https://online-go.com/game/778')
+  await page.locator('#go-number').press('Enter')
   await expect(work).toContainText('Game 778 · you played Black.')
   await page.locator('#go-count').fill('ten')
   await page.locator('#go-count').press('Enter')
@@ -528,20 +552,25 @@ test('the practice game: its number refused, read, then its count', async ({ pag
   await noViolation(page)
   // the final board is drawn on the count screen
   await expect(work.locator('figure.go-board')).toBeVisible()
+  await expect(work).toContainText('Your first count opens rated games, right or wrong.')
   await page.locator('#go-count').fill('9')
   await page.locator('#go-count').press('Enter')
   await expect(work).toContainText('Wrong.')
   await expect(work).toContainText('Your count: 9.')
   await expect(work).not.toContainText("Eruko's count of the server's final board")
+  // the first count, right or wrong, is the one the start gate needs
+  expect((await stored(page)).start).toMatchObject({ equal: '' })
+  expect((await stored(page)).start.counted).not.toBe('')
   await noViolation(page)
   // a wrong count is counted again on the same game, with no new game played
   await button(work, 'Count again').click()
   await expect(page.locator('#go-count')).toBeVisible()
+  await expect(work).not.toContainText('Your first count opens rated games')
   await page.locator('#go-count').fill('3')
   await page.locator('#go-count').press('Enter')
   await expect(work).toContainText('Right.')
   await expect(work).toContainText("Eruko's count of the server's final board: 3.")
-  expect((await stored(page)).start.counted).not.toBe('')
+  expect((await stored(page)).start.equal).not.toBe('')
   await button(work, /^Next$/).click()
   await expect(work).not.toContainText('Your count')
 })
@@ -555,7 +584,8 @@ test("a wrong count may show Eruko's count instead of counting again", async ({ 
   await button(work, "Show Eruko's count").click()
   await expect(work).toContainText("Eruko's count of the server's final board: 5.")
   await expect(work).toContainText(/That is \d+ of your stones on the board and \d+ empty points/)
-  expect((await stored(page)).start.counted).toBe('')
+  expect((await stored(page)).start.counted).not.toBe('')
+  expect((await stored(page)).start.equal).toBe('')
 })
 
 test('a reading says one plain line, its numbers behind Details, and closes with Next', async ({ page }) => {
@@ -618,7 +648,8 @@ test('nothing left says why, and leads to Start and to the unit', async ({ page 
   await expect(work).toContainText('Nothing left.')
   await expect(work).toContainText('The next item comes back on')
   await noViolation(page)
-  await expect(work.getByRole('link', { name: 'Go to Go course' })).toBeVisible()
+  // the way to the unit page stands once, at the page's foot
+  await expect(page.getByRole('link', { name: 'Go to Go course' })).toHaveCount(1)
   await work.getByRole('link', { name: 'Start' }).click()
   await expect(page.locator('h1')).toHaveText('Start')
 })
@@ -635,13 +666,15 @@ test('a part read again turns through its answered items', async ({ page }) => {
   await page.goto(`${G}/work?part=1`)
   await expect(page.locator('h1')).toHaveText('Read again: The board and turns')
   const again = page.locator('#go-again')
-  await expect(again).toContainText('Item 1 of 7')
+  await expect(again).toContainText('Item 1 of 5')
   await expect(again).toContainText('How many points lie next to A1?')
   await noViolation(page)
   await button(again, /^Next$/).click()
-  await expect(again).toContainText('Item 2 of 7')
+  await expect(again).toContainText('Item 2 of 5')
+  // the new item is read from its count
+  await expect(again.getByText('Item 2 of 5')).toBeFocused()
   await button(again, 'Previous').click()
-  await expect(again).toContainText('Item 1 of 7')
+  await expect(again).toContainText('Item 1 of 5')
   await page.getByRole('link', { name: 'Go to Go course' }).click()
   await expect(page.locator('h1')).toHaveText('Go course')
 })
@@ -655,12 +688,28 @@ test('a kind read again shows its solved problem, then those tried; one not begu
   await expect(again).toContainText('Problem 1 of')
   await expect(again).toContainText('First move: K9.')
   await noViolation(page)
-  await page.goto(`${G}/work?kind=10`)
-  await expect(page.locator('h1')).toHaveText('Capturing races')
+  // fight 12 builds on fight 4, not yet begun
+  await page.goto(`${G}/work?kind=22`)
+  await expect(page.locator('h1')).toHaveText('Fight 12')
   await expect(page.locator('#go-again')).toContainText('First move')
-  await expect(page.locator('#go-again')).toContainText("This kind's problems open once these are done:")
+  await expect(page.locator('#go-again')).toContainText('Its problems open once these are done:')
   await expect(page.locator('#go-again').getByRole('link', { name: 'Begin this kind' })).toHaveCount(0)
   await noViolation(page)
+})
+
+test('a kind not ready links what it waits on, and ends on the way on of an open kind', async ({ page }) => {
+  await setUp(page, RECORDS.firstRules())
+  await page.goto(`${G}/work?kind=10`)
+  const again = page.locator('#go-again')
+  await expect(again).toContainText('Its problems open once these are done:')
+  // the first three rules parts link the work list, and each kind its own page
+  await expect(again.getByRole('link', { name: 'the first three rules parts' })).toHaveAttribute('href', /\/work$/)
+  await expect(again.getByRole('link', { name: 'Seki' })).toHaveAttribute('href', /\/work\?kind=9$/)
+  await expect(page.getByRole('link', { name: 'Go to Go course' })).toBeVisible()
+  await noViolation(page)
+  await again.getByRole('link', { name: 'Seki' }).click()
+  await expect(page.locator('h1')).toHaveText('Seki')
+  await expect(page.getByRole('link', { name: 'Go to Go course' })).toBeVisible()
 })
 
 test('a kind whose kinds are done is begun from its row, ahead of the course order', async ({ page }) => {
@@ -686,9 +735,9 @@ test('a position from the learner\'s own game is posed on its own thread, and be
   page
 }) => {
   await setUp(page, ownGames())
-  await page.goto(`${G}/review`)
+  await page.goto(`${G}/work`)
   // the store is read once the page has opened the record, so the read takes no empty copy first
-  await expect(page.locator('table.lrn-rv')).toBeVisible()
+  await expect(page.locator('#go-work')).toBeVisible()
   await expect
     .poll(async () => (await stored(page)).own?.problems?.length ?? 0, { timeout: 20000 })
     .toBe(1)
@@ -910,4 +959,148 @@ test('a 9 by 9 board wider than a phone\'s step card takes the region role, its 
   })
   await expect(scroll).not.toHaveAttribute('role', /./)
   await expect(scroll).not.toHaveAttribute('tabindex', /./)
+})
+
+/** @param {Page} page */
+const status = page => page.locator('p[role=status].sr-only')
+
+test('a wrong rules item says the right answer, and Next says the new question', async ({ page }) => {
+  await setUp(page, RECORDS.firstRules())
+  await page.goto(`${G}/work`)
+  const work = page.locator('#go-work')
+  await button(work, 'No further move').click()
+  await expect(status(page)).toHaveText('Wrong. The answer is 3.')
+  await button(work, /^Next$/).click()
+  await expect(status(page)).toContainText('Black plays C3. Is it legal?')
+})
+
+test('a wrong problem says the first move and the result', async ({ page }) => {
+  await setUp(page, RECORDS.firstProblem())
+  await page.goto(`${G}/work`)
+  await page.locator('#go-move').fill('Q2')
+  await page.locator('#go-result').fill('lives')
+  await page.locator('#go-result').press('Enter')
+  await expect(status(page)).toHaveText('Wrong. First move: Q1. Result: dies.')
+})
+
+for (const [name, record, id, question] of /** @type {const} */ ([
+  ['a rules item', 'firstRules', '#go-rule', 'How many points lie next to C1?'],
+  ['a problem', 'firstProblem', '#go-move', 'What happens to the white group that includes R1?'],
+  ['a problem', 'firstProblem', '#go-result', 'What happens to the white group that includes R1?']
+]))
+  test(`on a phone with its keyboard open, ${name}'s question stays in view with ${id}, and describes it`, async ({
+    page
+  }) => {
+    await page.setViewportSize({ width: 390, height: 420 })
+    await setUp(page, record && RECORDS[record]())
+    await page.goto(`${G}/work`)
+    const field = page.locator(id)
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await field.focus()
+    await expect(field).toHaveAccessibleDescription(new RegExp(question.replace('?', '\\?')))
+    // the question's first and last lines show, under the top bar and above the screen's foot
+    const seen = await page.locator('#go-work p', { hasText: question }).evaluate(el => {
+      const r = el.getBoundingClientRect()
+      const top = document.elementFromPoint(r.left + 4, r.top + 4)
+      const foot = document.elementFromPoint(r.left + 4, r.bottom - 4)
+      return [el.contains(top), el.contains(foot)]
+    })
+    expect(seen).toEqual([true, true])
+  })
+
+test('the OGS user name field names its purpose', async ({ page }) => {
+  await setUp(page)
+  await page.goto(`${G}/start`)
+  await expect(page.locator('#go-user')).toHaveAttribute('autocomplete', 'username')
+  await expect(page.locator('#go-user')).toHaveAttribute('spellcheck', 'false')
+})
+
+test("a review move says the engine is reading it, then says the engine's answer when it comes", async ({
+  page
+}) => {
+  await setUp(page, RECORDS.reviewing(), { relay: 'hang' })
+  await page.goto(`${G}/work`)
+  await page.locator('#go-review').fill('K10')
+  await page.locator('#go-review').press('Enter')
+  await expect(status(page)).toHaveText('The engine is reading your move K10.')
+})
+
+test("a review move's loss is said when the engine answers, and so is an engine that does not", async ({ page }) => {
+  await setUp(page, RECORDS.reviewing(), { relay: 'ok' })
+  await page.goto(`${G}/work`)
+  await page.locator('#go-review').fill('K10')
+  await page.locator('#go-review').press('Enter')
+  await expect(status(page)).toHaveText('Your move K10: 0.0 points lost.')
+})
+
+test('a review move the engine cannot read says so', async ({ page }) => {
+  await setUp(page, RECORDS.reviewing(), { relay: 'down' })
+  await page.goto(`${G}/work`)
+  await page.locator('#go-review').fill('K10')
+  await page.locator('#go-review').press('Enter')
+  await expect(status(page)).toHaveText("Your move K10: the engine did not answer, so the move's loss is not known.")
+})
+
+test('Read the server again says the read, then what it found', async ({ page }) => {
+  await setUp(page, RECORDS.firstRated(), { server: 'down' })
+  await page.goto(`${G}/work`)
+  const work = page.locator('#go-work')
+  await expect(work).toContainText('because the server did not answer')
+  await button(work, 'Read the server again').click()
+  await expect(status(page)).toHaveText('The server did not answer.')
+  await page.unrouteAll()
+  await stubNet(page, {})
+  await button(work, 'Read the server again').click()
+  await expect(status(page)).toHaveText('Rank range: 27 kyu to 10 kyu.')
+})
+
+test("under forced colours in the dark theme a board's coordinates take the caption's text colour", async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active', colorScheme: 'dark' })
+  await setUp(page, RECORDS.reviewing(), { relay: 'hang' })
+  await page.goto(`${G}/work`)
+  const fig = page.locator('#go-work figure.go-board').first()
+  const coord = await fig.locator('.go-coord').first().evaluate(el => getComputedStyle(el).fill)
+  const text = await fig.locator('figcaption').evaluate(el => getComputedStyle(el).color)
+  expect(coord).toBe(text)
+})
+
+test("after an answer the problem's board and the line's board have different names", async ({ page }) => {
+  await setUp(page, RECORDS.firstProblem())
+  await page.goto(`${G}/work`)
+  await page.locator('#go-move').fill('q1')
+  await page.locator('#go-result').fill('Dies')
+  await page.locator('#go-result').press('Enter')
+  const names = await page.locator('#go-work figure.go-board [role=img]').evaluateAll(els => els.map(el => el.getAttribute('aria-label')))
+  expect(names.length).toBe(2)
+  expect(names[0]).not.toBe(names[1])
+})
+
+test('at 320 px a whole board scrolls in a named, focusable box at least 24 px high, its coordinates at 12 px or more', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await setUp(page, RECORDS.reviewing(), { relay: 'hang' })
+  await page.goto(`${G}/work`)
+  const { violations } = await new AxeBuilder({ page }).withRules(['scrollable-region-focusable']).analyze()
+  expect(violations).toEqual([])
+  const box = page.locator('#go-work .lrn-figure-scroll').first()
+  expect((await box.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(24)
+  expect(await page.locator('#go-work .go-coord').first().evaluate(el => parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(12)
+})
+
+test('the Start page at 320 px with wider text spacing does not scroll sideways', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await setUp(page)
+  await page.goto(`${G}/start`)
+  await expect(page.locator('h1')).toBeVisible()
+  await page.addStyleTag({
+    content:
+      '* { line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important } p { margin-bottom: 2em !important }'
+  })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+})
+
+test("a whole board's overview line is a target at least 44 px high", async ({ page }) => {
+  await setUp(page, RECORDS.firstRules())
+  await page.goto(`${G}/work`)
+  const summary = page.locator('#go-work figure.go-board summary').first()
+  expect((await summary.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44)
 })

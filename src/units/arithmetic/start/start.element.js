@@ -16,7 +16,7 @@ const needs = [
     h(
       'li',
       null,
-      'One scientific calculator with no graphing and no computer algebra. Each problem says whether you may use it. No problem allows it before the number facts pass.'
+      'One scientific calculator with no graphing and no computer algebra. Each problem says whether you may use it.'
     )
   )
 ]

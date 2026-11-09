@@ -1,19 +1,21 @@
 # Eruko
 
+Try it at https://stilyanx.github.io/eruko/. You install nothing, and your records stay in your browser.
+
 Eruko is a free study app for every learner. It runs in a browser. It has no account and no tracking, and your records stay on your own devices.
 
 You can open any page at any time.
 
 ## Units
 
-Each unit teaches one subject. A unit's Start page says what the unit needs before its first session. A unit is its folder in `src/units/`: `npm run gen` lists every folder there for the app, so a unit is added or removed with its folder and `npm run gen`. [`STATUS.md`](STATUS.md) labels each unit Draft, Testing or Ready.
+Each unit teaches one subject. A unit's Start page says what the unit needs before its first session. A unit is its folder in `src/units/`: `npm run gen` lists every folder there for the app, so a unit is added or removed with its folder and `npm run gen`. [`STATUS.md`](STATUS.md) labels each unit Draft, Testing or Ready. [`PRACTICE.md`](PRACTICE.md) says what comes back for practice, and when.
 
 | Unit | Discipline | Course |
 | --- | --- | --- |
 | Arithmetic | Mathematics | 51 topics in 7 sections, number facts, mixed practice and an end level |
-| Augustus | Biography | 56 lessons in 7 sections |
+| Augustus | Biography | 56 lessons |
 | Go course | Go | The rules of Go in 5 parts, then 22 kinds of problem in 3 sections |
-| C++ course | Programming | 12 first kinds of program, then the language track: 57 kinds in 2 stages |
+| C++ course | Programming | 74 kinds of program in 2 sections, then the language track: 304 kinds in 9 stages |
 
 ## What Eruko refuses
 

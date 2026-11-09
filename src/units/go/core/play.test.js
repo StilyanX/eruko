@@ -88,12 +88,17 @@ test('"Game ended": the game is kept once, a practice game opens its count, and 
   const wrong = gameCounted(gameId(4), 12, '2026-10-03')(r)
   assert.ok(wrong.position.open)
   assert.equal(fieldsOf(wrong.position.open).right, false)
-  assert.equal(wrong.start.counted, '')
+  // the first count, right or wrong, is the one the start gate needs
+  assert.deepEqual(wrong.start, { counted: '2026-10-03', equal: '' })
+  // counting again on a later day keeps the first day, and a right count sets `equal`
+  const again = gameCounted(gameId(4), 361, '2026-10-04')(wrong)
+  assert.deepEqual(again.start, { counted: '2026-10-03', equal: '2026-10-04' })
   const right = gameCounted(gameId(4), 361, '2026-10-03')(r)
   assert.ok(right.position.open)
+  // a right count shows Eruko's count at once
   assert.equal(fieldsOf(right.position.open).right, true)
   assert.equal(fieldsOf(right.position.open).count, 361)
-  assert.equal(right.start.counted, '2026-10-03')
+  assert.deepEqual(right.start, { counted: '2026-10-03', equal: '2026-10-03' })
   // a game that cannot be counted says why
   const short = gameEnded(
     course,

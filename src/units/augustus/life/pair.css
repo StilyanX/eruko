@@ -10,4 +10,9 @@
       grid-template-columns: repeat(var(--cols), minmax(0, var(--bio-line)));
     }
   }
+  /* An era map: its drawing never wider than its column. */
+  augustus-pair .lrn-bio-map svg {
+    max-width: 100%;
+    height: auto;
+  }
 }

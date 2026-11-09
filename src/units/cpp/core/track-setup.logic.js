@@ -52,7 +52,7 @@ const KERNEL = text([
   '}'
 ])
 
-/** A kernel for each compute-sanitizer tool, wrong where `bad`: out of bounds, unwritten, a race, a barrier some threads skip. */
+/** A kernel for each compute-sanitizer tool, wrong where `bad`: out of bounds, unwritten, a race. */
 const TOOL_KERNELS = {
   memcheck: (/** @type {boolean} */ bad) =>
     text([
@@ -90,26 +90,6 @@ const TOOL_KERNELS = {
       '    s[threadIdx.x] = threadIdx.x;',
       ...(bad ? [] : ['    __syncthreads();']),
       '    out[threadIdx.x] = s[63 - threadIdx.x];',
-      '}',
-      'int main()',
-      '{',
-      '    int* a = nullptr;',
-      '    cudaMalloc(&a, 64 * sizeof(int));',
-      '    k<<<1, 64>>>(a);',
-      '    cudaDeviceSynchronize();',
-      '    cudaFree(a);',
-      '}'
-    ]),
-  synccheck: (/** @type {boolean} */ bad) =>
-    text([
-      '__global__ void k(int* out)',
-      '{',
-      '    __shared__ int s[64];',
-      '    s[threadIdx.x] = 1;',
-      `    if (${bad ? 'threadIdx.x < 16' : 'true'}) {`,
-      '        __syncthreads();',
-      '    }',
-      '    out[threadIdx.x] = s[threadIdx.x];',
       '}',
       'int main()',
       '{',

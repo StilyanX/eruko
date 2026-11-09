@@ -2,7 +2,7 @@
 // written on paper, the published proof is shown, and the learner marks their own against it. A
 // unit hands its proof form; any other problem gets the shared answer box.
 import { STUCK, lines } from './maths-screens.dom.js'
-import { actionsAs, choice, mark } from './study.dom.js'
+import { actionsAs, choice, mark, say } from './study.dom.js'
 import { h } from './view.dom.js'
 
 /**
@@ -28,7 +28,10 @@ export const proofProblem =
               choice({
                 primary: true,
                 label: 'Show the published proof',
-                onPress: () => show('proof')
+                onPress: () => {
+                  show('proof')
+                  say('The published proof is below.')
+                }
               })
             )
           ]

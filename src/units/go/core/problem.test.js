@@ -1,8 +1,10 @@
 // Why a position makes no problem (src/units/go/core/problem.logic.js): each refusal of the
-// builder, from a bank position asked another way or searched with too small a budget.
+// builder, from a bank position asked another way or searched with too small a budget; and the
+// tagging run again on a sample of each source (21.01 <bu-go-checks> Tag).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { PROBLEMS } from '../content/problems.gen.js'
+import { KINDS } from './course.gen.js'
 import { boardOf } from './diagram.logic.js'
 import { BLACK, WHITE } from './rules.logic.js'
 import { kindId, problemId } from './decode.logic.js'
@@ -84,4 +86,27 @@ test('a line that passes where a move is as good makes no problem', () => {
   })
   // the same pass, where the search found every move worse, is a move of the line
   assert.equal(movesOf(found, [{ ...pass, only: true }, capture]).ok, true)
+})
+
+test('the tagging, run on a sample of each source, gives each problem the reasons and the kind it holds', () => {
+  /** @type {Map<string, (typeof PROBLEMS)[number][]>} */
+  const bySource = new Map()
+  for (const p of PROBLEMS) {
+    const source = p.source.replace(/[\d-]+$/, '')
+    bySource.set(source, [...(bySource.get(source) ?? []), p])
+  }
+  assert.ok(bySource.size >= 4, [...bySource.keys()].join(', '))
+  for (const [source, all] of bySource)
+    for (const p of all.slice(0, 2)) {
+      /** @type {import('./problem.logic.js').Drawing} */
+      const drawing = { ...drawingOf(p.id, p.toMove === 'black' ? 'B' : 'W'), ...(p.beyond === 'both' ? { beyond: 'both' } : {}) }
+      // the generator's own budget for a found file
+      const made = problemFrom(drawing, problemId('x'), kindId(0), 'aether', 6e6)
+      assert.ok(made.ok, `${source}: ${p.id}`)
+      /** @param {{ solution: { lines: readonly { moves: readonly { reason: string }[] }[] } }} q */
+      const reasons = q => q.solution.lines.map(l => l.moves.map(m => m.reason).join('|'))
+      assert.deepEqual(reasons(made.value), reasons(p), `${source}: ${p.id}`)
+      const seq = made.value.solution.lines[0]?.moves.map(m => m.reason).filter((r, i, a) => r !== a[i - 1]).join('|') ?? ''
+      assert.ok(KINDS.find(k => k.id === p.kind)?.seqs.includes(seq), `${source}: ${p.id} is tagged ${seq}`)
+    }
 })

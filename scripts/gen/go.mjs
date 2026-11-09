@@ -9,8 +9,8 @@
 // every move of its line carries a reason. The first ten kinds take their positions from
 // scripts/lib/go-built.mjs (drawn by hand) and scripts/lib/go-found*.json (kept by
 // scripts/go-find.mjs); the later kinds from scripts/lib/go-weekly.json (scripts/go-import.mjs)
-// and scripts/lib/go-classical.json (scripts/go-classical.mjs), each filled up to 12 from
-// scripts/lib/go-written.json (scripts/go-write.mjs).
+// and scripts/lib/go-classical.json (scripts/go-classical.mjs). The problems Eruko writes are
+// built in the learner's browser, from the found problems the learner got wrong (own.logic.js).
 // Run after changing a position: node scripts/gen/go.mjs
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import {
@@ -32,7 +32,6 @@ import { HAND, KIND_NAMES, KIND_TERMS } from '../lib/go-built.mjs'
 import { problemFrom } from '../../src/units/go/core/problem.logic.js'
 import { kindId, problemId } from '../../src/units/go/core/decode.logic.js'
 import { COLLECTIONS } from '../lib/go-classical.mjs'
-import { shapeOf } from '../go-write.mjs'
 import { PARTS, POSITIONS } from '../lib/go-rules-source.mjs'
 import { generated } from '../lib/generated.mjs'
 
@@ -50,7 +49,6 @@ import { generated } from '../lib/generated.mjs'
  * @property {string} source
  * @property {string} [term]
  * @property {string[]} problems
- * @property {string[]} [written] the problems Eruko wrote for it, used once every found problem is
  * @property {string[]} [seqs]
  * @property {number[]} [after]
  */
@@ -171,27 +169,27 @@ function rulesItem(p, id) {
   const name = i => coord(i % w, Math.floor(i / w))
   checkScore(board, id)
   const { question, answer } = asked(p, board, at, name, id)
-  return {
-    id,
-    part: p.part,
-    position: diagramFrom(p.rows, 0, 0, p.rows.length),
-    question,
-    answer,
-    rule: p.rule
-  }
+  return { position: diagramFrom(p.rows, 0, 0, p.rows.length), question, answer }
 }
 
-/** @type {ReturnType<typeof rulesItem>[]} */
+// A rules item is a rule with its cases: the stored positions of its part whose question that
+// rule decides, in the order they stand. It keeps the id its first position had, so a line kept
+// under that id stays with the same rule.
+/** @type {{ id: string, part: number, cases: ReturnType<typeof rulesItem>[], rule: string }[]} */
 const items = []
 const parts = PARTS.map((name, k) => {
   /** @type {string[]} */
   const ids = []
-  POSITIONS.filter(p => p.part === k + 1).forEach(p => {
-    const id = `R${k + 1}.${ids.length + 1}`
-    ids.push(id)
-    items.push(rulesItem(p, id))
+  POSITIONS.filter(p => p.part === k + 1).forEach((p, i) => {
+    const id = `R${k + 1}.${i + 1}`
+    const item = items.find(x => x.part === p.part && x.rule === p.rule)
+    if (item) item.cases.push(rulesItem(p, id))
+    else {
+      ids.push(id)
+      items.push({ id, part: p.part, cases: [rulesItem(p, id)], rule: p.rule })
+    }
   })
-  return { n: k + 1, name, items: ids }
+  return { n: k + 1, name, items: ids, cases: ids.map(id => items.find(x => x.id === id)?.cases.length ?? 1) }
 })
 
 // ---------------------------------------------------------------------------- problems
@@ -396,13 +394,10 @@ KIND_NAMES.forEach((name, k) => {
 const once = seq => seq.filter((r, i) => r !== seq[i - 1])
 /** @param {Problem} p */
 const seqOf = p => once(head(p.solution.lines, 'the solution').moves.map(m => m.reason))
-// A kind is read from its found and built problems; the written ones only repeat its sequence.
-/** @type {Set<string>} */
-const writtenIds = new Set()
 /** @param {CourseKind} kind */
 const seqs = kind =>
   problems
-    .filter(p => p.kind === kind.id && !writtenIds.has(p.id))
+    .filter(p => p.kind === kind.id)
     .flatMap(p => p.solution.lines.map(l => once(l.moves.map(m => m.reason))))
 /**
  * @param {string[]} small
@@ -572,34 +567,58 @@ for (const kind of kinds.filter(k => k.source === 'aether')) {
     problems.push(made)
   }
 }
-// Once every found source is used, the course goes on with problems Eruko writes and checks
-// the same way (scripts/go-write.mjs): each kind from the found sources is filled up to FILL
-// with the written problems whose sequence of reasons names it. They stand in the kind's
-// `written` list, after its found problems, so those keep their ids, and the record's course
-// adds them to the kind only once every found problem is used (own.logic.js).
-/** @typedef {PlacedDrawing & { seq: string, from: string }} Written A position scripts/go-write.mjs kept */
-for (const w of /** @type {Written[]} */ (read('go-written.json'))) {
-  const kind = bySeq.get(w.seq)
-  const held = kind ? kind.problems.length + (kind.written?.length ?? 0) : FILL
-  if (!kind || kind.source === 'aether' || held >= FILL) continue
-  const built = problemFrom(w, problemId('x'), kindId(0), 'aether', FOUND)
-  if (!built.ok || seqOf(built.value).join('|') !== w.seq || placed.has(placedKey(built.value)))
-    continue
-  // what the side to move plays must be new to the kind: a reply elsewhere makes no new problem
-  const plays = new Set(
-    problems.filter(p => p.kind === kind.id).map(p => shapeOf(p).line)
-  )
-  if (plays.has(shapeOf(built.value).line)) continue
-  placed.add(placedKey(built.value))
-  const made = {
-    ...built.value,
-    id: problemId(`${kind.id}.${held + 1}`),
-    kind: kindId(kind.id)
-  }
-  ;(kind.written ??= []).push(made.id)
-  writtenIds.add(made.id)
-  problems.push(made)
+// Ids never reused, never shown (<go-material-problem>): scripts/lib/go-ids.json keeps the id
+// each problem and each kind was ever given, a problem by its position's key (placedKey), a kind
+// by its first problem's. One met again takes its id back; a new one takes the id the order above
+// gives it when no one had it, else the next unused number. The file only grows, so a learner's
+// record never names another problem when an importer's output changes.
+const IDS = new URL('go-ids.json', LIB)
+/** @type {{ kinds: Record<string, number>, problems: Record<string, string> }} */
+const ledger = existsSync(IDS) ? JSON.parse(readFileSync(IDS, 'utf8')) : { kinds: {}, problems: {} }
+/** @type {Map<string, Problem>} */
+const byId = new Map(problems.map(p => [p.id, p]))
+/** @param {string} id */
+const problemAt = id => {
+  const p = byId.get(id)
+  if (!p) throw new Error(`problem ${id} is in no kind`)
+  return p
 }
+const kindsUsed = new Set(Object.values(ledger.kinds))
+/** @type {Map<number, number>} */
+const kindIds = new Map()
+for (const kind of kinds) {
+  const key = placedKey(problemAt(head(kind.problems, `kind ${kind.id}`)))
+  let id = ledger.kinds[key]
+  if (id === undefined) {
+    id = kindsUsed.has(kind.id) ? Math.max(0, ...kindsUsed, ...kinds.map(k => k.id)) + 1 : kind.id
+    ledger.kinds[key] = id
+    kindsUsed.add(id)
+  }
+  kindIds.set(kind.id, id)
+}
+const problemsUsed = new Set(Object.values(ledger.problems))
+/** @type {Map<string, string>} */
+const problemIds = new Map()
+for (const kind of kinds) {
+  const k = kindIds.get(kind.id)
+  kind.problems.forEach((old, place) => {
+    const key = placedKey(problemAt(old))
+    let id = ledger.problems[key]
+    if (id === undefined) {
+      id = `${k}.${place + 1}`
+      for (let n = place + 2; problemsUsed.has(id); n++) id = `${k}.${n}`
+      ledger.problems[key] = id
+      problemsUsed.add(id)
+    }
+    problemIds.set(old, id)
+  })
+}
+for (const p of problems) Object.assign(p, { id: problemIds.get(p.id), kind: kindIds.get(p.kind) })
+for (const kind of kinds) {
+  kind.id = kindIds.get(kind.id) ?? kind.id
+  kind.problems = kind.problems.map(id => problemIds.get(id) ?? id)
+}
+writeFileSync(IDS, `${JSON.stringify(ledger, null, 1)}\n`)
 let fights = 0
 for (const kind of kinds) if (kind.source !== 'aether') kind.name = `fight ${++fights}`
 // The bank stands in course order: kind by kind.
@@ -622,8 +641,8 @@ writeFileSync(
   new URL('content/rules-items.gen.js', DATA),
   generated(
     GEN,
-    `// The rules items of the five parts: a stored position, one question with one exact answer,
-// and the rule in one plain sentence.
+    `// The rules items of the five parts: the rule in one plain sentence, and its cases, each a
+// stored position with one question with one exact answer that the rule decides.
 // prettier-ignore
 export const RULES_ITEMS = ${JSON.stringify(items)}
 `
@@ -664,7 +683,7 @@ writeFileSync(
   generated(
     GEN,
     `// PARTS: the five rules parts with their items'
-// ids. KINDS: the kinds in course order, each with its number, its name, the kinds its answers
+// ids and how many cases each item holds. KINDS: the kinds in course order, each with its number, its name, the kinds its answers
 // use, where its problems come from, and their ids. SECTIONS: the unit page's sections over the
 // parts and then the kinds.
 // prettier-ignore

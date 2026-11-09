@@ -52,6 +52,7 @@ const LESSON = [
   { t: 'setbacks-done', ...at, none: false },
   { t: 'pick', ...at, sentence: sentenceId(lesson.id, 0, 3), on: true },
   { t: 'claims-chosen', ...at },
+  { t: 'check-done', ...at },
   {
     t: 'claim-text',
     ...at,
@@ -72,7 +73,10 @@ test('a lesson: each step is kept in the position, and Done writes it into the r
   assert.ok(forecast?.kind === 'forecast' && setback?.kind === 'setback' && claim?.kind === 'claim')
   assert.deepEqual([forecast.p, forecast.score, forecast.reason], [30, 0.18, 'He is young.'])
   assert.equal(setback.date, '2026-10-01', 'the setbacks are dated the day the lesson is written')
-  assert.deepEqual([claim.text, claim.verdict], ['Caesar was his great-uncle.', 'unchecked'])
+  assert.deepEqual(
+    [claim.text, claim.verdict, claim.why],
+    ['Caesar was his great-uncle.', 'contested', 'no second account holds it']
+  )
   assert.deepEqual(state.position, { life: aug, lesson: 1, step: 'situation', screen: 0 })
   assert.equal(state.lives.augustus?.lastLesson, 0)
   assert.equal(state.lives.augustus?.opened, '2026-10-01')
@@ -98,7 +102,7 @@ test('what is typed in a lesson is in the record before it is locked or done', (
   const chosen = play(decodeLives(), LESSON.slice(0, 10)).state.position
   assert.deepEqual(chosen?.chosen, [sentenceId(lesson.id, 0, 3)])
   assert.equal(chosen?.setbacks?.length, 1)
-  const written = play(decodeLives(), LESSON.slice(0, 13)).state.position
+  const written = play(decodeLives(), LESSON.slice(0, 14)).state.position
   assert.equal(written?.step, 'record')
   assert.deepEqual(written?.texts, { [sentenceId(lesson.id, 0, 3)]: 'Caesar was his great-uncle.' })
   assert.equal(written?.note, 'A patron who leaves for war.')
@@ -285,11 +289,6 @@ test('"Change the last mark" opens the round again as it stood before Done, on i
   assert.equal(late.state, marked)
 })
 
-test('a lesson read again keeps the screen in view', () => {
-  const s = play(decodeLives(), [{ t: 'reread', life: aug, lesson: 3, screen: 2 }]).state
-  assert.deepEqual(s.reread, { life: aug, lesson: 3, screen: 2 })
-})
-
 /** A record with a note of two lives, not yet compared. */
 const paired = (/** @type {'raised' | 'lowered'} */ state = 'lowered') =>
   decodeLives({
@@ -384,6 +383,60 @@ test('the stuck path, the level check, the checklist and the sample', () => {
   assert.deepEqual(clean.sessions, [], 'removing the sample is no day studied')
   const plain = decodeLives()
   assert.equal(play(plain, [{ t: 'drop-sample' }]).state, plain)
+})
+
+test('item 2: with two or more listed and another note unpaired, a yes or no for each on the next oldest', () => {
+  const two = decodeLives({
+    items: [
+      { id: 'n1', kind: 'shape', paired: null },
+      { id: 'n2', kind: 'shape', paired: '2026-09-01' },
+      { id: 'n3', kind: 'shape', paired: null }
+    ]
+  })
+  const asked = play(two, [
+    { t: 'list-text', field: 'people', text: 'Agrippa\nMaecenas' },
+    { t: 'list-done' },
+    { t: 'list-next', yes: false },
+    { t: 'list-next', yes: true },
+    { t: 'list-next', yes: true }
+  ]).state
+  assert.deepEqual(
+    asked.checklist,
+    {
+      note: 'n1',
+      people: ['Agrippa', 'Maecenas'],
+      nextNote: { note: 'n3', answers: [false, true] }
+    },
+    'asked on the next oldest unpaired note, once a person'
+  )
+  const one = play(two, [{ t: 'list-text', field: 'people', text: 'Agrippa' }, { t: 'list-done' }])
+  assert.equal(one.state.checklist?.nextNote, undefined, 'one person: nothing asked')
+  const lone = decodeLives({ items: [{ id: 'n1', kind: 'shape', paired: null }] })
+  const noOther = play(lone, [
+    { t: 'list-text', field: 'people', text: 'Agrippa\nMaecenas' },
+    { t: 'list-done' }
+  ])
+  assert.equal(
+    noOther.state.checklist?.nextNote,
+    undefined,
+    'no other unpaired note: nothing asked'
+  )
+  const started = play(two, [
+    { t: 'list-text', field: 'people', text: 'Agrippa\nMaecenas' },
+    { t: 'list-done' },
+    { t: 'list-next', yes: true }
+  ]).state
+  assert.deepEqual(
+    started.checklist?.nextNote,
+    { note: 'n3', answers: [true] },
+    'resumes at Maecenas'
+  )
+  const plain = decodeLives({ checklist: { note: 'n1', people: ['A', 'B'] } })
+  assert.equal(
+    play(plain, [{ t: 'list-next', yes: true }]).state.checklist,
+    plain.checklist,
+    'nothing asked: a yes changes nothing'
+  )
 })
 
 test('a lesson the course does not hold changes nothing', () => {
@@ -492,4 +545,14 @@ test('the level check reads Judgment over the scored forecasts and sets judged t
     play(few, [{ t: 'reach-level', life: aug }], '2026-11-01').state.lives.augustus?.end,
     undefined
   )
+})
+
+test('case 6: your field and post typed and kept, Done writes them as you', () => {
+  const s = play(decodeLives(), [
+    { t: 'list-text', field: 'field', text: ' Law ' },
+    { t: 'list-text', field: 'rank', text: 'Clerk' }
+  ]).state
+  assert.equal(s.you, undefined)
+  const done = play(s, [{ t: 'you-done' }]).state
+  assert.deepEqual([done.you, done.listing], [{ field: 'Law', rank: 'Clerk' }, undefined])
 })

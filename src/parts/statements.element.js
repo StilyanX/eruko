@@ -6,7 +6,7 @@ import { count } from '../kernel/days.logic.js'
 import { isRead, methodsLeft } from '../kernel/proofs.logic.js'
 import { noProofsSend, proofsOf } from './maths-steps.dom.js'
 import './pages.element.js'
-import { studyStore } from './study.dom.js'
+import { hashTo, studyStore } from './study.dom.js'
 import { Screen, h } from './view.dom.js'
 import './prove-statement.element.js'
 
@@ -15,6 +15,8 @@ export class AeStatements extends Screen {
   topic = { proofs: [], prove: [] }
   /** @type {import('./maths-steps.dom.js').ProofsSend} */
   send = noProofsSend
+  /** The id of the proofs' section, which the shut statements link. */
+  proofsId = ''
   #study = studyStore()
 
   setup() {
@@ -29,9 +31,9 @@ export class AeStatements extends Screen {
       return h(
         'p',
         { class: 'lrn-ss-note' },
-        'Read ',
-        count(unread, 'more proof', 'more proofs'),
-        ' to open the statements.'
+        'The statements open once you read ',
+        h('a', { href: hashTo(this.proofsId) }, count(unread, 'more proof', 'more proofs')),
+        '.'
       )
     const left = methodsLeft(topic.prove, record.proved)
     return [

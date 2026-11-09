@@ -44,21 +44,32 @@ export async function aboutRunner() {
 }
 
 /**
- * A program run as main.cpp on the input of each test, in order.
+ * A program run as main.cpp on the input of each test, in order; a function problem's header
+ * built with its test file and Catch2 instead, every case or (`examples`) the example alone.
  * @param {string} code
  * @param {readonly { input: string }[]} tests
+ * @param {import('./decode.logic.js').Fn | null} [fn]
+ * @param {boolean} [examples]
  */
-export async function runProgram(code, tests) {
+export async function runProgram(code, tests, fn = null, examples = false) {
   const r = await call('/run', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      files: { 'main.cpp': code },
-      tests: tests.map(t => ({ input: t.input })),
-      kind: 'program'
-    })
+    body: JSON.stringify(
+      fn
+        ? { files: { [fn.header]: code, [fn.name]: fn.test }, tests: [], kind: 'catch2', examples }
+        : {
+            files: { 'main.cpp': code },
+            tests: tests.map(t => ({ input: t.input })),
+            kind: 'program'
+          }
+    )
   })
-  return r.ok ? runnerResult(r.value) : r
+  if (!r.ok) return r
+  const read = runnerResult(r.value)
+  return read.ok && fn && read.value.compiled
+    ? { ...read, value: { ...read.value, catch2: /** @type {const} */ (true) } }
+    : read
 }
 
 /**

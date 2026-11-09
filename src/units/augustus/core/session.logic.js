@@ -56,7 +56,6 @@ import {
  *   | { t: 'judge', life: import('./decode.logic.js').LifeId }
  *   | { t: 'retry-done', life: import('./decode.logic.js').LifeId }
  *   | { t: 'change-mark', life: import('./decode.logic.js').LifeId }
- *   | { t: 'reread', life: import('./decode.logic.js').LifeId, lesson: number, screen: number }
  *   | { t: 'mark', life: import('./decode.logic.js').LifeId, item: import('./decode.logic.js').ItemId, right: boolean }
  *   | { t: 'retry-show', life: import('./decode.logic.js').LifeId, item: import('./decode.logic.js').ItemId }
  *   | { t: 'cell', shape: import('./decode.logic.js').ItemId, life: import('./decode.logic.js').LifeId, row: string, text: string }
@@ -65,6 +64,7 @@ import {
  *   | { t: 'no-rule', shape: import('./decode.logic.js').ItemId }
  *   | { t: 'rule-done', shape: import('./decode.logic.js').ItemId }
  *   | { t: 'end-life', life: import('./decode.logic.js').LifeId }
+ *   | { t: 'keep-life', life: import('./decode.logic.js').LifeId }
  *   | { t: 'open-life', life: import('./decode.logic.js').LifeId }
  *   | { t: 'reach-level', life: import('./decode.logic.js').LifeId }
  *   | { t: 'end-open', life: import('./decode.logic.js').LifeId }
@@ -75,7 +75,8 @@ import {
  *   | { t: 'end-reading', life: import('./decode.logic.js').LifeId, chapter: number, sentence: string }
  *   | { t: 'end-done', life: import('./decode.logic.js').LifeId }
  *   | { t: 'list-text', field: 'field' | 'rank' | 'people', text: string }
- *   | { t: 'list-done' }
+ *   | { t: 'list-done' } | { t: 'you-done' }
+ *   | { t: 'list-next', yes: boolean }
  *   | { t: 'drop-sample' }
  * >} Move
  */
@@ -86,7 +87,7 @@ import {
  */
 
 /** The moves that only type or turn, which answer nothing: "Change the last mark" stands through them. */
-const ANSWER_NOTHING = ['tell-text', 'go', 'draft', 'reread']
+const ANSWER_NOTHING = ['tell-text', 'go', 'draft']
 
 /**
  * The next record, and the effects, after one move.
@@ -149,8 +150,6 @@ function apply(s, ev) {
       return retryDone(s, ev)
     case 'change-mark':
       return changeMark(s, ev)
-    case 'reread':
-      return out({ ...s, reread: { life: ev.life, lesson: ev.lesson, screen: ev.screen } })
     case 'cell':
     case 'rule-text':
     case 'rest':
@@ -166,6 +165,7 @@ function apply(s, ev) {
 const LIFE_MOVES = new Set([
   'open-life',
   'end-life',
+  'keep-life',
   'reach-level',
   'end-open',
   'end-go',
@@ -176,12 +176,14 @@ const LIFE_MOVES = new Set([
   'end-done',
   'list-text',
   'list-done',
+  'you-done',
+  'list-next',
   'drop-sample'
 ])
 
 /**
  * @param {Event} ev
- * @returns {ev is EventOf<'open-life' | 'end-life' | 'reach-level' | 'end-open' | 'end-go' | 'end-gap' | 'end-witness' | 'end-footing' | 'end-reading' | 'end-done' | 'list-text' | 'list-done' | 'drop-sample'>}
+ * @returns {ev is EventOf<'open-life' | 'end-life' | 'keep-life' | 'reach-level' | 'end-open' | 'end-go' | 'end-gap' | 'end-witness' | 'end-footing' | 'end-reading' | 'end-done' | 'list-text' | 'list-done' | 'you-done' | 'list-next' | 'drop-sample'>}
  */
 const pastLessons = ev => LIFE_MOVES.has(ev.t)
 
@@ -189,7 +191,7 @@ const pastLessons = ev => LIFE_MOVES.has(ev.t)
  * A move past the lessons: the life opened, ended as stuck, its level check, its end level, the
  * next-life checklist, or the sample removed.
  * @param {import('./decode.logic.js').LivesRecord} s
- * @param {EventOf<'open-life' | 'end-life' | 'reach-level' | 'end-open' | 'end-go' | 'end-gap' | 'end-witness' | 'end-footing' | 'end-reading' | 'end-done' | 'list-text' | 'list-done' | 'drop-sample'>} ev
+ * @param {EventOf<'open-life' | 'end-life' | 'keep-life' | 'reach-level' | 'end-open' | 'end-go' | 'end-gap' | 'end-witness' | 'end-footing' | 'end-reading' | 'end-done' | 'list-text' | 'list-done' | 'you-done' | 'list-next' | 'drop-sample'>} ev
  * @returns {import('./decode.logic.js').LivesRecord}
  */
 function lifeMove(s, ev) {
@@ -198,6 +200,11 @@ function lifeMove(s, ev) {
       return openLife(s, ev)
     case 'end-life':
       return { ...s, lives: closeStuck(s.lives, ev.life, ev.day) }
+    case 'keep-life': {
+      // "Keep this life": the life closed as stuck is the life in hand again.
+      const { stuck: _stuck, ...kept } = s.lives[ev.life] ?? {}
+      return { ...s, lives: { ...s.lives, [ev.life]: kept } }
+    }
     case 'reach-level':
       return reachLevel(s, ev)
     case 'end-open':
@@ -211,7 +218,10 @@ function lifeMove(s, ev) {
       return endMove(s, ev)
     case 'list-text':
     case 'list-done':
+    case 'list-next':
       return checklistMove(s, ev)
+    case 'you-done':
+      return youDone(s)
     case 'drop-sample':
       return withoutSample(s)
     default:
@@ -560,30 +570,55 @@ export const listingOf = s =>
   s.listing ?? { field: s.you?.field ?? '', rank: s.you?.rank ?? '', people: '' }
 
 /**
- * A field of the checklist typed, or Done (or Skip), which writes it. Fields left empty keep what
- * an earlier checklist held.
+ * A field of the checklist typed, or Done (or Skip), which writes it, or a yes or no on the next
+ * note. Fields left empty keep what an earlier checklist held. With two or more people listed and
+ * another note not yet paired, Done asks for each person, in the order met, whether that life
+ * shares the next oldest such note; each answer is kept as it is given.
  * @param {import('./decode.logic.js').LivesRecord} s
- * @param {EventOf<'list-text' | 'list-done'>} ev
+ * @param {EventOf<'list-text' | 'list-done' | 'list-next'>} ev
  * @returns {import('./decode.logic.js').LivesRecord}
  */
 function checklistMove(s, ev) {
+  if (ev.t === 'list-next') {
+    const cl = s.checklist
+    const asked = cl?.nextNote
+    if (!cl || !asked || asked.answers.length >= cl.people.length) return s
+    return {
+      ...s,
+      checklist: { ...cl, nextNote: { ...asked, answers: [...asked.answers, ev.yes] } }
+    }
+  }
   const typed = listingOf(s)
   if (ev.t === 'list-text') return { ...s, listing: { ...typed, [ev.field]: ev.text } }
   const { listing: _listing, ...rest } = s
-  const note = s.items.find(i => i.kind === 'shape' && !i.paired)
+  const [note, next] = s.items.filter(i => i.kind === 'shape' && !i.paired)
   const field = typed.field.trim()
   const rank = typed.rank.trim()
+  const people = typed.people
+    .split('\n')
+    .map(x => x.trim())
+    .filter(Boolean)
   return {
     ...rest,
     ...(field || rank ? { you: { field, rank } } : {}),
     checklist: {
       note: note?.id ?? null,
-      people: typed.people
-        .split('\n')
-        .map(x => x.trim())
-        .filter(Boolean)
+      people,
+      ...(people.length >= 2 && next ? { nextNote: { note: next.id, answers: [] } } : {})
     }
   }
+}
+
+/**
+ * Your field and the office or rank you hold, typed before the first life opens (case 6), each
+ * empty where you hold none.
+ * @param {import('./decode.logic.js').LivesRecord} s
+ * @returns {import('./decode.logic.js').LivesRecord}
+ */
+function youDone(s) {
+  const typed = listingOf(s)
+  const { listing: _listing, ...rest } = s
+  return { ...rest, you: { field: typed.field.trim(), rank: typed.rank.trim() } }
 }
 
 /**

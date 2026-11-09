@@ -17,8 +17,18 @@ A web server keeps no shared record: each browser keeps its own. Only `npm start
 ## What a learner downloads
 
 - First visit: the first page shows after about 650 KB.
-- After that, in the background: the whole app once, about 2 MB with Brotli (11 MB uncompressed). Every page then opens with no connection.
+- After that, in the background: the whole app once, about 2.8 MB with Brotli (16.5 MB uncompressed). Every page then opens with no connection.
 - A new version: only the files that changed.
+
+## GitHub Pages
+
+GitHub Pages serves this repository's copy at https://stilyanx.github.io/eruko/. On every push to `main`, the workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) uploads `src/` as committed, and Pages serves it. Pages differs from the list above in three ways:
+
+- Pages cannot send an address that names no file to `index.html`. It sends `404.html` instead, with status 404. So the workflow copies `index.html` to `404.html`: a link opened straight into a page loads the app, and the app shows that page.
+- Pages lets the browser keep each file for 10 minutes. The service worker asks past that copy, so it still finds a new version at once.
+- Pages sends gzip, not Brotli. The whole app is about 3.4 MB with gzip.
+
+On the site, the Go relay and the C++ runner still run on your own computer. When you start each one, add `--origin https://stilyanx.github.io`, as the README says. Your browser may ask whether the site may reach apps on your device: say yes.
 
 ## 1. Set up the server, once
 

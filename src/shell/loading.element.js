@@ -23,17 +23,21 @@ export class ShellLoading extends Screen {
 
   view() {
     return h(
-      'p',
-      { class: 'loading', role: 'status' },
-      this.waited === 1 && 'Loading the page.',
-      this.waited === 10 && [
-        'This is taking too long. Check your connection, then reload. ',
-        h(
-          'button',
-          { type: 'button', class: 'btn', onclick: () => location.reload() },
-          'Reload the page'
-        )
-      ]
+      'main',
+      { id: 'main', tabindex: '-1', class: 'page' },
+      h(
+        'p',
+        { class: 'loading', role: 'status' },
+        this.waited === 1 && 'Loading the page.',
+        this.waited === 10 && [
+          'This is taking too long. Check your connection, then reload. ',
+          h(
+            'button',
+            { type: 'button', class: 'btn', onclick: () => location.reload() },
+            'Reload the page'
+          )
+        ]
+      )
     )
   }
 }

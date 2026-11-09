@@ -2,10 +2,9 @@
 // line, the pages done, the unit page's rows and the dated list. `r` is every unit's record at
 // once, each part by its name (kernel/pages.logic.js UnitRecords).
 import { START, UNIT } from './entry.logic.js'
-import { nextOf } from '../../../kernel/days.logic.js'
 import { ownOf } from './decode.logic.js'
-import { freshToday, gameToday, openKind, openPart, place as placeLine, titled, toReview } from './next.logic.js'
-import { courseOf, sectionsOf, withWritten } from './own.logic.js'
+import { datesOf, freshToday, gameToday, openKind, openPart, place as placeLine, positionsLeft, titled } from './next.logic.js'
+import { courseOf, sectionsOf } from './own.logic.js'
 import { kindLine, recordOf } from './record.logic.js'
 
 const BASE = `/${UNIT.slug}`
@@ -19,7 +18,7 @@ const slug = UNIT.slug
 function goOf(r) {
   const course = courseOf(ownOf(r.go))
   const record = recordOf(r.go, course)
-  return { course: withWritten(course, record), record }
+  return { course, record }
 }
 
 /** @param {import('../../../kernel/pages.logic.js').UnitRecords} r */
@@ -94,24 +93,22 @@ function rows(r) {
 }
 
 /**
- * The unit's dated list (study/days.js datedView): the problems and rules items with a line,
- * and what waits today with no date: new items, a game's positions to review, and the game.
+ * The unit's dated list (study/days.js datedView): the retired kinds, the rules items met, and
+ * the problems of a first run answered wrong, and what waits today with no date: new items, each
+ * review position, and the game, counted as the Review page counts them.
  * @param {import('../../../kernel/pages.logic.js').UnitRecords} r
  * @param {string} today
  * @returns {import('../../../kernel/days.logic.js').DatedGroup[]}
  */
 function dated(r, today) {
   const { course, record } = goOf(r)
-  const waits = (toReview(record) ? 1 : 0) + (gameToday(course, record, today) ? 1 : 0)
+  const waits = positionsLeft(record) + (gameToday(course, record, today) ? 1 : 0)
   return [
     {
       one: 'item',
       many: 'items',
       to: `${BASE}/work`,
-      dates: Object.values(record.recall).flatMap(lines => {
-        const next = nextOf([...lines])
-        return next ? [next] : []
-      }),
+      dates: datesOf(course, record),
       fresh: freshToday(course, record, today) + waits
     }
   ]

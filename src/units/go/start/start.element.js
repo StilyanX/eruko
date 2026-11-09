@@ -1,4 +1,4 @@
-// Hides: what Go needs before the first session, and where its set-up is done.
+// Hides: what Go needs before the first game, and where its set-up is done.
 import { PRACTICE } from '../core/game.logic.js'
 import { ENGINE } from '../core/record.logic.js'
 import '../../../parts/study-page.element.js'

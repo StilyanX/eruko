@@ -40,7 +40,7 @@ export class CppTrackSetup extends Screen {
       this.update()
       if (!ok)
         return this.#stop(
-          `Setup stops at "${check.name}". The track does not open until it gives its known outcome.`
+          `Setup stops at "${check.name}". The track opens once this check gives its known outcome.`
         )
     }
     const about = await aboutRunner()

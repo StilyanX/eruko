@@ -76,10 +76,9 @@ Go              American Go Association, Official AGA Rules of Go (1991), and Jo
                 Hatsuyoron), works in the public domain: positions only, from Ulrich Goertz's
                 transcriptions and the Flygo site's text, which state no licence of their
                 own; only the stones of the positions the search could pose and finish are
-                used. The problems Eruko writes for the kinds of these two sources, once
-                they are used, are one of their positions changed by one stone, with
-                Eruko's own answers, and keep the terms of the position they come from
-                (scripts/lib/go-written.json names it). KataGo (David J. Wu, MIT License)
+                used. The problems Eruko writes in your browser, each a position of these
+                two sources that you got wrong changed by one stone, with Eruko's own
+                answers, keep the terms of the position they come from. KataGo (David J. Wu, MIT License)
                 is installed by the learner and is not bundled.
 C++ course      Ivor Horton and Peter Van Weert, Beginning C++23 (Apress, 2023): the order in
                 which the first kinds use the parts of the language, and the order of the
@@ -87,10 +86,24 @@ C++ course      Ivor Horton and Peter Van Weert, Beginning C++23 (Apress, 2023):
                 Guidelines (Standard C++ Foundation): the style of the code. ISO/IEC JTC1
                 SC22 WG21, N4950, Working Draft, Standard for Programming Language C++: the
                 facts checked. Nicolai M. Josuttis, C++ Move Semantics - The Complete Guide:
-                the order of the language track's stage 2. Every problem, label, worked
-                example and trace is Eruko's own; the unit page lists the sources of the
-                track's later stages.
+                the order of the language track's stage 2. Exercism's C++ track
+                (github.com/exercism/cpp at commit 8d139cb0, MIT License, Copyright (c) 2021
+                Exercism, src/units/cpp/content/exercism/LICENSE): the kinds after the twelve
+                take its practice exercises, each exercise's test file kept whole in
+                src/units/cpp/content/exercism/ (with the cases its open reports name as
+                missing added in <exercise>_test.added.cpp) and its task, the statement
+                rewritten bare. The added cases take their inputs and values from Exercism's
+                problem specifications (github.com/exercism/problem-specifications, MIT
+                License, Copyright (c) 2014, 2019, 2021 Exercism; the same permission text as
+                src/units/cpp/content/exercism/LICENSE). Every other problem, and every reference solution, label,
+                worked example and trace, is Eruko's own; the unit page lists the sources of
+                the track's later stages. Stage 7's scans are each entered on its Guidelines rule's
+                own bad and good examples, used under the Guidelines' MIT-style licence
+                (Copyright Standard C++ Foundation and its contributors).
                 GCC, the compiler, is installed by the learner and is not bundled.
+                Catch2 v2.13.6 (Copyright the Catch2 authors, Boost Software License 1.0,
+                scripts/vendor/catch2-2.13.6/) runs the tests of function problems in the
+                C++ runner; it is not served to the page.
 
 All original works remain the property of their authors and publishers.
 

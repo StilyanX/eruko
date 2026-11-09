@@ -11,7 +11,8 @@ import { kindId, problemId, topicSlug } from './maths-decode.logic.js'
  * Where a kind stands in its worked example and its fading: the form, the stage (1 the worked
  * example, 2 and 3 fading, 4 alone), the count of fading problems taken, the line shown, the
  * problem a stage runs on, the streak of alone-solves right in a row, whether a wrong answer's
- * solution is shown (kept in the record by a unit that keeps it there), and the day it was last met.
+ * solution is shown (kept in the record by a unit that keeps it there), whether the line's reason or
+ * the problem's answer is shown (`open`, until the next move), and the day it was last met.
  * @typedef {Readonly<{
  *   form: number,
  *   stage: 1 | 2 | 3 | 4,
@@ -20,13 +21,14 @@ import { kindId, problemId, topicSlug } from './maths-decode.logic.js'
  *   problem?: import('./maths-decode.logic.js').ProblemId | null,
  *   streak?: number,
  *   shown?: boolean,
+ *   open?: boolean,
  *   day: string
  * }>} StagePlace
  */
 /** A kind met with no place kept, as a retired kind or an idea marked wrong: its day. @typedef {Readonly<{ day: string }>} StageMet */
 /** @typedef {StagePlace | StageMet} StageEntry */
 
-/** Where a mixed-practice problem in hand stands: marked right or wrong, or its proof shown. @typedef {'right' | 'wrong' | 'proof'} MixPhase */
+/** Where a mixed-practice problem in hand stands: marked right or wrong, its proof shown, or its answer shown and the mark asked. @typedef {'right' | 'wrong' | 'proof' | 'shown'} MixPhase */
 
 /**
  * The record every mathematics unit keeps: the dated lines of each retired kind (after its first,
@@ -34,7 +36,8 @@ import { kindId, problemId, topicSlug } from './maths-decode.logic.js'
  * problems used in fading, tried first or answered right the first time, where each kind stands,
  * each topic's try-first day, the retired kinds with their day, the kind answered last today, the
  * problem in hand in mixed practice, the item in view of each run of pages, and the retired kinds
- * with no never-tried problem left (`short`, for the material's author). A unit's own fields sit beside these in its part. An older Review page
+ * with no never-tried problem left (`short`, for the material's author), and what is typed in an
+ * answer field not yet checked or marked (`draft`), by the kind or problem it answers. A unit's own fields sit beside these in its part. An older Review page
  * put sample items in the record and named them in `sample`: they are read as not there, and the
  * next write drops them and the name.
  * @typedef {Readonly<{
@@ -47,6 +50,7 @@ import { kindId, problemId, topicSlug } from './maths-decode.logic.js'
  *   mix?: Readonly<{ day: string, id: import('./maths-decode.logic.js').ProblemId, phase: MixPhase }> | null | undefined,
  *   pages?: Readonly<Partial<Record<string, number>>> | undefined,
  *   short?: readonly import('./maths-decode.logic.js').KindId[] | undefined,
+ *   draft?: Readonly<Partial<Record<string, string>>> | undefined,
  *   sample?: undefined
  * }>} PracticeRecord
  */
@@ -141,7 +145,8 @@ function stageOf(v) {
       ...(typeof v.problem === 'string' ? { problem: problemId(v.problem) } : {}),
       ...(v.problem === null ? { problem: null } : {}),
       ...(typeof v.streak === 'number' ? { streak: v.streak } : {}),
-      ...(typeof v.shown === 'boolean' ? { shown: v.shown } : {})
+      ...(typeof v.shown === 'boolean' ? { shown: v.shown } : {}),
+      ...(v.open === true ? { open: true } : {})
     }
     return place
   }
@@ -156,7 +161,7 @@ function mixOf(v) {
   if (v === null) return null
   if (!isRecord(v) || typeof v.day !== 'string' || typeof v.id !== 'string') return undefined
   const { phase } = v
-  return phase === 'right' || phase === 'wrong' || phase === 'proof'
+  return phase === 'right' || phase === 'wrong' || phase === 'proof' || phase === 'shown'
     ? { day: v.day, id: problemId(v.id), phase }
     : undefined
 }
@@ -194,6 +199,7 @@ export function decodePractice(json) {
     mix: mixOf(json.mix),
     pages: mapOf(json.pages, k => k, n => (typeof n === 'number' ? n : undefined)),
     short: idsOf(json.short, kindId),
+    draft: mapOf(json.draft, k => k, t => (typeof t === 'string' ? t : undefined)),
     sample: undefined
   }
 }
@@ -357,7 +363,7 @@ export function practiceOrder(bank, record, today, lost = []) {
 
 /**
  * The problem in hand in mixed practice today, of those `known`: answered and its mark shown, or
- * its proof shown. A mark with no line of today on its problem or its kind was never kept, so its
+ * its proof or its answer shown. A mark with no line of today on its problem or its kind was never kept, so its
  * problem is not in hand.
  * @param {PracticeRecord} record
  * @param {string} day
@@ -370,7 +376,7 @@ export function inHand(record, day, known) {
   const kept = [record.list?.[problem.id], record.list?.[problem.kind]].some(
     lines => lines?.at(-1)?.date === day
   )
-  return mix.phase === 'proof' || kept ? mix : null
+  return mix.phase === 'proof' || mix.phase === 'shown' || kept ? mix : null
 }
 
 /**

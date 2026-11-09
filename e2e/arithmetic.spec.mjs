@@ -139,8 +139,8 @@ test('a worked example: say why, show the reason, mark it, and the next line tak
   await button(examples, 'Show the reason').click()
   await button(examples, 'Wrong').click()
   await expect(examples).toContainText('Wrong. Read the reason again.')
-  await expect(button(examples, 'Next line')).toBeFocused()
-  await button(examples, 'Next line').click()
+  await expect(button(examples, 'Next')).toBeFocused()
+  await button(examples, 'Next').click()
   await expect(examples.locator('li.lrn-ss-line:visible')).toHaveCount(3)
   await expect(examples).not.toContainText('lines wrong')
   await reloadKept(page)
@@ -170,6 +170,12 @@ test('a run of ideas turns with Previous and Next, focus on the new heading, and
   await expect(ideas.getByRole('heading', { name: /^Idea 2 of 7/ })).toBeVisible()
   await button(pager, 'Previous').click()
   await expect(ideas.getByRole('heading', { name: /^Idea 1 of 7/ })).toBeVisible()
+  // Next is the primary: Enter on an idea turns to the next, never a worked example's reason.
+  await button(pager, 'Next').click()
+  await ideas.getByRole('heading', { name: /^Idea 2 of 7/ }).focus()
+  await page.keyboard.press('Enter')
+  await expect(ideas.getByRole('heading', { name: /^Idea 3 of 7/ })).toBeVisible()
+  await expect(page.locator('#ar-examples .lrn-ss-reason')).not.toContainText(['Reason:'])
 })
 
 test('fading: a wrong answer shows the solution, and a right one says what follows', async ({
@@ -179,16 +185,19 @@ test('fading: a wrong answer shows the solution, and a right one says what follo
   await page.goto(`${R}/order-and-multiplication`)
   const examples = page.locator('#ar-examples')
   await expect(examples.locator('.lrn-ss-covered:visible')).toHaveCount(1)
+  await expect(examples).toContainText('The last line is hidden.')
   await button(examples, 'Show the answer').click()
   await button(examples, 'Wrong').click()
   await expect(examples).toContainText('Wrong. Read the solution.')
-  await button(examples, 'Next problem, last two lines hidden').click()
+  await button(examples, /^Next$/).click()
   await expect(examples.locator('.lrn-ss-covered:visible')).toHaveCount(2)
+  await expect(examples).toContainText('The last two lines are hidden.')
   await button(examples, 'Show the answer').click()
   await button(examples, 'Right').click()
   await expect(examples).toContainText('Right. The next problem hides every line. Solve it alone.')
   // Solved alone: one line, not a row of hidden lines whose count gives the steps away.
   await expect(examples).toContainText('Write the full working on paper.')
+  await expect(examples).toContainText('Every line is hidden.')
   await expect(examples.locator('.lrn-ss-covered:visible')).toHaveCount(0)
 })
 
@@ -200,6 +209,13 @@ test('a proof is read line by line, and a reload returns to its line', async ({ 
   await expect(proofs.locator('li.lrn-ss-line:visible')).toHaveCount(2)
   await reloadKept(page)
   await expect(proofs.locator('li.lrn-ss-line:visible')).toHaveCount(2)
+})
+
+test('shut parts say what opens them and link it', async ({ page }) => {
+  await page.goto(`${R}/laws-of-addition-and-multiplication`)
+  const prove = page.locator('#ar-prove')
+  await expect(prove).toContainText('The statements open once you read')
+  await expect(prove.getByRole('link', { name: /more proof/ })).toHaveAttribute('href', /#ar-proofs$/)
 })
 
 test('a link to one item (from Review) opens its run on that item', async ({ page }) => {
@@ -313,16 +329,18 @@ test('mixed practice: a proof, its mark changed, the next problem, and a reload 
   await expect(practice.getByRole('list', { name: 'Published proof' })).toBeVisible()
   await button(practice, 'Right').click()
   await expect(practice).toContainText('Right. This kind comes back on')
+  // Answered, it is no longer the next problem.
+  await expect(practice.getByRole('heading', { name: 'This problem' })).toBeVisible()
   await reloadKept(page)
   await expect(practice).toContainText('Right. This kind comes back on')
-  await button(practice, 'Change the mark to Wrong').click()
+  await button(practice, 'Change the last mark to Wrong').click()
   await expect(practice).toContainText('Wrong. Read the solution.')
   await expect(practice).toContainText('The problem and its kind come back tomorrow')
   await practice.getByText('When this problem comes back').click()
   await expect(practice.locator('details li').last()).toContainText(
     'wrong at the first try that day'
   )
-  await button(practice, 'Next problem').click()
+  await button(practice, /^Next$/).click()
   await expect(practice).not.toContainText('Wrong.')
   await expect(practice).toContainText('Put your notes away.')
 })
@@ -343,8 +361,17 @@ test('mixed practice: a problem answered on paper, shown and marked', async ({ p
   await expect(button(practice, 'Show the solution')).toBeFocused()
   await button(practice, 'Show the solution').click()
   await expect(solution).toBeVisible()
-  await button(practice, 'Change the mark to Right').click()
+  await button(practice, 'Change the last mark to Right').click()
   await expect(practice).toContainText('Right. This kind comes back on')
+})
+
+test('mixed practice before any facts sheet passes allows a calculator where the problem says yes', async ({
+  page
+}) => {
+  // Whole-number classes: every problem of its one kind is marked yes; no facts record at all.
+  await withRecord(page, { [MATH_PART.key]: { retired: { 't58-k1': addDays(studyDay(Date.now()), -5) } } })
+  await page.goto(`${R}/mixed-practice`)
+  await expect(page.locator('#ar-practice')).toContainText('Calculator: yes. Put your notes away.')
 })
 
 test('mixed practice before any kind is retired says where problems come from', async ({
@@ -394,6 +421,7 @@ test('number facts: a sheet starts from the plan', async ({ page }) => {
   await button(facts, 'Start the untimed addition sheet').click()
   await expect(facts.getByRole('heading', { name: /^Addition: untimed sheet/ })).toBeVisible()
   await expect(facts).toContainText('Page 1 of')
+  await expect(facts.locator('.lrn-ss-sheet input').first()).toBeFocused()
 })
 
 test('number facts: a slip repeats only the facts missed, and the bar is named after the untimed sheet', async ({
@@ -572,7 +600,7 @@ test('mixed practice: a mark held with no dated line is not kept, so the problem
   await expect(practice.getByRole('heading', { name: 'The next problem' })).toBeVisible()
   await expect(practice).not.toContainText('Invalid Date')
   await expect(button(practice, 'Show the answer')).toBeVisible()
-  await expect(button(practice, /Change the mark/)).toHaveCount(0)
+  await expect(button(practice, /Change the last mark/)).toHaveCount(0)
 })
 
 test('a worked example sets a reason that holds mathematics as mathematics, never as raw TeX', async ({
@@ -594,4 +622,103 @@ test('a worked example sets a reason that holds mathematics as mathematics, neve
   await expect(reason).toHaveCount(1)
   await expect(reason).not.toContainText('$')
   await expect(reason.locator('math').first()).toBeAttached()
+})
+
+test('the end level opens line by line: Sums on the addition set, the rest waiting, the facts drilled first', async ({
+  page
+}) => {
+  // Addition passed; multiplication still in drill, so its sheet takes the day's hour first.
+  await withRecord(page, { [FACTS_PART.key]: factsRecord() })
+  await page.goto(`${R}/end-level`)
+  const main = page.locator('main')
+  const row = (/** @type {string} */ name) => main.locator('li', { has: page.getByText(name, { exact: true }) })
+  await expect(row('Sums')).toContainText('Untimed sheet next.')
+  await expect(row('Facts')).toContainText('Opens once you pass the multiplication facts.')
+  await expect(row('Primes')).toContainText('Opens once you pass every set of number facts and finish Number theory.')
+  await expect(main).toContainText('The number facts come first today.')
+  await expect(button(main, /^Start/)).toHaveCount(0)
+  expect((await new AxeBuilder({ page }).analyze()).violations.map(v => v.id)).toEqual([])
+})
+
+/**
+ * Whether the focused element stands inside the window.
+ * @param {import('@playwright/test').Page} page
+ */
+const focusInView = page =>
+  page.evaluate(() => {
+    const el = document.activeElement
+    if (!el || el === document.body) return false
+    const r = el.getBoundingClientRect()
+    return r.bottom > 0 && r.top < innerHeight
+  })
+
+test("mixed practice's last Next puts focus on the empty day's line, and the status line says it", async ({
+  page
+}) => {
+  await withRecord(page, { [MATH_PART.key]: mathPlainFirst(), [FACTS_PART.key]: factsRecord() })
+  await page.goto(`${R}/mixed-practice`)
+  const practice = page.locator('#ar-practice')
+  const status = page.locator('p[role=status].sr-only')
+  await button(practice, 'Show the answer').press('Enter')
+  await button(practice, 'Right').press('Enter')
+  await button(practice, /^Next$/).press('Enter')
+  // A new problem says itself, never the last verdict.
+  await expect(status).toHaveText('The next problem. 1 problem left today.')
+  await button(practice, /^Show the/).press('Enter')
+  await button(practice, 'Right').press('Enter')
+  await button(practice, /^Next$/).press('Enter')
+  const empty = practice.getByText('Nothing left today.')
+  await expect(empty).toBeFocused()
+  await expect(status).toHaveText('Nothing left today. Each kind comes back on its date.')
+})
+
+test("a statement's proof compared: after Right, focus is on the mark, in view, never on a kept Right", async ({
+  page
+}) => {
+  await withRecord(page, { [MATH_PART.key]: mathRecord() })
+  await page.goto(`${R}/order-and-addition`)
+  const prove = page.locator('#ar-prove')
+  await button(prove.getByRole('navigation', { name: 'Statement pages' }), 'Next').click()
+  for (const name of ['Done', 'Wrong', 'Done', 'Right']) await button(prove, name).press('Enter')
+  await expect(prove).toContainText('Compare your proof line by line')
+  await expect(prove.locator('fieldset.mark')).toBeFocused()
+  expect(await focusInView(page)).toBe(true)
+})
+
+test("an idea check's box is described by its question, which stays in view with it on a phone with its keyboard open", async ({
+  page
+}) => {
+  await page.setViewportSize({ width: 390, height: 420 })
+  await page.goto(`${R}/natural-numbers-from-the-axioms`)
+  const box = page.getByLabel('The idea and your example (optional)')
+  await expect(box).toHaveAccessibleDescription(/^State the idea in your own words/)
+  const question = page.locator('#ar-examples').getByText('State the idea in your own words')
+  // Coming to the box from below, as Shift+Tab does, scrolls its question in with it.
+  await box.evaluate(el => scrollTo(0, scrollY + el.getBoundingClientRect().bottom + 40))
+  await box.focus()
+  await expect(question).toBeInViewport({ ratio: 1 })
+})
+
+test('one formula is one maths object, and what Show the answer reveals and a wrong mark corrects are said', async ({
+  page
+}) => {
+  await page.goto(`${R}/order-and-addition`)
+  await expect(page.locator('math', { hasText: /a\s*<\s*b/ }).first()).toBeAttached()
+  const tryIt = page.locator('#ar-try')
+  const status = page.locator('p[role=status].sr-only')
+  await button(tryIt, 'Show the answer').click()
+  await expect(status).toHaveText(/^The answer: \S/)
+  await button(tryIt, 'Wrong').click()
+  await expect(status).toHaveText(
+    /^Wrong\. The answer is \S.*\. The solution is below\. The worked example is open\.$/
+  )
+})
+
+test('a proof line read: Show the reason says the reason, in words with no TeX', async ({ page }) => {
+  await page.goto(`${R}/order-and-addition`)
+  const proofs = page.locator('#ar-proofs')
+  await button(proofs, 'Show the reason').click()
+  const status = page.locator('p[role=status].sr-only')
+  await expect(status).toHaveText(/^The reason: \S/)
+  await expect(status).not.toHaveText(/[$\\]/)
 })

@@ -88,7 +88,7 @@ for (const file of files) {
 
   if (!r.endsWith('decode.logic.js'))
     for (const m of text.matchAll(
-      /\/\*\*\s*@type\s*\{(?!const\})[^}]*(?:\{[^}]*\}[^}]*)*\}\s*\*\/[ \t]*\(/g
+      /\/\*\*\s*@type\s*\{(?!const\})(?:[^{}]|\{[^{}]*\})*\}\s*\*\/[ \t]*\(/g
     ))
       breach('Casts', r, `casts at line ${lineAt(text, m.index)}; cast only in a decoder`)
 

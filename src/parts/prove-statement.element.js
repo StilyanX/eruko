@@ -75,7 +75,10 @@ export class AeProveStatement extends StepScreen {
           )
         ]
       case 'compare':
-        return [
+        // New nodes, never the structure check's: a kept Right would hold focus far below.
+        return h(
+          'div',
+          { key: 'compare' },
           h('p', null, COMPARE),
           this.statement.check.uses &&
             h(
@@ -91,7 +94,7 @@ export class AeProveStatement extends StepScreen {
             onRight: () =>
               this.send({ t: 'prove-done', statement: this.statement.id, day: today() })
           })
-        ]
+        )
       default:
         return unreachable(phase)
     }

@@ -31,3 +31,20 @@ export const screensOf = lesson =>
 
 /** @param {import('./decode.logic.js').Lesson} lesson */
 export const sentencesOf = lesson => screensOf(lesson).flatMap(sc => sc.sentences)
+
+/**
+ * The stuck screen's other account: the first life of the course, in its order, of the same
+ * person (the same name and birth date) whose main account you have not read; null with none.
+ * @param {import('./decode.logic.js').LivesRecord} record
+ * @param {string} id the life in hand
+ */
+export function anotherAccount(record, id) {
+  const me = findLife(id)
+  if (!me) return null
+  const born = JSON.stringify(me.born)
+  return (
+    LIVES.find(
+      l => l.id !== id && l.name === me.name && JSON.stringify(l.born) === born && !record.lives[l.id]?.opened
+    ) ?? null
+  )
+}

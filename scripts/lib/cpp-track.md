@@ -8,8 +8,8 @@ toolkit at `~/.cache/eruko-cuda/tk` (or `ERUKO_CUDA`). Builds are cached under
 `~/.cache/eruko-cpp-gen/track/`.
 
 Sources live in `src/units/cpp/content/track/`: `stages.md`, then one folder per stage (`1/`, `2/`, …)
-holding one file per kind, `NN-slug.md`, numbered 01, 02, … in track order (the order of the stage's
-book). The kind's id is `<stage>.<NN>`; its items are `t<id>v1…` (verdict), `t<id>c` (count),
+holding one file per kind, `NN-slug.md`, NN the part's number in its stage's list (the order of the
+stage's book, `cpp-order.md`); a part with no kind leaves its number unused. The kind's id is `<stage>.<NN>`; its items are `t<id>v1…` (verdict), `t<id>c` (count),
 `t<id>a1…` (alone) and `t<id>w1…` (the witness that goes with alone 1, …).
 
 ## A kind file
@@ -100,7 +100,7 @@ row lines are the lines the learner should look at (the line of the expression, 
 ````
 ## Alone 1
 Form: run                       ← run | sanitizer | flag | probes
-Sanitizer: address              ← sanitizer form: address | thread | memcheck | initcheck | racecheck | synccheck
+Sanitizer: address              ← sanitizer form: address | thread | memcheck | initcheck | racecheck
 Result: nm foo<                 ← optional: judge a count instead of the output (see below)
 Write a program that reads n and prints …
 Input: one line, n.
@@ -139,7 +139,10 @@ Limits: 1 ≤ n ≤ 1000.
   the witness. `Result: nm <regex>` counts the defined symbols `nm -C` lists whose name matches (an
   instantiation count); `Result: sass <regex>` counts the machine instructions whose opcode matches;
   `Result: registers <kernel regex>` / `spill <kernel regex>` read nvcc's resource usage.
-- **sanitizer**: the reference is silent (and its output is the expected output); the wrong version
+  The input moves no such count, so a `Result:` item holds its wrong version to the examples by
+  what it prints and to the witness by its count; in the app, what a counted program prints must
+  be the reference's too.
+- **sanitizer** (it names its `Sanitizer:`): the reference is silent (and its output is the expected output); the wrong version
   passes the examples and is loud on the witness (or on a hidden test), the same report twice.
 - **flag**: `Expect:` then `- c++17: reject` / `- c++20..c++23: accept` lines. The reference gets
   every stated verdict, the wrong version misses one. Its witness is ```` ```cpp ```` probe lines appended
@@ -154,14 +157,104 @@ Limits: 1 ≤ n ≤ 1000.
   `Orders:` then `- 1: store release`, `- 2: load acquire` (`- 1: store release device` on the device;
   the operation is load, store, rmw or fence). The learner types each slot. `### Wrong` holds its own
   `Orders:` list (one slot weakened). The generator fills the slots, checks the reference silent under
-  the sanitizer (a host item needs `Sanitizer: thread`), and weakens each slot one step (seq_cst to
+  the sanitizer (a host item needs `Sanitizer: thread`, or `Settled: stored`), and weakens each slot one step (seq_cst to
   acquire/release/acq_rel, each of those to relaxed; system to device to block to thread): each weaker
   program must be loud, or its slot listed in `Forbidden: 2` with `Derivation 1:` and `Derivation 2:`
   (a race in global memory, a fence: what no sanitizer models). The answer is right when every slot is
   as stored and the run is silent. See `tests/fixtures/cpp-track/6/09-acqrel.md`.
+- `Settled: stored` on an orders item: what its weaker slots break is one no sanitizer models (a
+  host fence, which ThreadSanitizer does not model; on the device, an order between blocks, a race
+  in global memory, whose weaker programs may also never end), so the stored verdict alone settles
+  it. The item names no `Sanitizer:` and none runs; every slot is in `Forbidden:` with the two derivations; and `### Wrong`
+  holds, after its `Orders:`, one ```` ```out ```` block per result its weaker slot permits beside the
+  reference's on every input (the value from before the write, such as `0`). The witness is right when
+  the reference runs clean and one of those results differs from its output; no run of the wrong
+  version decides it, and no weaker program runs. See `content/track/6/09-fence.md`, and
+  `content/track/8/42-release-acquire-blocks.md` on the device.
 - Every input is stdin text; a device item takes its sizes and launch shape from stdin too. Device
   memory: no item needs more than a few MB (the device has 6 GB).
 - No check reads a clock: never print a time, never ask for speed.
+
+### `## Scan` (stage 7 only, and every stage 7 kind holds one)
+
+A stage 7 kind's part is one rule of the C++ Core Guidelines (sections P, I, F, R, ES, Con, T, Per,
+CP) that a scan can settle. `Part:` is the rule's number and title (`F.48 Don't return
+std::move(local)`); `Clause:` names the rule (`C++ Core Guidelines F.48`) and any N4950 clause.
+
+````
+## Scan
+Rule: F.48
+Warning: -Wpessimizing-move, -Wredundant-move        ← g++ 16 warnings that make it loud, or
+Pattern: /\breturn\s+std::move\s*\(\s*\w+\s*\)/      ← a JavaScript regular expression, flags i, m, s
+### Bad
+```cpp
+...the rule's own bad example from the Guidelines, made whole...
+```
+### Good
+```cpp
+...the rule's own good example...
+```
+````
+
+- A pattern runs over the answer's text with every comment and the inside of every string and
+  character literal blanked (`src/units/cpp/core/scan.logic.js`); a warning scan compiles the answer
+  alone at c++23 with the warnings named and reads g++'s text (nvcc passes them to its host compiler).
+- The rule's own text is the bound: the scan flags what the text calls a violation and nothing it
+  allows. Entry check: loud on `### Bad`, silent on `### Good` (a warning scan needs both to compile).
+- A stage 7 item alone is a run item: the reference passes its tests and the scan is silent on it;
+  the wrong version gives the same output on every test and the scan is loud on it (it breaks the
+  rule, not the result). Its `### Witness` is a program (```` ```cpp ````) that compiles and on which
+  the scan is silent: the learner rewrites the rule's bad example so the scan says nothing.
+- From the day a stage 7 kind is retired its scan reads every track answer (items alone and stage 7
+  witnesses), so the generator runs every scan over every item alone's reference in every stage. A
+  reference the scan flags is rewritten, or, when its statement asks for the break, its section
+  names the rule, `Exempt: R.3`, and the statement then says so by itself ("This program breaks
+  rule R.3 on purpose, so the scan of R.3 skips it.").
+- Sample: `tests/fixtures/cpp-track/7/05-sample.md`.
+
+## The reading: `content/track/reading/NN-slug.md`
+
+Nine tasks, `01-` to `09-`, in the paper's order (The track's reading). A task is shaped as a kind
+with the id `0.NN`; its items are `t0.NNb` (the bound), `t0.NNv1…`, `t0.NNc`, `t0.NNa1`, `t0.NNw1`.
+
+````
+# 0.02 A nearest-neighbour operator split by parity
+Task: a nearest-neighbour operator on a periodic four-dimensional lattice split by parity: …   ← the paper's wording
+Shape: QUDA include/kernels/dslash_wilson.cuh, lib/dslash_wilson.cu   ← the files read to choose the shape
+Device: yes
+Write a kernel that … (the task in plain words, no physics; one or more lines)
+
+## Bound
+Tag: 9.14                                 ← the kind whose part the bound tests
+Count: the bytes the routine loads per site in single precision
+Answer: 1440
+Source: QUDA include/kernels/dslash_wilson.cuh: 8 neighbours, each a 3×3 complex matrix and a 3-vector
+Derivation 1: …
+Derivation 2: …
+
+## Verdict 1
+Tag: 8.33
+…a verdict item as in a kind…
+
+## Count
+Tag: 9.08
+…
+
+## Alone 1
+Tag: 9.14
+Newer: 12, 30          ← the reference's lines that need c++23 (g++, or nvcc on the device, rejects it at c++20 exactly there)
+Form: run
+…an item alone as in a kind, with ### Reference, ### Wrong, ### Tests, ### Witness…
+````
+
+- Every item, the bound too, names with `Tag:` the track kind whose part its check tests; a wrong answer opens that
+  kind again. The tag must name a kind file that exists.
+- The bound is the count of the library's own routine for the task's work, read from its file and
+  stored with the file's name; it is derived twice, apart. The source's text chooses the shape and
+  is never copied.
+- The item alone and its witness pass the same entry checks as a kind's; the scans run over the
+  reference as over every reference.
+- Check one task with `--track-file src/units/cpp/content/track/reading/<file>.md`.
 
 ## Rules the generator does not check (the blind solve does)
 

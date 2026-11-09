@@ -4,7 +4,6 @@ import { KINDS, PARTS, bankOf, rulesOf, workAddress } from '../core/decode.logic
 import { PROBLEMS } from '../content/problems.gen.js'
 import { RULES_ITEMS } from '../content/rules-items.gen.js'
 import { titled } from '../core/next.logic.js'
-import { unit } from '../core/unit.logic.js'
 import '../../../parts/study-page.element.js'
 import { Screen, h } from '../../../parts/view.dom.js'
 import './again.element.js'
@@ -34,7 +33,6 @@ export class GoWork extends Screen {
               : name
                 ? `Read again: ${titled(name)}`
                 : 'Read again',
-            turn: { next: { label: 'Go to Go course', to: `/${unit.slug}` } },
             sections: [
               {
                 id: 'go-again',

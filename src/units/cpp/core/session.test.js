@@ -17,7 +17,7 @@ import { nextAction } from './next.logic.js'
 const typed = value => /** @type {T} */ (value)
 
 const course = courseFrom(
-  [{ title: 'First kinds', first: 1, last: 1 }],
+  [{ title: 'Whole programs', first: 1, last: 1 }],
   [
     {
       id: 1,
@@ -216,7 +216,8 @@ const STATE = `{
    "right": false,
    "verdict": null
   },
-  "pasted": ""
+  "pasted": "",
+  "shown": 1
  },
  "sessions": [
   "2026-10-08",
@@ -230,7 +231,15 @@ const STATE = `{
   "day": "2026-10-09",
   "side": "course"
  },
- "pin": null
+ "pin": null,
+ "trackReading": {
+  "round": 0,
+  "task": 0,
+  "at": 0,
+  "wrong": [],
+  "done": "",
+  "reopened": []
+ }
 }
 `
 
@@ -284,6 +293,47 @@ test('a run begun asks the runner, and its reply comes back to the item still ru
   assert.deepEqual(ran.position.open, { ...alone, code: 'y', running: null, ran: reply(['6\n']) })
 })
 
+test("a due kind's problem checked: the kind's line from its answer, the problem's own only when wrong, a never-tried one a mixed first try", () => {
+  const on = '2026-10-09'
+  /** @type {import('./decode.logic.js').CppRecord} */
+  const due = typed({
+    ...withKind(fresh(), kindId(1), { retired: day }),
+    recall: { K1: [{ date: day, right: true, next: on }] },
+    tries: [{ id: '1.01', date: day, right: true, mixed: false }]
+  })
+  const setUp = step(course, due, {
+    t: 'setup-stored',
+    user: 'learner',
+    series: 'abc',
+    zone: 'UTC',
+    day
+  }).state
+  const ready = {
+    ...setUp,
+    runtime: { language: 'C++23', name: 'g++', version: '16', refused: [] }
+  }
+  /** @type {import('./decode.logic.js').Asked} */
+  const item = typed({ n: 2, step: 'recall', id: '1.02', kind: 1 })
+  assert.deepEqual(nextAction(course, ready, on), item)
+  const checked = (/** @type {string[]} */ outputs) =>
+    after(
+      [
+        { t: 'submit', item, code: 'x', tests },
+        { t: 'submitted', item, code: 'x', tests, reply: reply(outputs), day: on }
+      ],
+      ready
+    )
+  const right = checked(['6\n', '20\n'])
+  assert.equal(right.recall.K1?.at(-1)?.right, true)
+  assert.equal(right.recall['1.02'], undefined)
+  assert.deepEqual(right.tries.at(-1), { id: '1.02', date: on, right: true, mixed: true })
+  const wrong = checked(['6\n', '21\n'])
+  assert.deepEqual(
+    [wrong.recall.K1?.at(-1)?.next, wrong.recall['1.02']?.at(-1)?.next],
+    ['2026-10-10', '2026-10-10']
+  )
+})
+
 test('"Stop" counts a submit running as wrong, and only stops a run on the examples', () => {
   const running = step(course, fresh(), { t: 'submit', item: alone, code: 'x', tests }).state
   const stopped = step(course, running, { t: 'stop', item: alone, total: 2, day })
@@ -312,7 +362,7 @@ test('the runner not answering says so, and the item waits with its program', ()
   assert.equal(nextAction(course, down.state, day), down.state.position.open)
 })
 
-test('the contest record pasted opens the reading screen before the first reading; practice comes after the first kinds', () => {
+test('the contest record pasted opens the reading screen before the first reading; practice comes after the whole-program kinds', () => {
   assert.throws(
     () => step(course, fresh(), { t: 'practice-accepted', day }),
     /every first kind is retired/
@@ -356,7 +406,11 @@ test('the contest record pasted opens the reading screen before the first readin
     [rows[1]],
     'a contest before the start gate opened is not kept, and none twice'
   )
-  assert.deepEqual(pasted.position, { open: { n: 1, step: 'reading' }, pasted: '2026-12-06' })
+  assert.deepEqual(pasted.position, {
+    open: { n: 1, step: 'reading' },
+    pasted: '2026-12-06',
+    shown: 1
+  })
   const typedNext = after(
     [{ t: 'next' }, { t: 'series-typed', series: 'arc', day: '2026-12-06' }],
     pasted
@@ -428,4 +482,32 @@ test('Change set-up stores the user name and time zone again, and keeps the rest
     () => step(course, fresh(), { t: 'setup-changed', user: 'x', zone: 'UTC' }),
     /server is stored/
   )
+})
+
+test('each "Next" on the filled trace shows one more row, kept in the record so a reload keeps it', () => {
+  const r = after([{ t: 'start-row' }, { t: 'start-row' }])
+  assert.equal(r.position.shown, 3)
+  assert.equal(recordOf(JSON.parse(JSON.stringify(r)), course).position.shown, 3)
+  assert.equal(recordOf({ position: { shown: 'x' } }, course).position.shown, 1)
+})
+
+test('a contest day takes no turn: an answer that day keeps the side of the session before it', () => {
+  /** @type {import('./decode.logic.js').CppRecord} */
+  const r = typed({
+    ...fresh(),
+    course: course.kinds.map(k => ({ ...fresh().course[0], kind: k.id, retired: '2026-10-01' })),
+    practice: '2026-10-02',
+    server: {
+      name: 'AtCoder',
+      user: 'u',
+      series: 'abc',
+      language: 'C++23',
+      zone: 'UTC',
+      next: `${day}T12:00`,
+      from: ''
+    },
+    side: { day: '2026-10-07', side: 'track' }
+  })
+  const s = step(course, r, { t: 'start-read', day }).state
+  assert.deepEqual(s.side, { day: '2026-10-07', side: 'track' })
 })

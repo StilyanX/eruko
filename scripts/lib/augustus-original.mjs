@@ -31,6 +31,7 @@ const plain = html =>
   html
     .replace(NOT_WORDS, '')
     .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
     .replace(/&nbsp;/g, ' ')
     .replace(/&shy;/g, '')

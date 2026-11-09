@@ -1,8 +1,8 @@
 // Every move a learner makes on the C++ course's pages, and axe on each screen. A record some way
 // into the course is put in the browser's key store before the page opens (cpp-records.mjs). The
 // runner on the learner's computer is faked by route interception: it answers each program with
-// the outputs the course's own reference solution gives, so a right program passes and any other
-// prints nothing; or it is absent, never answers, refuses to compile, or reports a new compiler.
+// the outputs the course's own reference solution gives, and a function problem's reference with
+// a Catch2 report of every case passed, so a right program passes and any other prints nothing; or it is absent, never answers, refuses to compile, or reports a new compiler.
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { CPP_PART, RUNNER } from '../src/units/cpp/core/entry.logic.js'
@@ -17,19 +17,25 @@ const C = 'explore/programming/cpp'
 /** @typedef {import('@playwright/test').Page} Page */
 /**
  * @typedef {{ reach?: 'ok' | 'down' | 'hang', version?: string, compile?: string, wrong?: string, stderr?: string }} Fake
- * `compile`: the compiler's text for every program; `wrong`: a problem whose solution prints nothing.
+ * `compile`: the compiler's text for every program; `wrong`: a problem whose solution prints nothing (a function problem: passes no case).
  */
 
 /** Each program the course holds, by its text, with the output it gives for each input. */
 const OUTPUTS = new Map([[CHECK.code, new Map(CHECK.tests.map(t => [t.input, t.output]))]])
+/** Each function problem's header, by its text, with the names of its Catch2 cases. */
+const CASES = new Map()
 for (const k of KINDS) {
   const { KIND } = await import(`../src/units/cpp/content/k${String(k.id).padStart(2, '0')}.gen.js`)
   for (const p of Object.values(KIND.problems))
-    OUTPUTS.set(
+    if (p.fn) CASES.set(`${p.solution.lines.join('\n')}\n`, [...p.examples, ...p.tests].map(t => t.input))
+    else OUTPUTS.set(
       `${p.solution.lines.join('\n')}\n`,
       new Map([...p.examples, ...p.tests].map(t => [t.input, t.output]))
     )
 }
+
+/** @param {string} s */
+const escaped = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 /** @param {{ solution: { lines: readonly string[] } }} p */
 const textOf = p => `${p.solution.lines.join('\n')}\n`
@@ -58,9 +64,14 @@ async function stubRunner(page, fake = {}) {
     if (path === '/stop') return json(route, { ok: true })
     if (reach === 'hang') return undefined
     if (compile) return json(route, { compiled: false, error: compile })
-    /** @type {{ files: Record<string, string>, tests: { input: string }[] }} */
+    /** @type {{ files: Record<string, string>, tests: { input: string }[], kind?: string }} */
     const ask = JSON.parse(req.postData() ?? '{}')
     const code = ask.files['main.cpp'] ?? ''
+    if (ask.kind === 'catch2') {
+      const names = Object.values(ask.files).includes(wrong ?? '') ? [] : (Object.values(ask.files).map(f => CASES.get(f)).find(Boolean) ?? [])
+      const xml = names.map((/** @type {string} */ n) => `<TestCase name="${escaped(n)}"><OverallResult success="true"/></TestCase>`).join('')
+      return json(route, { compiled: true, runs: [{ stdout: `<Catch>${xml}</Catch>`, stderr, exit: 0, signal: null, finished: true }] })
+    }
     const outputs = wrong && code === wrong ? new Map() : OUTPUTS.get(code)
     return json(route, {
       compiled: true,
@@ -131,14 +142,20 @@ test('Start lists what the learner needs; Setup refuses a missing field, then ch
   await expect(begin.locator('tbody tr')).toHaveCount(1)
   await expect(begin.locator('p', { hasText: 'Each cell holds what' }).locator('code')).toHaveText('std::println("{}", name)')
   await noViolation(page)
+  // one "Next" a row; the rows shown are kept over a reload
   for (let n = 2; n <= start.rows.length; n++) {
-    await button(begin, 'Next row').click()
+    await button(begin, 'Next').click()
     await expect(begin.locator('tbody tr')).toHaveCount(n)
     const row = start.rows[n - 1]
     await expect(page.locator('p[role=status].sr-only')).toContainText(`Line ${row?.line}: ${start.columns[0]}`)
+    if (n === 2) {
+      await page.waitForTimeout(1200)
+      await page.reload()
+      await expect(begin.locator('tbody tr')).toHaveCount(2)
+    }
   }
-  await expect(button(begin, 'Next row')).toHaveCount(0)
   await expect(begin.getByRole('button', { name: 'Next', exact: true })).toBeFocused()
+  await expect(begin.locator('tbody tr')).toHaveCount(start.rows.length)
   await noViolation(page)
   await button(begin, 'Next').click()
   await expect(page.locator('#cpp-begin')).toHaveCount(0)
@@ -194,8 +211,12 @@ test('Setup with a compiler that lacks C++23 shows its own text', async ({ page 
   await noViolation(page)
 })
 
-test('the work list before Setup leads to the Start page', async ({ page }) => {
+test('before Setup, Continue opens Start, and the work list leads to the Start page', async ({ page }) => {
   await setUp(page, null)
+  await page.goto(C)
+  const go = page.locator('a.hm-start', { hasText: 'Continue' })
+  await expect(go).toHaveAttribute('href', /\/cpp\/start$/)
+  await expect(go).not.toContainText('new today')
   await page.goto(`${C}/work`)
   await page.getByRole('link', { name: 'Start page' }).click()
   await expect(page.locator('h1')).toHaveText('Start')
@@ -216,7 +237,7 @@ test('a worked example: the statement and the solution under its labels, then th
   await expect(work.getByRole('heading', { name: 'Trace item' })).toBeVisible()
 })
 
-test('a trace item: every row typed, Answer, then the run\'s table beside it, kept after a reload', async ({ page }) => {
+test('a trace item: every row typed, Check, then the run\'s table beside it, kept after a reload', async ({ page }) => {
   await setUp(page, 'trace')
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
@@ -229,7 +250,7 @@ test('a trace item: every row typed, Answer, then the run\'s table beside it, ke
       await page.getByLabel(`Row ${r + 1}, ${FIRST.trace.columns[c]}`, { exact: true }).fill(` ${value} `)
   }
   await page.locator('#cpp-output').fill(FIRST.trace.output)
-  await button(work, 'Answer').click()
+  await button(work, 'Check').click()
   await expect(work).toContainText('Right.')
   await expect(work).toContainText("The run's table")
   await expect(page.locator('p[role=status].sr-only')).toHaveText('Right.')
@@ -251,14 +272,37 @@ test('a trace item: No further step counts as wrong', async ({ page }) => {
   expect((await stored(page)).recall.T1[0].right).toBe(false)
 })
 
-test('a Parsons problem: refused until every line is placed; each line in order and each blank filled passes', async ({ page }) => {
+for (const [name, label, why] of /** @type {const} */ ([
+  ['trace', 'Check', 'Fill the state table first.'],
+  ['alone', 'Check', 'Write your program first.']
+]))
+  test(`Enter on arrival (${name}) records nothing: ${label} stays locked, its reason shown, while nothing is typed`, async ({ page }) => {
+    await setUp(page, name)
+    await page.goto(`${C}/work`)
+    const work = page.locator('#cpp-work')
+    const press = button(work, label)
+    await expect(press).toHaveAttribute('aria-disabled', 'true')
+    await expect(work.locator('.why', { hasText: why }).first()).toBeVisible()
+    const was = await stored(page)
+    await press.focus()
+    await page.keyboard.press('Enter')
+    await expect(work).not.toContainText('Wrong.')
+    expect((await stored(page)).recall).toEqual(was.recall)
+    // one thing typed opens it
+    if (name === 'trace') await page.locator('#cpp-output').fill('1')
+    else await page.locator('#cpp-editor').fill('int main() {}\n')
+    await expect(press).not.toHaveAttribute('aria-disabled', 'true')
+    await expect(work.locator('.why', { hasText: why })).toHaveCount(0)
+  })
+
+test('a Parsons problem: Check locked with its reason until every line is placed; each place moves focus to the next line; in order with each blank filled passes', async ({ page }) => {
   await setUp(page, 'parsons')
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
   await expect(work.getByRole('heading', { name: 'Parsons problem' })).toBeVisible()
   await noViolation(page)
-  await button(work, 'Submit').click()
-  await expect(page.locator('#cpp-parsons-why')).toHaveText('Put every line in its place first.')
+  await expect(button(work, 'Check')).toHaveAttribute('aria-disabled', 'true')
+  await expect(work.locator('.why', { hasText: 'Put every line in its place first.' })).toBeVisible()
   const code = PARSONS.solution
   const moved = code.lines.flatMap((line, at) => (code.frame.includes(at) || !line.trim() ? [] : [at]))
   /** @param {number} at */
@@ -272,12 +316,16 @@ test('a Parsons problem: refused until every line is placed; each line in order 
   const [first, second] = moved
   await work.locator('.cpp-pool-line', { hasText: shown(second ?? 0).trim() }).first().click()
   await work.getByRole('button', { name: `Take out line ${(first ?? 0) + 1}` }).click()
-  for (const at of moved) await work.locator('.cpp-pool-line').filter({ hasText: shown(at).trim() }).first().click()
+  for (const [k, at] of moved.entries()) {
+    await work.locator('.cpp-pool-line').filter({ hasText: shown(at).trim() }).first().click()
+    if (k < moved.length - 1) await expect(work.locator('.cpp-pool-line').first()).toBeFocused()
+  }
   await expect(work.locator('.cpp-pool-line')).toHaveCount(0)
+  await expect(button(work, 'Check')).not.toHaveAttribute('aria-disabled', 'true')
   for (const [i, b] of code.blanks.entries())
     await page.getByLabel(`Blank ${i + 1}`, { exact: true }).fill((code.lines[b.line] ?? '').slice(b.from, b.to))
   await noViolation(page)
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(work).toContainText('Right.')
   await expect(work).toContainText(`${PARSONS.examples.length + PARSONS.tests.length} of ${PARSONS.examples.length + PARSONS.tests.length} tests passed.`)
   await button(work, 'Next').click()
@@ -350,16 +398,16 @@ test("a program's error text stands under the program, and a compile error still
   await page.unrouteAll()
   const compile = "main.cpp:1:13: error: expected '}' at end of input"
   await stubRunner(page, { compile })
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(work.locator('pre', { hasText: compile })).toBeVisible()
   await expect(work).toContainText('Expected')
   await expect(work).toContainText('Given')
 })
 
-test('a kind with no never-tried problem left says it waits for new problems, on the work list and its row', async ({ page }) => {
+test('a kind with no never-tried problem left says it opens again once Eruko adds new problems, on the work list and its row', async ({ page }) => {
   await setUp(page, 'waits')
   await page.goto(`${C}/work`)
-  await expect(page.locator('#cpp-work')).toContainText(`${KINDS[0]?.name} waits for new problems.`)
+  await expect(page.locator('#cpp-work')).toContainText(`${KINDS[0]?.name} opens again once Eruko adds new problems to it.`)
   await noViolation(page)
   await page.goto(C)
   await expect(page.getByText('Opens again once Eruko adds new problems to it.')).toBeVisible()
@@ -384,7 +432,7 @@ test('a problem written alone and right retires the kind, opens the next, and pa
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
   await page.locator('#cpp-editor').fill(textOf(ALONE))
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(work.getByRole('heading', { name: 'Result' })).toBeVisible()
   await expect(work).toContainText('Right.')
   await expect(work).toContainText('The reference solution')
@@ -402,7 +450,7 @@ test('a wrong submit shows the first failed test, then the reference solution', 
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
   await page.locator('#cpp-editor').fill('int main() {}\n')
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(work).toContainText('Wrong.')
   await expect(work).toContainText(`0 of ${ALONE.examples.length + ALONE.tests.length} tests passed.`)
   await expect(work).toContainText('Expected')
@@ -415,7 +463,7 @@ test('Stop while the hidden tests run counts the submit as wrong', async ({ page
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
   await page.locator('#cpp-editor').fill('int main() { for (;;) {} }\n')
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(work).toContainText('The hidden tests run.')
   await noViolation(page)
   await button(work, 'Stop').click()
@@ -429,7 +477,7 @@ test('a submit with the runner absent says how to start it, and the program wait
   await page.goto(`${C}/work`)
   const work = page.locator('#cpp-work')
   await page.locator('#cpp-editor').fill('int main() {}\n')
-  await button(work, 'Submit').click()
+  await button(work, 'Check').click()
   await expect(page.locator('#cpp-runner-why')).toHaveText(RUNNER_DOWN)
   await expect(page.locator('#cpp-editor')).toHaveValue('int main() {}\n')
   await noViolation(page)
@@ -462,6 +510,9 @@ test('on the contest day the contest is the whole plan', async ({ page }) => {
   await expect(work.getByRole('heading', { name: 'Contest' })).toBeVisible()
   await expect(work.getByRole('heading', { name: 'Problem' })).toHaveCount(0)
   await noViolation(page)
+  // Continue counts the contest alone
+  await page.goto(C)
+  await expect(page.locator('.hm-start').first()).toHaveText(/Work list: 1 new today$/)
 })
 
 test('the record pasted: refused when it is none, else the Reading screen, then the next contest', async ({ page }) => {
@@ -504,15 +555,30 @@ test('a new compiler the runner reports runs every reference solution first; one
   expect(r.runtime.refused).toEqual([PARSONS.id])
 })
 
-test('Review counts what waits today, and a row with something waiting leads to the work list', async ({ page }) => {
+test('Review counts what waits today as its card does, in one Work list row that leads to the work list', async ({ page }) => {
   await setUp(page, 'due')
+  await page.goto(C)
+  const card = page.locator('.hm-start', { hasText: 'Review' })
+  await expect(card).toContainText(' today.')
+  const waits = ((await card.locator('.hm-start-note').textContent()) ?? '').replace(' today.', '')
   await page.goto(`${C}/review`)
   const table = page.locator('table.lrn-rv')
-  await expect(table.getByRole('row', { name: /Problems due/ })).toContainText('1')
+  await expect(table.locator('tbody tr')).toHaveCount(1)
+  await expect(table.getByRole('row', { name: /Work list/ })).toContainText(waits)
+  // no later date is shown
+  await expect(page.locator('main')).not.toContainText('comes back from')
   await noViolation(page)
-  await table.getByRole('link', { name: 'Problems due' }).click()
+  await table.getByRole('link', { name: 'Work list' }).click()
   await expect(page.locator('h1')).toHaveText('Work list')
-  await expect(page.locator('#cpp-work')).toContainText(PARSONS.statement[0] ?? '')
+  await expect(page.locator('#cpp-work')).toContainText(ALONE.statement[0] ?? '')
+})
+
+test('with nothing left, the work list says so and when the next item comes back, with one way back to the course', async ({ page }) => {
+  await setUp(page, 'nothing')
+  await page.goto(`${C}/work`)
+  await expect(page.locator('#cpp-work')).toContainText('Nothing left.')
+  await expect(page.locator('#cpp-work')).toContainText('The next item comes back on')
+  await expect(page.getByRole('link', { name: 'Go to C++ course' })).toHaveCount(1)
 })
 
 test("the place line names the open kind in the unit's own words", async ({ page }) => {

@@ -9,6 +9,18 @@ import { actions, choice, step } from '../../../parts/study.dom.js'
 import { h } from '../../../parts/view.dom.js'
 import { LifeScreen, typed } from '../core/screens.dom.js'
 
+/**
+ * A field taking focus keeps the question above it in view: its scroll margin reaches up to the
+ * question's top, measured now, and the field and the question are brought into view together.
+ * @param {FocusEvent} e
+ */
+const withQuestion = e => {
+  const q = document.getElementById('au-question')
+  if (!q || !(e.target instanceof HTMLElement)) return
+  e.target.style.scrollMarginTop = `${e.target.getBoundingClientRect().top - q.getBoundingClientRect().top}px`
+  e.target.scrollIntoView({ block: 'nearest' })
+}
+
 export class AugustusQuestion extends LifeScreen {
   /** @type {import('../core/decode.logic.js').Life | null} */
   life = null
@@ -57,7 +69,7 @@ export class AugustusQuestion extends LifeScreen {
     const filled = Boolean(pText.trim() && reason.trim())
     const wrongP = this.checked && !readChance(pText).ok
     return step([
-      h('p', { class: 'lrn-bio-date', tabindex: '-1' }, dateLine(now.lesson.date, now.life.born)),
+      h('h3', { class: 'lrn-bio-date', tabindex: '-1' }, dateLine(now.lesson.date, now.life.born)),
       h('p', { class: 'lrn-bio-q', id: 'au-question' }, now.question.text),
       h(
         'form',
@@ -73,7 +85,8 @@ export class AugustusQuestion extends LifeScreen {
           inputmode: 'decimal',
           '.value': pText,
           'aria-invalid': wrongP ? 'true' : undefined,
-          'aria-describedby': wrongP ? 'au-p-note' : undefined,
+          'aria-describedby': wrongP ? 'au-question au-p-note' : 'au-question',
+          onfocus: withQuestion,
           oninput: (/** @type {Event} */ e) => {
             this.checked = false
             this.#type({ pText: typed(e), reason })
@@ -85,6 +98,8 @@ export class AugustusQuestion extends LifeScreen {
           id: 'au-reason',
           class: 'field',
           '.value': reason,
+          'aria-describedby': 'au-question',
+          onfocus: withQuestion,
           oninput: (/** @type {Event} */ e) => this.#type({ pText, reason: typed(e) })
         }),
         this.#actions(now, filled)

@@ -46,13 +46,8 @@ export function go(to, how = {}) {
   void navigation.navigate(linkTo(to), { history: how.replace ? 'replace' : 'push' })
 }
 
-// Where each page was left in this visit, by its path, for a link back to it.
-/** @type {Map<string, number>} */
-const left = new Map()
-
-/** Note where the page now shown stands, in memory and in its history entry. */
+/** Note where the page now shown stands, in its history entry. */
 function noteScroll() {
-  left.set(location.pathname, scrollY)
   try {
     keepInEntry({ scroll: scrollY })
     return true
@@ -129,19 +124,28 @@ export function startRouter(show) {
     const url = new URL(e.destination.url)
     if (!url.pathname.startsWith(BASE)) return
     const same = url.pathname === location.pathname
-    if (!same) left.set(location.pathname, scrollY)
+    if (!same) noteScroll()
+    // A link to the address already shown (the browser makes it a replace) moves focus to the
+    // title, as any other link does.
+    const again =
+      e.destination.url === location.href &&
+      e.navigationType !== 'reload' &&
+      e.navigationType !== 'traverse'
     e.intercept({
       focusReset: 'manual',
       scroll: 'manual',
       async handler() {
         await show(url, same)
+        if (again) requestAnimationFrame(focusTitle)
         if (same) return
+        // Back, Forward and a reload land where the reader left the page; a link lands at the top.
         const kept =
           e.navigationType === 'traverse' || e.navigationType === 'reload'
             ? entryState().scroll
             : undefined
-        landAt(typeof kept === 'number' ? kept : (left.get(url.pathname) ?? 0))
-        if (!url.hash) requestAnimationFrame(focusTitle)
+        landAt(typeof kept === 'number' ? kept : 0)
+        // A replace only puts the address in its one form (the first page's), and moves no focus.
+        if (!url.hash && e.navigationType !== 'replace') requestAnimationFrame(focusTitle)
       }
     })
   })
