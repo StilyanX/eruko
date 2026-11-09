@@ -139,3 +139,28 @@ test('one stored log of moves replays to its stored state, byte for byte', () =>
   const end = log.reduce((s, move) => step(s, move).state, state())
   assert.equal(`${JSON.stringify(end, null, 2)}\n`, expected)
 })
+
+test('a typed answer is kept in the record until the idea is marked right, and an empty one is dropped', () => {
+  const k = /** @type {import('../../../kernel/maths-decode.logic.js').KindId} */ ('t1-k1')
+  const typed = step(state(), { t: 'draft', id: k, text: '3 follows 2.' }).state
+  assert.deepEqual(decodeArithmetic(JSON.parse(JSON.stringify(typed.math))).draft, { [k]: '3 follows 2.' })
+  const same = step(typed, { t: 'draft', id: k, text: '3 follows 2.' }).state
+  assert.equal(same.math, typed.math, 'the same text writes nothing')
+  const wrong = step(typed, { t: 'idea-wrong', kind: k, day }).state
+  assert.deepEqual(wrong.math.draft, { [k]: '3 follows 2.' }, 'kept after a Wrong')
+  assert.equal(step(wrong, { t: 'idea-right', kind: k, day }).state.math.draft, undefined)
+  assert.equal(step(typed, { t: 'draft', id: k, text: '' }).state.math.draft, undefined)
+})
+
+test('a place on the number line is kept until it is checked, and reads back as kept', () => {
+  const draft = { key: 'p-3', mark: 260, typed: '2.6' }
+  const kept = step(state(), { t: 'place-draft', draft }).state
+  assert.deepEqual(kept.math.place, draft)
+  assert.deepEqual(decodeArithmetic(JSON.parse(JSON.stringify(kept.math))).place, draft)
+  const checked = step(kept, { t: 'place-draft', draft: null }).state
+  assert.equal(checked.math.place, null)
+  assert.equal(decodeArithmetic(JSON.parse(JSON.stringify(checked.math))).place, undefined)
+  const none = state()
+  assert.equal(step(none, { t: 'place-draft', draft: null }).state, none, 'nothing kept, nothing written')
+  assert.equal(decodeArithmetic({ place: { key: 'p', mark: -1, typed: '' } }).place, undefined, 'a damaged place reads as none')
+})

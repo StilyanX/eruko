@@ -18,10 +18,6 @@
   "day": "2026-10-01"
  },
  {
-  "t": "skip-game",
-  "day": "2026-10-01"
- },
- {
   "t": "answer",
   "item": {
    "n": 5,
@@ -41,40 +37,10 @@
   "item": {
    "n": 5,
    "step": "rules",
-   "id": "R1.2",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-01"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "rules",
-   "id": "R1.3",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-01"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "rules",
    "id": "R1.4",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -104,7 +70,7 @@
    "id": "R1.6",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -134,7 +100,7 @@
    "id": "R2.1",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -164,7 +130,7 @@
    "id": "R2.3",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -194,7 +160,7 @@
    "id": "R2.5",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -224,7 +190,7 @@
    "id": "R2.7",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -254,7 +220,7 @@
    "id": "R3.1",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -284,7 +250,7 @@
    "id": "R3.3",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -314,7 +280,7 @@
    "id": "R4.1",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -344,7 +310,7 @@
    "id": "R4.3",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -374,7 +340,7 @@
    "id": "R5.2",
    "kind": null
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -404,7 +370,7 @@
    "id": "R5.4",
    "kind": null
   },
-  "right": true,
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-01"
  },
@@ -437,21 +403,6 @@
    "n": 5,
    "step": "new",
    "id": "1.2",
-   "kind": 1
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-01"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "new",
-   "id": "1.3",
    "kind": 1
   },
   "right": true,
@@ -494,6 +445,21 @@
    "id": "3.2",
    "kind": 3
   },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-01"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "3.3",
+   "kind": 3
+  },
   "right": true,
   "given": "B1 dies",
   "day": "2026-10-01"
@@ -512,21 +478,6 @@
    "n": 5,
    "step": "new",
    "id": "4.2",
-   "kind": 4
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-01"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "new",
-   "id": "4.3",
    "kind": 4
   },
   "right": true,
@@ -557,14 +508,474 @@
   "t": "next"
  },
  {
+  "t": "example-read",
+  "kind": 6,
+  "day": "2026-10-01"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "6.2",
+   "kind": 6
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-01"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "6.3",
+   "kind": 6
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-01"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "example-read",
+  "kind": 7,
+  "day": "2026-10-01"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "7.2",
+   "kind": 7
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-01"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "example-read",
+  "kind": 8,
+  "day": "2026-10-01"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "8.2",
+   "kind": 8
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-01"
+ },
+ {
+  "t": "next"
+ },
+ {
   "t": "answer",
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "1.2",
-   "kind": 1
+   "id": "R1.1",
+   "kind": null,
+   "case": 1
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R1.4",
+   "kind": null,
+   "case": 0
   },
   "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R1.5",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R1.6",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R1.7",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.1",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.2",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.3",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.4",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.5",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.6",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.7",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.8",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R3.1",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R3.2",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R3.3",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R3.4",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R4.1",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R4.2",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R4.3",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.1",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.2",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.3",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.4",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-02"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.5",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
   "given": "B1 dies",
   "day": "2026-10-02"
  },
@@ -579,7 +990,7 @@
    "id": "1.3",
    "kind": 1
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-02"
  },
@@ -591,7 +1002,7 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "2.2",
+   "id": "2.3",
    "kind": 2
   },
   "right": true,
@@ -621,21 +1032,6 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "4.2",
-   "kind": 4
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
    "id": "4.3",
    "kind": 4
   },
@@ -651,7 +1047,7 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "5.2",
+   "id": "5.3",
    "kind": 5
   },
   "right": true,
@@ -666,8 +1062,8 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R1.1",
-   "kind": null
+   "id": "6.2",
+   "kind": 6
   },
   "right": true,
   "given": "B1 dies",
@@ -681,8 +1077,8 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R1.2",
-   "kind": null
+   "id": "7.3",
+   "kind": 7
   },
   "right": true,
   "given": "B1 dies",
@@ -696,368 +1092,8 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R1.3",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R1.4",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R1.5",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R1.6",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R1.7",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.2",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.3",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.4",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.5",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.6",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.7",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.8",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R3.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R3.2",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R3.3",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R3.4",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R4.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R4.2",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R4.3",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.1",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.2",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.3",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.4",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.5",
-   "kind": null
+   "id": "8.3",
+   "kind": 8
   },
   "right": false,
   "given": "B1 dies",
@@ -1075,8 +1111,8 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "4.4",
-   "kind": 4
+   "id": "6.4",
+   "kind": 6
   },
   "right": true,
   "given": "B1 dies",
@@ -1090,52 +1126,7 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "5.3",
-   "kind": 5
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 4,
-   "step": "mixed",
-   "id": "1.4",
-   "kind": 1
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 4,
-   "step": "mixed",
-   "id": "2.3",
-   "kind": 2
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-02"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 4,
-   "step": "mixed",
-   "id": "3.3",
+   "id": "3.4",
    "kind": 3
   },
   "right": true,
@@ -1150,8 +1141,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "1.3",
-   "kind": 1
+   "id": "R1.1",
+   "kind": null,
+   "case": 1
   },
   "right": true,
   "given": "B1 dies",
@@ -1165,23 +1157,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "1.4",
-   "kind": 1
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "2.3",
-   "kind": 2
+   "id": "R1.7",
+   "kind": null,
+   "case": 0
   },
   "right": false,
   "given": "B1 dies",
@@ -1195,8 +1173,73 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "3.3",
-   "kind": 3
+   "id": "R2.4",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R2.8",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R3.4",
+   "kind": null,
+   "case": 0
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.1",
+   "kind": null,
+   "case": 0
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 1,
+   "step": "recall",
+   "id": "R5.5",
+   "kind": null,
+   "case": 0
   },
   "right": true,
   "given": "B1 dies",
@@ -1225,8 +1268,8 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "4.4",
-   "kind": 4
+   "id": "8.3",
+   "kind": 8
   },
   "right": true,
   "given": "B1 dies",
@@ -1240,8 +1283,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "5.3",
-   "kind": 5
+   "id": "R1.6",
+   "kind": null,
+   "case": 0
   },
   "right": false,
   "given": "B1 dies",
@@ -1255,8 +1299,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R1.3",
-   "kind": null
+   "id": "R2.3",
+   "kind": null,
+   "case": 0
   },
   "right": true,
   "given": "B1 dies",
@@ -1270,8 +1315,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R1.7",
-   "kind": null
+   "id": "R2.7",
+   "kind": null,
+   "case": 0
   },
   "right": true,
   "given": "B1 dies",
@@ -1285,8 +1331,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R2.4",
-   "kind": null
+   "id": "R3.3",
+   "kind": null,
+   "case": 0
   },
   "right": true,
   "given": "B1 dies",
@@ -1300,8 +1347,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R2.8",
-   "kind": null
+   "id": "R4.3",
+   "kind": null,
+   "case": 0
   },
   "right": false,
   "given": "B1 dies",
@@ -1315,158 +1363,9 @@
   "item": {
    "n": 1,
    "step": "recall",
-   "id": "R3.4",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.5",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "1.2",
-   "kind": 1
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "4.2",
-   "kind": 4
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R1.4",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R2.5",
-   "kind": null
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R3.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R4.1",
-   "kind": null
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 1,
-   "step": "recall",
-   "id": "R5.2",
-   "kind": null
+   "id": "R5.4",
+   "kind": null,
+   "case": 0
   },
   "right": true,
   "given": "B1 dies",
@@ -1487,7 +1386,7 @@
    "id": "2.4",
    "kind": 2
   },
-  "right": false,
+  "right": true,
   "given": "B1 dies",
   "day": "2026-10-04"
  },
@@ -1499,8 +1398,8 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "3.4",
-   "kind": 3
+   "id": "8.4",
+   "kind": 8
   },
   "right": true,
   "given": "B1 dies",
@@ -1514,7 +1413,22 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "1.5",
+   "id": "3.5",
+   "kind": 3
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 4,
+   "step": "mixed",
+   "id": "1.4",
    "kind": 1
   },
   "right": true,
@@ -1529,8 +1443,8 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "4.5",
-   "kind": 4
+   "id": "6.5",
+   "kind": 6
   },
   "right": true,
   "given": "B1 dies",
@@ -1544,47 +1458,7 @@
   "item": {
    "n": 4,
    "step": "mixed",
-   "id": "5.4",
-   "kind": 5
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "example-read",
-  "kind": 6,
-  "day": "2026-10-04"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "new",
-   "id": "6.2",
-   "kind": 6
-  },
-  "right": true,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "example-read",
-  "kind": 7,
-  "day": "2026-10-04"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "new",
-   "id": "7.2",
+   "id": "7.4",
    "kind": 7
   },
   "right": true,
@@ -1595,17 +1469,27 @@
   "t": "next"
  },
  {
-  "t": "example-read",
-  "kind": 8,
+  "t": "answer",
+  "item": {
+   "n": 4,
+   "step": "mixed",
+   "id": "4.4",
+   "kind": 4
+  },
+  "right": false,
+  "given": "B1 dies",
   "day": "2026-10-04"
+ },
+ {
+  "t": "next"
  },
  {
   "t": "answer",
   "item": {
-   "n": 5,
-   "step": "new",
-   "id": "8.2",
-   "kind": 8
+   "n": 4,
+   "step": "mixed",
+   "id": "5.4",
+   "kind": 5
   },
   "right": true,
   "given": "B1 dies",
@@ -1625,21 +1509,6 @@
    "n": 5,
    "step": "new",
    "id": "9.2",
-   "kind": 9
-  },
-  "right": false,
-  "given": "B1 dies",
-  "day": "2026-10-04"
- },
- {
-  "t": "next"
- },
- {
-  "t": "answer",
-  "item": {
-   "n": 5,
-   "step": "new",
-   "id": "9.3",
    "kind": 9
   },
   "right": true,
@@ -1672,6 +1541,91 @@
  {
   "t": "example-read",
   "kind": 17,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "17.2",
+   "kind": 17
+  },
+  "right": false,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "answer",
+  "item": {
+   "n": 5,
+   "step": "new",
+   "id": "17.3",
+   "kind": 17
+  },
+  "right": true,
+  "given": "B1 dies",
+  "day": "2026-10-04"
+ },
+ {
+  "t": "next"
+ },
+ {
+  "t": "example-read",
+  "kind": 11,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 12,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 21,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 13,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 14,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 15,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 16,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 18,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 19,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 20,
+  "day": "2026-10-04"
+ },
+ {
+  "t": "example-read",
+  "kind": 22,
   "day": "2026-10-04"
  }
 ]

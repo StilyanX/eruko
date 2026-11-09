@@ -5,8 +5,9 @@
 // its item was stopped or left changes nothing.
 import { assert, unreachable } from '../../../kernel/invariant.logic.js'
 import { allPassed, traceRight, verdictOf } from './judge.logic.js'
-import { answered, exampleRead, firstKindsRetired, startRead } from './next.logic.js'
+import { answered, contestToday, exampleRead, firstKindsRetired, startRead } from './next.logic.js'
 import { withReading } from './readings.logic.js'
+import { readingAnswered } from './reading.logic.js'
 import { formText } from './decode.logic.js'
 import {
   aloneJudged,
@@ -14,7 +15,10 @@ import {
   trackAnswered,
   trackExampleRead,
   verdictRight,
-  witnessJudged
+  witnessJudged,
+  scansOver,
+  scanned,
+  withScans
 } from './track.logic.js'
 import {
   nextTyped,
@@ -30,6 +34,7 @@ import {
  * @typedef {readonly import('./decode.logic.js').Test[]} Tests The examples, then the hidden tests, of the problem answered
  * @typedef {Readonly<{ t: 'setup-stored', user: string, series: string, zone: string, day: string }>} SetupStored Setup: the fields typed, once the runner's check passed
  * @typedef {Readonly<{ t: 'start-read', day: string }>} StartRead The first kind's filled trace read
+ * @typedef {Readonly<{ t: 'start-row' }>} StartRow "Next" on the filled trace before its last row: one more row shows
  * @typedef {Readonly<{ t: 'example-read', kind: import('./decode.logic.js').KindId, day: string }>} ExampleRead
  * @typedef {Readonly<{ t: 'trace-answered', item: import('./decode.logic.js').Asked, trace: import('./decode.logic.js').Trace, cells: readonly (readonly string[])[], output: string, day: string }>} TraceAnswered "Answer" on a trace item: each row typed, its line's number first, and the second input's output
  * @typedef {Readonly<{ t: 'code-kept', item: import('./decode.logic.js').Asked, code: string }>} CodeKept The screen left with a program typed
@@ -49,13 +54,14 @@ import {
  * @typedef {Readonly<{ t: 'track-example-read', kind: string, day: string }>} TrackExampleRead The open track kind's worked example studied
  * @typedef {Readonly<{ t: 'track-verdict', item: import('./track-decode.logic.js').TrackAsked, content: import('./track-decode.logic.js').VerdictItem, typed: Readonly<Record<string, import('./track.logic.js').LevelAnswer>>, day: string }>} TrackVerdict A verdict for each level, typed before any run
  * @typedef {Readonly<{ t: 'track-count', item: import('./track-decode.logic.js').TrackAsked, content: import('./track-decode.logic.js').CountItem, typed: readonly (readonly string[])[], day: string }>} TrackCount The count item's table, filled before the run
- * @typedef {Readonly<{ t: 'track-submit', item: import('./track-decode.logic.js').TrackAsked, code: string, asks: readonly import('./track.logic.js').RunAsk[] }>} TrackSubmit An item alone or a witness submitted: the runs it asks
- * @typedef {Readonly<{ t: 'track-ran', item: import('./track-decode.logic.js').TrackAsked, code: string, content: import('./track-decode.logic.js').AloneItem, replies: readonly import('./track.logic.js').Reply[], day: string }>} TrackRan The runner's replies to a track submit
+ * @typedef {Readonly<{ t: 'track-submit', item: import('./track-decode.logic.js').TrackAsked, code: string, lines?: readonly number[], content: import('./track-decode.logic.js').AloneItem, asks: readonly import('./track.logic.js').RunAsk[] }>} TrackSubmit An item alone or a witness submitted: the runs it asks, the scans' warnings added here
+ * @typedef {Readonly<{ t: 'track-ran', item: import('./track-decode.logic.js').TrackAsked, code: string, lines?: readonly number[], content: import('./track-decode.logic.js').AloneItem, replies: readonly import('./track.logic.js').Reply[], day: string }>} TrackRan The runner's replies to a track submit
  * @typedef {Readonly<{ t: 'track-kept', item: import('./track-decode.logic.js').TrackAsked, code: string }>} TrackKept The screen left with an answer typed
  * @typedef {Readonly<{ t: 'track-stop', item: import('./track-decode.logic.js').TrackAsked, day: string }>} TrackStop "Stop" on a track submit: wrong
  * @typedef {Readonly<{ t: 'track-down' | 'track-lost', item: import('./track-decode.logic.js').TrackAsked }>} TrackDown The runner did not answer a track submit, or no page waits on it any more
- * @typedef {TrackExampleRead | TrackVerdict | TrackCount | TrackSubmit | TrackRan | TrackKept | TrackStop | TrackDown} TrackEvent
- * @typedef {StartRead | ExampleRead | TraceAnswered | CodeKept | RunExamples | ExamplesRan | Submit | Submitted | Stop | RunnerDown | RunLost | NoFurtherStep | Next | TrackEvent} StudyEvent
+ * @typedef {Readonly<{ t: 'track-bound', item: import('./track-decode.logic.js').TrackAsked, typed: string, day: string }>} TrackBound A reading task's bound, typed before any run
+ * @typedef {TrackExampleRead | TrackVerdict | TrackCount | TrackSubmit | TrackRan | TrackKept | TrackStop | TrackDown | TrackBound} TrackEvent
+ * @typedef {StartRead | StartRow | ExampleRead | TraceAnswered | CodeKept | RunExamples | ExamplesRan | Submit | Submitted | Stop | RunnerDown | RunLost | NoFurtherStep | Next | TrackEvent} StudyEvent
  * @typedef {Readonly<{ t: 'runtime-checked', about: import('./decode.logic.js').About, refused: readonly import('./decode.logic.js').ProblemId[] }>} RuntimeChecked The runner reported another compiler or version, and every reference solution ran against its tests under it; `refused` those that failed
  * @typedef {Readonly<{ t: 'setup-changed', user: string, zone: string }>} SetupChanged "Change set-up": the user name and the time zone typed again
  * @typedef {Readonly<{ t: 'track-setup-stored', pin: import('./track-decode.logic.js').Pin }>} TrackSetupStored The track's Setup passed every form: its pin
@@ -67,7 +73,7 @@ import {
  * @typedef {Readonly<{ t: 'run', item: import('./decode.logic.js').Asked, code: string, tests: Tests, why: 'examples' | 'submit' }>} RunEffect Run the program as main.cpp on each test's input, and send its reply back as `examples-ran` or `submitted`, or `runner-down`
  * @typedef {Readonly<{ t: 'stop' }>} StopEffect Stop every run on the runner
  * @typedef {Readonly<{ t: 'say', text: string }>} SayEffect A line said to a screen reader
- * @typedef {Readonly<{ t: 'track-run', item: import('./track-decode.logic.js').TrackAsked, code: string, asks: readonly import('./track.logic.js').RunAsk[] }>} TrackRunEffect Run each ask on the runner, and send the replies back as `track-ran`, or `track-down`
+ * @typedef {Readonly<{ t: 'track-run', item: import('./track-decode.logic.js').TrackAsked, code: string, lines?: readonly number[], asks: readonly import('./track.logic.js').RunAsk[] }>} TrackRunEffect Run each ask on the runner, and send the replies back as `track-ran`, or `track-down`
  * @typedef {RunEffect | StopEffect | SayEffect | TrackRunEffect} Effect
  */
 /** @typedef {Readonly<{ state: import('./decode.logic.js').CppRecord, effects: readonly Effect[] }>} Stepped */
@@ -116,18 +122,20 @@ function working(record, item, change) {
  * @returns {Stepped}
  */
 const judged = (course, record, answer, before = []) => ({
-  state: onCourse(answered(course, record, answer), answer.day),
+  state: onCourse(course, answered(course, record, answer), answer.day),
   effects: [...before, { t: 'say', text: answer.right ? 'Right.' : 'Wrong.' }]
 })
 
 /**
  * The day's session kept as the course's, for the turn of sessions between the course and the
- * track (track.logic.js `sideToday`).
+ * track (track.logic.js `sideToday`); a contest day takes no turn, so it keeps the side before it.
+ * @param {import('./decode.logic.js').Course} course
  * @param {import('./decode.logic.js').CppRecord} record
  * @param {string} day
  * @returns {import('./decode.logic.js').CppRecord}
  */
-const onCourse = (record, day) => ({ ...record, side: { day, side: 'course' } })
+const onCourse = (course, record, day) =>
+  contestToday(course, record, day) ? record : { ...record, side: { day, side: 'course' } }
 
 /**
  * The track item open as it is being answered, when it is this item.
@@ -163,7 +171,15 @@ function trackOpenWith(record, item, change) {
  * @returns {Stepped}
  */
 function trackJudged(course, record, item, { right, code, verdict, day }, before = []) {
-  const next = trackAnswered(course.track, record, { item, right, day })
+  // a unit of the reading (a task "0.NN") is dated by no gate: the reading moves on
+  const next = item.kind.startsWith('0.')
+    ? readingAnswered(course.reading, course.track, record, {
+        id: item.id,
+        kind: item.kind,
+        right,
+        day
+      })
+    : trackAnswered(course.track, record, { item, right, day })
   return {
     state: { ...next, position: { ...next.position, open: { ...item, code, right, verdict } } },
     effects: [...before, { t: 'say', text: right ? 'Right.' : 'Wrong.' }]
@@ -181,12 +197,19 @@ function trackRun(course, record, event) {
   if (event.t === 'track-ran') {
     if (trackWorking(record, event.item)?.running !== 'submit')
       return { state: record, effects: [] }
-    const { item, code, content, replies, day } = event
+    const { item, code, content, replies, day, lines = [] } = event
+    const scans = scansOver(course.track, record, item, content)
     if (item.unit === 'witness') {
-      const w = witnessJudged(content, replies)
+      const w = scanned(witnessJudged(content, replies), scans, code, replies, content.device)
       return trackJudged(course, record, item, { right: w.right, code, verdict: w, day })
     }
-    const a = aloneJudged(content, code, replies)
+    const a = scanned(
+      aloneJudged(content, code, replies, lines),
+      scans,
+      code,
+      replies,
+      content.device
+    )
     return trackJudged(course, record, item, { right: a.right, code, verdict: a, day })
   }
   {
@@ -235,13 +258,21 @@ function tracked(course, record, event) {
         day: event.day
       })
     }
+    case 'track-bound': {
+      const answer = course.reading.find(t => t.id === event.item.kind)?.bound.answer
+      const typed = event.typed.trim()
+      const right = typed !== '' && Number(typed) === answer
+      return trackJudged(course, record, event.item, {
+        right,
+        code: typed,
+        verdict: { stored: String(answer) },
+        day: event.day
+      })
+    }
     case 'track-kept':
       return { state: trackOpenWith(record, event.item, { code: event.code }), effects: [] }
     case 'track-submit':
-      return {
-        state: trackOpenWith(record, event.item, { code: event.code, running: 'submit' }),
-        effects: [{ t: 'track-run', item: event.item, code: event.code, asks: event.asks }]
-      }
+      return trackSubmitted(course, record, event)
     case 'track-ran':
     case 'track-stop':
       return trackRun(course, record, event)
@@ -258,6 +289,31 @@ function tracked(course, record, event) {
       return unreachable(event)
   }
 }
+
+/**
+ * A track item alone or witness submitted: it runs, with the scans' warnings asked, and the lines
+ * typed with it go along to its judging.
+ * @param {import('./decode.logic.js').Course} course
+ * @param {import('./decode.logic.js').CppRecord} record
+ * @param {TrackSubmit} event
+ * @returns {Stepped}
+ */
+const trackSubmitted = (course, record, event) => ({
+  state: trackOpenWith(record, event.item, { code: event.code, running: 'submit' }),
+  effects: [
+    {
+      t: 'track-run',
+      item: event.item,
+      code: event.code,
+      ...(event.lines ? { lines: event.lines } : {}),
+      asks: withScans(
+        event.asks,
+        scansOver(course.track, record, event.item, event.content),
+        event.content.device
+      )
+    }
+  ]
+})
 
 /**
  * The step for a run of a program: begun, answered by the runner, stopped, or not answered.
@@ -320,15 +376,23 @@ function ran(course, record, event) {
 function studied(course, record, event) {
   switch (event.t) {
     case 'start-read':
-      return { state: onCourse(startRead(course, record, event.day), event.day), effects: [] }
+      return {
+        state: onCourse(course, startRead(course, record, event.day), event.day),
+        effects: []
+      }
+    case 'start-row': {
+      const position = { ...record.position, shown: record.position.shown + 1 }
+      return { state: { ...record, position }, effects: [] }
+    }
     case 'example-read':
       return {
-        state: onCourse(exampleRead(course, record, event.kind, event.day), event.day),
+        state: onCourse(course, exampleRead(course, record, event.kind, event.day), event.day),
         effects: []
       }
     case 'track-example-read':
     case 'track-verdict':
     case 'track-count':
+    case 'track-bound':
     case 'track-kept':
     case 'track-submit':
     case 'track-ran':
@@ -384,7 +448,11 @@ function pasted(record, rows, day) {
   const read = withReading({ ...record, contests }, day)
   const show = read.readings.length !== record.readings.length || read.readings.length === 0
   /** @type {import('./decode.logic.js').Position} */
-  const position = { open: show ? { n: 1, step: 'reading' } : read.position.open, pasted: day }
+  const position = {
+    ...read.position,
+    open: show ? { n: 1, step: 'reading' } : read.position.open,
+    pasted: day
+  }
   return { ...read, position }
 }
 

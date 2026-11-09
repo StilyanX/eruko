@@ -54,30 +54,15 @@
     margin: var(--space-4) 0;
     overflow-x: auto;
   }
-  /* Inline maths wider than its line is made a focusable scroll box (study.dom.js). */
-  .lrn math[tabindex] {
+  /* Inline maths wider than its line is made a focusable scroll box (study.dom.js). Room above and
+     below keeps a tall fraction whole beside the scrollbar, at any line height (WCAG 1.4.12). */
+  .lrn math[tabindex='0'] {
     display: inline-block;
     max-width: calc(100% - 1ch);
+    padding-block: 0.5em;
     overflow-x: auto;
     overflow-y: hidden;
     vertical-align: middle;
-  }
-
-  /* One side of a long inline formula (maths-screens.dom.js): it moves to a new line whole, and
-     wraps inside only when it is wider than the line. */
-  .lrn .lrn-side {
-    display: inline-block;
-    max-width: 100%;
-  }
-  /* Where the pieces of one formula meet, the margin each piece keeps from the text
-     (typography.css) is dropped, so the joins set as tight as an unbroken formula. */
-  .lrn .lrn-side > .lrn-piece:has(+ .lrn-piece),
-  .lrn .lrn-side:has(+ .lrn-side) > .lrn-piece:last-child {
-    margin-right: 0;
-  }
-  .lrn .lrn-side > .lrn-piece + .lrn-piece,
-  .lrn .lrn-side + .lrn-side > .lrn-piece:first-child {
-    margin-left: 0;
   }
 
   /* The page header: the title. */

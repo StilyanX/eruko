@@ -177,3 +177,105 @@ export const problemsIn = v =>
           ...Object.values(v).flatMap(problemsIn)
         ]
       : []
+
+// TeX commands said as the sign or word a screen reader speaks; spacing is said as a space.
+/** @type {Record<string, string>} */
+const SIGNS = {
+  times: '×',
+  cdot: '×',
+  div: '÷',
+  le: '≤',
+  leq: '≤',
+  ge: '≥',
+  geq: '≥',
+  ne: '≠',
+  neq: '≠',
+  approx: '≈',
+  pm: '±',
+  mp: '∓',
+  ldots: '…',
+  dots: '…',
+  cdots: '…',
+  pi: 'π',
+  infty: '∞',
+  circ: '°',
+  to: '→',
+  quad: ' ',
+  qquad: ' ',
+  left: '',
+  right: '',
+  displaystyle: '',
+  hline: ''
+}
+const WRAPS = new Set(['text', 'mathrm', 'mathbf', 'textbf', 'mathit', 'operatorname', 'mbox'])
+const FRACS = new Set(['frac', 'dfrac', 'tfrac'])
+
+/**
+ * One formula's TeX in words: what the status line says of maths it reveals.
+ * @param {string} tex
+ */
+function texWords(tex) {
+  let i = 0
+  /** The next argument: a group in braces, a command, or one character. @returns {string} */
+  const arg = () => {
+    while (tex.charAt(i) === ' ') i++
+    if (tex.charAt(i) === '{') {
+      let depth = 0
+      const start = i
+      for (; i < tex.length; i++) {
+        if (tex.charAt(i) === '\\') i++
+        else if (tex.charAt(i) === '{') depth++
+        else if (tex.charAt(i) === '}' && --depth === 0) break
+      }
+      i++
+      return texWords(tex.slice(start + 1, i - 1))
+    }
+    return one()
+  }
+  /** The next sign, command or character, in words. @returns {string} */
+  const one = () => {
+    const c = tex.charAt(i++)
+    if (c === '^') {
+      const p = arg()
+      return p === '2' ? ' squared' : p === '3' ? ' cubed' : p === '°' ? '°' : ` to the power ${p}`
+    }
+    if (c === '_') return ` ${arg()}`
+    if (c === '{' || c === '}') return ''
+    if (c === '&') return ', '
+    if (c !== '\\') return c
+    const name = tex.slice(i).match(/^[a-zA-Z]+/)?.[0]
+    if (!name) {
+      const sym = tex.charAt(i++)
+      // \, between digits groups them; \\ ends a row.
+      return sym === '\\' ? ', ' : ',;:! '.includes(sym) ? (sym === ',' ? '' : ' ') : sym
+    }
+    i += name.length
+    if (FRACS.has(name)) return `${arg()} over ${arg()}`
+    if (name === 'sqrt') {
+      if (tex.charAt(i) === '[') i = tex.indexOf(']', i) + 1
+      return ` the square root of ${arg()}`
+    }
+    if (WRAPS.has(name)) return arg()
+    if (name === 'begin' || name === 'end') {
+      arg()
+      return ''
+    }
+    return SIGNS[name] ?? name
+  }
+  let out = ''
+  while (i < tex.length) out += one()
+  return out
+}
+
+/**
+ * A text with its maths in words, for the page's status line: bold marks dropped, each formula
+ * said as a screen reader speaks its signs ("1 over 2", "x squared").
+ * @param {string} text
+ */
+export const spoken = text =>
+  textRuns(text)
+    .flatMap(part => part.runs)
+    .map(run => (run.kind === 'text' ? run.text : texWords(run.tex)))
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()

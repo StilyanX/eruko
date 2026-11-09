@@ -38,6 +38,12 @@ test('Start is done once Setup is stored and the filled trace read', () => {
   assert.deepEqual(unit.finished({ cpp: set }), new Set())
   const read = { ...set, course: [{ kind: FIRST.id, opened: day, retired: '', part: 'example' }] }
   assert.deepEqual(unit.finished({ cpp: read }), new Set(['start']))
+  const retired = { ...set, course: [{ kind: FIRST.id, opened: day, retired: day, part: 'start' }] }
+  assert.deepEqual(
+    unit.finished({ cpp: retired }),
+    new Set(['start']),
+    'a retired first kind is past it'
+  )
 })
 
 test('the rows: Start, the work list, then the kinds, the open one opening the work list', () => {
@@ -57,22 +63,27 @@ test('the rows: Start, the work list, then the kinds, the open one opening the w
     KINDS.length + TRACK.length,
     "the course's kinds, then the track's"
   )
+  // before Start is done, the open kind opens Start
   assert.deepEqual(rows.items[0], {
     key: FIRST.id,
     title: FIRST.name,
-    to: '/explore/programming/cpp/work',
+    to: '/explore/programming/cpp/start',
     done: false
   })
+  const read = { ...set, course: [{ kind: FIRST.id, opened: day, retired: '', part: 'example' }] }
+  assert.equal(unit.rows({ cpp: read }).items[0]?.to, '/explore/programming/cpp/work')
   assert.ok(rows.items.slice(1).every(r => r.to === undefined && !r.done))
   if (TRACK[0])
-    assert.equal(rows.items[KINDS.length]?.opens, 'Opens once the twelve first kinds are retired.')
+    assert.equal(rows.items[KINDS.length]?.opens, 'Opens once the twelve whole-program kinds are retired.')
 })
 
 test('the dated list: the dated items, and the steps with no date that wait today', () => {
   const recall = { [FIRST.trace]: [{ date: day, right: true, next: '2026-10-09' }] }
-  const [group] = unit.dated({ cpp: { ...set, recall } }, day)
+  const course = [{ kind: FIRST.id, opened: day, retired: '', part: 'example' }]
+  const [group] = unit.dated({ cpp: { ...set, course, recall } }, day)
   assert.deepEqual(group?.dates, ['2026-10-09'])
   assert.equal(group?.to, '/explore/programming/cpp/work')
   assert.equal(group?.fresh, 1, 'the first run')
-  assert.equal(unit.dated({}, day)[0]?.fresh, 1)
+  assert.equal(unit.dated({}, day)[0]?.fresh, 0, 'nothing waits on the work list before Start')
+  assert.equal(unit.dated({ cpp: set }, day)[0]?.fresh, 0, 'nor before the filled trace is read')
 })

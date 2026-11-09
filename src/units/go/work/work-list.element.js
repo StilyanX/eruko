@@ -2,13 +2,24 @@
 // which event each answer sends (session.dom.js), and what waits beside it (the engine down, a
 // challenge posted, the engine's pass). The page's sheet reads each item
 // among the step's siblings (.lrn-ss > :first-child, .lrn p:last-child),
-// so each item is drawn by a method here, and its typed text, its refusal and its wait live in
-// this element, cleared when the item changes.
+// so each item is drawn by a method here. Its refusal and its wait live in this element, cleared
+// when the item changes; its typed text is kept in the record too, until it is answered.
 import { assert, unreachable } from '../../../kernel/invariant.logic.js'
 import { askEngine } from '../core/engine.dom.js'
 import { isRulesItem, readCount, readGameNumber, readMove } from '../core/decode.logic.js'
 import { areaParts, boardBefore, colours, diagramOf, gameOf, ratedCount } from '../core/game.logic.js'
-import { RESULT_WORDS, formLack, gameToday, isRight, nextAction, noKindBegun, pointLack, restOf, sameAnswer } from '../core/next.logic.js'
+import {
+  RESULT_WORDS,
+  formLack,
+  gameToday,
+  isRight,
+  nextAction,
+  noKindBegun,
+  pointLack,
+  restOf,
+  sameAnswer,
+  setUpLack
+} from '../core/next.logic.js'
 import { endLevelLines, readingLines, readingSummary } from '../core/readings.logic.js'
 import { lossOf, points, queryFor, typedLoss } from '../core/review.logic.js'
 import { BLACK, WHITE, parseCoord, place as placeStone } from '../core/rules.logic.js'
@@ -16,6 +27,7 @@ import { readEnded, readGame, readPlayer, serverSays } from '../core/server.dom.
 import { dayName, studyDay } from '../../../kernel/days.logic.js'
 import { clock, today } from '../../../parts/clock.dom.js'
 import { linkTo } from '../../../parts/links.dom.js'
+import { say } from '../../../parts/say.dom.js'
 import { actions, choice, step, verdict } from '../../../parts/study.dom.js'
 import { Screen, h } from '../../../parts/view.dom.js'
 import { Background, ServerRead, afterRedraw } from '../core/background.dom.js'
@@ -24,12 +36,13 @@ import {
   RESULTS,
   HOME,
   POINT_WHY,
+  QUESTION,
   READING_SERVER,
   SIDE,
   answering,
   asked,
+  check,
   bankOf,
-  busy,
   field,
   goStore,
   goView,
@@ -46,6 +59,9 @@ import {
 import { send } from '../core/session.dom.js'
 import { postedText, practiceText, rankText, ratedList, ratedText } from './game.dom.js'
 
+/** Why Game ended waits while the server is read. */
+const WAIT_SERVER = 'Wait for Eruko to read the server.'
+
 /** @typedef {{ why: string, busy: boolean }} Wait a refusal said and a read under way: "Game ended" */
 /**
  * What the item open holds while it is answered: the fields typed, the refusal, the engine's
@@ -54,8 +70,23 @@ import { postedText, practiceText, rankText, ratedList, ratedText } from './game
  * @typedef {{ key: string, move: string, result: string, typed: string, number: string, why: string, loss: '' | 'reading' | 'failed', ended: Wait }} Form
  */
 
-/** @param {string} key @returns {Form} */
-const blank = key => ({ key, move: '', result: '', typed: '', number: '', why: '', loss: '', ended: { why: '', busy: false } })
+/**
+ * A new item's state, with what the record kept typed for it.
+ * @param {string} key
+ * @param {import('../core/decode.logic.js').Draft} [draft]
+ * @returns {Form}
+ */
+const blank = (key, draft) => ({
+  key,
+  move: '',
+  result: '',
+  typed: '',
+  number: '',
+  ...(draft?.key === key ? draft : {}),
+  why: '',
+  loss: '',
+  ended: { why: '', busy: false }
+})
 
 /**
  * The name of the item open: a new item starts its form afresh.
@@ -65,12 +96,13 @@ const keyOf = item =>
   `${item.step}${'id' in item ? item.id : 'game' in item ? item.game : ''}${'index' in item ? item.index : ''}`
 
 /**
- * "Right." or "Wrong." said and kept, for the item open.
+ * "Right." or "Wrong." said and kept, for the item open; after Wrong, `answer` is said.
  * @param {import('../core/decode.logic.js').Asked} item
  * @param {string} day
+ * @param {string} answer the right answer, in a sentence
  */
-const judger = (item, day) => (/** @type {boolean} */ right, /** @type {string} */ given) =>
-  send({ t: 'answer', item, right, given, day })
+const judger = (item, day, answer) => (/** @type {boolean} */ right, /** @type {string} */ given) =>
+  send({ t: 'answer', item, right, given, day, answer })
 
 /** The work list. `problems` is the bank and `items` the rules items, each by id. */
 export class GoWorkList extends Screen {
@@ -80,11 +112,17 @@ export class GoWorkList extends Screen {
   items = {}
   /** The item open's own state. */
   #f = blank('')
+  /** Whether the item open follows another and is still to be said. */
+  #told = false
   /** A posted challenge's "Game ended", while it shows. @type {Wait | null} */
   #posted = null
-  #bg = new Background(() => this.update())
+  #bg = new Background(
+    () => this.update(),
+    () => this.problems
+  )
   #server = new ServerRead(() => this.update())
   #sync = afterRedraw(this, () => {
+    this.#tell()
     this.#server.sync(today())
     this.#bg.sync()
   })
@@ -108,6 +146,14 @@ export class GoWorkList extends Screen {
     this.#sync()
   }
 
+  /** A new item that follows another, once drawn, says its question, else its first line outside a board's caption. */
+  #tell() {
+    if (!this.#told) return
+    this.#told = false
+    const first = this.querySelector(`#${QUESTION}`) ?? this.querySelector('.lrn-ss p:not(figcaption p)')
+    if (first instanceof HTMLElement && first.innerText) say(first.innerText)
+  }
+
   /**
    * Change the item open's state, and redraw.
    * @param {object} state
@@ -118,13 +164,28 @@ export class GoWorkList extends Screen {
     this.update()
   }
 
+  /**
+   * A field of the item open typed: kept in the record until the item is answered.
+   * @param {Form} f
+   * @param {Partial<Form>} change
+   */
+  #type(f, change) {
+    Object.assign(f, change)
+    const { key, move, result, typed, number } = f
+    send({ t: 'draft', draft: { key, move, result, typed, number } })
+  }
+
   view() {
     const { record, course } = goView()
     const day = today()
     const item = nextAction(course, record, day)
     const key = keyOf(item)
-    // A new item starts with nothing typed.
-    if (this.#f.key !== key) this.#f = blank(key)
+    // A new item starts with what the record kept typed for it, else nothing; one that follows
+    // another says its first sentence once drawn.
+    if (this.#f.key !== key) {
+      this.#told = this.#f.key !== ''
+      this.#f = blank(key, record.position.draft)
+    }
     const posting = Boolean(gameToday(course, record, day)?.waiting && item.step !== 'game')
     if (!posting) this.#posted = null
     else this.#posted ??= { why: '', busy: false }
@@ -147,7 +208,7 @@ export class GoWorkList extends Screen {
   #screen(item, record, course, day) {
     switch (item.step) {
       case 'nothing':
-        return nothingLeft(record, day)
+        return nothingLeft(course, record, day)
       case 'review':
         return this.#review(record, item)
       case 'game':
@@ -176,7 +237,7 @@ export class GoWorkList extends Screen {
       case 'new':
       case 'rules':
         return isRulesItem(item.id)
-          ? this.#rules(this.#entry(item.id), record, item, day)
+          ? this.#rules(this.#entry(item), record, item, day)
           : this.#problemScreen(this.#problem(record, item.id), record, item, day, course)
       default:
         return unreachable(item)
@@ -184,13 +245,15 @@ export class GoWorkList extends Screen {
   }
 
   /**
-   * A rules item by its id; the course holds every rules item the record names.
-   * @param {string} id
+   * The case of a rules item asked: in step 1 the case its return draws, else its first; the
+   * course holds every rules item the record names.
+   * @param {import('../core/decode.logic.js').Asked} item
    */
-  #entry(id) {
-    const entry = this.items[id]
-    assert(entry, `The course holds every rules item the record names: ${id}`)
-    return entry
+  #entry(item) {
+    const entry = this.items[item.id]
+    const asked = entry?.cases[item.step === 'recall' ? (item.case ?? 0) : 0]
+    assert(entry && asked, `The course holds every rules item the record names: ${item.id}`)
+    return { ...asked, rule: entry.rule }
   }
 
   /**
@@ -216,7 +279,7 @@ export class GoWorkList extends Screen {
     const f = this.#f
     if ('right' in item)
       return [asked(problem), judged(item), solution(problem, course), next(() => send({ t: 'next' }))]
-    const judge = judger(item, day)
+    const judge = judger(item, day, `First move: ${problem.answers.join(' or ')}. Result: ${problem.result}.`)
     /** @param {SubmitEvent} e */
     const submit = e => {
       e.preventDefault()
@@ -232,7 +295,7 @@ export class GoWorkList extends Screen {
     /** @param {string} at */
     const pick = at => {
       if (problem.black.includes(at) || problem.white.includes(at)) return
-      this.#set(f, { move: at, why: '' })
+      this.#type(f, { move: at, why: '' })
     }
     return [
       asked(problem, { onPoint: pick, chosen: named(f.move, problem).slice(0, 1) }),
@@ -246,28 +309,30 @@ export class GoWorkList extends Screen {
             id: 'go-move',
             label: 'The first move: click its point, or type it, such as D4',
             value: f.move,
-            onChange: v => this.#set(f, { move: v }),
+            onChange: v => this.#type(f, { move: v }),
             why: f.why,
-            capitals: true
+            capitals: true,
+            asked: true
           }),
           field({
             id: 'go-result',
             label: 'The result: lives, dies, ko, or seki',
             value: f.result,
-            onChange: v => this.#set(f, { result: v }),
-            why: f.why
+            onChange: v => this.#type(f, { result: v }),
+            why: f.why,
+            asked: true
           })
         ),
         why(f.why),
         stuck(record),
-        answering(() => judge(false, ''))
+        answering(() => judge(false, ''), Boolean(f.move.trim() && f.result.trim()))
       )
     ]
   }
 
   /**
    * A rules item: the diagram, the question, a typed answer, then the answer and the rule's words.
-   * @param {import('../core/decode.logic.js').RulesItem} entry
+   * @param {import('../core/decode.logic.js').RulesCase & { rule: string }} entry
    * @param {import('../core/decode.logic.js').GoRecord} record
    * @param {import('../core/decode.logic.js').Asked | import('../core/decode.logic.js').Judged} item
    * @param {string} day
@@ -277,17 +342,18 @@ export class GoWorkList extends Screen {
     // an answer of points may be given by clicking them, each click adding a point or taking it out
     const pointed = !/^\d+$/.test(entry.answer) && entry.answer !== 'yes' && entry.answer !== 'no'
     const open = !('right' in item) && pointed
+    // the question sits under the board, next to the field it describes
     const question = [
-      h('p', null, entry.question),
       board({
         diagram: entry.position,
         ...(open
           ? {
-              onPoint: (/** @type {string} */ at) => this.#set(f, { typed: toggled(f.typed, at) }),
+              onPoint: (/** @type {string} */ at) => this.#type(f, { typed: toggled(f.typed, at) }),
               chosen: named(f.typed, entry.position)
             }
           : {})
-      })
+      }),
+      h('p', { id: QUESTION }, entry.question)
     ]
     if ('right' in item)
       return [
@@ -297,11 +363,10 @@ export class GoWorkList extends Screen {
         h('p', { key: 'rule' }, entry.rule),
         next(() => send({ t: 'next' }))
       ]
-    const judge = judger(item, day)
+    const judge = judger(item, day, `The answer is ${entry.answer}.`)
     /** @param {SubmitEvent} e */
     const submit = e => {
       e.preventDefault()
-      if (!f.typed.trim()) return this.#set(f, { why: 'Type the answer.' })
       const lack = formLack(f.typed, entry.answer)
       if (lack) return this.#set(f, { why: lack })
       judge(sameAnswer(f.typed, entry.answer), f.typed.trim())
@@ -318,13 +383,14 @@ export class GoWorkList extends Screen {
             id: 'go-rule',
             label: pointed ? 'Your answer: click the points, or type them' : 'Your answer',
             value: f.typed,
-            onChange: v => this.#set(f, { typed: v }),
-            why: f.why
+            onChange: v => this.#type(f, { typed: v }),
+            why: f.why,
+            asked: true
           })
         ),
         why(f.why),
         stuck(record),
-        answering(() => judge(false, ''))
+        answering(() => judge(false, ''), Boolean(f.typed.trim()))
       )
     ]
   }
@@ -338,12 +404,16 @@ export class GoWorkList extends Screen {
    * @param {import('../core/decode.logic.js').Entry} entry
    */
   async #lossOf(f, game, index, entry) {
+    say(`The engine is reading your move ${entry.typed}.`)
     const { engine } = goView().record
     const answer = engine && (await askEngine(engine.address, queryFor(engine, game, entry.move - 1, entry.typed)))
     if (answer && answer.ok) {
       const lossPts = typedLoss(game, entry, entry.typed, answer.value.scoreLead)
       send({ t: 'review-loss', game: game.id, index, typed: entry.typed, lossPts })
-    } else if (this.#f === f) this.#set(f, { loss: 'failed' })
+    } else if (this.#f === f) {
+      this.#set(f, { loss: 'failed' })
+      say(`Your move ${entry.typed}: the engine did not answer, so the move's loss is not known.`)
+    }
   }
 
   /**
@@ -468,7 +538,7 @@ export class GoWorkList extends Screen {
     const pick = at => {
       const p = parseCoord(at)
       if (!p || before.cells[p[1] * before.w + p[0]]) return
-      this.#set(f, { typed: at, why: '' })
+      this.#type(f, { typed: at, why: '' })
     }
     return [
       head,
@@ -483,7 +553,7 @@ export class GoWorkList extends Screen {
             id: 'go-review',
             label: 'Your move: click its point, or type it',
             value: f.typed,
-            onChange: v => this.#set(f, { typed: v }),
+            onChange: v => this.#type(f, { typed: v }),
             why: f.why,
             capitals: true
           })
@@ -491,7 +561,7 @@ export class GoWorkList extends Screen {
         why(f.why),
         actions(
           choice({ label: 'Skip this position', onPress: () => keep('none', null) }),
-          choice({ primary: true, type: 'submit', label: 'Check' })
+          check(Boolean(f.typed.trim()))
         )
       )
     ]
@@ -584,7 +654,13 @@ export class GoWorkList extends Screen {
           ],
       !ranged &&
         !server.busy &&
-        h('div', { class: 'actions', key: 'again' }, choice({ label: 'Read the server again', onPress: server.again }))
+        h('div', { class: 'actions', key: 'again' }, choice({
+            label: 'Read the server again',
+            onPress: () => {
+              say(READING_SERVER)
+              server.again()
+            }
+          }))
     ]
   }
 
@@ -598,32 +674,44 @@ export class GoWorkList extends Screen {
     const f = this.#f
     const wait = f.ended
     const skip = choice({ label: 'Skip the game today', onPress: () => send({ t: 'skip-game', day }) })
-    /** @param {string} number */
-    const ended = number =>
+    // set-up comes once, when the first game comes; the rest of the work list runs meanwhile
+    if (setUpLack(record)) return setUpFirst(skip)
+    const ended = () =>
       choice({
         primary: true,
-        onPress: () => void this.#ended(wait, day, item.practice, number),
+        // a practice game's Game ended submits the form of its number, so Enter there presses it
+        ...(item.practice
+          ? { type: /** @type {const} */ ('submit') }
+          : { onPress: () => void this.#ended(wait, day, false) }),
         disabled: wait.busy,
-        why: READING_SERVER,
+        why: WAIT_SERVER,
         label: 'Game ended'
       })
+    /** @param {SubmitEvent} e */
+    const submit = e => {
+      e.preventDefault()
+      void this.#ended(wait, day, true, f.number)
+    }
     if (item.practice)
       return [
         practiceText(),
         h(
-          'div',
-          { class: 'go-fields' },
-          field({
-            id: 'go-number',
-            label: "The game's number or address, when the game has ended",
-            value: f.number,
-            onChange: v => this.#set(f, { number: v }),
-            why: wait.why
-          })
-        ),
-        why(wait.why),
-        busy(wait.busy && READING_SERVER),
-        actions(skip, ended(f.number))
+          'form',
+          { key: 'form', onsubmit: submit, novalidate: true },
+          h(
+            'div',
+            { class: 'go-fields' },
+            field({
+              id: 'go-number',
+              label: "The game's number or address, when the game has ended",
+              value: f.number,
+              onChange: v => this.#type(f, { number: v }),
+              why: wait.why
+            })
+          ),
+          why(wait.why),
+          actions(skip, ended())
+        )
       ]
     const first = ratedCount(record) === 0
     return [
@@ -631,13 +719,12 @@ export class GoWorkList extends Screen {
       this.#ratedSettings(record),
       ratedText(first),
       why(wait.why),
-      busy(wait.busy && READING_SERVER),
       h(
         'div',
         { class: 'actions', key: 'ways' },
         skip,
         choice({ label: 'Challenge posted', onPress: () => send({ t: 'post-game', day }) }),
-        ended('')
+        ended()
       )
     ]
   }
@@ -651,13 +738,12 @@ export class GoWorkList extends Screen {
     return [
       postedText(),
       why(wait.why, 'go-posted-why'),
-      busy(wait.busy && READING_SERVER),
       actions(
         choice({ label: 'Challenge withdrawn', onPress: () => send({ t: 'skip-game', day }) }),
         choice({
           onPress: () => void this.#ended(wait, day, false),
           disabled: wait.busy,
-          why: READING_SERVER,
+          why: WAIT_SERVER,
           label: 'Game ended'
         })
       )
@@ -701,10 +787,12 @@ export class GoWorkList extends Screen {
       h(
         'div',
         { class: 'go-fields' },
-        field({ id: 'go-count', label: 'Your area count', value: f.typed, onChange: v => this.#set(f, { typed: v }), why: f.why })
+        field({ id: 'go-count', label: 'Your area count', value: f.typed, onChange: v => this.#type(f, { typed: v }), why: f.why })
       ),
+      !record.start.counted &&
+        h('p', { class: 'lrn-ss-note', key: 'opens' }, 'Your first count opens rated games, right or wrong.'),
       why(f.why),
-      actions(choice({ primary: true, type: 'submit', label: 'Check' }))
+      actions(check(Boolean(f.typed.trim())))
     )
   }
 }
@@ -797,17 +885,32 @@ function example(problem, item, day, course, record) {
 }
 
 /**
- * Nothing left: the sentence, then why, and where to go.
+ * The game before Start's set-up is done: the one missing act, the way to Start, and Skip.
+ * @param {import('../../../parts/view.dom.js').Child} skip
+ */
+const setUpFirst = skip => [
+  h(
+    'p',
+    { key: 'set-up' },
+    'Set up Go on the ',
+    h('a', { href: linkTo(`${HOME}/start`) }, 'Start page'),
+    ' first: choose the network file, check the engine, and type your OGS user name.'
+  ),
+  actions(skip)
+]
+
+/**
+ * Nothing left: the sentence, then why. The page's foot leads to the unit page.
+ * @param {import('../core/own.logic.js').Course} course
  * @param {import('../core/decode.logic.js').GoRecord} record
  * @param {string} day
  */
-function nothingLeft(record, day) {
-  const { later } = restOf(record, day)
+function nothingLeft(course, record, day) {
+  const { later } = restOf(course, record, day)
   return [
     h('p', null, 'Nothing left.'),
     later && h('p', { key: 'later' }, 'The next item comes back on ', dayName(later), '.'),
     !(record.engine && record.server) &&
-      h('p', { key: 'start' }, 'Games and their review wait on ', h('a', { href: linkTo(`${HOME}/start`) }, 'Start'), '.'),
-    h('p', { key: 'home' }, h('a', { href: linkTo(HOME) }, 'Go to Go course'))
+      h('p', { key: 'start' }, 'Games and their review wait on ', h('a', { href: linkTo(`${HOME}/start`) }, 'Start'), '.')
   ]
 }

@@ -71,6 +71,9 @@ function check(s, where) {
   if (rest.includes('$')) issues.push(`${where}  unbalanced $: ${s.slice(0, 70)}`)
 }
 
+// Fields that hold program text or a pattern, never maths: a `$` there is the program's own.
+const CODE = new Set(['test', 'lines', 'result', 'reference', 'wrong', 'template'])
+
 /**
  * @param {unknown} v
  * @param {string} where
@@ -78,7 +81,8 @@ function check(s, where) {
 function walkValue(v, where) {
   if (typeof v === 'string') check(v, where)
   else if (Array.isArray(v)) v.forEach(x => walkValue(x, where))
-  else if (v && typeof v === 'object') Object.values(v).forEach(x => walkValue(x, where))
+  else if (v && typeof v === 'object')
+    Object.entries(v).forEach(([k, x]) => CODE.has(k) || walkValue(x, where))
 }
 
 for (const f of files) {

@@ -6,6 +6,7 @@ import { typed } from '../../../../tests/lib/go-typed.mjs'
 import { ENGINE, SERVER } from './record.logic.js'
 import { UNITS } from '../../../shell/registry.js'
 import { KINDS, PARTS, SECTIONS } from './course.gen.js'
+import { positionsLeft } from './next.logic.js'
 import { unit } from './unit.logic.js'
 
 const day = '2026-10-08'
@@ -113,9 +114,15 @@ test('the dated list: what is due, and what waits today with no date', () => {
   assert.ok(group)
   assert.equal(group.to, '/explore/go/go/work')
   assert.deepEqual(group.dates, [])
-  assert.equal(group.fresh, FIRST_PART.items.length)
+  // the first game waits too: set-up comes when it comes
+  assert.equal(group.fresh, FIRST_PART.items.length + 1)
   const recall = { 'R1.1': [{ date: day, right: true, next: '2026-10-09' }] }
   assert.deepEqual(unit.dated({ go: { recall } }, day)[0]?.dates, ['2026-10-09'])
+  // each review position counts, as the Review page counts it, not one for the whole review
+  const games = [{ id: 1, date: day, moves: [], list: [{ move: 1 }, { move: 2, typed: 'D4' }, { move: 3 }] }]
+  const reviewing = typed({ go: { games } })
+  assert.equal(positionsLeft(typed({ games })), 2)
+  assert.equal(unit.dated(reviewing, day)[0]?.fresh, FIRST_PART.items.length + 2)
   // a stale or odd record never throws
   for (const go of [null, { list: {} }, { recall: {}, games: [] }])
     assert.ok(unit.dated(typed({ go }), day))

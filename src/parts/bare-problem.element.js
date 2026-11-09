@@ -5,7 +5,7 @@ import { today } from './clock.dom.js'
 import { dayName } from '../kernel/days.logic.js'
 import { topicSlug } from '../kernel/maths-decode.logic.js'
 import { answerBox, figure, lines, rich } from './maths-screens.dom.js'
-import { noSend, practiceOf } from './maths-steps.dom.js'
+import { noSend, practiceOf, sayCorrected } from './maths-steps.dom.js'
 import { StepScreen, step, studyStore, verdict } from './study.dom.js'
 import { h } from './view.dom.js'
 
@@ -35,7 +35,7 @@ export class AeBareProblem extends StepScreen {
   /** @param {boolean} right */
   #done(right) {
     this.result = { right }
-    this.send({ t: 'tried', topic: this.slug, right, day: today() })
+    sayCorrected(this.send({ t: 'tried', topic: this.slug, right, day: today() }), this.bare?.answer)
     this.focusSoon('p')
     this.update()
   }

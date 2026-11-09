@@ -6,7 +6,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { addDays, studyDay } from '../src/kernel/days.logic.js'
 import { KINDS, SECTIONS } from '../src/units/cpp/core/course.gen.js'
-import { courseFrom, kindId } from '../src/units/cpp/core/decode.logic.js'
+import { courseFrom, kindId, kindKey } from '../src/units/cpp/core/decode.logic.js'
 import { BUILT_WITH, recordOf, withKind } from '../src/units/cpp/core/record.logic.js'
 import { step } from '../src/units/cpp/core/session.logic.js'
 import { KIND } from '../src/units/cpp/content/k01.gen.js'
@@ -64,7 +64,9 @@ const reply = outs => ({
 })
 
 const setUp = () =>
-  after([{ t: 'setup-stored', user: 'learner', series: 'abc', zone: 'Europe/Copenhagen', day: ago(3) }])
+  after([
+    { t: 'setup-stored', user: 'learner', series: 'abc', zone: 'Europe/Copenhagen', day: ago(3) }
+  ])
 const example = () => after([{ t: 'start-read', day: ago(2) }], setUp())
 const trace = () => after([{ t: 'example-read', kind: 1, day: ago(2) }], example())
 const traceItem = { n: 5, step: 'trace', id: 'T1', kind: 1 }
@@ -74,7 +76,14 @@ const rows = KIND.trace.rows.map(r => [String(r.line), ...r.values])
 const parsons = () =>
   after(
     [
-      { t: 'trace-answered', item: traceItem, trace: KIND.trace, cells: rows, output: KIND.trace.output, day: today },
+      {
+        t: 'trace-answered',
+        item: traceItem,
+        trace: KIND.trace,
+        cells: rows,
+        output: KIND.trace.output,
+        day: today
+      },
       { t: 'next' }
     ],
     trace()
@@ -84,21 +93,62 @@ const alone = () =>
   after(
     [
       { t: 'submit', item: parsonsItem, code: 'x', tests: all(PARSONS) },
-      { t: 'submitted', item: parsonsItem, code: 'x', tests: all(PARSONS), reply: reply(all(PARSONS).map(t => t.output)), day: today },
+      {
+        t: 'submitted',
+        item: parsonsItem,
+        code: 'x',
+        tests: all(PARSONS),
+        reply: reply(all(PARSONS).map(t => t.output)),
+        day: today
+      },
       { t: 'next' }
     ],
     parsons()
   )
 
+/** Whole programs: the course's first section, the twelve the start gate asks retired. */
+const FIRST_KINDS = course.kinds.slice(0, course.sections[0]?.last ?? course.kinds.length)
 /**
- * Every first kind retired today, by the record's own kind lines.
+ * The kinds retired yesterday, each with its kind line and its own dated line (key K<n>), which
+ * came back right since, so none is due today; the kind after the last opens at its worked
+ * example, as gate 3 opens it.
  * @param {CppRecord} r
+ * @param {readonly typeof course.kinds[number][]} [kinds]
  */
-const retired = r => course.kinds.reduce((x, k) => withKind(x, kindId(k.id), { retired: ago(1), opened: ago(2) }), r)
+const retired = (r, kinds = FIRST_KINDS) => {
+  const after = course.kinds[kinds.length]
+  const x = kinds.reduce(
+    (y, k) => ({
+      ...withKind(y, kindId(k.id), { retired: ago(1), opened: ago(2) }),
+      recall: { ...y.recall, [kindKey(k.id)]: [{ date: ago(1), right: true, next: addDays(today, 4) }] }
+    }),
+    r
+  )
+  return after ? withKind(x, kindId(after.id), { opened: ago(1), part: 'example' }) : x
+}
 const practiced = () => after([{ t: 'practice-accepted', day: ago(1) }], retired(setUp()))
 /** @param {string} next */
 const contestOn = next => after([{ t: 'next-typed', next }], practiced())
 const WRONG = `#include <print>\n\nint main() {\n    std::println("0");\n}\n`
+/**
+ * The problem alone submitted on `day`, wrong: the Result screen.
+ * @param {string} day
+ */
+const wrongOn = day =>
+  after(
+    [
+      { t: 'submit', item: aloneItem, code: WRONG, tests: all(ALONE) },
+      {
+        t: 'submitted',
+        item: aloneItem,
+        code: WRONG,
+        tests: all(ALONE),
+        reply: reply(all(ALONE).map(() => '0\n')),
+        day
+      }
+    ],
+    alone()
+  )
 
 /** Each record by its name, built afresh at each call. */
 export const RECORDS = {
@@ -121,27 +171,33 @@ export const RECORDS = {
     after(
       [
         { t: 'run-examples', item: aloneItem, code: 'int main() {', tests: ALONE.examples },
-        { t: 'examples-ran', item: aloneItem, reply: { compiled: false, error: "main.cpp:1:13: error: expected '}' at end of input" } }
+        {
+          t: 'examples-ran',
+          item: aloneItem,
+          reply: { compiled: false, error: "main.cpp:1:13: error: expected '}' at end of input" }
+        }
       ],
       alone()
     ),
   /** The problem alone submitted, wrong: the Result screen. */
-  wrong: () =>
-    after(
-      [
-        { t: 'submit', item: aloneItem, code: WRONG, tests: all(ALONE) },
-        { t: 'submitted', item: aloneItem, code: WRONG, tests: all(ALONE), reply: reply(all(ALONE).map(() => '0\n')), day: today }
-      ],
-      alone()
-    ),
+  wrong: () => wrongOn(today),
   /** The trace item answered, wrong in one cell. */
   traced: () =>
     after(
-      [{ t: 'trace-answered', item: traceItem, trace: KIND.trace, cells: rows.map((r, i) => (i === 0 ? [r[0] ?? '', '9'] : r)), output: '31', day: today }],
+      [
+        {
+          t: 'trace-answered',
+          item: traceItem,
+          trace: KIND.trace,
+          cells: rows.map((r, i) => (i === 0 ? [r[0] ?? '', '9'] : r)),
+          output: '31',
+          day: today
+        }
+      ],
       trace()
     ),
-  /** A problem due today, written wrong yesterday. */
-  due: () => ({ ...alone(), recall: { ...alone().recall, [PARSONS.id]: [{ date: ago(1), right: false, next: today }] } }),
+  /** The problem alone submitted wrong yesterday: its own line brings it back alone today. */
+  due: () => after([{ t: 'next' }], wrongOn(ago(1))),
   practice: () => retired(setUp()),
   nextContest: practiced,
   upcoming: () => contestOn(`${addDays(today, 3)}T13:00`),
@@ -149,26 +205,46 @@ export const RECORDS = {
   paste: () => contestOn(`${ago(1)}T13:00`),
   reading: () =>
     after(
-      [{ t: 'record-pasted', rows: [{ contest: 'AtCoder Beginner Contest 430', date: ago(1), performance: 712 }], day: today }],
+      [
+        {
+          t: 'record-pasted',
+          rows: [{ contest: 'AtCoder Beginner Contest 430', date: ago(1), performance: 712 }],
+          day: today
+        }
+      ],
       contestOn(`${ago(1)}T13:00`)
     ),
   /** The first kind at its Parsons problem with every problem of it tried: it waits for new ones. */
   waits: () => {
     const r = withKind(parsons(), kindId(1), { part: 'parsons' })
-    const tries = (KINDS[0]?.problems ?? []).map(id => ({ id, date: ago(1), right: false, mixed: false }))
+    const tries = (KINDS[0]?.problems ?? []).map(id => ({
+      id,
+      date: ago(1),
+      right: false,
+      mixed: false
+    }))
     return { ...r, tries }
   },
-  /** Every problem tried, the next contest typed: nothing left today. */
+  /** Every kind retired and every problem tried, the next contest typed, gate 2 held (so the language track takes no session): nothing left today. */
   nothing: () => {
-    const r = contestOn(`${addDays(today, 3)}T13:00`)
-    const tries = course.kinds.flatMap(k => k.problems.map(id => ({ id, date: ago(1), right: true, mixed: true })))
-    return { ...r, tries, recall: { T1: [{ date: ago(1), right: true, next: addDays(today, 4) }] } }
+    const r = retired(contestOn(`${addDays(today, 3)}T13:00`), course.kinds)
+    const tries = course.kinds.flatMap(k =>
+      k.problems.map(id => ({ id, date: ago(1), right: true, mixed: true }))
+    )
+    const readings = [{ date: ago(1), mean: null, sd: null, p: 0.5, n: 10, state: 'held' }]
+    return {
+      ...r,
+      tries,
+      readings,
+      recall: { ...r.recall, T1: [{ date: ago(1), right: true, next: addDays(today, 4) }] }
+    }
   }
 }
 
 if (import.meta.filename === process.argv[1]) {
   const out = process.argv[2] ?? 'records'
   mkdirSync(out, { recursive: true })
-  for (const [name, make] of Object.entries(RECORDS)) writeFileSync(`${out}/${name}.json`, JSON.stringify(make()))
+  for (const [name, make] of Object.entries(RECORDS))
+    writeFileSync(`${out}/${name}.json`, JSON.stringify(make()))
   console.log(`cpp-records: ${Object.keys(RECORDS).length} records in ${out}`)
 }

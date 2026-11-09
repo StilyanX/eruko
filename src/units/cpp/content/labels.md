@@ -38,6 +38,165 @@
 - Give the function an `int` parameter, a copy of the number it is called with.
 - Give back a value with `return`, which ends the function.
 - Call the function with the number in brackets, and print what it returns.
+- Give the function a `const std::string&` parameter, which reads the caller's string without copying it.
+- Turn a digit character into its value with `digit - '0'`.
+- Include `vector`, the part of the library that holds `std::vector`, a list of values.
+- Write `std::vector<int>`, a list of `int` values, as the type of the answer.
+- Make a list that starts empty with `{}`.
+- Add a value at the end of the list with `push_back`.
+- Start a header, a file that other files include, with `#pragma once`, so it is read only once.
+- Put the function inside `namespace tag { }`, so the code that uses it calls it `tag::wrap`.
+- Join strings, or a string and fixed words in double quotes, with `+`.
+- Write `bool` as the type of an answer that is `true` or `false`.
+- Give back the result of a test, `true` when it holds, else `false`.
+- Turn a number into a string of its digits with `std::to_string`.
+- Include `cctype`, the part of the library that tests and changes characters.
+- Test whether a character is a digit with `std::isdigit`, and turn a test around with `!`.
+- Test whether a character is a capital letter with `std::isupper`.
+- Give 2 functions the same name when their parameters differ, and each call runs the one whose parameters fit.
+- Turn a number into a `char` with `static_cast<char>`.
+- Turn a test around with `!`, which holds when the test fails.
+- Test whether a string is empty with `empty()`, and get its last character with `back()`.
+- Take the last character off a string with `pop_back()`.
+- Write the values of an `enum class` between `{ }`, split by commas.
+- Name one value of the `enum class` as `phase::solid`.
+- Fill the map with `{key, value}` pairs inside its outer `{ }`.
+- Read the value of a key with `.at`, which throws for a key the map lacks.
+- Hold a size or an index with `std::size_t`, which is never below 0.
+- Get the character at an index with `text[end]`, where the first index is 0.
+- Turn a number into its digits as a string with `std::to_string`.
+- Add a character several times to the end of a string with `append`, the count first.
+- Make a type of your own with `class`, its members between `{` and `};`.
+- Hold a number with a fraction in a `double`.
+- Write the data first, where it is private: only the class's own functions reach it.
+- Write the functions anyone may call after `public:`.
+- Write a constructor, named as the class, which makes each new object.
+- Mark a constructor with one parameter `explicit`, so no value turns into an object by itself.
+- Set each member after `:`, before the constructor's body.
+- Mark with `const` a member function that never changes the object.
+- Include `array`, the part of the library that holds `std::array`, a list whose length is fixed.
+- Write `std::array<int, 3>`, a list of 3 `int` values, as the type of a parameter.
+- Make a list of 7 zeros with `std::array<int, 7> counts {}`, a place for each face from 1 to 6.
+- Reach the value at a place in the list with `counts[die]`.
+- Write `void` as the type of a function that gives back nothing.
+- Test whether a list is empty with `empty()`, and get its last item with `back()`.
+- Give the function a `const std::vector<int>&` parameter, which reads the caller's list without copying it.
+- Take each value of a list in turn with `for (const int digit : digits)`.
+- Put a value at the front of a list with `insert` and `result.begin()`, the list's start.
+- Multiply a variable and keep the result with `*=`.
+- Get the number of items in a list, as an `int`, with `std::ssize`.
+- Get the larger of 2 values with `std::max`, from `algorithm`.
+- Put a `for` inside another, so the inner one runs in full for each step of the outer.
+- Get the length of a string as an `int` with `std::ssize(text)`.
+- Change the character at an index with `result[index] =`.
+- Take each item of the list in turn with `for (const int number : numbers)`.
+- Write a newline inside quotes as `\n`.
+- Include `stdexcept`, the part of the library that holds the standard errors.
+- Stop with an error with `throw`, here a `std::domain_error` that holds a message.
+- Write `std::map<int, int>`, a map from each `int` to an `int`, as the type of the answer.
+- Make a `bool` variable, which holds `true` or `false`, and start it at `false`.
+- Test whether a character is a letter with `std::isalpha`.
+- Make a list of fixed values with `std::array<int, 10>`, the type of each item, then how many there are.
+- Read the item at an index with `.at`, which throws for an index outside the list.
+- Get the first item of a list with `front()`.
+- Get the largest item of a list with `std::ranges::max`, from `algorithm`.
+- Include `functional`, the part of the library that holds `std::ranges::greater`.
+- Sort a list from largest to smallest with `std::ranges::sort` and `std::ranges::greater {}`.
+- Cut a list to its first items with `resize`, and take the smaller of 2 values with `std::min`.
+- Write the data after `private:`, where only the class's own functions reach it.
+- Start a header with `#pragma once`, so a file that includes it twice reads it once.
+- Include `cctype`, the part of the library that tests and changes single characters.
+- Put the function in a `namespace`, and call it with the namespace's name, `::` and its own name.
+- Make a letter a capital with `std::toupper`, and turn its `int` answer back into a `char` with `static_cast<char>`.
+- Mark a member function `static` when it needs no object, and call it as `heading::north()`.
+- Make a new object of the class with its name and the value in `{ }`.
+- Write `operator==` as `= default`, which compares each member, and `!=` comes with it.
+- Pass a grid as `const std::vector<std::string>&`, a list of strings, one string for each row.
+- Get the character in row r and column c with `grid[r][c]`.
+- Put a `for` inside a `for`, so the inner one runs in full at each step of the outer one.
+- Turn a number from 0 to 9 into its digit with `'0' +`.
+- Take the part of a string that starts at an index with `substr`, and give a length to stop early.
+- Include `deque`, the part of the library that holds `std::deque`, a list that adds and takes items at both ends.
+- Make the class a template with `template <typename T>`, so its items may be of any type `T`.
+- Take the first item off a `std::deque` with `pop_front()`.
+- Remove every item of a list with `clear()`.
+- Give the function a `std::string&` parameter, with no `const`, which changes the caller's own string.
+- Write `template <typename Test>` above a function to let `Test` stand for any type, here any function the caller passes.
+- Call the function the parameter holds with the value in brackets, as `test(character)`.
+- Walk from `text.begin()`, the first character, to `text.end()`, just past the last.
+- Name 2 types in one template, split by a comma.
+- Make a type that holds several values with `struct`, whose members anyone may reach.
+- Make a list of n + 1 zeros with `std::vector<int> best(n + 1, 0)`, the size first, then the value.
+- Take each item of a list in turn, without copying it, with `const Piece& piece`.
+- Reach a member of a struct with `.`, as in `piece.length`.
+- Get the last item of a list with `back()`.
+- Make a list of strings with `std::vector<std::string>`, its items in order between `{ }`.
+- Leave the brackets after a function's name empty when it takes nothing.
+- Read the item at an index with `names[index]`, where the first index is 0.
+- Include `optional`, and write `std::optional<std::string>` as the type of an answer that holds a string or nothing.
+- Run the lines in `{ }` after `do` once, then again while the test after `while` holds.
+- Turn a string of digits into its number with `std::stoll`.
+- Change a list to its next order with `std::ranges::next_permutation`, whose `found` is false after the last.
+- Give back no answer with `std::nullopt`.
+- Make a letter small with `std::tolower`, and turn its `int` answer back into a `char` with `static_cast<char>`.
+- Throw from a constructor, so no object is ever made from bad data.
+- Make a list of lists with `std::vector<std::vector<int>>`, each item a row.
+- Give the function a `const std::map<std::string, int>&` parameter, which reads the caller's map without copying it.
+- Give a key its value with `result[name] =`, which adds the key when it is new.
+- Make a table outside every function, so each function below reads it.
+- Write `unsigned` for an integer that is never below 0.
+- Take one from a variable with `--`.
+- Make a list with its items between `{ }`, split by commas.
+- Reach the item at an index with `planets[index]`, where the first index is 0.
+- Hold a `std::mutex`, from `mutex`, which only one thread at a time can lock.
+- Lock the mutex with `std::lock_guard`, which unlocks it when the function ends.
+- Stop with a `std::runtime_error`, the error for a call that comes at the wrong time.
+- Name the numbers 0, 1 and 2 with `enum { red, green, blue }`, so `green` stands for 1.
+- Make a table outside every function, marked `const`, so each function can read it.
+- Find a value in a list with `std::ranges::find`, and let `auto` give the variable the type of what it gives back.
+- Turn the place found into an index by taking away `color.begin()`, the list's start.
+- Get a number without its minus sign with `std::abs`, from `cstdlib`.
+- Give the function a `std::array<int, 3>&` parameter, with no `const`, so it changes the caller's list.
+- Change a list to its next order with `std::ranges::next_permutation`, whose `found` is false after the last order.
+- Run the lines in `do { } while (test);` once, then again as long as the test holds.
+- Go on to the next turn with `continue`, which skips the rest of the lines in `{ }`.
+- Give a type a short name with `using`, here `grid` for a list of rows.
+- Make a list of a given length, each item the same, with round brackets: `(size, 0)`.
+- Turn an `enum class` value into its place, from 0, with `static_cast<int>`, and a place back into a value with `static_cast<Heading>`.
+- Call another member function of the same object by its name alone.
+- Include `memory`, the part of the library that holds `std::unique_ptr`.
+- Hold a branch in a `std::unique_ptr`, which owns the object it points to and starts empty.
+- Name a variable for another with `auto&`, and pick one of 2 values with `?` and `:`, the first when the test holds.
+- Test whether a pointer is empty with `== nullptr`.
+- Make a new object that a `std::unique_ptr` owns with `std::make_unique`.
+- Call a member function through a pointer with `->`.
+- Give the function a `std::vector<T>&` parameter, with no `const`, so it changes the caller's list.
+- Write `auto` as the type of the answer, so the compiler works it out from the `return`.
+- Give back where a list starts and ends with `cbegin()` and `cend()`, so a range `for` can take each value.
+- Give the function a `std::string` parameter, a copy of the caller's string that it may change.
+- Take each character by reference with `char& character`, so a change to it changes the text.
+- Put the characters of a string in order with `std::ranges::sort`, smallest first.
+- Give the function a `const std::vector<std::string>&` parameter, which reads the caller's list without copying it.
+- Take each string of a list in turn, without copying it, with `const std::string& word`.
+- Give the function a `std::string_view` parameter, which reads the caller's text without copying it.
+- Let each element own the next with `std::unique_ptr<Element>`, which deletes what it owns when it goes.
+- Hand over what a `std::unique_ptr` owns with `std::move`, which leaves it empty.
+- Reach a member of the object a pointer owns with `->`.
+- Test whether a pointer owns an object by writing it alone as the test.
+- Let `auto` give the variable the type of the value it starts with.
+- Write a `struct`, a class whose members anyone may reach, inside the class that uses it.
+- Own the next node with `std::unique_ptr<Node>`, which deletes it when the owner goes.
+- Point at a node without owning it with `Node*`, and start it at `nullptr`, which points at nothing.
+- Reach a member of the node a pointer points at with `->`.
+- Hand what a `std::unique_ptr` owns to another with `std::move`, which leaves the first empty.
+- Name a variable as another name for an existing one with `auto&`.
+- Pick one of 2 values with `?` and `:`, the first when the test before `?` holds.
+- Make a new node, owned by a `std::unique_ptr`, with `std::make_unique<Node>` and its members' values.
+- Get a pointer to what a `std::unique_ptr` owns with `get()`.
+- Join 2 tests with `||`, which holds when either one holds.
+- Read each character as an `unsigned char`, the form the `cctype` tests take.
+- Test whether a character is a letter or a digit with `std::isalnum`.
+- Keep the values seen in a `std::set`, where `contains` tests for a value and `insert` adds one.
 
 ## Plan labels
 - Print the value.
@@ -166,5 +325,535 @@
 - Give back the divisor.
 - Add a `*` for each index from 0 to the number - 1.
 - Give back the number rounded down or up to a multiple of 10.
+- Write a function that builds a new string from each character of the text.
+- Start `word_start` at true, since the next letter begins a word.
+- For each character, add a letter that begins a word in capitals, and mark a space or a dash as the start of a new word.
+- Write a function that throws an error when its input is not allowed.
+- Write a function that repeats a step until a condition holds and gives back the result.
+- Start the inverse at 1.
+- Add one to the inverse until a times it leaves 1 after dividing by 26.
+- Give back the inverse.
+- For each character, add a digit as it is, and a letter moved by the key.
+- For each character, add a space before it when 5, 10, 15 or more characters come before it, then the character.
+- Write a function that calls the functions above and gives back the answer.
+- Write a function that adds up a sequence and gives back the total.
+- For each digit, throw when it is not below the base, else times the total by the base and add the digit.
+- Start the result as an empty list.
+- While the number is above 0, put its last digit in the base at the front of the result, then drop it.
+- Throw `std::invalid_argument` when a base is below 2.
+- Give back the digits of the number in the output base.
+- Make a table of fixed values.
+- Write a class that keeps its data in private members.
+- Write a constructor that sets the data.
+- Write a member function that gives back a value worked out in one step.
+- Give back whether the score holds the value of the name.
+- Write a member function that gives back the items that pass a test.
+- Start the result as an empty set.
+- Add each name whose value the score holds.
+- Write a function that tries each order until one passes every test.
+- Add up each letter's place values, taking away those after `==`, and keep the first letter of each longer word.
+- Give back the letters' digits for the first order of the digits whose sum is 0 with no leading 0.
+- Give back no answer when no order fits.
+- Write a function that gives back a copy of the text with each letter in lower case.
+- Write a function that gives back a copy of the text with its characters in order.
+- Add each candidate with the word's letters that is not the word.
+- Write a function that adds to a total, then gives back an answer from the total.
+- Make a string of the number's digits, and count them.
+- Add each digit to the power of the count to the total.
+- Give back whether the total equals the number.
+- Write a function that tests each case in order and gives back the result of the first that holds.
+- Give back a digit as it is.
+- Give back the letter as far from `z` as the letter is from `a`.
+- Add each letter or digit swapped, with a space before every 5.
+- Add each character swapped when it is not a space.
+- Write member functions that lock the data, stop with an error when a test fails, else change it.
+- Stop with an error when the account is open, else open it with a balance of 0.
+- Stop with an error when the account is closed, else close it.
+- Stop with an error when the account is closed or the amount is below 0, else add it.
+- Stop with an error when the account is closed or the amount is below 0 or above the balance, else take it away.
+- Write a member function that locks the data, stops with an error when a test fails, else gives back the data.
+- Give back the verse for 0, for 1, for 2, else for any other number.
+- Write a function that builds a new string one piece at a time and gives it back.
+- For each number from start down to end, add an empty line before all but the first, then its verse.
+- Write member functions that give back the data.
+- Write a member function that solves its task by calling itself on a smaller part.
+- Pick the left branch for a value not above the data, else the right.
+- Put a new tree there when the branch is empty, else insert into the branch.
+- Add the left branch's values, then the data, then the right branch's values.
+- Write member functions that give back the start and the end of the values in order.
+- Fill the list with the values in order, then give back its start.
+- Write a function that halves the range that can hold the value until it finds it.
+- Start the range as the whole list.
+- Give back the middle index when it holds the value, else keep the half that can hold it.
+- Throw `std::domain_error` when the range is empty.
+- For each character, give back 0 when it is not `0` or `1`, else add it as a new last digit of the result.
+- Write a function that keeps what it finds in each character of the text, then gives back the answer for it.
+- Start with no letter found and a space as the last character.
+- Keep whether a capital or small letter comes, and the last character that is not white space.
+- Test each case in order, and give back the answer of the first that holds.
+- Write a member function that gives back the oldest item and removes it, or throws when there is none.
+- Write a member function that adds an item at the end, or throws when the buffer is full.
+- Write a member function that adds an item at the end, removing the oldest first when the buffer is full.
+- Write a member function that removes every item.
+- Write a class with a constructor that sets the data.
+- Compare 2 objects by their values with `==` and `!=`.
+- Keep the data in private members.
+- Throw `std::domain_error` for a number below 1.
+- Keep each letter, made lowercase, and each digit of the text, in order.
+- Write a member function that builds a new string one piece at a time and gives it back.
+- Find the columns, the smallest number whose square is at least the size.
+- Find the rows, the smallest number that times the columns is at least the size.
+- For each column, add a space before all but the first, then its character in each row, or a space past the end.
+- Work out the square of the distance from (0, 0).
+- Give back the score for the band of the distance.
+- Write a function that builds a new list one item at a time and gives it back.
+- Work out the size, 2 times the distance of the letter from `A`, plus 1.
+- For each row, add a row of spaces with the row's letter at its 2 places.
+- Add each integer from 1 to n to the total.
+- Give back the square of the total.
+- Add the square of each integer from 1 to n to the total.
+- Add each last binary digit to the total, then drop it from the number.
+- Write a function that builds a new map from each entry of the old one.
+- Start an empty map from each letter to its score.
+- Add each letter of each score, made small, with that score.
+- Write a function that gives back a value worked out in one step.
+- Give back whether the square is in the garden and holds a flower.
+- Write a function that counts the items that pass a test and gives back the count.
+- Add one for each flower in the 3 rows and 3 columns around it.
+- Write a function that builds a new grid from the answer for each square of the old one.
+- Start the result as a copy of the garden.
+- Put the count of flowers around each empty square, when above 0.
+- Start the verse with the line that names the animal.
+- Add the animal's own line, unless it is the fly.
+- Give back the verse when it is the horse.
+- Add a line for each animal back to the spider, with the spider's own words after it.
+- Add the last line and give back the verse.
+- Add each verse, then an empty line.
+- Give back the verses from the first to the last.
+- Write a member function that adds an item to the data.
+- Give back at once when some grade has the name.
+- Put the name in its grade, and sort the grade's names.
+- Write a member function that gives back the data.
+- Write a member function that gives back part of the data.
+- Give back no names when the map has no such grade.
+- Give back the names of the grade.
+- Give back 1 doubled once for each square before this one.
+- Add the value of each square from 1 to 64 to the total.
+- Throw `std::domain_error` when the lengths differ.
+- Add one for each index where the 2 letters differ.
+- Give back the words `Hello, World!`.
+- Add each digit to 16 times the total, and give back 0 at any other character.
+- Write a member function that gives back the largest values of a list, largest first.
+- Copy the list, and sort it from largest to smallest.
+- Keep at most the first 3.
+- Give back the sorted list.
+- Start the total and the count of digits at zero.
+- Add each digit times 10 less the count, or 10 for an `X` at the end, and give back false for any other character but `-`.
+- Give back whether there are 10 digits and 11 divides the total.
+- Write a function that gives back false at the first item that fails a test, else true.
+- Start the letters seen as an empty string.
+- For each letter, in lower case, give back false when it was seen before, else add it to the letters seen.
+- Give back true, since no letter came twice.
+- Name each possible value in an `enum class`.
+- Give back clover for `C`, grass for `G`, radishes for `R`, else violets.
+- Write a function that finds the first item that passes a test and gives back its position.
+- Make the list of students, in order.
+- Give back the index of the first student in the list equal to the student, else -1.
+- Work out where the student's letters start in each row.
+- Give back the plants of the student's 2 letters in each row.
+- Write a struct that holds several values together.
+- Write a function that keeps the best value for each weight, one item at a time.
+- Start the best value for each weight from 0 to the most at 0.
+- For each item, keep the larger of the best value without it and with it, heaviest weight first.
+- Give back the best value for the most weight.
+- Write a function that multiplies a sequence and gives back the product.
+- Start the product at 1.
+- For each character of the span, throw when it is not a digit, else times the product by the digit.
+- Give back the product.
+- Write a function that keeps the largest value and gives it back.
+- Throw `std::domain_error` when the span is below 0 or longer than the text.
+- Start the largest at zero.
+- For each start, keep the product of the span from it when it is larger.
+- Give back the largest.
+- Give back whether 400 divides a year that 100 divides.
+- Give back whether 4 divides any other year.
+- Write a member function that unlinks a node and gives back its value.
+- Keep the node's value.
+- Point the next node back at the node before, or the tail when there is no next node.
+- Point the node before at the next node, or the head when there is no node before.
+- Take one from the size and give back the value.
+- Write member functions that add a node at one end.
+- Make the node after the tail, or the head when the list is empty.
+- Make the node before the head, and the tail when the list is empty.
+- Write member functions that take a node off one end and give back its value.
+- Write a member function that finds the first item that passes a test and gives back whether it found one.
+- Start at the head and move on until the node holds the value or the list ends.
+- Give back false when no node holds it, else unlink the node and give back true.
+- Write a function that adds each item of one list to the end of another.
+- Add each item of the right list, in order, to the end of the left.
+- Add the items of each list, in order, to the end of the result.
+- Add each item, in order, when it passes the test.
+- Write a function that adds one for each item and gives back the count.
+- Add one for each item.
+- Add the function's answer for each item, in order.
+- Write a function that combines each item in turn into one result and gives it back.
+- Start the result at the start value.
+- Combine the result with each item, from first to last.
+- Combine the result with each item, from last to first.
+- Add each item, from last to first.
+- Add each digit from the last, doubled at every second, less 9 above 9.
+- Give back whether there are 2 digits or more and 10 divides the total.
+- Write a function that keeps a stack of characters, adding to and taking from its end, and gives back the answer.
+- Start the closing brackets needed as an empty string.
+- For each character, add the closing bracket an opening one needs, and give back false for a closing one that is not the last needed, else take it off.
+- Give back whether no closing bracket is still needed.
+- Give back false at the first factor from 2 up to the square root of the number.
+- Give back true.
+- Throw `std::domain_error` when n is less than 1.
+- Start the number at 1 and the count at zero.
+- Add one to the number, and one to the count when the number is prime, until the count is n.
+- Give back the number.
+- Write a function that counts each item in a map from the item to its count.
+- Start the count of each of `A`, `C`, `G` and `T` at zero.
+- Add one to the count of each character, and throw `std::invalid_argument` for one with no count.
+- Give back the counts.
+- Make a copy of the text with each letter in lower case.
+- Give back false for the first letter from `a` to `z` that the copy lacks.
+- Start an empty map from each letter to its count.
+- Add one to the count of each letter of each text, in lower case.
+- Write a function that builds each row from the row before it.
+- Add each row, with 1 at its ends and the sum of the 2 values above each other value.
+- Stop with an error when the number is below 1.
+- Add each integer from 1 to the number - 1 that divides it.
+- Give back perfect when the total equals the number, abundant when it is larger, else deficient.
+- Write a constructor that sets the data, and stops with an error when it is bad.
+- Keep each digit of the text, in order.
+- Drop the first digit when there are 11 and it is 1.
+- Stop with an error unless 10 digits are left and the first and the fourth are 2 or more.
+- Give back 0 when the word starts with a vowel, `xr` or `yt`.
+- Give back the index of the first vowel or `y` after the first letter, counting the `u` of `qu` with the letters before it.
+- For each word, add a space before all but the first, then the word from its split point, the letters before it, and `ay`.
+- While the number is above 1, take out the divisor when it divides the number, else add one to it.
+- Make the map from each codon to its amino acid, or to STOP.
+- For each codon in order, stop at STOP, else add its amino acid, where `at` throws for a codon the map lacks.
+- Stop with an error when a row or a column is not from 0 to 7.
+- Stop with an error when the 2 positions are the same.
+- Work out how far apart the rows and the columns are.
+- Give back whether they share a row, a column or a diagonal.
+- Work out the place of the index in one trip down and up.
+- Give back the place on the way down, else count it back up.
+- For each rail, add each character on it, in order.
+- Write a function that puts each character of the text in its place on the rails, rail by rail.
+- Start the result as a copy of the text.
+- Start the position in the text at zero.
+- For each rail, put the next character of the text at each index on it.
+- Add `Pling` when 3 divides the number.
+- Add `Plang` when 5 divides the number.
+- Add `Plong` when 7 divides the number.
+- Give back the number in digits for an empty result, else the result.
+- Make the list of colors, in the order of their codes.
+- Give back the index of the first color in the list equal to the color, else -1.
+- Give back 10 times the code of the first color plus the code of the second.
+- Give back the table of colors.
+- Give back the index of the first entry equal to the color.
+- Give back -1 when no entry is equal to it.
+- Start the place to add at 0.
+- For each byte, add it at the front, or just after the bytes before it in its own character.
+- Give back `C` for `G`, `G` for `C`, `A` for `T`, else `U`.
+- For each character of the strand, in order, add its partner to the result.
+- Write member functions that turn it a quarter turn to the right or to the left.
+- Write a member function that moves it one point in the direction it faces.
+- Write a member function that runs each instruction of the text in turn.
+- Make the list of values and their numerals, largest first.
+- For each value, largest first, add its numeral while the value fits in the number.
+- For each character, add a letter moved on by the key, back to the start after z, else the character itself.
+- For each run, add its length when above 1, then its character.
+- Add a digit to the count, or else add the character count times, at least once.
+- Make the words for 0 to 19 and for each ten.
+- Give back the word for a number below 20, the ten for a multiple of 10, else the ten, a dash and the last digit.
+- Give back the words for a number below 100, the hundreds for a multiple of 100, else the hundreds and the rest.
+- Throw `std::domain_error` for a number above 999 999 999 999.
+- Give back `zero` for 0.
+- Make the word for each power of 1000.
+- Start the power at 0.
+- While the number is above 0, put the words for its last 3 digits, when not 0, at the front of the result, then drop them.
+- Add the value of each letter, made small, from the table.
+- Make the list of the 4 actions, the one for the lowest bit first.
+- For each of the 4 bits, lowest first, add its action when the bit is 1.
+- Reverse the result when the bit for 16 is 1.
+- Throw `std::domain_error` for a length below 1 or above the text's.
+- Add the part of that length that starts at each index.
+- Write a function that marks the multiples of each number, and gives back the numbers left unmarked.
+- Start with no number from 0 to n marked.
+- Keep each unmarked number from 2 to n, and mark its multiples.
+- Write a member function that puts a new element first.
+- Make the new element hold the value and the old first one.
+- Add one to the size.
+- Write a member function that takes off the first element and gives back its value.
+- Keep the value of the first element.
+- Make the next element the first, and take one from the size.
+- Give back the value.
+- Write a member function that gives back the value of the first element.
+- Throw `std::out_of_range` when the list is empty.
+- Give back the value of the first element.
+- Write a member function that turns the order of the elements around.
+- Start the turned list empty.
+- Move each first element to the front of the turned list.
+- Make the turned list the list.
+- Write member functions that give back a value worked out in one step.
+- Divide the age in Earth years by the planet's year.
+- Give a type a short name.
+- Give back whether the cell is in the grid and still 0.
+- Write a function that fills a grid and gives it back.
+- Start the grid with size rows of size zeros.
+- Start at the top left, moving right.
+- For each number from 1 to size times size, put it in the cell, turn right when the next cell is not free, then move on.
+- Give back the grid.
+- Write a function that gives back true at the first item that passes a test, else false.
+- Give back true at the first start in the list where the part follows.
+- Give back false, since no start matched.
+- Give back equal for equal lists, sublist when the second holds the first, superlist when the first holds the second, else unequal.
+- Add each number from 1 to the limit - 1 that one of the factors divides.
+- Stop with an error when a side is 0 or less, or longer than the other 2 together.
+- Give back equilateral when all 3 sides are equal, isosceles when 2 are, else scalene.
+- For each character, give back 0 when it is not 0, 1 or 2, else times the total by 3 and add the digit.
+- Make the lists of the names of the days and of the gifts, the first day first.
+- Start the result with the opening words for the day.
+- Add each gift from the day's down to the second, each with a comma after it.
+- Add `and ` when there is more than one gift, then the first gift and a full stop.
+- For each day from start to end, add an empty line before all but the first, then its verse.
+- Write a function that gives back the next states from a state.
+- Work out how much each bucket can pour into the other.
+- Give back the states after filling, emptying or pouring each bucket, one move later.
+- Write a function that tries each state in order of moves, and gives back the first that reaches the goal.
+- Start the states to try with the start bucket full, after 1 move.
+- Start the states seen with the first one and the one no move may reach.
+- While states are left, take the first, give back the answer when it holds the goal, else add each next state not yet seen.
+- Throw `std::domain_error` when no state reaches the goal.
+- Give back the words with the name between them.
+- Start the word as an empty string.
+- For each character, add a letter, a digit or an inner apostrophe to the word, else add one to the count of the word, without its last apostrophes, and start a new word.
+- Give back the map.
+- Write a function that counts each item, then gives back the answer for the case it is given.
+- Count the dice that show each face, and add each die to the total.
+- Give back the face times its count for `ones` to `sixes`.
+- Keep the face that the most dice show.
+- Give back the score of each other category when the dice fit it.
+- Give back 0 when the dice do not fit the category.
+- Name the place of each value in its list.
+- Give back the name of the nation in the house.
+- Give back whether the 2 houses are side by side.
+- Change the list to its next order, and give back false after the last.
+- Try each order of the colors with green just right of ivory.
+- Try each order of the nations that fits the colors.
+- Try each order of the drinks that fits.
+- Try each order of the hobbies that fits.
+- Give back the answer for the first order of pets that fits.
+- Add the value of each digit to the total.
+- Give back whether 2 divides the total.
+- Add each even number from 2 to n.
+- Give back the text between `<` and `>`.
+- Give back true for an age below 5.
+- Give back whether the age is 65 or more.
+- Add the number, a space and the word.
+- Add `s` when the number is not 1.
+- For each character, give back false when it is not a digit.
+- Add one for each capital letter.
+- Add one for each digit.
+- Give back `)` for `(`, `(` for `)`, else the character itself.
+- For each character of the text, in order, add it flipped to the result.
+- Give back `4` for `a`, `3` for `e`, `0` for `o`, else the character itself.
+- For each character of the text, in order, add it changed to the result.
+- Give back 9 less the value of a digit.
+- Give back any other character as it is.
+- Add `_` for a space, else the character swapped.
+- Add a space for `_`, else the character swapped.
+- Give back a small letter as its capital.
+- Give back a capital as its small letter, else the character as it is.
+- Add `-` for a space, else the character swapped.
+- Add a space for `-`, else the character swapped.
+- Give back the cube of the number.
+- Add the cube of each integer from 1 to n to the total.
+- Give back 2 times n, less 1.
+- Add the n-th odd number for each n from 1 to the count to the total.
+- Start the kept characters as an empty string.
+- For each character, take off the last kept one when they are equal, else add it.
+- Give back the kept characters.
+- For each character, take off the last kept one when it is the same letter in the other case, else add it.
+- Give back solid at 0 or below, liquid below 100, else gas.
+- Give back less when a is below b, equal when they are equal, else greater.
+- Give back whether the item's size is at most the room.
+- Add each item whose size is at most the room.
+- Give back whether the points are at least the grade's least number.
+- Add each grade whose least number the points reach.
+- For each run, add its character, then its length.
+- Start the last letter as a space.
+- For each character, keep a letter, or add the kept letter as many times as a digit says.
+- For each run, add its character, then its length in brackets when above 1.
+- For each character, add a digit to the count, add the last character count - 1 more times at `)`, else add any character but `(`.
+- Count the dice that show each face.
+- Keep the largest count.
+- Give back 20 for `triple` when 3 dice show one face, 10 for `pair` when 2 do, else 0.
+- Give back the score of each category when the dice fit it.
+- Give back 0 when the list is empty.
+- Give back the last item of the list.
+- Give back 0 when the map has no such item.
+- Give back the amount of the item.
+- For each digit, times the total by 10 and add the digit.
+- While the number is above 0, put its last digit at the front of the result, then drop it.
+- Give back the digits of the number plus one.
+- For each digit, times the total by 2 and add the digit.
+- While the number is above 0, put its last binary digit at the front of the result, then drop it.
+- Give back the digits of the sum of the 2 numbers.
+- Times the product by each number of the length from start.
+- For each start, keep the product of the length from it when it is larger.
+- Times the product by each digit of the number.
+- For each number, keep the product of its digits when it is larger.
+- Add each number of the list to the total.
+- Give back loss for a total below 0, draw for 0, else win.
+- Add 1 for a `U` and take 1 for a `D`.
+- Give back below for a total below 0, ground for 0, else above.
+- Give back rail 0 for an index that 3 divides, else rail 1.
+- Add each even number of the list.
+- Start the result with the opening words for the number.
+- Add ` clap` once for each integer from 1 to the number.
+- Add a full stop and a newline.
+- For each number from 1 to last, add an empty line before all but the first, then its verse.
+- Start the result with the number in digits.
+- Add ` bottle` for 1, else ` bottles`.
+- Add ` left.` and a newline.
+- Stop with an error when a side is below 1.
+- Stop with an error when the hour is not from 0 to 23 or the minute is not from 0 to 59.
+- Start an empty map from each number to its count.
+- Add one to the count of each number.
+- Give back rail 2 for an odd index, rail 0 for one that 4 divides, else rail 1.
+- Start with no digit and no letter found.
+- Keep whether a digit or a letter comes.
+- Add the number of segments of each digit from the table.
+- Add the days of each month before the month.
+- Keep at most the first 2.
+- Keep at most the first 5.
+- Start with no digit, capital or small letter found.
+- Keep whether a digit, a capital or a small letter comes.
+- For each character, add it in capitals.
+- Give back whether the square is in the grid and holds a `#`.
+- Add one for each wall in the 3 rows and 3 columns around it.
+- Start the result as a copy of the grid.
+- Put the count of walls around each square in its place.
+- Add one for each wall directly above, below, left or right of it.
+- Put the count of walls beside each square in its place.
+- Start the range as every number from 0 to n.
+- Give back the middle number when its square is n, else keep the half that can hold the root.
+- Keep the half that can hold the first number at least the value, until one index is left.
+- Give back the index left.
+- Give back the index of the first `=`.
+- Add the part after the split point, then `=`, then the part before it.
+- Add each character of the right text, in order, to the end of the left.
+- Add the characters of each text, in order, to the end of the result.
+- Add each character, in order, when it passes the test.
+- Start the best price for each length from 0 to the total at 0.
+- For each piece, keep the larger of the best price without it and with it, shortest length first.
+- Give back the best price for the total length.
+- Start the best value for weight 0 at 0, and for each other weight at -1, the mark for none.
+- For each item, keep the larger of the best value without it and with it, heaviest weight first, when the weight without it can be made.
+- Give back the table of planets.
+- Give back the place of the first planet equal to the name, counting from 1.
+- Give back 0 when no planet is equal to it.
+- Give back the table of days.
+- Give back the index of the first entry equal to the day.
+- Give back the index of the first capital letter, or 0 when there is none.
+- For each word, add a space before all but the first, then the word from its split point and the letters before it.
+- Add each multiple of 3 from 3 to n to the total.
+- Add each multiple of 5 from 5 to n to the total.
+- Add each even integer from 2 to n to the total.
+- Add each odd integer from 1 to n to the total.
+- Sort the digits, so the first order is the smallest.
+- Give back the first order whose number the divisor divides.
+- Give back the first order where no 2 digits side by side are equal.
+- Keep each letter of the text, made small.
+- Stop with an error when no letter is left.
+- Keep each letter and digit of the text, made small.
+- Stop with an error unless 6 are left, each a digit or a letter from `a` to `f`.
+- Add each row, starting with the last value of the row before, each next value the one before it plus the one above that.
+- Start the row as `{1}`.
+- Add each row, then make the next by adding the last value doubled.
+- Start an empty map from each name to its price.
+- Put each name in the result with 2 times its price.
+- Start an empty map from each value to its key.
+- Put each value in the result with its key.
+- Add a line for each animal back to the first, with its sound.
+- Give back the verse.
+- Make the list of planets, in order.
+- Give back the index of the first planet in the list equal to the planet, else -1.
+- Give back the position of the second planet less the position of the first.
+- Stop with an error when the box is open, else open it.
+- Stop with an error when the box is closed, else add one vote.
+- Stop with an error when the box is closed, else close it.
+- Stop with an error when the gate is unlocked, else unlock it.
+- Stop with an error when the gate is locked, else add one pass and lock it.
+- Start the verse with the line that names its number.
+- Add a line for each fruit from the first to this one, with its colour.
+- Give back the name of the color of the house.
+- Try each order of the colors with green just right of red.
+- Try each order of the colors with blue just right of green.
+- Try each order of the pets that fits the colors.
+- Give back the answer for the first order of drinks that fits.
+- Make the list of ranks, from lowest to highest.
+- Give back the index of the first rank in the list equal to the rank, else -1.
+- Give back whether the first rank is higher than the second.
+- Give back the product of the row's and the column's numbers, counted from 1.
+- Fill each cell of each row with its value.
+- Give back 1 more than the distance from the cell to the nearest edge.
+- Pick the left branch for a value above the data, else the right.
+- Give back the line for 0, for 1, else for any other number.
+- For each number from start down to 0, add its line.
+- Give back the verse for 0, for 1, else for any other number.
+- For each number from start down to 0, add an empty line before all but the first, then its verse.
+- Give back false at the first odd digit.
+- Add one to the number, and one to the count when its digits are all even, until the count is n.
+- Give back false at the first square from 4 up to the number that divides it.
+- Start the number at 0 and the count at zero.
+- Add one to the number, and one to the count when no square divides it, until the count is n.
+- Pick the left branch for a shorter word, else the right.
+- Add each word of at least the length whose letters are in alphabetical order.
+- Give back the group with 2 zeros in front below 10, 1 zero below 100, else as it is.
+- Give back the whole number below 1000, else its last 3 digits padded.
+- Start the result with the last group.
+- While groups are left, drop the last group, then put the new last group and a space at the front.
+- Give back no word for power 0, `thousand` for 1, `million` for 2, else `billion`.
+- Give back nothing for a group of 0, else the group and the word for its power.
+- Give back `0` for 0.
+- Give back sunny for `S`, cloudy for `C`, else rainy.
+- Make the list of days, in order.
+- Give back the index of the first day in the list equal to the day, else -1.
+- Give back the sky for the day's letter.
+- Give back red for `R`, amber for `A`, else green.
+- Make the list of roads, in order.
+- Give back the index of the first road in the list equal to the road, else -1.
+- Give back the light for the road's letter.
+- Add each word of the length in which no letter comes twice.
+- Add the weight to the total.
+- Make the next element the first, and take its weight from the total.
+- Mark the multiples of each step from the step to n.
+- Keep each unmarked number from 1 to n.
+- Mark the multiples of each square from 4 to n.
+- Give back true at the first item whose sign is the sign given.
+- Give back false, since no item matched.
+- Give back both when the list holds both signs, positive or negative when it holds one, else none.
+- Give back true at the first item equal to the value.
+- Give back both when the list holds both values, one when it holds one, else neither.
+- For each column, add its character in each row that reaches it.
+- Add one to the inverse until a times it leaves 1 after dividing by 36.
+- For each letter or digit, add the symbol the key moves it to.
+- For each character, add a dash before it when 4, 8, 12 or more characters come before it, then the character.
+- Add one to the inverse until the key times it leaves 1 after dividing by 10.
+- For each digit, add the last digit of the digit times the key.
+- For each character, add a space before all but the first, then the character.
+- Keep each letter of the text, made uppercase, in order.
+- Add every letter from the index on, one row apart.
+- Give back the states after a jump forward and a jump back, one jump later.
+- Start the states to try and the values seen with the start.
+- Give back unreachable when no state reaches the goal.
+- Give back the states after adding 1 or doubling, one move later.
 
 Plan words: counter, accumulator, loop, flag, sentinel, tally, running total

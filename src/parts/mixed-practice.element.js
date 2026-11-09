@@ -1,11 +1,11 @@
 // Hides: step 2, mixed practice, and its gate. `bank` is every problem of the course, and
 // `order(bank, record, day)` the day's problems. `lost(record)` lists marked questions that lost
 // marks; one joins the bank. `proof(problem, phase, { answer, show })` gives a problem of the
-// unit's own kind its step, and `show(phase)` holds the screen on a phase through a reload. An
-// answered problem, or a proof shown, is stored as { day, id, phase }, so a reload or a break
+// unit's own kind its step, and `show(phase)` holds the screen on a phase through a reload.
+// `checked(problem)` names a problem whose answer the app checks: its mark is the app's, so no
+// Change the last mark follows it. An
+// answered problem, an answer or a proof shown, is stored as { day, id, phase }, so a reload or a break
 // returns to it.
-import { FACTS_PART, allFactsPassed, decodeFacts } from '../kernel/facts.logic.js'
-import { persistedStore } from '../record/store.js'
 import { pageAt } from './page-index.dom.js'
 import { count, dayName } from '../kernel/days.logic.js'
 import { inHand, kindLines, lastKind, nextProblem, shortKinds } from '../kernel/practice.logic.js'
@@ -14,12 +14,13 @@ import { calculator } from '../kernel/steps.logic.js'
 import { clock, today } from './clock.dom.js'
 import { linkTo } from './links.dom.js'
 import { answerBox, figure, lines, problemLines, rich } from './maths-screens.dom.js'
-import { noSend, practiceOf } from './maths-steps.dom.js'
+import { noSend, practiceOf, sayCorrected } from './maths-steps.dom.js'
 import {
   StepScreen,
   actionsAs,
   choice,
   mark,
+  say,
   slugNow,
   step,
   studyStore,
@@ -70,20 +71,18 @@ export class AeMixedPractice extends StepScreen {
   written = undefined
   /** @type {Proof | undefined} */
   proof = undefined
+  /** @type {(problem: import('../kernel/maths-decode.logic.js').BankProblem) => boolean} */
+  checked = () => false
   /** @type {import('./maths-steps.dom.js').Send} */
   send = noSend
-  /** The problem whose answer is shown. */
-  openFor = ''
   /** The problem whose solution the learner hid, to solve it again on a blank page. */
   hiddenFor = ''
-  /** A problem was in hand: the empty line that replaces the last one takes focus. */
-  #had = false
+  /** The problem last drawn: the next one says itself, and the empty line that replaces the last takes focus. */
+  #had = ''
   #study = studyStore()
-  #facts = persistedStore(FACTS_PART.key)
 
   setup() {
     this.watch(this.#study)
-    this.watch(this.#facts)
     this.watch(clock)
   }
 
@@ -104,13 +103,20 @@ export class AeMixedPractice extends StepScreen {
 
   drawn() {
     super.drawn()
-    const { record, current } = this.#now()
-    // The last problem's Next takes the heading away: focus goes to the line that replaces it.
-    if (current) this.#had = true
-    else if (this.#had) {
-      this.#had = false
+    const { record, order, current } = this.#now()
+    // A new problem says itself; the last problem's Next takes the heading away, and focus goes to
+    // the line that replaces it, which the status line says.
+    if (current) {
+      if (this.#had && this.#had !== current.id)
+        say(`The next problem. ${count(order.length, 'problem', 'problems')} left today.`)
+      this.#had = current.id
+    } else if (this.#had) {
+      this.#had = ''
       const p = this.querySelector('p')
-      if (p instanceof HTMLElement) p.focus()
+      if (p instanceof HTMLElement) {
+        p.focus()
+        say(p.textContent ?? '')
+      }
     }
     // Retired kinds with nothing new left: `short` lists them for the owner, who builds more problems.
     const short = shortKinds(this.bank, record)
@@ -122,8 +128,10 @@ export class AeMixedPractice extends StepScreen {
    * @param {boolean} right
    */
   #answer(p, right) {
-    this.send({ t: 'mix-answer', problem: p, lost: lostOf(p), right, day: today() })
-    this.focusSoon('h3')
+    const said = this.send({ t: 'mix-answer', problem: p, lost: lostOf(p), right, day: today() })
+    sayCorrected(said, isLost(p) ? null : p.answer)
+    // The control pressed is gone: focus goes to the step's live primary, Next.
+    this.focusSoon('.lrn-ss-primary')
   }
 
   /** @param {Practice} p */
@@ -155,15 +163,15 @@ export class AeMixedPractice extends StepScreen {
    * The problem's own lines before it is marked: a lost question's question, a problem's prompt.
    * @param {Practice} p
    * @param {number} left the problems left today
+   * @param {boolean} marked the problem is marked, so it is no longer the next one
    */
-  #head(p, left) {
-    const factsPassed = allFactsPassed(decodeFacts(this.#facts.get()))
+  #head(p, left, marked) {
     return [
-      h('h3', { tabindex: '-1' }, 'The next problem'),
+      h('h3', { tabindex: '-1' }, marked ? 'This problem' : 'The next problem'),
       h(
         'p',
         { class: 'lrn-ss-note' },
-        isLost(p) ? '' : `${calculator(p, factsPassed)} `,
+        isLost(p) ? '' : `${calculator(p)} `,
         'Put your notes away.',
         ' ',
         count(left, 'problem', 'problems'),
@@ -180,8 +188,9 @@ export class AeMixedPractice extends StepScreen {
    * own step, or the answer box.
    * @param {Practice} p
    * @param {string} day
+   * @param {boolean} shown its answer is shown, and the mark asked
    */
-  #solve(p, day) {
+  #solve(p, day, shown) {
     const answer = (/** @type {boolean} */ right) => this.#answer(p, right)
     if (isLost(p))
       return [
@@ -200,11 +209,8 @@ export class AeMixedPractice extends StepScreen {
         })
       ]
     const open = {
-      open: this.openFor === p.id,
-      onOpen: () => {
-        this.openFor = p.id
-        this.update()
-      },
+      open: shown,
+      onOpen: () => this.send({ t: 'mix-show', id: p.id, phase: 'shown', day }),
       onDone: answer
     }
     const figures = this.figures
@@ -278,13 +284,16 @@ export class AeMixedPractice extends StepScreen {
               this.update()
             }
           }),
+        (lost || !this.checked(p)) &&
+          choice({
+            key: 'change',
+            label: ['Change the last mark to ', phase === 'right' ? 'Wrong' : 'Right'],
+            onPress: () => this.#change(p)
+          }),
         choice({
-          label: ['Change the mark to ', phase === 'right' ? 'Wrong' : 'Right'],
-          onPress: () => this.#change(p)
-        }),
-        choice({
+          key: 'next',
           primary: true,
-          label: 'Next problem',
+          label: 'Next',
           onPress: () => {
             this.send({ t: 'mix-next' })
             this.focusSoon('h3')
@@ -307,12 +316,12 @@ export class AeMixedPractice extends StepScreen {
       null,
       step(
         [
-          this.#head(current, order.length),
+          this.#head(current, order.length, phase === 'right' || phase === 'wrong'),
           figure(isLost(current) ? undefined : current.figure, this.figures),
-          phase === 'solve' && this.#solve(current, day),
+          (phase === 'solve' || phase === 'shown') && this.#solve(current, day, phase === 'shown'),
           phase === 'proof' && !isLost(current) && this.#own(current, phase, day),
           (phase === 'right' || phase === 'wrong') && this.#marked(current, phase, dated),
-          phase !== 'solve' && [
+          phase !== 'solve' && phase !== 'shown' && [
             phase !== 'proof' && problemLines(kind, 'kind'),
             problemLines(own, 'problem')
           ]

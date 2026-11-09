@@ -11,6 +11,6 @@ Each unit is labelled with one of three words.
 | Arithmetic | Testing | The testing round |
 | Augustus | Testing | The testing round |
 | Go course | Draft | At least 12 problems in every kind; the rest of the weekly problems and the four classical collections |
-| C++ course | Draft | The Exercism track and contest problems after the first twelve kinds; stages 3 to 9 of the language track |
+| C++ course | Draft | Contest problems after the 74 kinds of program |
 
 A barrier or a wrong fact found in any unit is a defect: report it as an issue.

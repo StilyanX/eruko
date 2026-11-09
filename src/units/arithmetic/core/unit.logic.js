@@ -1,8 +1,9 @@
 // Hides: what the app around Arithmetic reads of the unit, as plain functions of the learner's
 // records: the place line, the pages done, the unit page's rows and the dated list. `r` holds every
 // part of the record by its name; this unit reads its own (`math`) and the number facts (`facts`).
-// The end level opens once every topic is finished, and arithmetic is done when every line of it
-// stands passed (Mathematics, "When the stage is done").
+// The end level opens line by line (Mathematics, "The end level", Opens): its returns sit with the
+// number facts' and its drill after mixed practice ("The work list"), and arithmetic is done when
+// every line of it stands passed ("When the stage is done").
 import { UNIT } from './entry.logic.js'
 import { bankKindsOf } from '../../../kernel/maths-decode.logic.js'
 import { mathsUnit } from '../../../kernel/maths-unit.logic.js'
@@ -10,7 +11,8 @@ import { BANK_KINDS } from './course.gen.js'
 import { COURSE, decodeArithmetic } from './decode.logic.js'
 import { proofRows, proofTopicState, proofsToday } from '../../../kernel/proofs.logic.js'
 import { LINE_IDS } from './end-lines.logic.js'
-import { drillLines, endPassed, lineNext, linesPassed } from './end-level.logic.js'
+import { drillLines, endPassed, gateOf, lineNext, linesPassed } from './end-level.logic.js'
+import { decodeFacts } from '../../../kernel/facts.logic.js'
 
 const shared = mathsUnit({
   unit: UNIT,
@@ -22,17 +24,33 @@ const shared = mathsUnit({
 })
 
 /**
- * Whether every topic is finished, so the end level is open.
+ * Whether every topic is finished.
  * @param {import('./decode.logic.js').ArithmeticRecord} math
  */
-export const endOpen = math => COURSE.every(t => proofTopicState(t, math).finished)
+const allFinished = math => COURSE.every(t => proofTopicState(t, math).finished)
+
+/**
+ * The gate the end level runs in today: its lines open and the block left to it.
+ * @param {import('../../../kernel/pages.logic.js').UnitRecords} r
+ * @param {string} today
+ */
+export function endGate(r, today) {
+  const math = decodeArithmetic(r.math ?? {})
+  const finished = new Set(
+    (UNIT.sections ?? [])
+      .filter(s => COURSE.slice(s.first - 1, s.last).every(t => proofTopicState(t, math).finished))
+      .map(s => s.title)
+  )
+  return gateOf(math.end ?? {}, decodeFacts(r.facts ?? {}), finished, today)
+}
 
 /** @param {string | undefined} d @returns {d is string} */
 const isDate = d => Boolean(d)
 
 /**
- * The unit's dated list: the shared rows, the end level's sheets once it is open, then the proofs
- * read, topic by topic.
+ * The unit's dated list: the number facts with the end level's sheets due back, mixed practice
+ * with the end level's line in hand after it, held as mixed practice is, then the proofs read,
+ * topic by topic.
  * @param {import('../../../kernel/pages.logic.js').UnitRecords} r
  * @param {string} today
  * @returns {import('../../../kernel/days.logic.js').DatedGroup[]}
@@ -40,19 +58,18 @@ const isDate = d => Boolean(d)
 function dated(r, today) {
   const math = decodeArithmetic(r.math ?? {})
   const end = math.end ?? {}
-  const [facts, ...rest] = shared.dated(r, today)
+  const gate = endGate(r, today)
+  const open = gate.open.length > 0
+  const to = `${shared.base}/end-level`
+  const [facts, mixed, ...rest] = shared.dated(r, today)
   return [
     ...(facts ? [facts] : []),
-    ...(endOpen(math)
-      ? [
-          {
-            one: 'end-level sheet',
-            many: 'end-level sheets',
-            to: `${shared.base}/end-level`,
-            dates: LINE_IDS.map(id => lineNext(end.lines?.[id])).filter(isDate),
-            fresh: drillLines(end, today)
-          }
-        ]
+    ...(open
+      ? [{ one: 'end-level sheet', many: 'end-level sheets', to, dates: LINE_IDS.map(id => lineNext(end.lines?.[id])).filter(isDate) }]
+      : []),
+    ...(mixed ? [mixed] : []),
+    ...(open
+      ? [{ one: 'end-level line', many: 'end-level lines', to, dates: [], fresh: drillLines(end, today, gate), ...(mixed?.hold ? { hold: true } : {}) }]
       : []),
     ...rest,
     ...proofRows(COURSE, math, { ...shared, anchor: 'ar-proofs' })
@@ -65,7 +82,7 @@ function dated(r, today) {
  */
 function place(r) {
   const math = decodeArithmetic(r.math ?? {})
-  if (!endOpen(math)) return shared.place(r)
+  if (!allFinished(math)) return shared.place(r)
   const end = math.end ?? {}
   if (endPassed(end)) return 'Arithmetic done: every lesson and every end-level line.'
   return `All ${COURSE.length} lessons done. End level: ${linesPassed(end)} of ${LINE_IDS.length} passed.`
@@ -94,7 +111,7 @@ export const unit = {
     const math = decodeArithmetic(r.math ?? {})
     // The end level, once open and until passed, says how many lines stand passed.
     const endState =
-      endOpen(math) && !done.has('end-level')
+      endGate(r, '').open.length && !done.has('end-level')
         ? { state: `${linesPassed(math.end ?? {})} of ${LINE_IDS.length} passed` }
         : {}
     return {

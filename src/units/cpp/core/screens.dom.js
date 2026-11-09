@@ -7,7 +7,7 @@
 // wider than its column scrolls sideways and is named so (`markScroll`).
 import { CPP_PART, UNIT } from './entry.logic.js'
 import { KINDS, SECTIONS } from './course.gen.js'
-import { STAGES, TRACK } from './track.gen.js'
+import { READING, READING_GAPS, STAGES, TRACK } from './track.gen.js'
 import { partsOf, stageOf } from './track-decode.logic.js'
 import { courseFrom, kindContentOf } from './decode.logic.js'
 import { recordOf } from './record.logic.js'
@@ -19,7 +19,7 @@ import { h } from '../../../parts/view.dom.js'
 export const HOME = `/${UNIT.slug}`
 
 /** The course the record is read against. */
-const COURSE = courseFrom(SECTIONS, KINDS, TRACK, STAGES)
+const COURSE = courseFrom(SECTIONS, KINDS, TRACK, STAGES, READING, READING_GAPS)
 
 /** The C++ record's store: one copy in memory for every screen. */
 export const cppStore = () => persistedStore(CPP_PART.key)
@@ -158,7 +158,7 @@ export const away = (href, text) => h('a', { href, target: '_blank', rel: 'noref
  * A label's text with each span between backticks in the code face.
  * @param {string} text
  */
-const codeSpans = text =>
+export const codeSpans = text =>
   text.split('`').map((piece, i) => (i % 2 ? h('code', { key: `s${i}` }, piece) : piece))
 
 /**
@@ -219,8 +219,42 @@ export const statement = problem =>
   h(
     'div',
     { key: 'statement' },
-    problem.statement.map(line => h('p', { key: line }, line))
+    problem.statement.map(line => h('p', { key: line }, codeSpans(line))),
+    problem.found &&
+      h(
+        'p',
+        { class: 'lrn-ss-note', key: 'found' },
+        `From ${problem.found.contest === 'nwerc' ? 'NWERC' : problem.found.contest === 'bapc' ? 'BAPC' : 'the BAPC preliminaries'} ${problem.found.year}, problem ${problem.found.problem.toUpperCase()}, under ${problem.found.licence}; the statement is rewritten.`
+      )
   )
+
+/**
+ * A problem's examples: a function problem's as calls with the value each must give, after the
+ * example's own lines; else each an input and the output it must give.
+ * @param {import('./decode.logic.js').Problem} problem
+ */
+export const examplesOf = problem =>
+  problem.fn
+    ? [
+        h(
+          'p',
+          { key: 'whole' },
+          `Type the whole file ${problem.fn.header}, as the tests include it.`
+        ),
+        problem.fn.setup.length > 0 && [
+          label('Example'),
+          codeBlock({ lines: problem.fn.setup, name: 'Example' })
+        ],
+        problem.fn.calls.map((c, i) =>
+          h(
+            'div',
+            { class: 'cpp-pair', key: `call ${i}` },
+            h('div', null, label('Call'), printed(c.call, 'Call')),
+            h('div', null, label('Expected'), printed(c.expected, 'Expected'))
+          )
+        )
+      ]
+    : examples(problem.examples)
 
 /**
  * A problem's examples, each an input and the output it must give.
@@ -331,8 +365,8 @@ export const cellRule = () => h('p', { key: 'cell-rule' }, codeSpans(CELL_RULE))
 /**
  * The filled trace of the Start screen (Programming, Running it: Start from zero): the first
  * kind's own traced program, its input, and its state table, whose rows appear one at a time, each
- * as its line runs, by "Next row"; once every row shows, the same place offers "Next", which moves
- * on. `shown` is how many rows show.
+ * as its line runs, by "Next" (SS: "row by row, read once"); once every row shows, the same
+ * "Next" moves on. `shown` is how many rows show.
  * @param {import('./decode.logic.js').StartTrace} trace
  * @param {number} shown
  * @param {{ onRow: () => void, onNext: () => void }} p
@@ -360,11 +394,11 @@ export const filledTrace = (trace, shown, { onRow, onNext }) => [
       name: 'The state table'
     })
   ),
-  // one control in one place: "Next row" until every row shows, then "Next"
+  // one control in one place: "Next" shows the next row until every row shows, then moves on
   actionsAs(
     'start',
     shown < trace.rows.length
-      ? choice({ key: 'go', primary: true, label: 'Next row', onPress: onRow })
+      ? choice({ key: 'go', primary: true, label: 'Next', onPress: onRow })
       : choice({ key: 'go', primary: true, label: 'Next', onPress: onNext })
   )
 ]

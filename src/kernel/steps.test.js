@@ -63,11 +63,9 @@ test('one alone-solve opens the next form\'s example, and on the last form retir
   assert.deepEqual(afterAnswer({ form: 0, stage: 4 }, true, 1), { t: 'retire' })
 })
 
-test('the calculator line: the problem\'s mark, held back until the number facts pass', () => {
-  assert.equal(calculator({ calc: 'no' }, true), 'Calculator: no.')
-  assert.equal(calculator({ calc: 'no' }, false), 'Calculator: no.')
-  assert.equal(calculator({ calc: 'yes' }, true), 'Calculator: yes.')
-  assert.equal(calculator({ calc: 'yes' }, false), 'Calculator: no, until the number facts pass.')
+test('the calculator line: the problem\'s own mark alone, whatever the number facts', () => {
+  assert.equal(calculator({ calc: 'no' }), 'Calculator: no.')
+  assert.equal(calculator({ calc: 'yes' }), 'Calculator: yes.')
 })
 
 test('a Yes/No kind retires only after two fresh alone-solves right in a row; a wrong one starts the count again', () => {

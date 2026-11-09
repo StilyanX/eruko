@@ -38,7 +38,11 @@ export class AugustusRecordEntry extends LifeScreen {
             { class: 'lrn-ss-note' },
             'Claim ',
             i + 1,
-            c.verdict === 'contested' ? ' · Contested' : c.verdict === 'agrees' ? ' · Agrees' : ''
+            c.verdict === 'contested'
+              ? ` · Contested: ${c.why ?? ''}`
+              : c.verdict === 'agrees'
+                ? ' · Agrees'
+                : ''
           ),
           h('p', null, all.find(x => x.id === c.id)?.text),
           h('textarea', {

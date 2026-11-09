@@ -57,7 +57,8 @@ Answer: c++23 defined
 ## Alone 1
 Form: sanitizer
 Sanitizer: address
-Write a program that reads integers until the end of the input and prints them in reverse order.
+Exempt: R.3, R.12, R.20, ES.24
+Write a program that reads integers until the end of the input and prints them in reverse order. Keep them in an array you get with new[]; when it is full, copy them to one twice as large and free the old one with delete[].
 Input: one line, up to 1000 integers separated by spaces.
 Output: one line, the same integers in reverse order, separated by spaces.
 Limits: 1 ≤ count ≤ 1000; each integer fits in an int.
@@ -155,7 +156,8 @@ int main()
 ## Alone 2
 Form: sanitizer
 Sanitizer: address
-Write a program that keeps a queue of integers and carries out commands: push x puts x at the back, and pop takes the front integer out and prints it.
+Exempt: R.3, R.12, R.20, ES.24
+Write a program that keeps a queue of integers and carries out commands: push x puts x at the back, and pop takes the front integer out and prints it. Make each element of the queue a node you get with new and free with delete.
 Input: first line q, then q lines, each push x or pop.
 Output: one line for each pop, the integer it took out.
 Limits: 1 ≤ q ≤ 1000; a pop never comes when the queue is empty; x fits in an int.
@@ -207,7 +209,7 @@ int main()
         if (command == "push") {
             Node* node {new Node {0, nullptr}};
             std::cin >> node->value;
-            if (tail != nullptr) {
+            if (tail) {
                 tail->next = node;
             } else {
                 head = node;
@@ -217,13 +219,13 @@ int main()
             Node* front {head};
             std::println("{}", front->value);
             head = front->next;
-            if (head == nullptr) {
+            if (!head) {
                 tail = nullptr;
             }
             delete front;
         }
     }
-    while (head != nullptr) {
+    while (head) {
         Node* next {head->next};
         delete head;
         head = next;
@@ -254,7 +256,7 @@ int main()
         if (command == "push") {
             Node* node {new Node {0, nullptr}};
             std::cin >> node->value;
-            if (tail != nullptr) {
+            if (tail) {
                 tail->next = node;
             } else {
                 head = node;
@@ -267,7 +269,7 @@ int main()
             delete front;
         }
     }
-    while (head != nullptr) {
+    while (head) {
         Node* next {head->next};
         delete head;
         head = next;

@@ -1,0 +1,8 @@
+{
+  "name": "Catch2 (single header, Boost Software License 1.0)",
+  "version": "2.13.6",
+  "source": "https://github.com/exercism/cpp/blob/8d139cb04c7463722ae1f233099cc0bd39a71092/exercises/practice/leap/test/catch.hpp",
+  "files": {
+    "catch.hpp": "e11ac6b2994c046909c4a7c730a6a536e8f9563172563026878b7baadecdf553"
+  }
+}

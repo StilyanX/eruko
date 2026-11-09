@@ -74,7 +74,7 @@ export const builtLife = built => /** @type {Life} */ (built)
  * (right days after that since the last wrong one), its next date, and the day it entered.
  * @typedef {Readonly<{ lines: readonly RecallLine[], learning: number, later: number, next: string | null, entered?: string }>} Recall
  */
-/** @typedef {'agrees' | 'contested' | 'unchecked'} Verdict A claim set beside a witness, or with none to hand. */
+/** @typedef {'agrees' | 'contested' | 'unchecked'} Verdict A claim set beside a witness; "unchecked" only in an older record, read as contested. */
 /**
  * A forecast: the decision's question and answer, and the learner's chance of yes, reason and
  * score, or `known` ("I already know", read with no score).
@@ -83,9 +83,11 @@ export const builtLife = built => /** @type {Life} */ (built)
  *   known?: boolean, move?: string, p?: number, reason?: string, score?: number }>} Forecast
  */
 /**
- * A claim kept: a sentence of the account in the learner's words, with its verdict.
+ * A claim kept: a sentence of the account in the learner's words, with its verdict and, when
+ * contested, why.
  * @typedef {Readonly<{ id: ItemId, kind: 'claim', life: LifeId, date: string, lesson: LessonId,
- *   text: string, sentence: string, page: string, witness: string | null, verdict?: Verdict }>} Claim
+ *   text: string, sentence: string, page: string, witness: string | null, verdict?: Verdict,
+ *   why?: string }>} Claim
  */
 /**
  * A setback of a stretch of the life: the setback, its cost and the next move.
@@ -142,7 +144,7 @@ export const builtLife = built => /** @type {Life} */ (built)
 /** @typedef {'situation' | 'outcome' | 'question' | 'struggle' | 'check' | 'record'} LessonStep */
 /** @typedef {Readonly<{ pText: string, reason: string }>} Draft A forecast typed and not yet locked. */
 /** @typedef {Readonly<{ setback: string, cost: string, next: string }>} SetbackRow A setback being typed. */
-/** @typedef {Readonly<{ id: SentenceId, verdict: Verdict | undefined }>} ChosenClaim */
+/** @typedef {Readonly<{ id: SentenceId, verdict: Verdict | undefined, why?: string }>} ChosenClaim */
 /** @typedef {Readonly<{ claims: readonly ChosenClaim[], shape: ItemId | 'new' | null }>} CheckDone What the check settled. */
 /**
  * Where the learner is in a lesson, and what its steps carry and hold typed, so a reload lands on
@@ -170,7 +172,6 @@ export const builtLife = built => /** @type {Life} */ (built)
  * @typedef {Readonly<{ day: string, life: LifeId, telling: Telling, recall: Recall | null,
  *   closed: string | null }>} LastMark
  */
-/** @typedef {Readonly<{ life: LifeId, lesson: number, screen: number }>} Reread The screen in view of a lesson done, read again. */
 /** @typedef {'raised' | 'lowered'} Level The level of the pair of lives: three columns or two. */
 /** @typedef {Readonly<{ life: LifeId, date: string, n: number, mean: number, variance: number, meanP: number, shareYes: number }>} LevelLine */
 /**
@@ -181,14 +182,22 @@ export const builtLife = built => /** @type {Life} */ (built)
  */
 /** @typedef {Readonly<{ field: string, rank: string, people: string }>} ChecklistDraft The next-life checklist being typed. */
 /**
+ * The next-life checklist in progress: its note and the people listed at item 2 in the order met.
+ * `nextNote`, where item 2 asks it: the next oldest note not yet paired, and the learner's yes or
+ * no for each person, in the order met, whether that life shares it; fewer answers than people
+ * while the question is under way.
+ * @typedef {Readonly<{ note: ItemId | null, people: readonly string[],
+ *   nextNote?: Readonly<{ note: ItemId, answers: readonly boolean[] }> }>} Checklist
+ */
+/**
  * The learner's record of the lives, under LIVES_PART.key. `sample` marks the sample items an
  * older Review page put in it.
  * @typedef {Readonly<{ items: readonly Item[], lives: Readonly<Record<string, LifeState>>,
  *   recall: Readonly<Record<string, Recall>>, sessions: readonly string[], position?: Position,
  *   level?: Readonly<{ state: Level, checks: readonly LevelLine[] }>, telling?: Telling | null,
- *   lastMark?: LastMark, reread?: Reread, pair?: PairDraft, listing?: ChecklistDraft, model?: string,
+ *   lastMark?: LastMark, pair?: PairDraft, listing?: ChecklistDraft, model?: string,
  *   you?: Readonly<{ field: string, rank: string }>,
- *   checklist?: Readonly<{ note: ItemId | null, people: readonly string[] }>,
+ *   checklist?: Checklist,
  *   sample?: unknown }>} LivesRecord
  */
 
@@ -296,7 +305,8 @@ const KINDS = {
     sentence: text(i.sentence),
     page: text(i.page),
     witness: optText(i.witness) ?? null,
-    ...opt('verdict', isVerdict(i.verdict) ? i.verdict : undefined)
+    ...opt('verdict', isVerdict(i.verdict) ? i.verdict : undefined),
+    ...opt('why', optText(i.why))
   }),
   /** @param {Fields} i @param {Base} base @returns {Setback} */
   setback: (i, base) => ({
@@ -519,7 +529,8 @@ const checkDone = c => ({
     const claim = fields(x)
     return {
       id: sentenceOf(text(claim.id)),
-      verdict: isVerdict(claim.verdict) ? claim.verdict : undefined
+      verdict: isVerdict(claim.verdict) ? claim.verdict : undefined,
+      ...opt('why', optText(claim.why))
     }
   }),
   shape: typeof c.shape === 'string' ? noteOf(c.shape) : null
@@ -575,16 +586,6 @@ function lastMark(v) {
     recall: isRecord(m.recall) ? recall(m.recall) : null,
     closed: typeof m.closed === 'string' ? m.closed : null
   }
-}
-
-/**
- * @param {unknown} v
- * @returns {Reread | undefined}
- */
-function reread(v) {
-  const r = fields(v)
-  if (typeof r.life !== 'string') return undefined
-  return { life: lifeId(r.life), lesson: number(r.lesson), screen: number(r.screen) }
 }
 
 /** @param {unknown} v @returns {LevelLine} */
@@ -643,7 +644,8 @@ export function decodeLives(json = {}) {
     level,
     telling: told,
     lastMark: marked,
-    reread: again,
+    // a lesson read again by its address is gone; its screen kept in an older record is dropped
+    reread: _reread,
     pair: paired,
     listing,
     model,
@@ -670,7 +672,6 @@ export function decodeLives(json = {}) {
     ...opt('level', isRecord(level) ? levelOf(lv) : undefined),
     ...opt('telling', isRecord(told) ? telling(told, recallOf) : told === null ? null : undefined),
     ...opt('lastMark', lastMark(marked)),
-    ...opt('reread', reread(again)),
     ...opt('pair', pair(paired)),
     ...opt(
       'listing',
@@ -683,9 +684,30 @@ export function decodeLives(json = {}) {
     ...opt(
       'checklist',
       isRecord(checklist)
-        ? { note: typeof cl.note === 'string' ? itemId(cl.note) : null, people: texts(cl.people) }
+        ? {
+            note: typeof cl.note === 'string' ? itemId(cl.note) : null,
+            people: texts(cl.people),
+            ...opt('nextNote', nextNote(cl.nextNote))
+          }
         : undefined
     )
+  }
+}
+
+/**
+ * The next-note question of a checklist, or absent where it names no note.
+ * @param {unknown} v
+ * @returns {{ note: ItemId, answers: readonly boolean[] } | undefined}
+ */
+function nextNote(v) {
+  const n = fields(v)
+  if (typeof n.note !== 'string') return undefined
+  // Answers stand by place, so an odd one ends them: the question resumes there.
+  const answers = list(n.answers)
+  const odd = answers.findIndex(x => !isFlag(x))
+  return {
+    note: itemId(n.note),
+    answers: (odd < 0 ? answers : answers.slice(0, odd)).filter(isFlag)
   }
 }
 
@@ -695,17 +717,6 @@ export function decodeLives(json = {}) {
  * @returns {import('../../../kernel/decode.logic.js').JsonRecord}
  */
 export const encodeLives = record => record
-
-/**
- * The lesson an address asks to read again (`?lesson=<n>`, from 1), or null when it asks none
- * the course holds.
- * @param {string | null} asked
- * @param {number} lessons
- */
-export function lessonAsked(asked, lessons) {
-  const n = Number(asked)
-  return Number.isInteger(n) && n >= 1 && n <= lessons ? n : null
-}
 
 /**
  * Why a typed chance of yes cannot be read: it is no number, or it is above 100.

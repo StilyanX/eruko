@@ -3,7 +3,7 @@
 // `r` holds every unit's part of the record by its name; this unit reads its own, `lives`,
 // decoded once (decode.logic.js).
 import { UNIT } from './entry.logic.js'
-import { endRow, firstLife, lessonRows, place as placeLine, recallDate } from './next.logic.js'
+import { firstLife, place as placeLine, recallDate } from './next.logic.js'
 import { COURSE } from './course.gen.js'
 import { decodeLives, lifeId } from './decode.logic.js'
 import { NO_END, endDone, roundDate } from './end.logic.js'
@@ -47,21 +47,24 @@ const finished = r => {
 }
 
 /**
- * The unit page's rows: Start, the lessons in sections by age, then what follows the last lesson.
- * A lesson's row opens it once it is done or open (next.logic.js lessonRows); no row stands for
- * the life's page itself, since the open lesson's row opens it.
+ * The unit page's rows: Start, and no list, since the life is one page and no lesson is listed
+ * ahead of its decision. The life's page stands after the course, where only Continue reads it
+ * (a unit page with no sections draws no Contents), so Continue leads to the lesson in hand.
  * @param {import('../../../kernel/pages.logic.js').UnitRecords} r
  */
-function rows(r) {
-  const to = `${BASE}/life`
-  const record = livesOf(r)
-  return {
-    start: { key: 'start', title: 'Start', to: `${BASE}/start`, done: false },
-    top: [],
-    items: lessonRows(COURSE, record, to),
-    after: [endRow(COURSE, record, to, finished(r).has('life'))]
-  }
-}
+const rows = r => ({
+  start: { key: 'start', title: 'Start', to: `${BASE}/start`, done: false },
+  top: [],
+  items: [],
+  after: [
+    {
+      key: 'life',
+      title: 'The life of Augustus',
+      to: `${BASE}/life`,
+      done: finished(r).has('life')
+    }
+  ]
+})
 
 /**
  * The unit's dated list (kernel/days.logic.js datedView): each life in recall, told on the life's

@@ -1,14 +1,17 @@
 // Arithmetic's end level run by the number-facts gate (src/units/arithmetic/core/end-level.logic.js)
 // against Mathematics, "The end level": the untimed sheet, the misses, the timed sheet that passes
 // with no errors, no slower and inside the line's bar, returns decided on errors alone, the clock
-// on each problem, the retyping and the day's drill block. Driven through endStep with set times.
+// on each problem, the retyping, and Opens, In hand and Block: the lines opened by the number-facts
+// sets and the sections, one line drilled at a time in what the gate's block leaves. Driven through endStep with set times.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { allowanceSum } from './end-draw.logic.js'
 import { LINE_IDS, allowanceOf, answersOf, entriesOf } from './end-lines.logic.js'
 import {
   decodeEnd,
+  drillLines,
   endStep,
+  gateOf,
   lineBars,
   lineInHand,
   lineNext,
@@ -17,6 +20,9 @@ import {
   problemTimes,
   startSheet
 } from './end-level.logic.js'
+
+/** Every line open and the whole hour left. @type {import('./end-level.logic.js').Gate} */
+const all = { open: LINE_IDS, left: 3600 }
 
 const day = '2026-10-01'
 const day2 = '2026-10-02'
@@ -75,7 +81,7 @@ function work(end, { at, today, per = 1000, wrong = [], retypeMs = 0 }) {
  * @param {{ at: number, today: string, seed?: number, per?: number, wrong?: number[], retypeMs?: number }} o
  */
 function sheet(end, o) {
-  const begun = endStep(end, { t: 'end-begin', seed: o.seed ?? 1, nowMs: o.at, day: o.today })
+  const begun = endStep(end, { t: 'end-begin', seed: o.seed ?? 1, nowMs: o.at, day: o.today, gate: all })
   return work(begun, o).end
 }
 
@@ -99,17 +105,17 @@ test('a record worked through a pass reads back as written', () => {
 })
 
 test('the line in hand is the first in order with a sheet', () => {
-  assert.deepEqual(lineInHand({}, day), { line: 'facts', kind: 'untimed' })
-  assert.deepEqual(lineInHand({ lines: before('estimates') }, day), { line: 'estimates', kind: 'untimed' })
-  assert.equal(lineInHand({ lines: Object.fromEntries(LINE_IDS.map(l => [l, passed])) }, day), null)
+  assert.deepEqual(lineInHand({}, day, all), { line: 'facts', kind: 'untimed' })
+  assert.deepEqual(lineInHand({ lines: before('estimates') }, day, all), { line: 'estimates', kind: 'untimed' })
+  assert.equal(lineInHand({ lines: Object.fromEntries(LINE_IDS.map(l => [l, passed])) }, day, all), null)
 })
 
 test('the day\'s drill block is 3,600 s; a return due is still offered', () => {
-  assert.deepEqual(lineInHand({ spent: { day, seconds: 3599 } }, day), { line: 'facts', kind: 'untimed' })
-  assert.equal(lineInHand({ spent: { day, seconds: 3600 } }, day), null)
-  assert.deepEqual(lineInHand({ spent: { day: day2, seconds: 3600 } }, day), { line: 'facts', kind: 'untimed' })
+  assert.deepEqual(lineInHand({ spent: { day, seconds: 3599 } }, day, all), { line: 'facts', kind: 'untimed' })
+  assert.equal(lineInHand({ spent: { day, seconds: 3600 } }, day, all), null)
+  assert.deepEqual(lineInHand({ spent: { day: day2, seconds: 3600 } }, day, all), { line: 'facts', kind: 'untimed' })
   const due = { lines: { facts: { ...passed, returns: [{ date: day, right: true, next: day2 }] } }, spent: { day: day2, seconds: 3600 } }
-  assert.deepEqual(lineInHand(due, day2), { line: 'facts', kind: 'return' })
+  assert.deepEqual(lineInHand(due, day2, all), { line: 'facts', kind: 'return' })
 })
 
 test('untimed with a miss, the misses until right, then a timed sheet as fast passes: the first dated line', () => {
@@ -120,16 +126,16 @@ test('untimed with a miss, the misses until right, then a timed sheet as fast pa
   assert.equal(rec?.clean, undefined)
   assert.equal(rec?.missFrom, 'untimed')
   assert.equal(rec?.misses?.length, 1)
-  assert.deepEqual(lineInHand(end, day), { line: 'primes', kind: 'misses' })
+  assert.deepEqual(lineInHand(end, day, all), { line: 'primes', kind: 'misses' })
 
   end = sheet(end, { at: 100000, today: day, wrong: [0] })
-  assert.deepEqual(lineInHand(end, day), { line: 'primes', kind: 'misses' }, 'a missed miss comes again')
+  assert.deepEqual(lineInHand(end, day, all), { line: 'primes', kind: 'misses' }, 'a missed miss comes again')
   end = sheet(end, { at: 200000, today: day, per: 500 })
   rec = end.lines?.primes
   assert.equal(rec?.clean, 200500)
   assert.equal(rec?.cleanMs, 11000, 'the untimed sheet\'s time stays the bar')
   assert.equal(rec?.misses, undefined)
-  assert.deepEqual(lineInHand(end, day), { line: 'primes', kind: 'timed' })
+  assert.deepEqual(lineInHand(end, day, all), { line: 'primes', kind: 'timed' })
 
   end = sheet(end, { at: 300000, today: day })
   rec = end.lines?.primes
@@ -137,7 +143,7 @@ test('untimed with a miss, the misses until right, then a timed sheet as fast pa
   assert.equal(end.sheet?.result?.bar, 11000)
   assert.deepEqual(rec?.returns, [{ date: day, right: true, next: day2 }])
   assert.ok(linePassed(rec))
-  assert.deepEqual(lineInHand(end, day), { line: 'squares', kind: 'untimed' })
+  assert.deepEqual(lineInHand(end, day, all), { line: 'squares', kind: 'untimed' })
 })
 
 test('a timed sheet with an error, or slower than the untimed one, does not pass', () => {
@@ -149,7 +155,7 @@ test('a timed sheet with an error, or slower than the untimed one, does not pass
   const slow = sheet(clean, { at: 100000, today: day, per: 1001 })
   assert.equal(slow.sheet?.result?.passed, false)
   assert.ok(slow.sheet?.result?.bars.every(b => b.ok), 'only the untimed time failed it')
-  assert.deepEqual(lineInHand(slow, day), { line: 'primes', kind: 'timed' })
+  assert.deepEqual(lineInHand(slow, day, all), { line: 'primes', kind: 'timed' })
 })
 
 test('a timed sheet as fast as the untimed one but over the line\'s pace does not pass', () => {
@@ -157,13 +163,13 @@ test('a timed sheet as fast as the untimed one but over the line\'s pace does no
   const over = sheet(clean, { at: 100000, today: day, per: 1300 })
   assert.equal(over.sheet?.result?.passed, false)
   assert.deepEqual(over.sheet?.result?.bars.map(b => b.ok), [false, false])
-  assert.deepEqual(lineInHand(over, day), { line: 'primes', kind: 'timed' })
+  assert.deepEqual(lineInHand(over, day, all), { line: 'primes', kind: 'timed' })
   const atStep = sheet(over, { at: 200000, today: day, per: 1260 })
   assert.equal(atStep.sheet?.result?.passed, true)
 })
 
 test('a generated line\'s first timed sheet is the one drawn with the untimed; after a failed bar the next has the pass\'s sum', () => {
-  let end = endStep({ lines: before('factoring') }, { t: 'end-begin', seed: 1, nowMs: 0, day })
+  let end = endStep({ lines: before('factoring') }, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
   const drawn = end.lines?.factoring
   const sum = drawn?.sum ?? 0
   assert.equal(allowanceSum('factoring', end.sheet?.problems ?? []), sum)
@@ -172,7 +178,7 @@ test('a generated line\'s first timed sheet is the one drawn with the untimed; a
   end = work(end, { at: 0, today: day, per: 60000 }).end
   assert.equal(end.lines?.factoring?.cleanMs, 600000)
 
-  end = endStep(end, { t: 'end-begin', seed: 2, nowMs: 1e6, day })
+  end = endStep(end, { t: 'end-begin', seed: 2, nowMs: 1e6, day, gate: all })
   assert.deepEqual(end.sheet?.problems, drawn?.next)
   assert.equal(end.lines?.factoring?.next, undefined)
   end = work(end, { at: 1e6, today: day, per: 60000 }).end
@@ -181,7 +187,7 @@ test('a generated line\'s first timed sheet is the one drawn with the untimed; a
   assert.equal(result?.passed, false)
   assert.deepEqual(result?.bars, [{ name: 'Total time', ok: false, value: 600000, limit: sum * 10 }])
 
-  end = endStep(end, { t: 'end-begin', seed: 3, nowMs: 2e6, day })
+  end = endStep(end, { t: 'end-begin', seed: 3, nowMs: 2e6, day, gate: all })
   assert.equal(end.sheet?.kind, 'timed')
   assert.equal(allowanceSum('factoring', end.sheet?.problems ?? []), sum)
 })
@@ -197,16 +203,16 @@ test('a clean return writes a right line', () => {
 
 test('a return with errors writes no line; the misses the next day decide it right', () => {
   let end = due()
-  assert.deepEqual(lineInHand(end, day2), { line: 'primes', kind: 'return' })
+  assert.deepEqual(lineInHand(end, day2, all), { line: 'primes', kind: 'return' })
   end = sheet(end, { at: 0, today: day2, wrong: [0] })
   const rec = end.lines?.primes
   assert.equal(rec?.returns?.length, 1)
   assert.equal(rec?.missFrom, 'return')
   assert.equal(rec?.missDay, day2)
   assert.ok(linePassed(rec))
-  assert.equal(lineStep(end, 'primes', day2), null)
+  assert.equal(lineStep(end, 'primes', day2, all), null)
   assert.equal(lineNext(rec), day3)
-  assert.equal(lineStep(end, 'primes', day3), 'misses')
+  assert.equal(lineStep(end, 'primes', day3, all), 'misses')
   end = sheet(end, { at: 0, today: day3 })
   assert.deepEqual(end.lines?.primes?.returns?.map(l => [l.date, l.right]), [[day, true], [day3, true]])
   assert.equal(end.lines?.primes?.misses, undefined)
@@ -220,12 +226,12 @@ test('a return\'s misses missed again write a wrong line and send the line back 
   assert.equal(rec?.clean, null)
   assert.equal(rec?.failed, day3)
   assert.ok(!linePassed(rec))
-  assert.equal(lineStep(end, 'primes', day3), null)
-  assert.equal(lineStep(end, 'primes', day4), 'untimed')
+  assert.equal(lineStep(end, 'primes', day3, all), null)
+  assert.equal(lineStep(end, 'primes', day4, all), 'untimed')
 })
 
 test('a problem is clocked from its appearance to its last key, a long pause counted whole', () => {
-  let end = endStep({}, { t: 'end-begin', seed: 1, nowMs: 0, day })
+  let end = endStep({}, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
   end = endStep(end, { t: 'end-type', value: '1', nowMs: 100000 })
   assert.equal(end.sheet?.ms[0], 100000)
   end = endStep(end, { t: 'end-type', value: '12', nowMs: 100400 })
@@ -238,7 +244,7 @@ test('a problem is clocked from its appearance to its last key, a long pause cou
 })
 
 test('the retyping time comes off its problem; a blank entry is not retyped', () => {
-  const { end, moves } = work(endStep({ lines: before('primes') }, { t: 'end-begin', seed: 1, nowMs: 0, day }), {
+  const { end, moves } = work(endStep({ lines: before('primes') }, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all }), {
     at: 0,
     today: day,
     retypeMs: 300
@@ -248,7 +254,7 @@ test('the retyping time comes off its problem; a blank entry is not retyped', ()
   assert.equal(end.lines?.primes?.untimedMs, 11 * 700)
   if (end.sheet) assert.deepEqual(problemTimes(end.sheet), Array(11).fill(700))
 
-  let blank = endStep({ lines: before('primes') }, { t: 'end-begin', seed: 1, nowMs: 0, day })
+  let blank = endStep({ lines: before('primes') }, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
   blank = endStep(blank, { t: 'end-enter', nowMs: 1000, day })
   const rest = work(blank, { at: 1000, today: day })
   assert.equal(rest.moves.retype, 10)
@@ -297,7 +303,7 @@ test('the factoring bar: the sheet\'s time at most the sum of its allowances', (
 
 test('endStep: begin, each entry typed and entered, each entry retyped, then the result; the same seed the same', () => {
   const run = () => {
-    let end = endStep({ lines: before('product-3') }, { t: 'end-begin', seed: 1, nowMs: 0, day })
+    let end = endStep({ lines: before('product-3') }, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
     const problems = end.sheet?.problems ?? []
     assert.equal(end.sheet?.kind, 'untimed')
     const entries = problems.reduce((n, p) => n + entriesOf('product-3', p).length, 0)
@@ -312,7 +318,7 @@ test('endStep: begin, each entry typed and entered, each entry retyped, then the
 })
 
 test('an estimate shows its product after both entries, and the next problem waits for end-next', () => {
-  let end = endStep({ lines: before('estimates') }, { t: 'end-begin', seed: 1, nowMs: 0, day })
+  let end = endStep({ lines: before('estimates') }, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
   const p = end.sheet?.problems[0] ?? []
   const [e = '', d = ''] = answers('estimates', p)
   end = endStep(end, { t: 'end-type', value: e, nowMs: 2000 })
@@ -330,10 +336,64 @@ test('an estimate shows its product after both entries, and the next problem wai
 test('a sheet of missed problems is checked with no retyping', () => {
   /** @type {import('./end-level.logic.js').EndRecord} */
   const missed = { lines: { facts: { misses: [[0]], missFrom: 'untimed' } } }
-  let end = endStep(missed, { t: 'end-begin', seed: 1, nowMs: 0, day })
+  let end = endStep(missed, { t: 'end-begin', seed: 1, nowMs: 0, day, gate: all })
   assert.equal(end.sheet?.kind, 'misses')
   end = endStep(end, { t: 'end-type', value: '0', nowMs: 500 })
   end = endStep(end, { t: 'end-enter', nowMs: 600, day })
   assert.equal(end.sheet?.phase, 'retype')
   assert.deepEqual(end.sheet?.result, { errors: 0, ms: 600, bars: [] })
+})
+
+/** A number-facts set passed long ago, due far ahead. */
+const setPassed = {
+  clean: 1,
+  cleanSeconds: 300,
+  timed: [{ time: 2, seconds: 280, perMin: 26, errors: 0 }],
+  returns: [{ date: '2026-01-01', right: true, next: '2099-01-01' }]
+}
+
+test('Opens: Facts and Sums on their own set, every other line on every set and its section; a begun line stays open', () => {
+  const none = new Set()
+  assert.deepEqual(gateOf({}, {}, none, day).open, [])
+  assert.deepEqual(gateOf({}, { addition: setPassed }, none, day).open, ['sums'])
+  assert.deepEqual(gateOf({}, { addition: setPassed, multiplication: setPassed }, none, day).open, ['facts', 'sums'])
+  const sets = { addition: setPassed, subtraction: setPassed, multiplication: setPassed, division: setPassed }
+  assert.deepEqual(gateOf({}, sets, new Set(['Number theory']), day).open, ['facts', 'sums', 'primes', 'factoring'])
+  assert.deepEqual(gateOf({}, { ...sets, division: {} }, new Set(['Number theory']), day).open, ['facts', 'sums'], 'not every set')
+  assert.deepEqual(
+    gateOf({}, sets, new Set(['Whole numbers', 'Fractions, percent and ratio', 'Number theory']), day).open,
+    LINE_IDS
+  )
+  assert.deepEqual(gateOf({ lines: { squares: {} } }, { addition: setPassed }, none, day).open, ['sums', 'squares'])
+})
+
+test('Block: the gate\'s one hour, the gate\'s own drill first', () => {
+  const sets = { addition: setPassed, subtraction: setPassed, multiplication: setPassed, division: setPassed }
+  assert.equal(gateOf({}, sets, new Set(), day).left, 3600)
+  assert.equal(gateOf({}, { ...sets, spent: { day, seconds: 1000 } }, new Set(), day).left, 2600)
+  assert.equal(gateOf({}, { ...sets, spent: { day: day2, seconds: 1000 } }, new Set(), day).left, 3600)
+  assert.equal(gateOf({}, { addition: setPassed, multiplication: setPassed }, new Set(), day).left, 0, 'subtraction still drills')
+  const gate = { open: LINE_IDS, left: 2600 }
+  assert.deepEqual(lineInHand({ spent: { day, seconds: 2599 } }, day, gate), { line: 'facts', kind: 'untimed' })
+  assert.equal(lineInHand({ spent: { day, seconds: 2600 } }, day, gate), null)
+  assert.equal(lineInHand({}, day, { open: LINE_IDS, left: 0 }), null)
+})
+
+test('In hand: the first open line not passed, and no other; a sheet due back first, outside the block', () => {
+  /** @type {import('./end-level.logic.js').Gate} */
+  const gate = { open: ['facts', 'sums', 'primes'], left: 3600 }
+  assert.deepEqual(lineInHand({}, day, gate), { line: 'facts', kind: 'untimed' })
+  // Facts failed its timed sheet today and waits for tomorrow: Sums does not step in.
+  const failed = { lines: { facts: { failed: day } } }
+  assert.equal(lineInHand(failed, day, gate), null)
+  assert.equal(lineStep(failed, 'sums', day, gate), null)
+  assert.equal(drillLines(failed, day, gate), 0)
+  const due = { lines: { facts: { ...passed, returns: [{ date: day, right: true, next: day2 }] } } }
+  assert.deepEqual(lineInHand(due, day2, gate), { line: 'facts', kind: 'return' })
+  assert.equal(drillLines(due, day2, gate), 1, 'Sums is in hand for drill')
+  assert.deepEqual(lineInHand(due, day2, { ...gate, left: 0 }), { line: 'facts', kind: 'return' }, 'a return falls outside the block')
+  assert.deepEqual(lineInHand({ lines: { facts: passed } }, day, gate), { line: 'sums', kind: 'untimed' })
+  // Sums begun before Facts opened stays in hand until it passes.
+  assert.deepEqual(lineInHand({ lines: { sums: { untimedMs: 9000 } } }, day, gate), { line: 'sums', kind: 'untimed' })
+  assert.equal(lineStep({ lines: { facts: passed } }, 'primes', day, gate), null)
 })

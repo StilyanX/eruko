@@ -73,7 +73,6 @@ const OWN_WORDS = [
 
 /** Hedges: Footing leaves out a sentence holding one of these. */
 const HEDGES = [
-  'Scholars',
   'scholars',
   'apparently',
   'probably',
@@ -191,12 +190,12 @@ export const citedAlone = evidence => {
 }
 
 /**
- * Whether a text holds any of the words, each as a whole word or phrase, as written.
+ * Whether a text holds any of the words, each as a whole word or phrase, with no regard to capitals.
  * @param {string} text
  * @param {readonly string[]} words
  */
 const holds = (text, words) =>
-  words.some(w => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`).test(text))
+  words.some(w => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(text))
 
 // The course's sentences
 
@@ -236,7 +235,7 @@ export const readingChapters = life =>
 /**
  * The pools of every part, from the built life and the chapters the Original job holds.
  * The Reading lists every sentence that cites alone a chapter it holds (a key) or a chapter it
- * does not (the tenth), save one in a Gaps lesson where its chapter is also cited alone in a
+ * does not (the eleventh), save one in a Gaps lesson where its chapter is also cited alone in a
  * lesson that is not; the Gaps lessons are those the paper lists, save a lesson that holds a
  * sentence the Reading lists, since such a lesson is not a Gaps decision. Witnesses takes the
  * other sentences at an odd place, Footing those at an even one, neither from a Gaps lesson, and
@@ -280,7 +279,7 @@ export function pools(life, held) {
     keys: Object.fromEntries(
       held.map(c => [c, reading.filter(x => x.c === c).map(x => String(x.s.id))])
     ),
-    tenth: reading.filter(x => !held.includes(x.c)).map(x => String(x.s.id)),
+    eleventh: reading.filter(x => !held.includes(x.c)).map(x => String(x.s.id)),
     witnesses,
     footing,
     byId: new Map(all.map(s => [String(s.id), s]))
@@ -343,11 +342,28 @@ function least(pool, n, before, tally, random) {
 }
 
 /**
+ * The Reading's chapters in Latin, five of ten: on an even number of lines any five but the round
+ * before's; on an odd number each chapter in the language it did not have in the round before.
+ * @param {readonly number[]} chapters
+ * @param {readonly number[]} was the round before's Latin, or none
+ * @param {number} m the lines the round has
+ * @param {() => number} random
+ */
+function latinOf(chapters, was, m, random) {
+  if (was.length && m % 2 === 1) return chapters.filter(c => !was.includes(c))
+  const same = (/** @type {readonly number[]} */ a) =>
+    a.length === was.length && a.every(c => was.includes(c))
+  let latin = shuffle(chapters, random).slice(0, chapters.length / 2)
+  while (was.length && same(latin)) latin = shuffle(chapters, random).slice(0, chapters.length / 2)
+  return latin
+}
+
+/**
  * A round drawn new: Gaps, then the Reading, then Witnesses, then Footing, each from its own pool
  * by the rule of Draw, the turn of Gaps taken from the number of lines the round has. The
- * Reading's languages are drawn anew, five chapters in one language and four in the other, and
- * after a round each chapter that two or more sentences cite alone takes a key the round before
- * did not list, and the tenth is one the round before did not list. Every part is shown in an
+ * Reading's languages are five chapters in Latin and five in Greek (row Reading), and after a
+ * round each chapter that two or more sentences cite alone takes a key the round before did not
+ * list, and the eleventh is one the round before did not list. Every part is shown in an
  * order drawn new.
  * @param {Pools} p
  * @param {import('./decode.logic.js').End} end
@@ -377,12 +393,10 @@ export function drawRound(p, end, seed) {
     const fresh = pool.filter(id => !before.has(id))
     return shuffle(fresh.length ? fresh : pool, random)[0] ?? ''
   })
-  const tenthFresh = p.tenth.filter(id => !before.has(id))
-  const tenth = shuffle(tenthFresh.length ? tenthFresh : p.tenth, random)[0]
+  const eleventhFresh = p.eleventh.filter(id => !before.has(id))
+  const eleventh = shuffle(eleventhFresh.length ? eleventhFresh : p.eleventh, random)[0]
   const order = shuffle(chapters, random)
-  // Five in one language and four in the other for nine; as near half as the count allows.
-  const half = random() < 0.5 ? Math.floor(chapters.length / 2) : Math.ceil(chapters.length / 2)
-  const latin = shuffle(chapters, random).slice(0, half)
+  const latin = latinOf(chapters, end.round?.draw.latin ?? [], m, random)
   const witnesses = WITNESSES.flatMap(w =>
     least(
       (p.witnesses[w] ?? []).map(s => String(s.id)),
@@ -407,7 +421,7 @@ export function drawRound(p, end, seed) {
     footing: shuffle(footing, random),
     chapters: order,
     latin: latin.sort((a, b) => a - b),
-    list: shuffle([...keys, ...(tenth ? [tenth] : [])], random)
+    list: shuffle([...keys, ...(eleventh ? [eleventh] : [])], random)
   }
 }
 

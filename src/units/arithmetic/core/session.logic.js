@@ -44,7 +44,11 @@ import { endStep } from './end-level.logic.js'
  *   | { t: 'sheet-drop' }
  * >} FactsEvent
  */
-/** @typedef {import('../../../kernel/maths-session.logic.js').MathsEvent | import('../../../kernel/proofs.logic.js').ProofsEvent | FactsEvent | import('./end-level.logic.js').EndEvent} Event */
+/**
+ * A place on a number line marked or typed, kept until it is checked (`draft`), or checked (null).
+ * @typedef {Readonly<{ t: 'place-draft', draft: import('./decode.logic.js').PlaceDraft | null }>} PlaceEvent
+ */
+/** @typedef {import('../../../kernel/maths-session.logic.js').MathsEvent | import('../../../kernel/proofs.logic.js').ProofsEvent | FactsEvent | import('./end-level.logic.js').EndEvent | PlaceEvent} Event */
 
 /**
  * A state and the effects a move leaves.
@@ -193,6 +197,11 @@ export function step(state, move) {
       const after = endStep(end, move)
       return after === end ? { state, effects: [] } : { state: { ...state, math: { ...state.math, end: after } }, effects: [] }
     }
+    case 'place-draft':
+      // A draft stands until it is checked; a check leaves null, which the merge writes over it.
+      return move.draft === null && !state.math.place
+        ? { state, effects: [] }
+        : { state: { ...state, math: { ...state.math, place: move.draft } }, effects: [] }
     case 'sheet-begin':
     case 'sheet-return':
     case 'sheet-answer':
@@ -205,6 +214,7 @@ export function step(state, move) {
     case 'example-done':
     case 'stage-answer':
     case 'stage-wrong':
+    case 'stage-open':
     case 'idea-wrong':
     case 'idea-right':
     case 'tried':
@@ -213,6 +223,7 @@ export function step(state, move) {
     case 'mix-change':
     case 'mix-show':
     case 'mix-next':
+    case 'draft':
     case 'short': {
       const { record, effects } = mathsStep(state.math, move)
       return { state: { ...state, math: record }, effects }

@@ -17,7 +17,7 @@ A web server keeps no shared record: each browser keeps its own. Only `npm start
 ## What a learner downloads
 
 - First visit: the first page shows after about 650 KB.
-- After that, in the background: the whole app once, about 2 MB with Brotli (11 MB uncompressed). Every page then opens with no connection.
+- After that, in the background: the whole app once, about 2.8 MB with Brotli (16.5 MB uncompressed). Every page then opens with no connection.
 - A new version: only the files that changed.
 
 ## 1. Set up the server, once

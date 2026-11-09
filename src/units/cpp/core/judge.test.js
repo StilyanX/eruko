@@ -3,7 +3,16 @@
 // turned back into its program.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { allPassed, parsonsProgram, samePrint, traceRight, verdictOf } from './judge.logic.js'
+import {
+  allPassed,
+  parsonsProgram,
+  samePrint,
+  traceRight,
+  verdictOf,
+  catch2Cases,
+  catch2Verdict,
+  callOf
+} from './judge.logic.js'
 import { cutParsons, shuffleBy } from './parsons.logic.js'
 
 /**
@@ -144,4 +153,128 @@ test('a Parsons answer is the program it stands for: the frame in place, the lin
   )
   assert.throws(() => parsonsProgram(code, [4, 5], []), /every line that moves/)
   assert.throws(() => parsonsProgram(code, [4, 4, 5], []), /every line that moves/)
+})
+
+// A Catch2 v2 XML report, as the runner returns it for leap with `year % 4 == 0` alone.
+const LEAP_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<Catch name="p">
+  <Group name="p">
+    <TestCase name="not_divisible_by_4" filename="leap_test.cpp" line="8">
+      <OverallResult success="true"/>
+    </TestCase>
+    <TestCase name="divisible_by_100_not_divisible_by_400" filename="leap_test.cpp" line="19">
+      <Expression success="false" type="REQUIRE" filename="leap_test.cpp" line="20">
+        <Original>
+          !leap::is_leap_year(2100)
+        </Original>
+        <Expanded>
+          false
+        </Expanded>
+      </Expression>
+      <OverallResult success="false"/>
+    </TestCase>
+    <TestCase name="vector &amp; size" filename="x_test.cpp" line="30">
+      <Expression success="false" type="REQUIRE" filename="x_test.cpp" line="31">
+        <Original>
+          expected == x::f(&quot;ab&quot;)
+        </Original>
+        <Expanded>
+          { 1, 2 } == { 2, 1 }
+        </Expanded>
+      </Expression>
+      <OverallResult success="false"/>
+    </TestCase>
+  </Group>
+</Catch>`
+
+test('a Catch2 report: each test case passed or not, its first failed assertion as Call, Expected, Given', () => {
+  const cases = catch2Cases(LEAP_XML)
+  assert.deepEqual(
+    cases.map(c => [c.name, c.success]),
+    [
+      ['not_divisible_by_4', true],
+      ['divisible_by_100_not_divisible_by_400', false],
+      ['vector & size', false]
+    ]
+  )
+})
+
+test('an assertion as a call: the side that reads as a value is Expected, the expansion gives Given', () => {
+  assert.deepEqual(callOf('REQUIRE', '!leap::is_leap_year(2100)', 'false'), {
+    call: 'leap::is_leap_year(2100)',
+    expected: 'false',
+    given: 'true'
+  })
+  assert.deepEqual(callOf('REQUIRE', 'expected == x::f("ab")', '{ 1, 2 } == { 2, 1 }'), {
+    call: 'x::f("ab")',
+    expected: 'expected',
+    given: '{ 2, 1 }'
+  })
+  assert.deepEqual(callOf('REQUIRE', 'x::f(2) == 4'), { call: 'x::f(2)', expected: '4', given: '' })
+  assert.deepEqual(
+    callOf('REQUIRE_FALSE', 'triangle::kind(1, 1, 2) == triangle::flavor::equilateral').expected,
+    'not triangle::flavor::equilateral'
+  )
+  assert.deepEqual(
+    callOf(
+      'REQUIRE_THAT',
+      'age.on_earth(), Catch::Matchers::WithinAbs(31.69, accuracy)',
+      '31.5 is within 0.01 of 31.69'
+    ),
+    {
+      call: 'age.on_earth()',
+      expected: 'Catch::Matchers::WithinAbs(31.69, accuracy)',
+      given: '31.5 is within 0.01 of 31.69'
+    }
+  )
+  assert.deepEqual(callOf('REQUIRE_FALSE', 'x::ok(3)'), {
+    call: 'x::ok(3)',
+    expected: 'false',
+    given: ''
+  })
+  assert.deepEqual(callOf('REQUIRE_THROWS_AS', 'x::f(-1), std::domain_error'), {
+    call: 'x::f(-1)',
+    expected: 'throws std::domain_error',
+    given: ''
+  })
+})
+
+test("a function problem's check: a test is a test case, passed when every assertion in it held", () => {
+  const tests = [
+    { input: 'not_divisible_by_4', output: '' },
+    { input: 'divisible_by_100_not_divisible_by_400', output: '' },
+    { input: 'missing', output: '' }
+  ]
+  const v = catch2Verdict(
+    {
+      compiled: true,
+      runs: [{ stdout: LEAP_XML, stderr: '', exit: 1, signal: null, finished: true }]
+    },
+    tests
+  )
+  assert.deepEqual([v.passed, v.total], [1, 3])
+  assert.deepEqual(v.failed, {
+    input: 'leap::is_leap_year(2100)',
+    expected: 'false',
+    given: 'true',
+    error: ''
+  })
+  // a case the report never reached (a crash cut it short) is not passed
+  assert.equal(
+    catch2Verdict(
+      {
+        compiled: true,
+        runs: [{ stdout: LEAP_XML, stderr: '', exit: 1, signal: null, finished: true }]
+      },
+      [
+        { input: 'not_divisible_by_4', output: '' },
+        { input: 'missing', output: '' }
+      ]
+    ).passed,
+    1
+  )
+  assert.equal(
+    catch2Verdict({ compiled: false, error: 'leap.h:3:1: error: x' }, tests).error,
+    'leap.h:3:1: error: x'
+  )
 })

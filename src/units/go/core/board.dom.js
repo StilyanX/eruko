@@ -257,7 +257,7 @@ function caption(p, whole) {
 }
 
 /**
- * @typedef {{ diagram: import('./diagram.logic.js').StoredDiagram, numbers?: import('./diagram.logic.js').Numbers, plays?: string | undefined, dead?: readonly string[], onPoint?: (at: string) => void, chosen?: readonly string[], last?: string | undefined, keys?: ((e: KeyboardEvent) => void) | undefined }} BoardProps
+ * @typedef {{ diagram: import('./diagram.logic.js').StoredDiagram, numbers?: import('./diagram.logic.js').Numbers, plays?: string | undefined, dead?: readonly string[], onPoint?: (at: string) => void, chosen?: readonly string[], last?: string | undefined, keys?: ((e: KeyboardEvent) => void) | undefined, what?: string }} BoardProps
  */
 
 /**
@@ -266,18 +266,19 @@ function caption(p, whole) {
  * the sentence that names the side to move. With `onPoint`, a click or tap on the board gives the
  * point under it, the pointer's way to answer beside the typed field; `chosen` rings the points
  * the answer names; `last` marks the last move played. With `keys`, the board's box takes the
- * keyboard's focus and hands it each key pressed there. The star points are drawn. A whole
+ * keyboard's focus and hands it each key pressed there. `what` names the board ("Go board"), so
+ * a line's board is told from the position's. The star points are drawn. A whole
  * board's text runs row by row.
  * @param {BoardProps} p
  */
 export function board(p) {
-  const { diagram, onPoint, keys } = p
+  const { diagram, onPoint, keys, what = 'Go board' } = p
   const { size } = diagram
   const f = frameOf(diagram, pointPx())
   const { w, ht } = f
   const whole = w === size && ht === size
   const width = f.pt * (w + 2)
-  const name = `Go board, ${whereOf(diagram)}`
+  const name = `${what}, ${whereOf(diagram)}`
   return h(
     'figure',
     { class: 'go-board' },

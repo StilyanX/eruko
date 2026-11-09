@@ -30,6 +30,7 @@ import { afterAnswer, freshProblem } from './steps.logic.js'
  *   | { t: 'example-done', kind: import('./steps.logic.js').KindFacts, inRecord: boolean, day: string }
  *   | { t: 'stage-answer', kind: import('./steps.logic.js').KindFacts, inRecord: boolean, right: boolean, day: string }
  *   | { t: 'stage-wrong', kind: import('./maths-decode.logic.js').KindId, day: string }
+ *   | { t: 'stage-open', kind: import('./maths-decode.logic.js').KindId, day: string }
  *   | { t: 'idea-wrong', kind: import('./maths-decode.logic.js').KindId, day: string }
  *   | { t: 'idea-right', kind: import('./maths-decode.logic.js').KindId, day: string }
  *   | { t: 'tried', topic: import('./maths-decode.logic.js').TopicSlug, right: boolean, day: string }
@@ -39,6 +40,7 @@ import { afterAnswer, freshProblem } from './steps.logic.js'
  *   | { t: 'mix-show', id: import('./maths-decode.logic.js').ProblemId, phase: import('./practice.logic.js').MixPhase, day: string }
  *   | { t: 'mix-next' }
  *   | { t: 'short', kinds: readonly import('./maths-decode.logic.js').KindId[] }
+ *   | { t: 'draft', id: string, text: string }
  * >} MathsEvent
  */
 
@@ -64,10 +66,12 @@ const show = text => ({ t: 'show', text })
  * @returns {R}
  */
 function placed(record, kind, patch, day, used) {
+  // What was shown on the line or problem in hand closes with any move but the one that opens it.
+  const { open: _, ...at } = placeOf(record, kind)
   return {
     ...record,
     used: used && !record.used?.includes(used) ? [...(record.used ?? []), used] : record.used,
-    stage: { ...record.stage, [kind]: { ...placeOf(record, kind), ...patch, day } }
+    stage: { ...record.stage, [kind]: { ...at, ...patch, day } }
   }
 }
 
@@ -246,7 +250,7 @@ function mixChanged(record, { problem, lost, day }) {
  * The moves of a worked example: a line read, the example done, and a stage's answer.
  * @template {import('./practice.logic.js').PracticeRecord} R
  * @param {R} record
- * @param {Extract<MathsEvent, { t: 'example-line' | 'example-done' | 'stage-answer' | 'stage-wrong' }>} move
+ * @param {Extract<MathsEvent, { t: 'example-line' | 'example-done' | 'stage-answer' | 'stage-wrong' | 'stage-open' }>} move
  * @returns {Moved<R>}
  */
 function workedStep(record, move) {
@@ -265,9 +269,23 @@ function workedStep(record, move) {
         record: placed(record, move.kind, { shown: true }, move.day),
         effects: [say('Wrong. The solution is below.')]
       }
+    case 'stage-open':
+      return { record: placed(record, move.kind, { open: true }, move.day), effects: [] }
     default:
       return unreachable(move)
   }
+}
+
+/**
+ * The typed answers with one set to `text`, or dropped when it is empty; none left, no field.
+ * @param {import('./practice.logic.js').PracticeRecord['draft']} draft
+ * @param {string} id
+ * @param {string} text
+ */
+function drafted(draft, id, text) {
+  const { [id]: _, ...rest } = draft ?? {}
+  const left = text ? { ...rest, [id]: text } : rest
+  return Object.keys(left).length ? left : undefined
 }
 
 /** What an idea marked wrong asks next. */
@@ -286,6 +304,7 @@ export function mathsStep(record, move) {
     case 'example-done':
     case 'stage-answer':
     case 'stage-wrong':
+    case 'stage-open':
       return workedStep(record, move)
     case 'idea-wrong':
       return {
@@ -297,7 +316,8 @@ export function mathsStep(record, move) {
         record: {
           ...record,
           retired: { ...record.retired, [move.kind]: move.day },
-          stage: { ...record.stage, [move.kind]: { day: move.day } }
+          stage: { ...record.stage, [move.kind]: { day: move.day } },
+          draft: drafted(record.draft, move.kind, '')
         },
         effects: [say('Right. Problems on this idea now come in mixed practice.')]
       }
@@ -327,6 +347,10 @@ export function mathsStep(record, move) {
       return { record: { ...record, mix: null }, effects: [] }
     case 'short':
       return { record: { ...record, short: move.kinds }, effects: [] }
+    case 'draft':
+      return (record.draft?.[move.id] ?? '') === move.text
+        ? { record, effects: [] }
+        : { record: { ...record, draft: drafted(record.draft, move.id, move.text) }, effects: [] }
     default:
       return unreachable(move)
   }

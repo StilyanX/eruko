@@ -27,11 +27,12 @@ export function dueToday(groups, today) {
 
 /**
  * The way on, for the Continue card: the work that waits today, where the unit's dated list puts
- * it, else the first row in reading order that opens and is not done. Pages done every session
- * (`repeats`) are left out of the second: what they hold today is on the dated list. A row that
+ * it, else the first row in reading order that opens, is not done and is not a look. Pages done
+ * every session (`repeats`) are left out of the second: what they hold today is on the dated list. A row that
  * ends a section (a level test) counts once the section's own rows are done. A kind held
  * (`hold`: mixed practice until a part of the open topic is taken today) waits for the first row,
- * which is the open topic. Null once nothing is left.
+ * which is the open topic. A first row `idle` (nothing to take there today) stops the way on
+ * there, so no later row opens past it. Null once nothing is left.
  * @param {{
  *   rows: import('../kernel/pages.logic.js').Rows,
  *   sections: readonly { first: number, last: number }[],
@@ -56,8 +57,8 @@ export function nextWork({ rows, sections, groups, today, repeats = () => false 
     }),
     ...after
   ]
-  const row = ordered.find(it => it.to && !it.done)
-  if (row?.to) return { to: row.to, title: row.title, lang: row.lang, waits: '' }
+  const row = ordered.find(it => it.to && !it.done && !it.look)
+  if (row?.to && !row.idle) return { to: row.to, title: row.title, lang: row.lang, waits: '' }
   return dueToday(groups, today)
 }
 
@@ -87,12 +88,12 @@ export function continueOf(view, unit, records, today) {
 /**
  * Why a row opens nothing, shown on it and read with it: the unit's own reason where it gives
  * one, else the row it opens after, by number. `before` is the number of the row before it in
- * the unit's order (0 for the first). A row done, or one that opens, needs none.
+ * the unit's order (0 for the first, which opens after Start). A row done, or one that opens, needs none.
  * @param {import('../kernel/pages.logic.js').Item} item
  * @param {number} before
  */
 export function lockNote(item, before) {
   if (item.to || item.done) return ''
   if (item.opens) return item.opens
-  return before > 0 ? `Opens after ${before}` : 'Opens later'
+  return before > 0 ? `Opens after ${before}` : 'Opens after Start'
 }

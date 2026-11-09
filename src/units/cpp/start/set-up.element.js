@@ -136,7 +136,7 @@ export class CppSetUp extends StepScreen {
             type: 'submit',
             label: 'Store',
             disabled: this.checking,
-            why: 'The check is under way.'
+            why: 'Wait for the check to finish.'
           })
         )
       ),

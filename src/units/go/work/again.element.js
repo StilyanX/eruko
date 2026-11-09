@@ -1,14 +1,14 @@
 // Hides: what a part read again, or a kind's own page, shows, from its row on the unit page: a part
-// shows its items already answered, each with its answer and its rule. A kind shows its worked
+// shows its items already answered, each with the cases asked, their answers, and its rule. A kind shows its worked
 // example, its first problem solved, then its problems already tried, each with its solution; one
-// not begun offers to begin it once it may open, and else names what it waits on. The engine's
+// not begun offers to begin it once it may open, and else links what it waits on. The engine's
 // pass and the problems from the learner's games run behind it, as behind every Go page.
 import { kindReady, noKindBegun, waitsOn } from '../core/next.logic.js'
 import { kindLine } from '../core/record.logic.js'
 import { today } from '../../../parts/clock.dom.js'
 import { linkTo } from '../../../parts/links.dom.js'
-import { PRIMARY, actions, whereIn, step, turn } from '../../../parts/study.dom.js'
-import { Screen, h } from '../../../parts/view.dom.js'
+import { PRIMARY, StepScreen, actions, whereIn, step, turn } from '../../../parts/study.dom.js'
+import { h } from '../../../parts/view.dom.js'
 import { Background, afterRedraw } from '../core/background.dom.js'
 import { board } from '../core/board.dom.js'
 import { HOME, RESULTS, asked, bankOf, goStore, goView, solution } from '../core/screens.dom.js'
@@ -32,15 +32,22 @@ function shownOf(course, record, part, kind, held) {
 }
 
 /**
- * A rules item read again: its question, position, answer and rule.
+ * A rules item read again: each case asked, in the order the item holds them, with its question,
+ * position and answer; then the rule.
  * @param {import('../core/decode.logic.js').RulesItem} entry
+ * @param {readonly import('../core/decode.logic.js').GoLine[]} lines
  */
-const itemAgain = entry => [
-  h('p', null, entry.question),
-  board({ diagram: entry.position }),
-  h('p', null, 'Answer: ', entry.answer, '.'),
-  h('p', null, entry.rule)
-]
+const itemAgain = (entry, lines) => {
+  const asked = new Set(lines.map(l => l.case ?? 0))
+  return [
+    entry.cases.flatMap((c, i) =>
+      asked.has(i)
+        ? [[h('p', null, c.question), board({ diagram: c.position }), h('p', null, 'Answer: ', c.answer, '.')]]
+        : []
+    ),
+    h('p', null, entry.rule)
+  ]
+}
 
 /**
  * "Begin this kind", once the kind may open: the work list, with the kind's first run begun.
@@ -59,7 +66,7 @@ const begin = kind =>
     )
   )
 
-export class GoAgain extends Screen {
+export class GoAgain extends StepScreen {
   /** @type {Readonly<Record<string, import('../core/decode.logic.js').Problem>>} */
   problems = {}
   /** @type {Readonly<Record<string, import('../core/decode.logic.js').RulesItem>>} */
@@ -70,7 +77,10 @@ export class GoAgain extends Screen {
   kind = 0
   /** The item in view. */
   at = 0
-  #bg = new Background(() => this.update())
+  #bg = new Background(
+    () => this.update(),
+    () => this.problems
+  )
   #sync = afterRedraw(this, () => this.#bg.sync())
 
   setup() {
@@ -95,7 +105,7 @@ export class GoAgain extends Screen {
     const k = course.kinds.find(x => x.id === this.kind)
     const shown = shownOf(course, record, part, k, id => Boolean(part ? items[id] : bank[id]))
     if (!shown.length)
-      return h('p', null, 'This ', part ? 'part' : 'kind', ' opens on ', h('a', { href: linkTo(`${HOME}/work`) }, 'the work list'), '.')
+      return h('p', null, 'This ', part ? 'part' : 'kind', ' opens once you reach it on ', h('a', { href: linkTo(`${HOME}/work`) }, 'the work list'), '.')
     const n = Math.min(this.at, shown.length - 1)
     const id = shown[n] ?? ''
     const entry = items[id]
@@ -106,7 +116,7 @@ export class GoAgain extends Screen {
       shown.length > 1 && whereIn(part ? 'Item' : 'Problem', n + 1, shown.length),
       step(
         part && entry
-          ? itemAgain(entry)
+          ? itemAgain(entry, record.recall[id] ?? [])
           : problem && [
               asked(problem),
               solution(problem, course),
@@ -123,11 +133,23 @@ export class GoAgain extends Screen {
           onTurn: to => {
             this.at = to
             this.update()
+            // the new item is read from its count, as turning an item does on every page
+            this.focusSoon('.lrn-ss-note[tabindex]')
           }
         }),
       k && !begun && kindReady(course, record, k) && begin(k.id),
       waits.length > 0 &&
-        h('p', { class: 'lrn-ss-note', key: 'waits' }, "This kind's problems open once these are done: ", waits.join(', '), '.')
+        h(
+          'p',
+          { class: 'lrn-ss-note', key: 'waits' },
+          'Its problems open once these are done: ',
+          // a kind links its own page, the rules parts the work list that asks them
+          waits.flatMap((w, i) => [
+            i > 0 && ', ',
+            h('a', { href: linkTo(`${HOME}/work${w.kind ? `?kind=${w.kind}` : ''}`) }, w.name)
+          ]),
+          '.'
+        )
     ]
   }
 }

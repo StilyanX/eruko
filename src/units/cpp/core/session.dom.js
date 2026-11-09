@@ -11,7 +11,7 @@ import { today } from '../../../parts/clock.dom.js'
 import { say } from '../../../parts/say.dom.js'
 import { allPassed, verdictOf } from './judge.logic.js'
 import { runAsk, runProgram, stopRuns } from './runner.dom.js'
-import { cppStore, cppView, loadKind, trackItemNow } from './screens.dom.js'
+import { cppStore, cppView, kindNow, loadKind, trackItemNow } from './screens.dom.js'
 import { step } from './session.logic.js'
 
 /** True once a run found the runner not answering, until one is answered again. */
@@ -25,8 +25,10 @@ let waiting = 0
  */
 async function runOn(effect) {
   const { item, code, tests, why } = effect
+  const k = kindNow(item.kind)
+  const fn = k && k !== 'failed' ? (k.problems[item.id]?.fn ?? null) : null
   waiting += 1
-  const reply = await runProgram(code, tests)
+  const reply = await runProgram(code, tests, fn, why === 'examples')
   waiting -= 1
   runnerDown.set(!reply.ok)
   if (!reply.ok) send({ t: 'runner-down', item })
@@ -40,7 +42,7 @@ async function runOn(effect) {
  * @param {import('./session.logic.js').TrackRunEffect} effect
  */
 async function trackRuns(effect) {
-  const { item, code, asks } = effect
+  const { item, code, asks, lines } = effect
   const content = trackItemNow(item)
   waiting += 1
   /** @type {import('./track.logic.js').Reply[]} */
@@ -58,7 +60,15 @@ async function trackRuns(effect) {
   waiting -= 1
   runnerDown.set(false)
   if (content && 'reference' in content)
-    send({ t: 'track-ran', item, code, content, replies, day: today() })
+    send({
+      t: 'track-ran',
+      item,
+      code,
+      ...(lines ? { lines } : {}),
+      content,
+      replies,
+      day: today()
+    })
 }
 
 /**
@@ -126,7 +136,11 @@ export async function checkRuntime(about, onCount) {
       const problem = content.problems[id]
       if (!problem) continue
       const tests = [...problem.examples, ...problem.tests]
-      const reply = await runProgram(`${problem.solution.lines.join('\n')}\n`, tests)
+      const reply = await runProgram(
+        `${problem.solution.lines.join('\n')}\n`,
+        tests,
+        problem.fn ?? null
+      )
       if (!reply.ok) return fail('unanswered')
       if (!allPassed(verdictOf(reply.value, tests))) refused.push(id)
       onCount(++done, of)

@@ -36,6 +36,14 @@
     font-size: var(--type-ui);
     font-variant-numeric: tabular-nums;
   }
+  /* A screen's date line is its heading, set as the line it was. */
+  augustus-life h3.lrn-bio-date,
+  augustus-review h3.lrn-bio-date,
+  augustus-start h3.lrn-bio-date {
+    margin: 0 0 var(--space-4);
+    font-weight: inherit;
+    line-height: inherit;
+  }
   augustus-life .lrn-bio-cols,
   augustus-review .lrn-bio-cols,
   augustus-start .lrn-bio-cols {

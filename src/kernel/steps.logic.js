@@ -101,13 +101,7 @@ export function afterAnswer(st, right, forms, twice = false) {
 }
 
 /**
- * The calculator line of a problem: the problem's own mark, held back until the number facts pass.
+ * The calculator line of a problem: the problem's own mark alone.
  * @param {Readonly<{ calc?: string }>} problem
- * @param {boolean} factsPassed
  */
-export const calculator = (problem, factsPassed) =>
-  problem.calc === 'no'
-    ? 'Calculator: no.'
-    : factsPassed
-      ? 'Calculator: yes.'
-      : 'Calculator: no, until the number facts pass.'
+export const calculator = problem => (problem.calc === 'no' ? 'Calculator: no.' : 'Calculator: yes.')

@@ -12,12 +12,12 @@ import { parseCoord } from './rules.logic.js'
 
 // The ids
 
-/** @typedef {string & { readonly brand: 'ProblemId' }} ProblemId A problem's id: its kind's number, then its place in the kind, "3.2". */
+/** @typedef {string & { readonly brand: 'ProblemId' }} ProblemId A problem's id, never reused and never shown: "3.2" in the bank (scripts/lib/go-ids.json keeps it), "o<key>" for a problem built in the browser. */
 /** @typedef {string & { readonly brand: 'RuleId' }} RuleId A rules item's id: "R2.4". */
-/** @typedef {ProblemId | RuleId} ItemId A problem's or a rules item's id: what the dated list is keyed by. */
+/** @typedef {ProblemId | RuleId} ItemId A problem's or a rules item's id. */
 /** @typedef {number & { readonly brand: 'KindId' }} KindId A kind's number. */
 /** @typedef {number & { readonly brand: 'GameId' }} GameId A game's number on the server. */
-/** @typedef {string & { readonly brand: 'PositionKey' }} PositionKey A position of a reviewed game tried for a problem of the learner's own: "<game>-<move>". */
+/** @typedef {string & { readonly brand: 'PositionKey' }} PositionKey A position of a reviewed game tried for a problem of the learner's own, "<game>-<move>", or a change to a seed tried for a written problem, "w<seed>-<point>-<act>". */
 
 /** @param {string} text */
 export const problemId = text => /** @type {ProblemId} */ (text)
@@ -36,6 +36,12 @@ export const itemId = text => (text.startsWith('R') ? ruleId(text) : problemId(t
 export const isRulesItem = id => id.startsWith('R')
 /** @param {number} n */
 export const kindId = n => /** @type {KindId} */ (n)
+/**
+ * The key a retired kind's lines are kept under in the dated list, beside the problems' and the
+ * rules items' ids: "k3".
+ * @param {KindId} id
+ */
+export const kindKey = id => `k${id}`
 /** @param {number} n */
 export const gameId = n => /** @type {GameId} */ (n)
 /**
@@ -43,29 +49,37 @@ export const gameId = n => /** @type {GameId} */ (n)
  * @param {number} move
  */
 export const positionKey = (game, move) => /** @type {PositionKey} */ (`${game}-${move}`)
+/**
+ * @param {ProblemId} seed
+ * @param {string} at
+ * @param {'black' | 'white' | 'off'} act
+ */
+export const changeKey = (seed, at, act) => /** @type {PositionKey} */ (`w${seed}-${at}-${act}`)
 
 // The course and the bank
 
 /** @typedef {'black' | 'white'} Colour */
-/** @typedef {Readonly<{ n: number, name: string, items: readonly RuleId[] }>} Part A rules part with its items' ids */
+/** @typedef {Readonly<{ n: number, name: string, items: readonly RuleId[], cases?: readonly number[] }>} Part A rules part with its items' ids and how many cases each holds, one where none is given */
 /**
- * A kind: its number, name and problems, the problems Eruko wrote for it (`written`, asked once
- * every found problem is used), the kinds its answers use (`after`), where it comes from, its
- * term where it has one, and the sequences of reasons its problems give.
- * @typedef {Readonly<{ id: KindId, name: string, source: string, term?: string, problems: readonly ProblemId[], written?: readonly ProblemId[], seqs: readonly string[], after: readonly KindId[] }>} Kind
+ * A kind: its number, name and problems, the kinds its answers use (`after`), where it comes
+ * from, its term where it has one, and the sequences of reasons its problems give.
+ * @typedef {Readonly<{ id: KindId, name: string, source: string, term?: string, problems: readonly ProblemId[], seqs: readonly string[], after: readonly KindId[] }>} Kind
  */
 /** @typedef {Readonly<{ side: 'B' | 'W', at: string | null, reason: string }>} SolutionMove A move of a line with its reason; `at` is null for a pass */
 /** @typedef {Readonly<{ at: number, moves: readonly SolutionMove[] }>} SolutionVariation */
 /** @typedef {Readonly<{ first: string, moves: readonly SolutionMove[], variations: readonly SolutionVariation[] }>} SolutionLine */
 /** @typedef {Readonly<{ black: number, white: number, result: import('./solve.logic.js').Fate }>} KoChange The ko threats at which a ko result changes, and the result there */
 /**
- * A Go problem as the unit stores it: its diagram, region, side to move, the group asked about,
+ * A Go problem as the unit stores it: its diagram, region, side to move, the group asked about
+ * (by the stone it is named by, `at`),
  * the ko field, every best first move, the result, and its solution.
- * @typedef {import('./diagram.logic.js').StoredDiagram & Readonly<{ id: ProblemId, kind: KindId, source: string, region: readonly string[], beyond?: 'both', toMove: Colour, group: Readonly<{ colour: Colour, at: string, where: string | null }>, ko: string, answers: readonly string[], result: import('./solve.logic.js').Fate, solution: Readonly<{ lines: readonly SolutionLine[], changes: readonly KoChange[] }> }>} Problem
+ * @typedef {import('./diagram.logic.js').StoredDiagram & Readonly<{ id: ProblemId, kind: KindId, source: string, region: readonly string[], beyond?: 'both', toMove: Colour, group: Readonly<{ colour: Colour, at: string }>, ko: string, answers: readonly string[], result: import('./solve.logic.js').Fate, solution: Readonly<{ lines: readonly SolutionLine[], changes: readonly KoChange[] }> }>} Problem
  */
 /**
- * A rules item: a stored position, one question with one exact answer, and the rule.
- * @typedef {Readonly<{ id: RuleId, part: number, position: import('./diagram.logic.js').StoredDiagram, question: string, answer: string, rule: string }>} RulesItem
+ * A rules item: the rule, and its cases, each a stored position with one question with one exact
+ * answer that the rule decides.
+ * @typedef {Readonly<{ position: import('./diagram.logic.js').StoredDiagram, question: string, answer: string }>} RulesCase
+ * @typedef {Readonly<{ id: RuleId, part: number, cases: readonly RulesCase[], rule: string }>} RulesItem
  */
 
 /** The five rules parts, as the generator wrote them. @type {readonly Part[]} */
@@ -118,6 +132,7 @@ export const posedOf = data =>
 /** @typedef {Readonly<{ name: string, rules: string, main: number, overtime: number, size: number }>} ServerSetting What the first stage fixes for the server */
 /** @typedef {ServerSetting & Readonly<{ user: string, id: number, since: string }>} Server The server as stored: the fixed setting, and the player and the day set up */
 /** @typedef {Readonly<{ id: ProblemId, date: string, right: boolean, mixed: boolean }>} Try A problem's first try */
+/** @typedef {import('../../../kernel/days.logic.js').Line & Readonly<{ case?: number }>} GoLine A dated line; a rules item's names the case asked, the first where none is named */
 /** @typedef {Readonly<{ part: number, done: string }>} PartLine A rules part's state */
 /** @typedef {Readonly<{ kind: KindId, opened: string, retired: string, after: readonly KindId[] }>} KindLine A kind's state */
 /** @typedef {PartLine | KindLine} CourseLine */
@@ -138,13 +153,13 @@ export const posedOf = data =>
 /** @typedef {Readonly<{ p: number, n: number }>} Share A share right out of n tries */
 /** @typedef {Readonly<{ date: string, games: number, rating: number, deviation: number, p: number, n: number, then?: Share, state: 'held' | 'open', before?: true }>} Reading One reading of gate 2 */
 /** @typedef {Readonly<{ date: string, rating: number, deviation: number, games: number }>} First The reading at which the first line was set */
-/** @typedef {Readonly<{ problems: readonly Problem[], kinds: readonly Kind[], seen: readonly PositionKey[], attempts?: Readonly<Record<string, number>> }>} Own The problems built from the learner's own games, the kinds they made, the positions tried, and how often each was started */
+/** @typedef {Readonly<{ problems: readonly Problem[], kinds: readonly Kind[], seen: readonly PositionKey[], attempts?: Readonly<Record<string, number>> }>} Own The problems built from the learner's own games and the problems Eruko wrote, the kinds they made, every position or change posed, and how often each was started */
 
 /**
  * The one next action, or the item left open, `n` the case's number in the paper's list. An
  * answered item keeps its verdict (`right`) and what was typed (`given`); a review position its
  * line once `shown`; the practice game's count what was typed, Eruko's count, and the verdict.
- * @typedef {Readonly<{ n: 1, step: 'recall', id: ItemId, kind: KindId | null }>} Recall
+ * @typedef {Readonly<{ n: 1, step: 'recall', id: ItemId, kind: KindId | null, case?: number }>} Recall
  * @typedef {Readonly<{ n: 4, step: 'mixed', id: ProblemId, kind: KindId }>} Mixed
  * @typedef {Readonly<{ n: 5, step: 'new', id: ProblemId, kind: KindId }>} New
  * @typedef {Readonly<{ n: 5, step: 'rules', id: RuleId, kind: null }>} Rules
@@ -165,13 +180,18 @@ export const posedOf = data =>
 
 /**
  * Where the learner stands: the item open, the kind answered last, the days the game was
- * skipped, the challenge posted and the engine down, the last read of the server, and after Set
- * up again the OGS account set up before (`was`).
- * @typedef {Readonly<{ open: Item | null, last: KindId | null, skipped: string, posted: string, read: ServerRead | null, was?: number }>} Position
+ * skipped, the challenge posted and the engine down, the last read of the server, after Set
+ * up again the OGS account set up before (`was`), and what is typed for the item open (`draft`).
+ * @typedef {Readonly<{ open: Item | null, last: KindId | null, skipped: string, posted: string, read: ServerRead | null, was?: number, draft?: Draft }>} Position
+ */
+/**
+ * What is typed for the item open until it is answered: `key` names the item, so a draft of
+ * another item is not shown.
+ * @typedef {Readonly<{ key: string, move: string, result: string, typed: string, number: string }>} Draft
  */
 /**
  * The Go record, with the fields "A Self-Study System" sets (The build, Go, The record).
- * @typedef {Readonly<{ engine: Engine | null, server: Server | null, course: readonly CourseLine[], recall: Readonly<Record<string, readonly import('../../../kernel/days.logic.js').Line[]>>, tries: readonly Try[], games: readonly Game[], readings: readonly Reading[], first: First | null, start: Readonly<{ counted: string }>, position: Position, own: Own }>} GoRecord
+ * @typedef {Readonly<{ engine: Engine | null, server: Server | null, course: readonly CourseLine[], recall: Readonly<Record<string, readonly GoLine[]>>, tries: readonly Try[], games: readonly Game[], readings: readonly Reading[], first: First | null, start: Readonly<{ counted: string, equal: string }>, position: Position, own: Own }>} GoRecord
  */
 
 /** @param {unknown} x */
@@ -287,7 +307,18 @@ function positionOf(raw, held, games) {
     skipped: text(p.skipped),
     posted: text(p.posted),
     read: read && /** @type {ServerRead} */ (/** @type {unknown} */ (read)),
-    ...(typeof p.was === 'number' ? { was: p.was } : {})
+    ...(typeof p.was === 'number' ? { was: p.was } : {}),
+    ...(isRecord(p.draft) && typeof p.draft.key === 'string'
+      ? {
+          draft: {
+            key: p.draft.key,
+            move: text(p.draft.move),
+            result: text(p.draft.result),
+            typed: text(p.draft.typed),
+            number: text(p.draft.number)
+          }
+        }
+      : {})
   }
 }
 
@@ -326,8 +357,7 @@ export function decodeRecord(raw, course) {
   /** @type {ReadonlySet<string>} */
   const held = new Set([
     ...course.parts.flatMap(p => p.items),
-    // a kind's written problems are held before they join it (own.logic.js)
-    ...course.kinds.flatMap(k => [...k.problems, ...(k.written ?? [])])
+    ...course.kinds.flatMap(k => [kindKey(k.id), ...k.problems])
   ])
   const games = list(r.games).flatMap(g => storedGame(g) ?? [])
   const recall = isRecord(r.recall) ? r.recall : {}
@@ -341,7 +371,7 @@ export function decodeRecord(raw, course) {
           ? [
               [
                 id,
-                /** @type {import('../../../kernel/days.logic.js').Line[]} */ (
+                /** @type {GoLine[]} */ (
                   lines.filter(isRecord)
                 )
               ]
@@ -353,7 +383,8 @@ export function decodeRecord(raw, course) {
     games,
     readings: /** @type {Reading[]} */ (list(r.readings).filter(isRecord)),
     first: isRecord(r.first) ? /** @type {First} */ (/** @type {unknown} */ (r.first)) : null,
-    start: { counted: isRecord(r.start) ? text(r.start.counted) : '' },
+    // a record from before `equal` reads it as empty
+    start: isRecord(r.start) ? { counted: text(r.start.counted), equal: text(r.start.equal) } : { counted: '', equal: '' },
     position: positionOf(r.position, held, games),
     own: ownOf(r)
   }

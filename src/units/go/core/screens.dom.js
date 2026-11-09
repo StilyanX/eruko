@@ -8,7 +8,7 @@ import { persistedStore } from '../../../record/store.js'
 import { dayName } from '../../../kernel/days.logic.js'
 import { ownOf, readMove } from './decode.logic.js'
 import { pointLack } from './next.logic.js'
-import { courseOf, withWritten } from './own.logic.js'
+import { courseOf } from './own.logic.js'
 import { REASONS } from './reasons.logic.js'
 import { recordOf } from './record.logic.js'
 import { passAt } from './review.logic.js'
@@ -37,27 +37,41 @@ export function goView() {
   const raw = goStore().get()
   const course = courseOf(ownOf(raw))
   const record = recordOf(raw, course)
-  return { course: withWritten(course, record), record }
+  return { course, record }
 }
 
 /**
- * The task: the side, then the group by where it stands, never the aim.
+ * The task: the side, then the group by its stone on the highest row, the leftmost of those, never the aim.
  * @param {import('./decode.logic.js').Problem} p
  */
 const taskOf = p =>
-  `${SIDE[p.toMove]} plays first. What happens to the ${p.group.colour} group ${p.group.where ?? `at ${p.group.at}`}?`
+  `${SIDE[p.toMove]} plays first. What happens to the ${p.group.colour} group that includes ${p.group.at}?`
+
+/** The id of the question an answer field is asked by: its fields' description (`field`). */
+export const QUESTION = 'go-q'
 
 /**
- * A problem as it is asked: the task, the ko field, and the diagram, which may take
- * a click (`pick`: board.dom.js's `onPoint` and `chosen`).
+ * A problem as it is asked: the diagram, which may take a click (`pick`: board.dom.js's
+ * `onPoint` and `chosen`), then the task and the ko field, next to the answer's fields.
  * @param {import('./decode.logic.js').Problem} problem
  * @param {{ onPoint?: (at: string) => void, chosen?: readonly string[] }} [pick]
  */
 export const asked = (problem, pick = {}) => [
-  h('p', null, taskOf(problem)),
-  h('p', { class: 'lrn-ss-note' }, problem.ko),
-  board({ diagram: problem, plays: `${SIDE[problem.toMove]} plays first.`, ...pick })
+  board({ diagram: problem, plays: `${SIDE[problem.toMove]} plays first.`, ...pick }),
+  h('div', { id: QUESTION }, h('p', null, taskOf(problem)), h('p', { class: 'lrn-ss-note' }, problem.ko))
 ]
+
+/**
+ * A field taking focus keeps the question above it in view: its scroll margin reaches up to the
+ * question's top, measured now, and the field and the question are brought into view together.
+ * @param {FocusEvent} e
+ */
+const withQuestion = e => {
+  const q = document.getElementById(QUESTION)
+  if (!q || !(e.target instanceof HTMLElement)) return
+  e.target.style.scrollMarginTop = `${e.target.getBoundingClientRect().top - q.getBoundingClientRect().top}px`
+  e.target.scrollIntoView({ block: 'nearest' })
+}
 
 /**
  * The points a typed answer names, each on the diagram: what the board rings.
@@ -182,10 +196,11 @@ export function solution(problem, course) {
 }
 
 /**
- * A field with its label above it.
- * @param {{ id: string, label: string, value: string, onChange: (v: string) => void, why: string, whyId?: string, capitals?: boolean }} p
+ * A field with its label above it. `asked` names a field the question above it describes
+ * (`QUESTION`); `autocomplete` names the input's purpose.
+ * @param {{ id: string, label: string, value: string, onChange: (v: string) => void, why: string, whyId?: string, capitals?: boolean, asked?: boolean, autocomplete?: string }} p
  */
-export const field = ({ id, label, value, onChange, why, whyId = 'go-why', capitals = false }) =>
+export const field = ({ id, label, value, onChange, why, whyId = 'go-why', capitals = false, asked = false, autocomplete = 'off' }) =>
   h(
     'div',
     null,
@@ -197,10 +212,11 @@ export const field = ({ id, label, value, onChange, why, whyId = 'go-why', capit
       oninput: (/** @type {Event} */ e) => {
         if (e.target instanceof HTMLInputElement) onChange(e.target.value)
       },
-      autocomplete: 'off',
+      onfocus: asked ? withQuestion : undefined,
+      autocomplete,
       autocapitalize: capitals ? 'characters' : 'none',
       spellcheck: 'false',
-      'aria-describedby': why ? whyId : undefined
+      'aria-describedby': [asked && QUESTION, why && whyId].filter(Boolean).join(' ') || undefined
     })
   )
 
@@ -252,15 +268,22 @@ export const judged = item =>
     'judged'
   )
 
+/** Why Check is locked while a field is empty. */
+const FILL = 'Fill in every field.'
+
+/**
+ * Check, locked until every field is filled.
+ * @param {boolean} filled
+ */
+export const check = filled => choice({ primary: true, type: 'submit', disabled: !filled, why: FILL, label: 'Check' })
+
 /**
  * The two ways to answer a problem or a rules item.
  * @param {() => void} onNone
+ * @param {boolean} filled
  */
-export const answering = onNone =>
-  actions(
-    choice({ label: 'No further move', onPress: onNone }),
-    choice({ primary: true, type: 'submit', label: 'Check' })
-  )
+export const answering = (onNone, filled) =>
+  actions(choice({ label: 'No further move', onPress: onNone }), check(filled))
 
 /**
  * The course's problems by id, with the ones built from the learner's own games.

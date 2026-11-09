@@ -382,7 +382,7 @@ export const RECORDS = {
           ? {
               ...i,
               lives: ['augustus', 'caesar', 'alexander'],
-              decisions: ['aug-002'],
+              decisions: ['aug-002', 'aug-003'],
               paired: ago(1)
             }
           : i
@@ -478,13 +478,31 @@ export const RECORDS = {
       ]
     },
     you: { field: 'Law', rank: 'Associate' },
-    checklist: { note: 'n1', people: ['Agrippa', 'Maecenas'] }
+    checklist: {
+      note: 'n1',
+      people: ['Agrippa', 'Maecenas'],
+      nextNote: { note: 'n2', answers: [false, true] }
+    }
+  }),
+  // Item 2's question on the next oldest note, the first person answered.
+  'next-life-asked.json': () => ({
+    ...RECORDS['next-life-done.json'](),
+    checklist: {
+      note: 'n1',
+      people: ['Agrippa', 'Maecenas', 'Livia'],
+      nextNote: { note: 'n2', answers: [false] }
+    }
   }),
   // No life opened, and the position names a life the course does not hold.
   'none.json': () => {
     const r = bio()
     const { opened: _opened, ...augustus } = /** @type {Record<string, Rec>} */ (r.lives).augustus ?? {}
-    return { ...r, lives: { augustus }, position: { life: 'nobody', lesson: 0, step: 'situation', screen: 0 } }
+    return {
+      ...r,
+      you: { field: '', rank: '' },
+      lives: { augustus },
+      position: { life: 'nobody', lesson: 0, step: 'situation', screen: 0 }
+    }
   },
   'sample.json': () => ({
     ...bio(),

@@ -5,10 +5,11 @@
 import { dayName } from '../kernel/days.logic.js'
 import { isRead, proofLines } from '../kernel/proofs.logic.js'
 import { proofId } from '../kernel/proofs-decode.logic.js'
+import { spoken } from '../kernel/maths-text.logic.js'
 import { clock, today } from './clock.dom.js'
 import { figure, rich } from './maths-screens.dom.js'
 import { heading, noProofsSend, proofsOf } from './maths-steps.dom.js'
-import { StepScreen, actions, actionsAs, choice, mark, step, studyStore } from './study.dom.js'
+import { StepScreen, actions, actionsAs, choice, mark, say, step, studyStore } from './study.dom.js'
 import { h } from './view.dom.js'
 
 export class AeProofReader extends StepScreen {
@@ -82,6 +83,7 @@ export class AeProofReader extends StepScreen {
                   onPress: () => {
                     this.shown = true
                     this.update()
+                    say(`The reason: ${spoken(l.reason)}`)
                   }
                 })
               ),
@@ -140,6 +142,7 @@ export class AeProofReader extends StepScreen {
               onPress: () => {
                 this.reveal = true
                 this.update()
+                say(`The main idea: ${spoken(this.proof.idea)}`)
               }
             })
           )
@@ -194,7 +197,7 @@ export class AeProofReader extends StepScreen {
           : h(
               'p',
               { key: 'closed', class: 'lrn-ss-note' },
-              'This proof opens after the proof before it.'
+              'This proof opens once you read the proof before it.'
             )
       ])
     }

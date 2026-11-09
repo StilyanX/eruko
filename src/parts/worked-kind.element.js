@@ -5,16 +5,18 @@
 import { dayName } from '../kernel/days.logic.js'
 import { InvariantError } from '../kernel/invariant.logic.js'
 import { kindId } from '../kernel/maths-decode.logic.js'
+import { spoken } from '../kernel/maths-text.logic.js'
 import { placeOf } from '../kernel/practice.logic.js'
-import { afterAnswer, hidden, kindFacts, stageProblem } from '../kernel/steps.logic.js'
+import { hidden, kindFacts, stageProblem } from '../kernel/steps.logic.js'
 import { clock, today } from './clock.dom.js'
 import { SAY_WHY, answerBox, figure, lines, rich } from './maths-screens.dom.js'
-import { heading, noSend, practiceOf, shownBy } from './maths-steps.dom.js'
+import { heading, noSend, practiceOf, sayCorrected, shownBy } from './maths-steps.dom.js'
 import {
   StepScreen,
   actionsAs,
   choice,
   mark,
+  say,
   whereIn,
   step,
   studyStore,
@@ -22,6 +24,17 @@ import {
 } from './study.dom.js'
 import { h } from './view.dom.js'
 import { focusIn } from './study-page.element.js'
+
+/**
+ * What a stage hides, said over its problem.
+ * @param {1 | 2 | 3 | 4} stage
+ */
+const hides = stage =>
+  stage === 2
+    ? 'The last line is hidden.'
+    : stage === 3
+      ? 'The last two lines are hidden.'
+      : 'Every line is hidden.'
 
 export class AeWorkedKind extends StepScreen {
   /** @type {import('../kernel/maths-decode.logic.js').Kind} */
@@ -41,16 +54,12 @@ export class AeWorkedKind extends StepScreen {
   inRecord = true
   /** @type {import('./maths-steps.dom.js').Send} */
   send = noSend
-  /** The reason of the line in hand is shown. */
-  shownReason = false
   /** The line in hand was marked wrong: its reason is read again. */
   reread = false
   /** A wrong stage answer kept on the page. */
   wrongShown = false
   /** After a right one: the message about the next problem. */
   passed = ''
-  /** The problem whose answer is shown. */
-  openFor = ''
   #study = studyStore()
 
   setup() {
@@ -66,9 +75,8 @@ export class AeWorkedKind extends StepScreen {
   /** A line of the example done: the next line, its reason hidden. */
   #nextLine() {
     this.send({ t: 'example-line', kind: kindFacts(this.kind, this.bank), day: today() })
-    this.shownReason = false
     this.reread = false
-    // Focus goes to the next line's Show the reason, or after the last to Next problem.
+    // Focus goes to the next line's Show the reason, or after the last to Next.
     this.#focusButton()
   }
 
@@ -90,11 +98,13 @@ export class AeWorkedKind extends StepScreen {
   }
 
   // Kept in the record, a wrong answer cannot be taken back by a reload; kept on the page, it can.
-  #wrong() {
+  /** @param {import('../kernel/maths-decode.logic.js').PaperProblem} problem */
+  #wrong(problem) {
     this.passed = ''
     if (this.inRecord) {
-      this.send({ t: 'stage-wrong', kind: this.kind.id, day: today() })
-      this.focusSoon('h3')
+      sayCorrected(this.send({ t: 'stage-wrong', kind: this.kind.id, day: today() }), problem.answer)
+      // The control pressed is gone: focus goes to the step's live primary, Next.
+      this.#focusButton()
     } else {
       this.wrongShown = true
       this.update()
@@ -114,10 +124,10 @@ export class AeWorkedKind extends StepScreen {
       'li',
       { key: i, class: 'lrn-ss-line' },
       h('span', { class: 'lrn-ss-text' }, rich(l.step)),
-      (i < st.line || this.shownReason) &&
+      (i < st.line || st.open) &&
         h('span', { class: 'lrn-ss-reason' }, 'Reason: ', rich(l.reason)),
       inHand &&
-        !this.shownReason && [
+        !st.open && [
           h('span', { class: 'lrn-ss-reason', key: 'say' }, SAY_WHY),
           actionsAs(
             'show',
@@ -125,7 +135,8 @@ export class AeWorkedKind extends StepScreen {
               primary: true,
               label: 'Show the reason',
               onPress: () => {
-                this.shownReason = true
+                this.send({ t: 'stage-open', kind: this.kind.id, day: today() })
+                say(`The reason: ${spoken(l.reason)}`)
                 // The button is gone once the reason shows: focus goes to the mark's question.
                 this.#focusButton()
               }
@@ -133,7 +144,7 @@ export class AeWorkedKind extends StepScreen {
           )
         ],
       inHand &&
-        this.shownReason &&
+        st.open &&
         !this.reread &&
         mark({
           when: 'Right when what you said names the same definition, theorem or rule as the reason shown, in your own words.',
@@ -150,7 +161,7 @@ export class AeWorkedKind extends StepScreen {
             'reread-next',
             choice({
               primary: true,
-              label: last ? 'Done' : 'Next line',
+              label: last ? 'Done' : 'Next',
               onPress: () => this.#nextLine()
             })
           )
@@ -176,7 +187,7 @@ export class AeWorkedKind extends StepScreen {
     // for its reason.
     let drawn = -1
     inView.forEach((l, i) => {
-      if (l.figure && (i < st.line || this.shownReason)) drawn = i
+      if (l.figure && (i < st.line || st.open)) drawn = i
     })
     return step(
       [
@@ -197,7 +208,7 @@ export class AeWorkedKind extends StepScreen {
             'next-problem',
             choice({
               primary: true,
-              label: 'Next problem, last line hidden',
+              label: 'Next',
               onPress: () =>
                 this.#moved({
                   t: 'example-done',
@@ -230,7 +241,7 @@ export class AeWorkedKind extends StepScreen {
           problem,
           open: hand.open,
           onOpen: hand.onOpen,
-          onDone: right => (right ? this.#after(true) : this.#wrong()),
+          onDone: right => (right ? this.#after(true) : this.#wrong(problem)),
           setAnswer: this.setAnswer,
           setForm: this.setForm
         })
@@ -248,7 +259,6 @@ export class AeWorkedKind extends StepScreen {
     const problem = stageProblem(kind, st, this.bank)
     if (!problem) throw new InvariantError(`kind ${kind.id} has a problem for its stage`)
     const all = problem.lines ?? problem.solution ?? []
-    const back = afterAnswer(st, false, kind.forms.length)
     const key = `${st.form}-${st.stage}-${st.problem}`
     const shown = this.inRecord ? Boolean(st.shown) : this.wrongShown
     /** @type {import('./maths-steps.dom.js').Hand} */
@@ -256,19 +266,18 @@ export class AeWorkedKind extends StepScreen {
       lines: all,
       hide: hidden(st.stage, all.length),
       figures: this.figures,
-      open: this.openFor === key,
-      onOpen: () => {
-        this.openFor = key
-        this.update()
-      },
+      open: Boolean(st.open),
+      onOpen: () => this.send({ t: 'stage-open', kind: kind.id, day: today() }),
       onDone: right => this.#after(right),
-      onStuck: () => this.#wrong()
+      onStuck: () => this.#wrong(problem)
     }
     // Keyed by its problem: a new problem is new nodes, never the last one's mathematics.
     return step(
       [
         heading(this.heading),
         passed,
+        // Over the problem, how much of its working is hidden: the Next that opened it says only Next.
+        h('p', { class: 'lrn-ss-note' }, hides(st.stage)),
         h('p', null, rich(problem.prompt)),
         figure(problem.figure, this.figures),
         shown
@@ -279,11 +288,7 @@ export class AeWorkedKind extends StepScreen {
                 'next',
                 choice({
                   primary: true,
-                  label: [
-                    'Next problem, ',
-                    back.t === 'stage' && back.stage === 3 ? 'last two lines' : 'every line',
-                    ' hidden'
-                  ],
+                  label: 'Next',
                   onPress: () => this.#after(false)
                 })
               )

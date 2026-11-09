@@ -1,15 +1,18 @@
 // Hides: what runs behind every Go page while it is open: the engine's pass over each ended game,
-// the problems built from the learner's own games on a thread of their own, and (on the work
+// the problems built from the learner's own games and the problems Eruko writes, on a thread of
+// their own, and (on the work
 // list) the server's rating read once a study day. Each task keeps a key of what it reads, and
 // `sync` starts, stops or leaves it as the key says, after every redraw. What a task learns goes
 // to the record as an event (session.dom.js).
 import { askEngine } from './engine.dom.js'
-import { OWN_TRIES, attemptsOf, courseOf, courseUsed, nextPosition } from './own.logic.js'
+import { OWN_TRIES, attemptsOf, courseOf, courseUsed, entering, nextBuild } from './own.logic.js'
 import { posedOf } from './decode.logic.js'
+import { rankRange } from './readings.logic.js'
 import { passAnswerOf, passAt, queryFor } from './review.logic.js'
 import { readPlayer } from './server.dom.js'
 import { goView } from './screens.dom.js'
 import { send } from './session.dom.js'
+import { say } from '../../../parts/say.dom.js'
 
 /**
  * What runs behind a page follows each redraw: `sync`
@@ -47,13 +50,15 @@ const OWN_WORKER = new URL('./own-worker.dom.js', import.meta.url)
 const NONE = '\u0000'
 
 /**
- * The engine's pass and the problems from the learner's games, for one screen. `changed` redraws
- * the screen when `stalled` changes. The engine's pass sends every position of an ended game
+ * The engine's pass and the problems from the learner's games and the written ones, for one
+ * screen. `changed` redraws the screen when `stalled` changes; `bank` gives the bank's problems,
+ * the written problems' seeds. The engine's pass sends every position of an ended game
  * once, at the stored setting, one after another, and keeps the answers; the engine is asked
  * again half a minute after it fails to answer, and a game it will not read is left out, so the
- * games after it are read. When the course has no never-tried problem left, the next position of
- * a reviewed game's list is posed and solved off the page's own thread, and the search's answer
- * is kept; a position whose search was started on several visits and never finished is passed over.
+ * games after it are read. When the course has no never-tried problem left, the next build (a
+ * position of a reviewed game's list, else a change to a seed) is posed and solved off the page's
+ * own thread, and the search's answer is kept; one whose search was started on several visits and
+ * never finished is passed over.
  */
 export class Background {
   /** Whether the last query went unanswered. */
@@ -68,10 +73,15 @@ export class Background {
   #ownKey = NONE
   /** @type {(() => void) | null} */
   #ownStop = null
+  #bank
 
-  /** @param {() => void} changed */
-  constructor(changed) {
+  /**
+   * @param {() => void} changed
+   * @param {() => Readonly<Record<string, import('./decode.logic.js').Problem>>} bank
+   */
+  constructor(changed, bank) {
     this.#changed = changed
+    this.#bank = bank
   }
 
   /** Start, restart or leave each task, as the record now stands. */
@@ -140,9 +150,9 @@ export class Background {
 
   #syncOwn() {
     const { record } = goView()
-    // the learner's own games give problems once no never-tried problem of the found sources or
-    // the games is left; the problems Eruko wrote come in at that point too, beside them
-    const next = courseUsed(courseOf(record.own), record) ? nextPosition(record) : undefined
+    // the learner's own games give problems once no never-tried problem is left; the problems
+    // Eruko writes once no reviewed game's position is left to pose
+    const next = courseUsed(courseOf(record.own), record) ? nextBuild(record, this.#bank()) : undefined
     const key = next?.key
     if (key === this.#ownKey) return
     this.#ownKey = key
@@ -158,7 +168,7 @@ export class Background {
       send({ t: 'own-started', key })
     }
     const worker = new Worker(OWN_WORKER, { type: 'module' })
-    worker.onmessage = e => send({ t: 'own-tried', key, problem: posedOf(e.data) })
+    worker.onmessage = e => send({ t: 'own-tried', key, problem: entering(posedOf(e.data), next.seed) })
     worker.onerror = () => send({ t: 'own-tried', key, problem: null })
     worker.postMessage(next.position)
     this.#ownStop = () => worker.terminate()
@@ -168,7 +178,7 @@ export class Background {
 /**
  * Reads the server's rating and deviation by the user name, once a study day, on the first Go
  * page opened. `busy` is whether a read is under way; `again` reads again after the server did
- * not answer. `changed` redraws the screen when `busy` changes.
+ * not answer, and says what that read found. `changed` redraws the screen when `busy` changes.
  */
 export class ServerRead {
   busy = false
@@ -209,10 +219,15 @@ export class ServerRead {
     let live = true
     this.#set(true)
     // A read that fails leaves the rank range unread, and the work list says the server did not answer.
+    const asked = this.#n > 0
     void readPlayer(user).then(player => {
       if (!live) return
       if (player.ok) send({ t: 'server-read', day, player: player.value })
       this.#set(false)
+      // a read the learner asked for says what it found
+      if (!asked) return
+      const range = player.ok && Number.isFinite(player.value.rating) ? rankRange(player.value.rating) : null
+      say(range ? `Rank range: ${range.lower} to ${range.upper}.` : 'The server did not answer.')
     })
     this.#stop = () => {
       live = false

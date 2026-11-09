@@ -13,7 +13,7 @@ test("Setup runs a fixed program for every form the paper lists, the device's be
   const names = CHECKS.map(c => c.name)
   for (const lv of ['c++11', 'c++14', 'c++17', 'c++20', 'c++23'])
     assert.ok(names.includes(`g++ at -std=${lv}`))
-  for (const tool of ['memcheck', 'initcheck', 'racecheck', 'synccheck'])
+  for (const tool of ['memcheck', 'initcheck', 'racecheck'])
     assert.ok(names.includes(`compute-sanitizer --tool ${tool}`))
   assert.ok(
     names.some(n => n.startsWith('gdb')) &&

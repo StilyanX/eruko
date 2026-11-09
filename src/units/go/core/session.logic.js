@@ -3,7 +3,7 @@
 // study day and every reply come in with the event. Tested in tests/go-session.test.mjs, which
 // replays a stored log of events to its stored record.
 import { unreachable } from '../../../kernel/invariant.logic.js'
-import { courseOf, withAttempt, withOwn, withWritten } from './own.logic.js'
+import { courseOf, withAttempt, withOwn } from './own.logic.js'
 import {
   answerItem,
   closeItem,
@@ -15,11 +15,11 @@ import {
 } from './next.logic.js'
 import { gameCounted, gameEnded } from './play.logic.js'
 import { ENGINE, SERVER, serverStored, setUpAgain } from './record.logic.js'
-import { withAnswer, withLoss, withTyped, withUnread } from './review.logic.js'
+import { points, withAnswer, withLoss, withTyped, withUnread } from './review.logic.js'
 
 /**
  * A move of the learner, or a reply the unit waited on: what the step is given.
- * @typedef {Readonly<{ t: 'answer', item: import('./decode.logic.js').Asked, right: boolean, given: string, day: string }>} Answer A problem or a rules item answered, judged by gate 1
+ * @typedef {Readonly<{ t: 'answer', item: import('./decode.logic.js').Asked, right: boolean, given: string, day: string, answer?: string }>} Answer A problem or a rules item answered, judged by gate 1; `answer` is the right answer, said after Wrong
  * @typedef {Readonly<{ t: 'next' }>} Next "Next" after a verdict, a position, a reading or a note
  * @typedef {Readonly<{ t: 'example-read', kind: import('./decode.logic.js').KindId, day: string }>} ExampleRead A worked example read, or "Begin this kind"
  * @typedef {Readonly<{ t: 'open', item: import('./decode.logic.js').Item }>} Open An item kept open as it now stands: a count to count again or to show
@@ -38,7 +38,8 @@ import { withAnswer, withLoss, withTyped, withUnread } from './review.logic.js'
  * @typedef {Readonly<{ t: 'engine-stored', checksum: string }>} EngineStored The engine checked on the Start page
  * @typedef {Readonly<{ t: 'server-stored', player: import('./decode.logic.js').Player, day: string }>} ServerStored The OGS user name stored on the Start page
  * @typedef {Readonly<{ t: 'set-up-again' }>} SetUpAgain "Clear and set up again"
- * @typedef {Answer | Next | ExampleRead | Open | ReviewMove | ReviewLoss | ReviewLeftOut | SkipGame | PostGame | GamesEnded | Counted | ServerReadEvent | PassAnswerEvent | PassUnread | OwnStarted | OwnTried | EngineStored | ServerStored | SetUpAgain} Event
+ * @typedef {Readonly<{ t: 'draft', draft: import('./decode.logic.js').Draft }>} DraftEvent What is typed for the item open, kept until it is answered
+ * @typedef {Answer | Next | ExampleRead | Open | ReviewMove | ReviewLoss | ReviewLeftOut | SkipGame | PostGame | GamesEnded | Counted | ServerReadEvent | PassAnswerEvent | PassUnread | OwnStarted | OwnTried | EngineStored | ServerStored | SetUpAgain | DraftEvent} Event
  * @typedef {Readonly<{ t: 'say', text: string }>} Effect What the interpreter runs after the record is set: a line said to a screen reader
  */
 
@@ -50,7 +51,7 @@ import { withAnswer, withLoss, withTyped, withUnread } from './review.logic.js'
  * @returns {import('./decode.logic.js').GoRecord}
  */
 function studied(record, event) {
-  const course = withWritten(courseOf(record.own), record)
+  const course = courseOf(record.own)
   switch (event.t) {
     case 'answer':
       return answerItem(course, event.item, event.right, event.day, event.given)(record)
@@ -90,7 +91,7 @@ function replied(record, event) {
     case 'games-ended': {
       const { games, player, day, practice } = event
       return gameEnded(
-        withWritten(courseOf(record.own), record),
+        courseOf(record.own),
         games,
         player,
         day,
@@ -115,6 +116,8 @@ function replied(record, event) {
       return stored(record, event.player, event.day)
     case 'set-up-again':
       return setUpAgain(record)
+    case 'draft':
+      return { ...record, position: { ...record.position, draft: event.draft } }
     default:
       return unreachable(event)
   }
@@ -152,17 +155,37 @@ const STUDY = new Set([
  */
 const isStudy = event => STUDY.has(event.t)
 
+/** The moves that answer, close or leave the item open, and so clear what was typed for it. @type {ReadonlySet<Event['t']>} */
+const CLEARS = new Set([
+  'answer',
+  'next',
+  'open',
+  'review-move',
+  'review-left-out',
+  'skip-game',
+  'games-ended',
+  'counted',
+  'set-up-again'
+])
+
 /**
  * The session's one step: the next record, and the effects to run. A judged answer says its
- * verdict.
+ * verdict, and the right answer after Wrong; the engine's late loss for a review move is said
+ * when it comes; a move that answers the item open clears its draft.
  * @param {import('./decode.logic.js').GoRecord} record
  * @param {Event} event
  * @returns {Readonly<{ state: import('./decode.logic.js').GoRecord, effects: readonly Effect[] }>}
  */
 export function step(record, event) {
-  const state = isStudy(event) ? studied(record, event) : replied(record, event)
+  const moved = isStudy(event) ? studied(record, event) : replied(record, event)
+  const { draft: _typed, ...position } = moved.position
+  const state = CLEARS.has(event.t) && moved.position.draft ? { ...moved, position } : moved
   /** @type {Effect[]} */
   const effects =
-    event.t === 'answer' ? [{ t: 'say', text: event.right ? 'Right.' : 'Wrong.' }] : []
+    event.t === 'answer'
+      ? [{ t: 'say', text: event.right ? 'Right.' : ['Wrong.', event.answer].filter(Boolean).join(' ') }]
+      : event.t === 'review-loss'
+        ? [{ t: 'say', text: `Your move ${event.typed}: ${points(event.lossPts)} points lost.` }]
+        : []
   return { state, effects }
 }

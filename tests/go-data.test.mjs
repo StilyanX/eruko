@@ -10,6 +10,7 @@ import { boardOf, threatsOf, viewOf } from '../src/units/go/core/diagram.logic.j
 import { REASONS } from '../src/units/go/core/reasons.logic.js'
 import { BLACK, WHITE, byPoint, parseCoord } from '../src/units/go/core/rules.logic.js'
 import { solve } from '../src/units/go/core/solve.logic.js'
+import { readFileSync } from 'node:fs'
 
 const reasons = new Set(REASONS.map(([key]) => key))
 
@@ -30,7 +31,6 @@ test('a problem holds the paper\'s fields, and its solution a line for each best
     assert.ok(!ids.has(p.id), `${p.id} is used once`)
     ids.add(p.id)
     assert.match(p.id, /^\d+\.\d+$/)
-    assert.equal(p.id.split('.')[0], String(p.kind))
     assert.equal(p.size, 19)
     assert.ok(['lives', 'dies', 'ko', 'seki'].includes(p.result), p.id)
     assert.match(p.ko, /^Ko threats elsewhere: (none for either side|Black (none|\d), White (none|\d))\.$/)
@@ -68,12 +68,10 @@ test('the course: five rules parts, the ten first kinds in the paper\'s order, e
   assert.deepEqual(built.map(k => k.name), first)
   for (const [i, k] of KINDS.entries()) {
     assert.ok(k.problems.length >= 1, k.name)
-    // the found and built problems, then the written ones, which wait apart (own.logic.js)
-    assert.deepEqual([...k.problems, ...(k.written ?? [])], PROBLEMS.filter(p => p.kind === k.id).map(p => p.id))
-    if (k.written) assert.notEqual(k.source, 'aether', `${k.name}: only a kind from the found sources is written for`)
+    assert.deepEqual(k.problems, PROBLEMS.filter(p => p.kind === k.id).map(p => p.id))
     for (const a of k.after) assert.ok(KINDS.slice(0, i).some(e => e.id === a), `${k.name} comes after ${a}`)
   }
-  assert.equal(PROBLEMS.length, KINDS.reduce((n, k) => n + k.problems.length + (k.written?.length ?? 0), 0))
+  assert.equal(PROBLEMS.length, KINDS.reduce((n, k) => n + k.problems.length, 0))
   assert.equal(SECTIONS[0]?.title, 'Rules')
   assert.equal(SECTIONS.at(-1)?.last, PARTS.length + KINDS.length)
 })
@@ -118,4 +116,17 @@ test('a found or classical problem makes a kind of its own only where no one fir
       assert.match(p.source, /^(easy|intermediate|hard)\/\S+\d$|^(Gokyo Shumyo|Xuanxuan Qijing|Guanzi Pu|Igo Hatsuyoron) \d+$/)
     }
   }
+})
+
+test('an id is never reused: every problem and kind holds an id the ledger gave once, and kept', () => {
+  /** @type {{ kinds: Record<string, number>, problems: Record<string, string> }} */
+  const ledger = JSON.parse(readFileSync(new URL('../scripts/lib/go-ids.json', import.meta.url), 'utf8'))
+  const given = Object.values(ledger.problems)
+  assert.equal(new Set(given).size, given.length, 'no problem id given twice')
+  const kinds = Object.values(ledger.kinds)
+  assert.equal(new Set(kinds).size, kinds.length, 'no kind id given twice')
+  for (const p of PROBLEMS) assert.ok(given.includes(p.id), `${p.id} is in the ledger`)
+  for (const k of KINDS) assert.ok(kinds.includes(k.id), `kind ${k.id} is in the ledger`)
+  // the ids the written problems of the first build held stay given
+  for (const id of ['12.2', '17.4', '19.2', '21.7']) assert.ok(given.includes(id), `${id} stays given`)
 })

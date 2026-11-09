@@ -1,0 +1,1509 @@
+{
+ "about": "Pleiades (Roger S. Bagnall, Richard J. A. Talbert, Tom Elliott and others; Creative Commons Attribution), https://pleiades.stoa.org, from the places dump of 2026-11-08: each place an era map names, by id, with its title, representative point, location precision and first date.",
+ "places": [
+  {
+   "id": "1004",
+   "title": "(H)Adriaticum/Superum Mare",
+   "lat": 42.4700542144,
+   "lon": 16.4511294299,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "1027",
+   "title": "Hispania",
+   "lat": 42.5,
+   "lon": -7.5,
+   "precision": "rough",
+   "first": null
+  },
+  {
+   "id": "1046",
+   "title": "Ionium Mare",
+   "lat": 38.8454140217,
+   "lon": 17.1063908357,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "1052",
+   "title": "Italia",
+   "lat": 43.6941505,
+   "lon": 11.0949512,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "108797",
+   "title": "Beckinghausen",
+   "lat": 51.6136695,
+   "lon": 7.565823,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "109125",
+   "title": "Lupia (river)",
+   "lat": 51.6877535583,
+   "lon": 7.71440103501,
+   "precision": "precise",
+   "first": 1700
+  },
+  {
+   "id": "109169",
+   "title": "Mogontiacum",
+   "lat": 49.998912,
+   "lon": 8.273869,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "109229",
+   "title": "Oberaden",
+   "lat": 51.6134127,
+   "lon": 7.5831968,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "109277",
+   "title": "Rhenus (river)",
+   "lat": 49.6380760082,
+   "lon": 7.46057338683,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "118604",
+   "title": "Boihaemum",
+   "lat": 50.069138833,
+   "lon": 14.3852544822,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "1332",
+   "title": "Thessalia",
+   "lat": 39.4438683285,
+   "lon": 22.2954322962,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "148127",
+   "title": "Massalia/Massilia",
+   "lat": 43.296854,
+   "lon": 5.382499,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "167717",
+   "title": "Col. Lugdunum",
+   "lat": 45.758866,
+   "lon": 4.8194815,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "167793",
+   "title": "Isara (river)",
+   "lat": 45.3534667384,
+   "lon": 5.98896522576,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "187290",
+   "title": "Aquileia",
+   "lat": 45.769631,
+   "lon": 13.370946,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "187324",
+   "title": "Brigantinus (lake)",
+   "lat": 47.6327298758,
+   "lon": 9.29661790915,
+   "precision": "precise",
+   "first": 1700
+  },
+  {
+   "id": "196789404",
+   "title": "Via Egnatia",
+   "lat": 40.9268360207,
+   "lon": 23.8538159173,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "197240",
+   "title": "Dalmatia (region)",
+   "lat": 43.539561,
+   "lon": 16.483426,
+   "precision": "related",
+   "first": null
+  },
+  {
+   "id": "197304",
+   "title": "Histria",
+   "lat": 45.3046377717,
+   "lon": 14.0791804107,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "197380",
+   "title": "Metulum",
+   "lat": 45.209371,
+   "lon": 15.299752,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "197425",
+   "title": "Pannonia",
+   "lat": 45.7490406431,
+   "lon": 16.6030583846,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "197504",
+   "title": "Segestica/Siscia",
+   "lat": 45.483168,
+   "lon": 16.371388,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "20419",
+   "title": "Britannia/Albion (island)",
+   "lat": 53.826,
+   "lon": -2.422,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "20420",
+   "title": "Britannicum Mare",
+   "lat": 49.9892202,
+   "lon": -2.23846985,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "20468",
+   "title": "Germania",
+   "lat": 52.5,
+   "lon": 7.5,
+   "precision": "rough",
+   "first": -330
+  },
+  {
+   "id": "207429",
+   "title": "Savus (river)",
+   "lat": 45.3250294869,
+   "lon": 17.4447146167,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "216830",
+   "title": "Haemus (mountain range)",
+   "lat": 42.7175,
+   "lon": 24.916667,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "220408239",
+   "title": "Rödgen",
+   "lat": 50.371,
+   "lon": 8.7665,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "226577",
+   "title": "Danuvius/Istros/Hister (river)",
+   "lat": 46.2764915176,
+   "lon": 19.4480237194,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "246347",
+   "title": "Col. Narbo Martius",
+   "lat": 43.1836165,
+   "lon": 3.004203,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "246349",
+   "title": "Col. Tarraco",
+   "lat": 41.116892,
+   "lon": 1.2583375,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "246582",
+   "title": "Pyrenaei (mountains)",
+   "lat": 42.7599890774,
+   "lon": 0.425313611323,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "256063",
+   "title": "Carteia/Calpe/Karpessos",
+   "lat": 36.1851914761,
+   "lon": -5.40939078138,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "256155",
+   "title": "Emerita Augusta",
+   "lat": 38.917656207,
+   "lon": -6.34103268648,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "256314",
+   "title": "Munda",
+   "lat": 37.419687,
+   "lon": -5.141862,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "266021",
+   "title": "Saguntum/Arse",
+   "lat": 39.678125,
+   "lon": -0.2772475,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "27164982",
+   "title": "Porta Capena",
+   "lat": 41.884,
+   "lon": 12.491,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "347036492",
+   "title": "Capitolinus Mons",
+   "lat": 41.8925778,
+   "lon": 12.4822154,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "373777",
+   "title": "Cyrenaica (region)",
+   "lat": 32.4996533333,
+   "lon": 20.8717433333,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "383579",
+   "title": "Augusta Praetoria",
+   "lat": 45.737444,
+   "lon": 7.3161705,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "383587",
+   "title": "Benacus (lake)",
+   "lat": 45.6304078009,
+   "lon": 10.6841222643,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "383689",
+   "title": "Larius/Comacinus L.",
+   "lat": 45.9778278059,
+   "lon": 9.24983379164,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "383698",
+   "title": "Liguria (region)",
+   "lat": 44.3303913999,
+   "lon": 8.78620043711,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "383715",
+   "title": "Mutina",
+   "lat": 44.647057,
+   "lon": 10.925223,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "383798",
+   "title": "Ticinum",
+   "lat": 45.185899,
+   "lon": 9.156562,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "383808",
+   "title": "Vada Sabatia",
+   "lat": 44.269359,
+   "lon": 8.435757,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "393379",
+   "title": "Ariminum",
+   "lat": 44.0589565,
+   "lon": 12.5631945,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "393405",
+   "title": "Claterna",
+   "lat": 44.4344526511,
+   "lon": 11.5045531003,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "393421",
+   "title": "Felsina/Bononia",
+   "lat": 44.4945737,
+   "lon": 11.3455467,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "393424",
+   "title": "Forum Cornelii",
+   "lat": 44.353995,
+   "lon": 11.707535,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "393425",
+   "title": "Forum Gallorum",
+   "lat": 44.596736,
+   "lon": 11.053156,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "393469",
+   "title": "Padus/Eridanus (river)",
+   "lat": 45.0085318471,
+   "lon": 9.68594601999,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "393480",
+   "title": "Ravenna",
+   "lat": 44.415718,
+   "lon": 12.196604,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "393483",
+   "title": "Rhenus (river)",
+   "lat": 44.4778655405,
+   "lon": 11.4392817865,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "393492",
+   "title": "Scultenna (river)",
+   "lat": 44.6405097472,
+   "lon": 11.0940918871,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "403255",
+   "title": "Planasia (island)",
+   "lat": 42.5899932679,
+   "lon": 10.0808323139,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "413005",
+   "title": "Alba Fucens",
+   "lat": 42.0799043722,
+   "lon": 13.4111791182,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "413248",
+   "title": "Perusia",
+   "lat": 43.111192,
+   "lon": 12.3899085,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "413253",
+   "title": "Picenum (region)",
+   "lat": 43.3313039333,
+   "lon": 13.5081034933,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "413312",
+   "title": "Sentinum",
+   "lat": 43.427013,
+   "lon": 12.855963,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "413360",
+   "title": "Umbria (region)",
+   "lat": 42.9155655563,
+   "lon": 12.6304795313,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "422826",
+   "title": "Albanus M.",
+   "lat": 41.7521724,
+   "lon": 12.710094,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "423013",
+   "title": "Praeneste",
+   "lat": 41.8394835,
+   "lon": 12.8923075,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "423025",
+   "title": "Roma",
+   "lat": 41.8899769865,
+   "lon": 12.4912581746,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "432742",
+   "title": "Campania",
+   "lat": 41.3901862239,
+   "lon": 13.6224300124,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "432754",
+   "title": "Capua",
+   "lat": 41.0860925,
+   "lon": 14.250207,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "432815",
+   "title": "Dikaiarcheia/Puteoli",
+   "lat": 40.825838,
+   "lon": 14.1217415,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "432941",
+   "title": "Misenum",
+   "lat": 40.786279,
+   "lon": 14.084884,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "432981",
+   "title": "Nola",
+   "lat": 40.926823,
+   "lon": 14.524545,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "433011",
+   "title": "Pandataria (island)",
+   "lat": 40.7939436148,
+   "lon": 13.4248686311,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "433014",
+   "title": "Parthenope/Neapolis",
+   "lat": 40.839995,
+   "lon": 14.25287,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "433146",
+   "title": "Teanum Sidicinum",
+   "lat": 41.2502785,
+   "lon": 14.0700745,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "442509",
+   "title": "Brundisium/Brentesion",
+   "lat": 40.638663,
+   "lon": 17.9429115,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "442525",
+   "title": "Canusium",
+   "lat": 41.22142765,
+   "lon": 16.0655784,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "442642",
+   "title": "Lupia(e)",
+   "lat": 40.352152,
+   "lon": 18.172425,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "442810",
+   "title": "Taras/Tarentum/Neptunia",
+   "lat": 40.4737866,
+   "lon": 17.2330416,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "452308",
+   "title": "Consentia",
+   "lat": 39.295395,
+   "lon": 16.253611,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "452416",
+   "title": "Rhegion/Regium",
+   "lat": 38.109279,
+   "lon": 15.64393,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "452457",
+   "title": "Sybaris/Thurii/Copia",
+   "lat": 39.7173276732,
+   "lon": 16.4942623529,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462270",
+   "title": "Katane/Catina",
+   "lat": 37.502959,
+   "lon": 15.088142,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462281",
+   "title": "Lilybaeum",
+   "lat": 37.8027343605,
+   "lon": 12.4296649099,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462379",
+   "title": "Mylae",
+   "lat": 38.219365,
+   "lon": 15.240385,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462384",
+   "title": "Naulochos",
+   "lat": 38.221699,
+   "lon": 15.374469,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "462386",
+   "title": "Naxos (settlement)",
+   "lat": 37.82248715,
+   "lon": 15.2677947,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462410",
+   "title": "Pan(h)ormus",
+   "lat": 38.1112268,
+   "lon": 13.3524434,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "462492",
+   "title": "Sicilia (island)",
+   "lat": 37.592530586,
+   "lon": 14.0465172229,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "462494",
+   "title": "Siculum Fretum",
+   "lat": 38.1167640465,
+   "lon": 15.5962387942,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "462503",
+   "title": "Syracusae/Syrakousai",
+   "lat": 37.070078971,
+   "lon": 15.2833356581,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "462506",
+   "title": "Tauromenium",
+   "lat": 37.852391,
+   "lon": 15.292123,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "462527",
+   "title": "Tyndaris",
+   "lat": 38.14272495,
+   "lon": 15.0445609,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "462538",
+   "title": "Zancle/Messana",
+   "lat": 38.192251,
+   "lon": 15.556634,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "472014",
+   "title": "Sardinia (island)",
+   "lat": 40.0663001683,
+   "lon": 8.96062935972,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "472063",
+   "title": "Corsica/Kyrnos (island)",
+   "lat": 41.9340137928,
+   "lon": 9.18684944628,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "481693",
+   "title": "Acroceraunia Pr.",
+   "lat": 40.4214901,
+   "lon": 19.2917556,
+   "precision": "precise",
+   "first": 1700
+  },
+  {
+   "id": "481728",
+   "title": "Apollonia",
+   "lat": 40.72019121,
+   "lon": 19.469259975,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "481818",
+   "title": "Dyrr(h)achium/Epidamnos",
+   "lat": 41.3163425,
+   "lon": 19.447355,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "481865",
+   "title": "Illyricum",
+   "lat": 41.2540645139,
+   "lon": 19.8584085756,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "481986",
+   "title": "Scodra",
+   "lat": 42.060232,
+   "lon": 19.512883,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "50004",
+   "title": "India",
+   "lat": 20.6367379616,
+   "lon": 79.5332605032,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "501325",
+   "title": "Abydos",
+   "lat": 40.19421564,
+   "lon": 26.4113127626,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "501347",
+   "title": "Amphipolis",
+   "lat": 40.8258114808,
+   "lon": 23.8415794323,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "501386",
+   "title": "Chersonesus",
+   "lat": 40.3366203876,
+   "lon": 26.4879780177,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "501434",
+   "title": "Hellespont (strait)",
+   "lat": 40.2188080193,
+   "lon": 26.4768660982,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "501482",
+   "title": "Krenides/Philippi/Col. Augusta Iulia Philippensis",
+   "lat": 41.0126513396,
+   "lon": 24.2846372868,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "501629",
+   "title": "Strymon (river)",
+   "lat": 41.809453061,
+   "lon": 23.161189893,
+   "precision": "precise",
+   "first": 300
+  },
+  {
+   "id": "501635",
+   "title": "Thasos (island)",
+   "lat": 40.6764946876,
+   "lon": 24.6650352149,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "501638",
+   "title": "Thracia",
+   "lat": 41.5178303653,
+   "lon": 26.9624137954,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "502866838",
+   "title": "Forum Romanum",
+   "lat": 41.891616244,
+   "lon": 12.4871944545,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "511189",
+   "title": "Bithynia (region)",
+   "lat": 40.5628578119,
+   "lon": 30.7201762118,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "511218",
+   "title": "Cyzicus",
+   "lat": 40.3855645,
+   "lon": 27.883191,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "511381",
+   "title": "Propontis",
+   "lat": 40.6666672,
+   "lon": 28.2499999,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "530771",
+   "title": "Actium",
+   "lat": 38.953891,
+   "lon": 20.765852,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "530795",
+   "title": "Ambracius Sinus",
+   "lat": 38.9679861903,
+   "lon": 20.9664242043,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "530835",
+   "title": "Corcyra (island)",
+   "lat": 39.619969638,
+   "lon": 19.8665416487,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "530871",
+   "title": "Epirus",
+   "lat": 39.6854576581,
+   "lon": 20.7139203232,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "530975",
+   "title": "Leucas (island)",
+   "lat": 38.6987545502,
+   "lon": 20.6536522387,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "531013",
+   "title": "Nicopolis",
+   "lat": 39.0157,
+   "lon": 20.7360035,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "540775",
+   "title": "Euboea (island)",
+   "lat": 38.53,
+   "lon": 23.87,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "541042",
+   "title": "Pharsalus",
+   "lat": 39.2884974571,
+   "lon": 22.387853349,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "550696",
+   "title": "Lesbos (island)",
+   "lat": 39.1774570221,
+   "lon": 26.2374755401,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "550759",
+   "title": "Mysia (region)",
+   "lat": 39.5996880845,
+   "lon": 27.8340013218,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "550763",
+   "title": "Mytilene",
+   "lat": 39.110475,
+   "lon": 26.547048,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "560221",
+   "title": "Aegaeum Mare",
+   "lat": 38.9139570674,
+   "lon": 24.9172407527,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "570182",
+   "title": "Corinthus/Korinthos",
+   "lat": 37.9056416435,
+   "lon": 22.8786143909,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "570186",
+   "title": "Cythera (island)",
+   "lat": 36.2401136145,
+   "lon": 22.982874966,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "570468",
+   "title": "Megara",
+   "lat": 37.985078,
+   "lon": 23.340163,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "570483",
+   "title": "Methone/Mothone (Messenian)",
+   "lat": 36.81435,
+   "lon": 21.704441,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "570567",
+   "title": "Patra(e)",
+   "lat": 38.243265,
+   "lon": 21.738518,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "570577",
+   "title": "Peloponnesus/Peloponnesos/Peloponnese",
+   "lat": 37.092784642,
+   "lon": 22.3359574955,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "570685",
+   "title": "Sparta",
+   "lat": 37.0817824552,
+   "lon": 22.4246722824,
+   "precision": "precise",
+   "first": -850
+  },
+  {
+   "id": "579844",
+   "title": "Aegina (island)",
+   "lat": 37.7345625132,
+   "lon": 23.4893020837,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "579885",
+   "title": "Athenae",
+   "lat": 37.9716474729,
+   "lon": 23.7239547968,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "579920",
+   "title": "Eleusis",
+   "lat": 38.041101,
+   "lon": 23.537401,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "579925",
+   "title": "Eretria (Euboea)",
+   "lat": 38.3999169038,
+   "lon": 23.7947210755,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "589748",
+   "title": "Creta (island)",
+   "lat": 35.214847063,
+   "lon": 25.0740796921,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "589886",
+   "title": "Kydonia",
+   "lat": 35.515775,
+   "lon": 24.01869,
+   "precision": "precise",
+   "first": -1600
+  },
+  {
+   "id": "589894",
+   "title": "Lappa",
+   "lat": 35.28658,
+   "lon": 24.336077,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "590031",
+   "title": "Rhodos (island)",
+   "lat": 36.1791104437,
+   "lon": 27.9720762659,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "590282460",
+   "title": "Parthian empire",
+   "lat": 34.195121363,
+   "lon": 49.0472317484,
+   "precision": "related",
+   "first": 2000
+  },
+  {
+   "id": "599575",
+   "title": "Cnidus (Tekir)",
+   "lat": 36.6881795,
+   "lon": 27.3728385,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "599612",
+   "title": "Ephesus/Arsinoe(ia)",
+   "lat": 37.940164272,
+   "lon": 27.342402982,
+   "precision": "precise",
+   "first": -1200
+  },
+  {
+   "id": "599799",
+   "title": "Miletus",
+   "lat": 37.53046444,
+   "lon": 27.2788084839,
+   "precision": "precise",
+   "first": -1750
+  },
+  {
+   "id": "599926",
+   "title": "Samos (island)",
+   "lat": 37.7324600706,
+   "lon": 26.8391253467,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "619161",
+   "title": "Galatia",
+   "lat": 39.9338119976,
+   "lon": 32.4274370108,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "628936",
+   "title": "Armenia Minor",
+   "lat": 39.563857017,
+   "lon": 38.3301408085,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "628949",
+   "title": "Cappadocia (region)",
+   "lat": 38.6338690033,
+   "lon": 35.8491181051,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "638955",
+   "title": "Laodicea ad Lycum/Diospolis/Roas",
+   "lat": 37.8359393239,
+   "lon": 29.1073887789,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "639034",
+   "title": "Pamphylia (region)",
+   "lat": 36.921937827,
+   "lon": 30.9479600355,
+   "precision": "precise",
+   "first": null
+  },
+  {
+   "id": "648789",
+   "title": "Tarsus/Antiochia ad Cydnum",
+   "lat": 36.9140431341,
+   "lon": 34.8964666589,
+   "precision": "precise",
+   "first": -1750
+  },
+  {
+   "id": "658440",
+   "title": "Cilicia (region)",
+   "lat": 36.5864551425,
+   "lon": 33.9105804832,
+   "precision": "related",
+   "first": -1000
+  },
+  {
+   "id": "658443",
+   "title": "Commagene",
+   "lat": 37.6236147534,
+   "lon": 37.5371164364,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "658481",
+   "title": "Hierapolis/Kastabala",
+   "lat": 37.176408,
+   "lon": 36.1873455,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "658585",
+   "title": "Rhosos",
+   "lat": 36.4195645,
+   "lon": 35.887675,
+   "precision": "precise",
+   "first": -1000
+  },
+  {
+   "id": "668288",
+   "title": "Koile Syria/Massyas",
+   "lat": 34.213257326,
+   "lon": 36.3164107051,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "66908841",
+   "title": "Via Aemilia",
+   "lat": 44.50129763,
+   "lon": 11.27604437,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "678267",
+   "title": "Libanus M.",
+   "lat": 34.3,
+   "lon": 36.116667,
+   "precision": "precise",
+   "first": -720
+  },
+  {
+   "id": "678334",
+   "title": "Phoenice (region)",
+   "lat": 33.25,
+   "lon": 35.25,
+   "precision": "rough",
+   "first": -750
+  },
+  {
+   "id": "678393",
+   "title": "Sidon/Col. Aurelia Pia",
+   "lat": 33.56194725,
+   "lon": 35.3727895,
+   "precision": "precise",
+   "first": -2000
+  },
+  {
+   "id": "678437",
+   "title": "Tyrus/Col. Septimia Severa",
+   "lat": 33.2693355,
+   "lon": 35.201829,
+   "precision": "precise",
+   "first": -10000
+  },
+  {
+   "id": "687934",
+   "title": "Iudaea (region)",
+   "lat": 31.73416715,
+   "lon": 35.0017203,
+   "precision": "related",
+   "first": -1000
+  },
+  {
+   "id": "707498",
+   "title": "Cyprus (island)",
+   "lat": 34.9954356825,
+   "lon": 33.2224668079,
+   "precision": "related",
+   "first": -720
+  },
+  {
+   "id": "716615",
+   "title": "Paraetonium/Ammonia",
+   "lat": 31.350136,
+   "lon": 27.2368445,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "727070",
+   "title": "Alexandria",
+   "lat": 31.201435,
+   "lon": 29.909773,
+   "precision": "precise",
+   "first": -2010
+  },
+  {
+   "id": "727131",
+   "title": "Iuliopolis/Nikopolis",
+   "lat": 31.233348,
+   "lon": 29.950022,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "727172",
+   "title": "Nilus (river)",
+   "lat": 9.90411310187,
+   "lon": 30.6566218531,
+   "precision": "precise",
+   "first": -6000
+  },
+  {
+   "id": "766",
+   "title": "Aegyptus (Roman imperial province)",
+   "lat": 31.201435,
+   "lon": 29.909773,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "775",
+   "title": "Africa (region)",
+   "lat": 32.5,
+   "lon": 7.5,
+   "precision": "rough",
+   "first": -30
+  },
+  {
+   "id": "783",
+   "title": "Alpes (mountains)",
+   "lat": 43.7447943789,
+   "lon": 7.40175591685,
+   "precision": "related",
+   "first": -330
+  },
+  {
+   "id": "815",
+   "title": "Ap(p)enninus M.",
+   "lat": 42.952656572,
+   "lon": 12.7619986346,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "837",
+   "title": "Asia Minor",
+   "lat": 37.91033975,
+   "lon": 27.27850275,
+   "precision": "related",
+   "first": 1700
+  },
+  {
+   "id": "845034",
+   "title": "Paphlagonia (region)",
+   "lat": 41.3501492228,
+   "lon": 33.8653138112,
+   "precision": "related",
+   "first": -750
+  },
+  {
+   "id": "857095",
+   "title": "Comana Pontica/Hierocaesarea",
+   "lat": 40.3576074689,
+   "lon": 36.6386890701,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "857287",
+   "title": "Pontus",
+   "lat": 40.2213566967,
+   "lon": 37.9234161999,
+   "precision": "precise",
+   "first": -550
+  },
+  {
+   "id": "874350",
+   "title": "Armenia (region)",
+   "lat": 38.7401436819,
+   "lon": 42.1670167182,
+   "precision": "related",
+   "first": -550
+  },
+  {
+   "id": "884193",
+   "title": "Phraaspa?/Phraata?/Vera?",
+   "lat": 37.3157215,
+   "lon": 46.9434325,
+   "precision": "precise",
+   "first": -330
+  },
+  {
+   "id": "903080",
+   "title": "Media/Mad(aya) (region)",
+   "lat": 35.0482414358,
+   "lon": 48.9193312443,
+   "precision": "precise",
+   "first": -750
+  },
+  {
+   "id": "912849",
+   "title": "Euphrates (river)",
+   "lat": 35.6600434392,
+   "lon": 39.3738557697,
+   "precision": "related",
+   "first": -18000
+  },
+  {
+   "id": "970740488",
+   "title": "Dangstetten",
+   "lat": 47.588889,
+   "lon": 8.310833,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "971691208",
+   "title": "Palatinus Mons",
+   "lat": 41.8893064,
+   "lon": 12.4871093,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "981502",
+   "title": "Achaia (province)",
+   "lat": 38.5915774614,
+   "lon": 22.6375580505,
+   "precision": "related",
+   "first": null
+  },
+  {
+   "id": "981504",
+   "title": "Africa Proconsularis (Roman province)",
+   "lat": 32.5,
+   "lon": 12.5,
+   "precision": "rough",
+   "first": -30
+  },
+  {
+   "id": "981509",
+   "title": "Asia (Roman province)",
+   "lat": 38.4607221567,
+   "lon": 27.7761048198,
+   "precision": "related",
+   "first": null
+  },
+  {
+   "id": "981531",
+   "title": "Macedonia (Roman province)",
+   "lat": 40.7823947449,
+   "lon": 22.3435014057,
+   "precision": "related",
+   "first": -330
+  },
+  {
+   "id": "981537",
+   "title": "Narbonensis (province)",
+   "lat": 42.4395194,
+   "lon": 3.1766797,
+   "precision": "related",
+   "first": -30
+  },
+  {
+   "id": "981550",
+   "title": "Syria (Roman imperial province)",
+   "lat": 37.5,
+   "lon": 37.5,
+   "precision": "rough",
+   "first": null
+  },
+  {
+   "id": "98909",
+   "title": "Albis (river)",
+   "lat": 51.8663130371,
+   "lon": 12.6301958103,
+   "precision": "precise",
+   "first": -30
+  },
+  {
+   "id": "99060",
+   "title": "Visurgis (river)",
+   "lat": 52.4768817845,
+   "lon": 9.09547053576,
+   "precision": "precise",
+   "first": 1700
+  },
+  {
+   "id": "993",
+   "title": "Gallia",
+   "lat": 46.3609533058,
+   "lon": 1.67061448931,
+   "precision": "related",
+   "first": null
+  }
+ ]
+}

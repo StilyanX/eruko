@@ -1,8 +1,7 @@
 // Hides: Augustus's entry in the app's list of units: its title, address, description, sources,
-// pages and the runs of lessons its unit page shows.
+// and pages.
 // The shell lists every unit's entry (shell/registry.js), through the unit's manifest.
 import { reviewPage, startPage } from '../../../kernel/pages.logic.js'
-import { COURSE as AUGUSTUS } from './course.gen.js'
 
 /**
  * The unit's own part of the record.
@@ -37,7 +36,5 @@ export const UNIT = {
       slug: 'life',
       file: 'augustus/life'
     }
-  ],
-  // Runs of lessons, each named by the years its decisions fall in.
-  sections: AUGUSTUS.sections
+  ]
 }

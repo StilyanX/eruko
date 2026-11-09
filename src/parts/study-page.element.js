@@ -72,6 +72,10 @@ function reveal(id) {
   })
 }
 
+// Every Start page names the device's own read-aloud, under its first section; the app has none.
+const READ_ALOUD =
+  "To hear any text read aloud, turn on your device's reader: Android, Select to Speak; iPhone and iPad, Spoken Content; Windows, Narrator, or Read aloud in Edge; Mac, Spoken Content; Chromebook, Select-to-speak."
+
 /** The fields and buttons focus may go to once a press removed its control. */
 const CONTROL = 'input:not([type=hidden]), textarea, select, button'
 
@@ -157,7 +161,9 @@ function focusAfter(at, from = null) {
     ? null
     : (steps.map(st => st.querySelector('fieldset.mark')).find(Boolean) ??
       steps[0]?.querySelector('h3, h2') ??
-      steps[0])
+      steps[0] ??
+      // The pressed step's box itself is gone, with no other in its section: the section's heading.
+      at.section?.querySelector('h2'))
   if (head instanceof HTMLElement && !head.hasAttribute('tabindex')) head.tabIndex = -1
   const target = to ?? head
   if (target instanceof HTMLElement) {
@@ -300,12 +306,13 @@ export class AeStudyPage extends Screen {
               sections.map(s => h('li', { key: s.id }, h('a', { href: hashTo(s.id) }, s.title)))
             )
           ),
-        sections.map(s =>
+        sections.map((s, i) =>
           h(
             'section',
             { key: s.id, id: s.id, 'data-anchor': s.id, class: 'lrn-section' },
             h('h2', { class: many || named ? undefined : 'sr-only' }, s.title),
-            s.content
+            s.content,
+            page.start && i === 0 && h('p', null, READ_ALOUD)
           )
         ),
         page.repeats && alsoToday(page.slug, today()),

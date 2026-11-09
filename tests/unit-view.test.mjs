@@ -10,7 +10,7 @@ assert.ok(page)
 
 test('a row that opens nothing says the row it opens after, or the reason its unit gives', () => {
   assert.equal(lockNote({ key: 2, title: 'Two' }, 1), 'Opens after 1')
-  assert.equal(lockNote({ key: 1, title: 'One' }, 0), 'Opens later')
+  assert.equal(lockNote({ key: 1, title: 'One' }, 0), 'Opens after Start')
   assert.equal(
     lockNote({ key: 3, title: 'Three', opens: 'Opens when picked' }, 2),
     'Opens when picked'
@@ -53,6 +53,9 @@ test('the way on is the work due today, else the first row that opens and is not
   const nothing = [{ one: 'problem', many: 'problems', to: '/p', dates: [] }]
   // A page done every session is not the way on when nothing waits on it.
   assert.equal(nextWork({ rows, sections, groups: nothing, today, repeats })?.to, '/two')
+  // A row that opens a look is never the way on.
+  const looked = { ...rows, items: rows.items.map(it => (it.key === 2 ? { ...it, look: true } : it)) }
+  assert.equal(nextWork({ rows: looked, sections, groups: nothing, today, repeats }), null)
   // A section's end counts once its own rows are done.
   const allDone = { ...rows, items: rows.items.map(it => ({ ...it, done: true })) }
   assert.equal(nextWork({ rows: allDone, sections, groups: nothing, today, repeats })?.to, '/test')

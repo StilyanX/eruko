@@ -3,7 +3,8 @@
 // files alone.
 //   Shared code   a file that is no unit's own (src/ outside units/, and every script, test and
 //                 browser test whose name does not start with a unit's folder name) names no
-//                 unit: no unit folder as a path or a quoted name, and no unit's title.
+//                 unit: no unit folder as a path or a quoted name, and no unit's title. The
+//                 export (scripts/export-public.mjs) is no shared code: it names the units it strips.
 //   Left out    every path in scripts/public-exclude.txt is left out of the copy; no
 //                 other file names a unit those paths remove, nor its discipline, in any case.
 //                 Generated files are written again by `npm run gen` once the paths are gone.
@@ -36,13 +37,15 @@ const ownerOf = f => {
 
 // Files no rule reads: generated, vendored, binary, or the lock file.
 const SKIP =
-  /(\.gen\.js|\.woff2|\.png|\.wasm|\.svg|package-lock\.json)$|^src\/record\/sqlite-|^src\/style\/fonts\/|\/hls-[^/]+\//
+  /(\.gen\.js|\.woff2|\.png|\.wasm|\.svg|package-lock\.json)$|^src\/record\/sqlite-|^scripts\/vendor\/|^src\/style\/fonts\/|\/hls-[^/]+\//
 /** The page's generated lists (stylesheets and preloads) are written by scripts/gen/preload.mjs. */
 const withoutGenerated = (/** @type {string} */ f, /** @type {string} */ text) =>
   f === 'src/index.html'
     ? text.replace(/<!-- preload: generated[\s\S]*?<!-- \/preload -->/, '')
     : text
 
+/** The export, which strips the units it leaves out and so names them. */
+const EXPORT = 'scripts/export-public.mjs'
 const CODE = /\.(js|mjs|css|html|json)$/
 
 /** @type {string[]} */
@@ -50,7 +53,14 @@ const failures = []
 
 // Shared code names no unit.
 for (const f of files) {
-  if (ownerOf(f) || SKIP.test(f) || !CODE.test(f) || !/^(src|scripts|tests|e2e)\//.test(f)) continue
+  if (
+    ownerOf(f) ||
+    SKIP.test(f) ||
+    f === EXPORT ||
+    !CODE.test(f) ||
+    !/^(src|scripts|tests|e2e)\//.test(f)
+  )
+    continue
   const text = withoutGenerated(f, readFileSync(f, 'utf8'))
   for (const [i, unit] of UNITS.entries()) {
     const folder = FOLDERS[i] ?? ''

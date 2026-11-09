@@ -6,20 +6,26 @@
 // each made by its one constructor here ("A Self-Study System", The build, Programming).
 import { isRecord } from '../../../kernel/decode.logic.js'
 import { fail, ok } from '../../../kernel/result.logic.js'
-import { studyDay } from '../../../kernel/days.logic.js'
-import { decodeTrack, itemsOf } from './track-decode.logic.js'
+import { nextDate, nextOf, studyDay } from '../../../kernel/days.logic.js'
+import { datedOf, decodeTrack, unitsOf } from './track-decode.logic.js'
 
 // The ids
 
 /** @typedef {string & { readonly brand: 'ProblemId' }} ProblemId A problem's id: its kind's number, a dot, its place in the kind, "7.03". */
 /** @typedef {string & { readonly brand: 'TraceId' }} TraceId A trace item's id: T and its kind's number, "T7". */
-/** @typedef {ProblemId | TraceId} ItemId A problem's or a trace item's id: what the dated list is keyed by. */
+/** @typedef {ProblemId | TraceId} ItemId A problem's or a trace item's id, as an item is asked. */
 /** @typedef {number & { readonly brand: 'KindId' }} KindId A kind's number. */
 
 /** @param {string} text */
 export const problemId = text => /** @type {ProblemId} */ (text)
 /** @param {string} text */
 const traceId = text => /** @type {TraceId} */ (text)
+/**
+ * A retired kind's key on the dated list: K and its number, "K7". The list holds kinds, traces
+ * and problems answered wrong.
+ * @param {KindId} kind
+ */
+export const kindKey = kind => `K${kind}`
 /** @param {number} n */
 export const kindId = n => /** @type {KindId} */ (n)
 /**
@@ -41,7 +47,7 @@ export const itemId = text => (text.startsWith('T') ? traceId(text) : problemId(
  * (its first-level labels in order), its problems in course order, and its trace item.
  * @typedef {Readonly<{ id: KindId, name: string, after: readonly KindId[], plan: readonly string[], problems: readonly ProblemId[], trace: TraceId }>} Kind
  */
-/** @typedef {Readonly<{ sections: readonly import('../../../kernel/pages.logic.js').Section[], kinds: readonly Kind[], track: readonly import('./track-decode.logic.js').TrackKind[], stages: readonly import('./track-decode.logic.js').Stage[] }>} Course The course: its sections and its kinds in course order, and the language track's kinds in track order with its stages */
+/** @typedef {Readonly<{ sections: readonly import('../../../kernel/pages.logic.js').Section[], kinds: readonly Kind[], track: readonly import('./track-decode.logic.js').TrackKind[], stages: readonly import('./track-decode.logic.js').Stage[], reading: readonly import('./track-decode.logic.js').ReadingTask[], readingGaps: readonly Readonly<{ n: number, task: string, round?: number }>[] }>} Course The course: its sections and its kinds in course order, and the language track's kinds in track order with its stages and the tasks of its reading */
 /** @typedef {Readonly<{ input: string, output: string }>} Test An input and the output it must give */
 /** @typedef {Readonly<{ at: number, level: 0 | 1 | 2, text: string }>} Label A label, standing above line `at`: 0 for a label of the frame, shown in the first kind's worked example only */
 /** @typedef {Readonly<{ line: number, from: number, to: number }>} Blank The part of a line a Parsons problem leaves blank, by its columns, `to` not included */
@@ -51,9 +57,16 @@ export const itemId = text => (text.startsWith('T') ? traceId(text) : problemId(
  * @typedef {Readonly<{ lines: readonly string[], frame: readonly number[], labels: readonly Label[], blanks: readonly Blank[] }>} Code
  */
 /**
+ * @typedef {Readonly<{ slug: string, commit: string, header: string, name: string, test: string, setup: readonly string[], calls: readonly Readonly<{ call: string, expected: string }>[] }>} Fn
+ *   A function problem (Exercism's track): you write the header `header` that the test file
+ *   `name` includes; each test is one of its cases, by name (`Test.input`), the first the example;
+ *   the example shown as its lines before its first assertion and each assertion as a call with
+ *   the value it must give
+ */
+/**
  * A problem: its statement's lines, the examples shown, the hidden tests and the reference
  * solution. A worked example is a problem with no tests.
- * @typedef {Readonly<{ id: ProblemId, kind: KindId, source: string, statement: readonly string[], examples: readonly Test[], tests: readonly Test[], solution: Code }>} Problem
+ * @typedef {Readonly<{ id: ProblemId, kind: KindId, source: string, statement: readonly string[], examples: readonly Test[], tests: readonly Test[], solution: Code, fn?: Fn, found?: Readonly<{ contest: string, year: number, problem: string, licence: string }> }>} Problem
  */
 /** @typedef {Readonly<{ line: number, values: readonly string[] }>} TraceRow One row of a recorded state table: the line run, then each column's value after it */
 /**
@@ -66,7 +79,7 @@ export const itemId = text => (text.startsWith('T') ? traceId(text) : problemId(
  * one input, and the table recorded for it. It is never a trace item.
  * @typedef {Readonly<{ id: string, lines: readonly string[], columns: readonly string[], input: string, rows: readonly TraceRow[] }>} StartTrace
  */
-/** @typedef {Readonly<{ id: KindId, example: Problem, trace: Trace, start: StartTrace | null, problems: Readonly<Record<string, Problem>> }>} KindContent A kind's content file (content/k<NN>.gen.js); `start` only in the first kind's */
+/** @typedef {Readonly<{ id: KindId, example: Problem, trace: Trace, traces: readonly Trace[], start: StartTrace | null, problems: Readonly<Record<string, Problem>> }>} KindContent A kind's content file (content/k<NN>.gen.js); `traces` the kind's returning traces, made from its problems' reference solutions; `start` only in the first kind's */
 
 /**
  * The course from the course file the generator wrote (course.gen.js), and the track from its
@@ -75,10 +88,21 @@ export const itemId = text => (text.startsWith('T') ? traceId(text) : problemId(
  * @param {readonly unknown[]} kinds
  * @param {readonly unknown[]} [track]
  * @param {readonly unknown[]} [stages]
+ * @param {readonly unknown[]} [reading]
+ * @param {readonly unknown[]} [readingGaps] the reading's tasks nothing passed for, shown by name
  * @returns {Course}
  */
-export const courseFrom = (sections, kinds, track = [], stages = []) =>
-  /** @type {Course} */ (/** @type {unknown} */ ({ sections, kinds, track, stages }))
+export const courseFrom = (
+  sections,
+  kinds,
+  track = [],
+  stages = [],
+  reading = [],
+  readingGaps = []
+) =>
+  /** @type {Course} */ (
+    /** @type {unknown} */ ({ sections, kinds, track, stages, reading, readingGaps })
+  )
 
 /**
  * A kind's content from its module (content/k<NN>.gen.js), whose every field the generator checked.
@@ -86,7 +110,9 @@ export const courseFrom = (sections, kinds, track = [], stages = []) =>
  * @returns {KindContent}
  */
 export const kindContentOf = module =>
-  /** @type {KindContent} */ ({ start: null, .../** @type {object} */ (module.KIND) })
+  /** @type {KindContent} */ (
+    /** @type {unknown} */ ({ start: null, traces: [], .../** @type {object} */ (module.KIND) })
+  )
 
 // The record
 
@@ -107,7 +133,7 @@ export const kindContentOf = module =>
 
 /**
  * The items gate 1 judges, `n` the case's number in the paper's list.
- * @typedef {Readonly<{ n: 2, step: 'recall', id: ItemId, kind: KindId }>} Recall A problem or trace item due
+ * @typedef {Readonly<{ n: 2, step: 'recall', id: ItemId, kind: KindId }>} Recall A trace item due, a problem of a kind in its first run due, or the problem a due kind gives
  * @typedef {Readonly<{ n: 4, step: 'mixed', id: ProblemId, kind: KindId }>} Mixed
  * @typedef {Readonly<{ n: 5, step: 'trace', id: TraceId, kind: KindId }>} TraceStep
  * @typedef {Readonly<{ n: 5, step: 'parsons', id: ProblemId, kind: KindId }>} ParsonsStep
@@ -124,7 +150,7 @@ export const kindContentOf = module =>
  * @typedef {import('./track-decode.logic.js').TrackAsked & Readonly<{ code: string, right: boolean, verdict: Readonly<Record<string, unknown>> | null }>} TrackJudged A track item judged, until "Next": what the screen shows of the check
  * @typedef {Working | Judged | ReadingStep | TrackWorking | TrackJudged} Open
  */
-/** @typedef {Readonly<{ open: Open | null, pasted: string }>} Position The item open, and the day the contest record was last pasted */
+/** @typedef {Readonly<{ open: Open | null, pasted: string, shown: number }>} Position The item open, the day the contest record was last pasted, and how many rows of the Start screen's filled trace show, so a reload keeps them */
 /**
  * The C++ record, with the fields "A Self-Study System" sets (The build, Programming, The record).
  * @typedef {Readonly<{ runtime: Runtime | null, server: Server | null, course: readonly KindLine[], recall: Readonly<Record<string, readonly import('../../../kernel/days.logic.js').Line[]>>, tries: readonly Try[], runs: readonly RunLine[], contests: readonly Contest[], practice: string, readings: readonly Reading[], position: Position, sessions: readonly string[], turn: 4 | 5 | null } & import('./track-decode.logic.js').TrackRecord>} CppRecord
@@ -252,20 +278,24 @@ export function decodeRecord(raw, course) {
   const r = isRecord(raw) ? raw : {}
   /** @type {ReadonlySet<string>} */
   const held = new Set([
-    ...course.kinds.flatMap(k => [...k.problems, k.trace]),
-    ...course.track.flatMap(itemsOf)
+    ...course.kinds.flatMap(k => [...k.problems, k.trace, kindKey(k.id)]),
+    ...course.track.flatMap(datedOf),
+    ...course.reading.flatMap(unitsOf)
   ])
-  const recall = isRecord(r.recall) ? r.recall : {}
+  const raws = isRecord(r.recall) ? r.recall : {}
   const position = isRecord(r.position) ? r.position : {}
+  const lines = courseLines(r.course, course)
+  /** @type {Record<string, import('../../../kernel/days.logic.js').Line[]>} */
+  const recall = Object.fromEntries(
+    Object.entries(raws).flatMap(([id, l]) =>
+      held.has(id) && Array.isArray(l) ? [[id, heldLines(l)]] : []
+    )
+  )
   return {
     runtime: runtimeOf(r.runtime),
     server: serverOf(r.server),
-    course: courseLines(r.course, course),
-    recall: Object.fromEntries(
-      Object.entries(recall).flatMap(([id, lines]) =>
-        held.has(id) && Array.isArray(lines) ? [[id, heldLines(lines)]] : []
-      )
-    ),
+    course: lines,
+    recall: { ...kindsBefore(course, lines, recall), ...recall },
     tries: heldRows(r.tries, held),
     runs: heldRows(r.runs, held),
     contests: /** @type {Contest[]} */ (
@@ -273,11 +303,38 @@ export function decodeRecord(raw, course) {
     ),
     practice: text(r.practice),
     readings: /** @type {Reading[]} */ (list(r.readings).filter(isRecord)),
-    position: { open: openOf(position.open, held), pasted: text(position.pasted) },
+    position: {
+      open: openOf(position.open, held),
+      pasted: text(position.pasted),
+      shown:
+        typeof position.shown === 'number' && position.shown >= 1 ? Math.floor(position.shown) : 1
+    },
     sessions: list(r.sessions).filter(d => typeof d === 'string'),
     turn: r.turn === 4 || r.turn === 5 ? r.turn : null,
     ...decodeTrack(r, course.track)
   }
+}
+
+/**
+ * The lines of retired kinds a record from before kinds were dated lacks: one line, right, the day
+ * the kind retired, coming back when the first of its problems dated right then would have, or
+ * the next day. The record's own lines of its problems stay; a wrong one is a wrong problem's line.
+ * @param {Course} course
+ * @param {readonly KindLine[]} kinds
+ * @param {Readonly<Record<string, readonly import('../../../kernel/days.logic.js').Line[]>>} recall
+ */
+function kindsBefore(course, kinds, recall) {
+  return Object.fromEntries(
+    course.kinds.flatMap(k => {
+      const retired = kinds.find(c => c.kind === k.id)?.retired ?? ''
+      if (!retired || recall[kindKey(k.id)]) return []
+      const [first] = k.problems
+        .flatMap(id => (recall[id]?.at(-1)?.right ? (nextOf(recall[id]) ?? []) : []))
+        .sort()
+      const next = first ?? nextDate(undefined, true, retired)
+      return [[kindKey(k.id), [{ date: retired, right: true, next }]]]
+    })
+  )
 }
 
 /**
@@ -340,7 +397,7 @@ export function parsonsForm(code) {
 // The runner's replies
 
 /** @typedef {Readonly<{ stdout: string, stderr: string, exit: number | null, signal: string | null, finished: boolean }>} Output What one run printed, its exit, and whether it ended by itself */
-/** @typedef {Readonly<{ compiled: true, runs: readonly Output[], reports?: Readonly<Record<string, string>> }> | Readonly<{ compiled: false, error: string }>} RunnerResult The runner's reply to a program: one output per test and the reports asked, or the compiler's error text */
+/** @typedef {Readonly<{ compiled: true, runs: readonly Output[], reports?: Readonly<Record<string, string>>, catch2?: true }> | Readonly<{ compiled: false, error: string }>} RunnerResult The runner's reply to a program: one output per test and the reports asked, or the compiler's error text; `catch2` for a function problem's build, whose one run printed Catch2's XML report */
 /** @typedef {Readonly<{ compiler: string, version: string, standard: string, cuda?: string, gdb?: string, device?: string }>} About What the runner says of itself: its compiler, and nvcc, gdb and nvcc's highest level where it has them */
 
 /**

@@ -1,0 +1,20 @@
+aug-001: "Italy" is first dated -30; "Thessaly" is first dated -30; "North Africa" is first dated -30
+aug-002: "Africa" is first dated -30
+aug-004: "East" has no Pleiades id; "Albania" has no Pleiades id; "Egnatian Way" is first dated -30; "Italy" is first dated -30
+aug-005: "Italy" is first dated -30
+aug-006: "Italy" is first dated -30
+aug-008: "Cisalpine Gaul" has no Pleiades id; "Cyrene" is first dated -30; "Italy" is first dated -30
+aug-009: "Cisalpine Gaul" has no Pleiades id; "Gallia Comata" has no Pleiades id; "Transalpine Gaul" has no Pleiades id; "Further Spain" has no Pleiades id; "Italy" is first dated -30; "Mutina" is first dated -30; "Aemilian Way" is first dated -30; "Claterna" is first dated -30; "Forum Cornelii" is first dated -30; "Asia Minor" is first dated 1700; "Scultenna" is first dated -30; "Forum Gallorum" is first dated -30; "Vada Sabatia" is first dated -30; "Isère" is first dated -30
+aug-011: "Africa" is first dated -30
+aug-013: "East" has no Pleiades id; "Cisalpine Gaul" has no Pleiades id; "Transalpine Gaul" has no Pleiades id; "western sea" has no Pleiades id; "Renus" is first dated -30; "Narbonensis" is first dated -30; "North Africa" is first dated -30; "Italy" is first dated -30
+aug-014: "Calabria" has no Pleiades id; "Italy" is first dated -30; "Africa" is first dated -30; "Hellespont" is first dated -30; "Strymon" is first dated 300; "Narbonensis" is first dated -30; "Apennines" is first dated -30; "Asia Minor" is first dated 1700
+aug-015: "East" has no Pleiades id; "Italy" is first dated -30; "Misenum" is first dated -30
+aug-016: "Iranian highlands" has no Pleiades id; "Bosnian highlands" has no Pleiades id; "Parthian empire" is first dated 2000; "Italy" is first dated -30; "Mutina" is first dated -30; "Palatine hill" is first dated -30; "Egypt" is first dated -30; "Sava" is first dated -30; "Cyrenaica" is first dated -30
+aug-017: "Albania" has no Pleiades id; "Asia Minor" is first dated 1700; "Misenum" is first dated -30; "Italy" is first dated -30; "Keraunian headland" is first dated 1700; "Nikopolis" is first dated -30
+aug-032: "Aosta valley" has no Pleiades id
+aug-040: "Asia Minor" is first dated 1700
+aug-045: "Balkans" has no Pleiades id; "Europe" has no Pleiades id
+aug-046: "German Bight" has no Pleiades id; "North Sea" has no Pleiades id; "Lake Constance" is first dated 1700
+aug-047: "Balkan peninsula" has no Pleiades id; "Hesse" has no Pleiades id; "Artagira" has no Pleiades id; "Lippe" is first dated 1700; "Weser" is first dated 1700; "Asia Minor" is first dated 1700
+aug-049: "Alpine passes" has no Pleiades id; "Balkans" has no Pleiades id
+aug-054: "Weser" is first dated 1700

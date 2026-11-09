@@ -51,7 +51,9 @@
 
 /**
  * A row of a unit page, as a unit's `rows` gives it. `opens` says why a row not reached opens
- * nothing, where the unit has a reason of its own.
+ * nothing, where the unit has a reason of its own. `look` marks a row that opens a page to look
+ * at before its turn, which keeps nothing and which Continue never names. `idle` marks the row
+ * in hand with nothing to take today (a topic waiting for its proof checks): it opens, but the way on names nothing.
  * @typedef {Readonly<{
  *   key: string | number,
  *   title: string,
@@ -59,7 +61,9 @@
  *   done?: boolean,
  *   lang?: string,
  *   opens?: string,
- *   state?: string
+ *   state?: string,
+ *   idle?: boolean,
+ *   look?: boolean
  * }>} Item
  */
 /**

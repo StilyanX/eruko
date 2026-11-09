@@ -63,7 +63,9 @@
     outline: var(--focus-width) solid var(--accent);
     outline-offset: 2px;
   }
-  [tabindex='-1']:focus {
+  /* A title or the page that script focuses (a new page, the skip link) takes no ring; any other
+     element focus is moved to, a step's mark or note, keeps it, so the reader sees where it went. */
+  :is(h1, h2, h3, main)[tabindex='-1']:focus {
     outline: none;
   }
 
@@ -202,7 +204,7 @@
     gap: var(--space-3);
     margin-top: var(--space-3);
   }
-  /* Why a locked button is locked, shown under it once it is pressed. */
+  /* Why a locked button is locked, under it from the moment it is drawn, in the text's own colour. */
   .why {
     flex-basis: 100%;
     font-family: var(--font-ui);

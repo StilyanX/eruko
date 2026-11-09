@@ -1,5 +1,5 @@
-// Hides: a unit's page, the same for every unit: the title, where the learner stands, Start,
-// Continue (the way on) and Review as cards, always in that order, then Contents and the sources.
+// Hides: a unit's page, the same for every unit: the title, where the learner stands, Continue
+// (the way on), Review and Start as cards, always in that order, then Contents and the sources.
 // Contents holds a field that finds a row by a word, and one list of the course in named sections,
 // each opening in place on its rows. What the learner opened and typed is kept in the history
 // entry, so Back from a row, or a reload, returns to the list as it was left.
@@ -92,14 +92,15 @@ function keptState(kept) {
 }
 
 /**
- * What a search of the unit finds: the pages by title, the sections by name, and each section's
- * rows by title, with how many in all.
+ * What a search of the unit finds: the pages by title (those ahead of the course, then those
+ * after it), the sections by name, and each section's rows by title, with how many in all.
  * @param {string} query
  * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
  */
 function searchHits(query, all) {
   const { start, top, items, after = [], sections } = all
-  const hitPages = [start, ...top, ...after].filter(p => finds(query, p.title))
+  const hitPages = [start, ...top].filter(p => finds(query, p.title))
+  const hitAfter = after.filter(p => finds(query, p.title))
   const named = sections.map((s, i) => ({ s, i })).filter(({ s }) => finds(query, s.title))
   const groups = sections
     .map(s => ({
@@ -110,8 +111,9 @@ function searchHits(query, all) {
         .filter(({ it }) => finds(query, it.title))
     }))
     .filter(g => g.hits.length)
-  const total = hitPages.length + named.length + groups.reduce((n, g) => n + g.hits.length, 0)
-  return { hitPages, named, groups, total }
+  const total =
+    hitPages.length + hitAfter.length + named.length + groups.reduce((n, g) => n + g.hits.length, 0)
+  return { hitPages, hitAfter, named, groups, total }
 }
 
 /**
@@ -291,7 +293,7 @@ export class ShellUnitPage extends Screen {
           { class: 'hm-start-note' },
           dueCount + freshCount
             ? `${waiting(dueCount, freshCount)} today.`
-            : kinds.some(k => k.away)
+            : kinds.some(k => k.away === 'In Anki')
               ? 'You recall your word cards in Anki.'
               : 'Nothing due today.'
         )
@@ -310,9 +312,11 @@ export class ShellUnitPage extends Screen {
    * @param {ReturnType<typeof searchHits>} found
    * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
    */
-  #found({ hitPages, named, groups }, all) {
+  #found({ hitPages, hitAfter, named, groups }, all) {
     return [
       hitPages.length > 0 && rows(hitPages),
+      // A page after the course, found, says the row it opens after, as in the list.
+      hitAfter.length > 0 && rows(hitAfter, undefined, [], all.items.length),
       named.length > 0 &&
         this.sections(
           named.map(n => n.s),

@@ -27,7 +27,7 @@ test('a diagram: stones by coordinate in real coordinates, and where a cut stand
   assert.deepEqual(threatsOf('Ko threats elsewhere: Black 1, White none.'), { black: 1, white: 0 })
   assert.deepEqual(threatsOf('Ko threats elsewhere: none for either side.'), { black: 0, white: 0 })
   assert.equal(
-    RULES_ITEMS.every(i => whereOf(i.position) === 'whole board'),
+    RULES_ITEMS.every(i => i.cases.every(c => whereOf(c.position) === 'whole board')),
     true
   )
 })

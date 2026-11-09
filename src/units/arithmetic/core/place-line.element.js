@@ -6,13 +6,15 @@
 // ends on the line cut into tenths with the exact place. A right mark in mixed practice is handed
 // on the same way, its solution shown under the step's verdict. A right mark in fading (the step
 // hands `hide`), whose step shows no solution after it, shows here the line cut into tenths with
-// the exact place and the mark, the verdict, and Next, which hands it on.
+// the exact place and the mark, the verdict, and Next, which hands it on. The mark and what is
+// typed are kept in the record until checked, so a reload returns to them.
 import { STUCK, lines, rich } from '../../../parts/maths-screens.dom.js'
 import { StepScreen, actionsAs, choice, verdict } from '../../../parts/study.dom.js'
 import { h } from '../../../parts/view.dom.js'
 import { matchAnswer } from './check.logic.js'
 import { placeKey } from './figures.logic.js'
 import './number-line.element.js'
+import { mathNow, send } from './session.dom.js'
 import {
   decimalOf,
   hundredthsAt,
@@ -57,10 +59,29 @@ export class ArithmeticPlaceLine extends StepScreen {
   typed = ''
   /** A right mark in fading, checked: the line cut into tenths shows before the next problem. */
   shown = false
+  /** The problem whose kept place was read back. */
+  #read = ''
+
+  /** The problem's key in the record: its id, else its prompt. */
+  #id() {
+    return this.problem?.id ?? this.problem?.prompt ?? ''
+  }
+
+  /** The place as it stands, kept in the record until it is checked. */
+  #keep() {
+    const draft = { key: this.#id(), mark: this.mark, typed: this.typed }
+    send({ t: 'place-draft', draft: this.shown ? { ...draft, shown: true } : draft })
+  }
+
+  /** The place checked: nothing of it is kept. */
+  #checked() {
+    send({ t: 'place-draft', draft: null })
+  }
 
   /** @param {number | null} hundredths */
   #place(hundredths) {
     this.mark = hundredths
+    this.#keep()
     this.update()
   }
 
@@ -155,6 +176,27 @@ export class ArithmeticPlaceLine extends StepScreen {
   }
 
   /**
+   * Check pressed: a wrong mark, or a right one outside fading, is handed to the step; a right
+   * one in fading shows the line cut into tenths first.
+   * @param {number} mark
+   * @param {string} value
+   * @param {import('../../../kernel/maths-decode.logic.js').PaperProblem} problem
+   */
+  #check(mark, value, problem) {
+    const right = matchAnswer(decimalOf(mark), value, problem.form)
+    if (!right || this.hand?.hide === undefined) {
+      this.#checked()
+      if (right) this.hand?.onDone(true)
+      else this.hand?.onStuck()
+      return
+    }
+    this.shown = true
+    this.#keep()
+    this.update()
+    this.focusSoon('.lrn-ss-primary')
+  }
+
+  /**
    * The line to press and the box to type the place in, one form whose submit is Check: a mark in
    * the same tenth as the exact place is right.
    * @param {string} value
@@ -172,14 +214,7 @@ export class ArithmeticPlaceLine extends StepScreen {
         novalidate: true,
         onsubmit: (/** @type {SubmitEvent} */ e) => {
           e.preventDefault()
-          if (mark === null) return
-          if (!matchAnswer(decimalOf(mark), value, problem.form)) this.hand?.onStuck()
-          else if (this.hand?.hide === undefined) this.hand?.onDone(true)
-          else {
-            this.shown = true
-            this.update()
-            this.focusSoon('.lrn-ss-primary')
-          }
+          if (mark !== null) this.#check(mark, value, problem)
         }
       },
       h('p', { key: 'form', class: 'lrn-ss-note' }, rich(problem.form)),
@@ -204,7 +239,13 @@ export class ArithmeticPlaceLine extends StepScreen {
       ...this.#typeBox(to, faulty),
       actionsAs(
         'place',
-        choice({ label: STUCK, onPress: () => this.hand?.onStuck() }),
+        choice({
+          label: STUCK,
+          onPress: () => {
+            this.#checked()
+            this.hand?.onStuck()
+          }
+        }),
         choice({
           primary: true,
           type: 'submit',
@@ -233,7 +274,14 @@ export class ArithmeticPlaceLine extends StepScreen {
       verdict(true, [whereLies(value), ' Your mark is in the same tenth.']),
       actionsAs(
         'next',
-        choice({ primary: true, label: 'Next', onPress: () => this.hand?.onDone(true) })
+        choice({
+          primary: true,
+          label: 'Next',
+          onPress: () => {
+            this.#checked()
+            this.hand?.onDone(true)
+          }
+        })
       )
     )
   }
@@ -241,6 +289,17 @@ export class ArithmeticPlaceLine extends StepScreen {
   view() {
     const problem = this.problem
     if (problem === null) return null
+    // A place kept for this problem, read back once: a reload returns to it.
+    if (this.#read !== this.#id()) {
+      this.#read = this.#id()
+      const kept = mathNow().place
+      if (kept?.key === this.#read) {
+        this.mark = kept.mark
+        this.typed = kept.typed
+        // Only a right mark in fading stands checked before its Next.
+        this.shown = kept.shown === true && this.hand?.hide !== undefined
+      }
+    }
     const value = problem.answer
     const to = reachOf(value)
     const hand = this.hand

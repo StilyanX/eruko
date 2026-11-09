@@ -12,15 +12,14 @@ import { roundInHand } from './end.logic.js'
 /**
  * The course as the work list and the unit page read it (course.gen.js).
  * @typedef {Readonly<{ lives: readonly Readonly<{ id: string, name: string, lessons: number, setbacks?: boolean }>[],
- *   born?: import('./decode.logic.js').HistDate,
- *   lessons: readonly Readonly<{ date?: import('./decode.logic.js').HistDate, from?: number, question?: string | null }>[] }>} Course
+ *   lessons: readonly Readonly<{ date?: import('./decode.logic.js').HistDate, question?: string | null }>[] }>} Course
  */
 /**
  * The work list's one next action.
  * @typedef {Readonly<{ kind: 'recall' | 'end' | 'stuck' | 'level' | 'next-life', life: import('./decode.logic.js').LifeId }
  *   | { kind: 'lesson', life: import('./decode.logic.js').LifeId, lesson: number }
  *   | { kind: 'pair', shape: import('./decode.logic.js').ItemId }
- *   | { kind: 'none' }>} Action
+ *   | { kind: 'you' } | { kind: 'none' }>} Action
  */
 
 // Forecasts
@@ -177,25 +176,40 @@ export function addsItems(r, today, last = false) {
 
 // Claims and the level
 
-/**
- * A claim on a sentence with no second account's passage is left unchecked: with no witness to
- * hand there is nothing to check it against, so it carries no verdict and no word.
- * @param {import('./decode.logic.js').Sentence} s
- */
-export const unchecked = s => !s.passage
+/** The reasons of a contested claim, in the words gate 2 gives them. */
+export const WHY = {
+  otherwise: 'the second account says otherwise',
+  part: 'the second account covers only part',
+  dispute: "the main account's notes record a dispute",
+  none: 'no second account holds it',
+  stake: 'the only witness has a stake'
+}
 
 /**
- * A claim with a witness is contested with no choice: its notes record a dispute, or the only
- * witness is the person himself or someone who served him.
+ * Why a claim on a sentence is contested with no choice, the first that applies: its notes record
+ * a dispute, no second account holds it, or the only witness has a stake. Null when the learner
+ * chooses.
  * @param {import('./decode.logic.js').Sentence} s
  */
-export const forcedContested = s => !!s.passage && (!!s.dispute || !!s.passage.served)
+export const forcedWhy = s =>
+  s.dispute ? WHY.dispute : !s.passage ? WHY.none : s.passage.served ? WHY.stake : null
+
+/** @param {import('./decode.logic.js').Sentence} s */
+export const forcedContested = s => forcedWhy(s) !== null
 
 /**
- * A record claim's verdict: one saved contested before any witness was to hand is unchecked.
+ * A record claim's verdict: an older record's "unchecked" claim, kept before the course held a
+ * second account, is contested, since no second account holds it.
  * @param {import('./decode.logic.js').Claim} i
  */
-export const claimVerdict = i => (i.verdict === 'contested' && !i.witness ? 'unchecked' : i.verdict)
+export const claimVerdict = i => (i.verdict === 'unchecked' ? 'contested' : i.verdict)
+
+/**
+ * The reason a contested record claim carries wherever it comes back, or empty.
+ * @param {import('./decode.logic.js').Claim} i
+ */
+export const claimWhy = i =>
+  claimVerdict(i) !== 'contested' ? '' : (i.why ?? (i.witness ? '' : WHY.none))
 
 /**
  * One line of the level check for a life's scored forecasts: [{ p, answer, score }].
@@ -363,58 +377,6 @@ export function firstLife(course) {
 }
 
 /**
- * The years a lesson covers, from the year its first screen opens on (`from`) to its decision:
- * "63 to 47 BC", "12 BC to AD 4". A lesson within one year keeps the date line, "45 BC · age 17".
- * @param {Course['lessons'][number]} lesson
- * @param {import('./decode.logic.js').HistDate | undefined} born
- */
-function span(lesson, born) {
-  const { from, date } = lesson
-  if (from === undefined || !date?.y || from === date.y) return dateLine(date, born)
-  if (from < 0 && date.y > 0) return `${yearName(from)} to ${yearName(date.y)}`
-  return from < 0 ? `${-from} to ${yearName(date.y)}` : `${yearName(from)} to ${date.y}`
-}
-
-/**
- * The unit page's lesson rows, in reading order, each named by the years it covers: a decision
- * named on a row would be read before its lesson, and later questions give earlier outcomes away.
- * A lesson done opens to be read again; the open one opens the life's page; a lesson ahead opens
- * nothing. `page` is the life page's URL.
- * @param {Course} course
- * @param {import('./decode.logic.js').LivesRecord} record
- * @param {string} page
- */
-export function lessonRows(course, record, page) {
-  const last = record.lives[firstLife(course).id]?.lastLesson ?? -1
-  return course.lessons.map((l, i) => ({
-    key: `lesson-${i + 1}`,
-    title: span(l, course.born),
-    to: i <= last ? `${page}?lesson=${i + 1}` : i === last + 1 ? page : undefined,
-    done: i <= last
-  }))
-}
-
-/**
- * The unit page's last row: what follows the last lesson on the life's page, the recall, the level
- * check and the next life. It opens once every lesson is done; until then the open lesson's row
- * is the way in. `closed` marks the life closed.
- * @param {Course} course
- * @param {import('./decode.logic.js').LivesRecord} record
- * @param {string} page
- * @param {boolean} [closed]
- */
-export function endRow(course, record, page, closed = false) {
-  const life = firstLife(course)
-  const last = record.lives[life.id]?.lastLesson ?? -1
-  return {
-    key: 'after',
-    title: 'After the last lesson',
-    to: last >= life.lessons - 1 ? page : undefined,
-    done: closed
-  }
-}
-
-/**
  * The notes the gate-3 list offers: this life's first, then earlier lives', each newest first.
  * The record appends notes as they are written, so the newest is the last.
  * @param {readonly import('./decode.logic.js').Item[]} items
@@ -466,6 +428,8 @@ export function lifeAction(record, course, today) {
   if (first && roundInHand(record.lives[first.id], today)) return { kind: 'end', life: first.id }
   const shape = record.items.find(i => i.kind === 'shape' && pairDue(i))
   if (shape) return { kind: 'pair', shape: shape.id }
+  // No life in hand yet: your field and post first (case 6), then the first life's first lesson.
+  if (!record.you && !Object.values(record.lives).some(l => l?.opened)) return { kind: 'you' }
   const life = lives.find(l => l.id === inHand(record, course))
   if (!life) return { kind: 'none' }
   const state = record.lives[life.id] ?? {}
@@ -505,6 +469,20 @@ export function inHand(record, course) {
 export function nextBuilt(record, course, from) {
   const at = course.lives.findIndex(l => l.id === from)
   return course.lives.slice(at + 1).find(l => !record.lives[l.id]?.opened && l.lessons > 0) ?? null
+}
+
+/**
+ * The list of item 2 in the order item 3 goes down it: those whose life shares the next note
+ * first, then the rest, each group in the order met. With no answers, or before every person is
+ * answered, the order met stands.
+ * @template T
+ * @param {readonly T[]} list the people in the order met
+ * @param {readonly boolean[]} [answers] a yes or no for each, by place
+ * @returns {readonly T[]}
+ */
+export function orderList(list, answers) {
+  if (!answers || answers.length < list.length) return list
+  return [...list.filter((_, i) => answers[i]), ...list.filter((_, i) => !answers[i])]
 }
 
 // The record's other rules

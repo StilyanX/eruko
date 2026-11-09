@@ -80,7 +80,8 @@ export const optionalStatement = (statement, prove, proved = {}) =>
 
 /**
  * A topic with proofs is finished when every kind is retired, every proof is known, and every
- * method its statements practise has a proved statement or none left.
+ * method its statements practise has a proved statement or none left. It `waits` when only proof
+ * checks stand between it and finished: it has no part left to take, and stays the open topic.
  * @param {import('./proofs-decode.logic.js').ProofCourseTopic} topic
  * @param {import('./practice.logic.js').PracticeRecord & import('./proofs-decode.logic.js').ProofsRecord} record
  */
@@ -91,11 +92,12 @@ export function proofTopicState(topic, record) {
     const p = proofs[id]
     return p !== undefined && 'read' in p && p.known
   }
-  const finished =
+  const parts =
     topic.kinds.every(k => retired[k.id]) &&
-    topic.proofs.every(known) &&
+    topic.proofs.every(id => isRead(proofs[id])) &&
     openStatements(topic.prove, record.proved).length === 0
-  return { finished }
+  const finished = parts && topic.proofs.every(known)
+  return { finished, waits: parts && !finished }
 }
 
 /**

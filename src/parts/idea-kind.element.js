@@ -1,7 +1,7 @@
 // Hides: an idea with no method. Its one kind retires when the learner states it in their own words
 // with an example of their own and marks the example right. The app reads nothing of what they
 // state, so any mode serves (aloud, on paper, or typed): the box is optional, and its text stays
-// after a Wrong.
+// after a Wrong. What is typed is kept in the record (`draft`) until the idea is marked right.
 import { today } from './clock.dom.js'
 import { dayName } from '../kernel/days.logic.js'
 import { kindId } from '../kernel/maths-decode.logic.js'
@@ -10,14 +10,26 @@ import { heading, noSend, practiceOf } from './maths-steps.dom.js'
 import { StepScreen, actions, choice, mark, step, studyStore, verdict } from './study.dom.js'
 import { h } from './view.dom.js'
 
+/**
+ * The box, once drawn: focused, it brings its question into view with it, the question being as
+ * far above the box as its scroll margin.
+ * @param {Element} box
+ */
+function keepInView(box) {
+  if (!(box instanceof HTMLElement)) return
+  new ResizeObserver(() => {
+    const question = document.getElementById(box.getAttribute('aria-describedby') ?? '')
+    if (question)
+      box.style.scrollMarginTop = `${box.getBoundingClientRect().top - question.getBoundingClientRect().top}px`
+  }).observe(box)
+}
+
 export class AeIdeaKind extends StepScreen {
   /** @type {import('../kernel/maths-decode.logic.js').Kind} */
   kind = { id: kindId(''), forms: [] }
   heading = ''
   /** @type {import('./maths-steps.dom.js').Send} */
   send = noSend
-  /** The idea and the example typed, if the learner types them. */
-  text = ''
   /** Show the check pressed: the mark is asked. */
   written = false
   #study = studyStore()
@@ -59,9 +71,12 @@ export class AeIdeaKind extends StepScreen {
           id: field,
           class: 'field',
           rows: '4',
-          '.value': this.text,
+          'aria-describedby': `${field}-q`,
+          ref: keepInView,
+          '.value': practiceOf(this.#study).draft?.[this.kind.id] ?? '',
           oninput: (/** @type {Event} */ e) => {
-            if (e.target instanceof HTMLTextAreaElement) this.text = e.target.value
+            if (e.target instanceof HTMLTextAreaElement)
+              this.send({ t: 'draft', id: this.kind.id, text: e.target.value })
           }
         })
       ),
@@ -97,7 +112,7 @@ export class AeIdeaKind extends StepScreen {
             failed && !this.written && verdict(false, TRY_AGAIN),
             h(
               'p',
-              null,
+              { id: `inst-${id}-q` },
               'State the idea in your own words: aloud, on paper, or in the box. Give one example of your own that the text above does not show.'
             ),
             this.#box(`inst-${id}`)

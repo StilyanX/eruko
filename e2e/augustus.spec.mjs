@@ -60,6 +60,24 @@ const pressLocked = async (scope, name) => {
 const status = page => page.locator('p[role=status].sr-only')
 
 /**
+ * Wait three frames: where focus goes after a press is settled two frames on.
+ * @param {import('@playwright/test').Page} page
+ */
+const settled = page =>
+  page.evaluate(
+    () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r))))
+  )
+
+/**
+ * Past the first screen of a record with no life in hand: your field and post, left empty.
+ * @param {import('@playwright/test').Page} page
+ */
+async function pastYou(page) {
+  await expect(page.getByRole('heading', { name: 'Your field and your post' })).toBeVisible()
+  await button(page, 'Done').click()
+}
+
+/**
  * Turn through the lesson's screens to its last, with Next.
  * @param {import('@playwright/test').Page} page
  * @param {number} times
@@ -108,6 +126,12 @@ test('Review removes the sample items an older page put in the record', async ({
  */
 async function readToQuestion(page) {
   await page.goto(LIFE)
+  // No life in hand: your field and post first (case 6), kept as typed, then the first lesson.
+  await expect(page.getByRole('heading', { name: 'Your field and your post' })).toBeVisible()
+  await page.locator('#au-you-field').fill('Law')
+  await page.locator('#au-you-rank').fill('Clerk')
+  await page.locator('#au-you-rank').press('Enter')
+  expect((await stored(page)).you).toEqual({ field: 'Law', rank: 'Clerk' })
   // One page title, the life's; the section names the lesson in hand.
   await expect(page.locator('h1')).toHaveText('The life of Augustus')
   await expect(page.getByRole('heading', { level: 2, name: 'Lesson 1' })).toBeVisible()
@@ -115,6 +139,14 @@ async function readToQuestion(page) {
   // Enter, with focus on the screen, presses its Next.
   await page.locator('.lrn-bio-date').focus()
   await page.keyboard.press('Enter')
+  await expect(page.locator('.lrn-bio-date')).toHaveText('59 BC · age 3–4')
+  // Focus goes to the new screen's date line on every turn, so Enter after Enter turns on.
+  await expect(page.locator('.lrn-bio-date')).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('.lrn-bio-date')).not.toHaveText('59 BC · age 3–4')
+  await settled(page)
+  await expect(page.locator('.lrn-bio-date')).toBeFocused()
+  await button(page, 'Previous').click()
   await expect(page.locator('.lrn-bio-date')).toHaveText('59 BC · age 3–4')
   // Next moves focus to the new screen's date line.
   await button(page, 'Next').click()
@@ -251,7 +283,12 @@ async function checkFirst(page) {
   await expect(page.getByRole('navigation', { name: 'Screens' })).toHaveCount(0)
   await page.locator('.lrn-bio-pick label').first().click()
   await expect(page.locator('.lrn-bio-pick input').first()).toBeChecked()
-  // With no note written yet, a new one is the only choice: no screen asks for it.
+  await button(page, 'Done').click()
+  // The chosen claim on its own screen: no second account holds it, so it is contested, with no
+  // choice; with no note written yet, a new one is the only choice, so no note is asked.
+  await expect(page.getByRole('heading', { name: 'Each claim beside another account' })).toBeVisible()
+  await expect(page.locator('.lrn-bio-claim')).toContainText('No second account.')
+  await expect(page.locator('.lrn-bio-claim')).toContainText('Contested: no second account holds it.')
   await button(page, 'Done').click()
 }
 
@@ -301,6 +338,7 @@ test('"I already know" and no setback or claim put the lesson in the record at o
   page
 }) => {
   await page.goto(LIFE)
+  await pastYou(page)
   await next(page, 8)
   await button(page, 'I already know').click()
   await expect(status(page)).toHaveText('You read the decision with no score.')
@@ -352,7 +390,7 @@ async function tellAndCheck(page) {
   await expect(page.locator('.lrn-bio-told-col')).toHaveCSS('position', 'sticky')
   await pressLocked(page, 'Done')
   await expect(page.locator('.lrn-ss .why')).toHaveText(
-    'Mark every item. Item 1 of 12 has no mark.'
+    'Mark every item, from item 1.'
   )
   // Mark the first item Wrong and every other Right.
   await items.nth(0).getByLabel('Wrong').check()
@@ -380,7 +418,7 @@ async function tellAgain(page) {
   await expect(items.getByLabel('Right')).toHaveCount(0)
   await expect(items).toContainText('Decision · 47 BC')
   await pressLocked(page, 'Done')
-  await expect(page.locator('.lrn-ss .why')).toHaveText('Mark every item. Item 1 of 1 has no mark.')
+  await expect(page.locator('.lrn-ss .why')).toHaveText('Mark every item, from item 1.')
   await items.getByRole('button', { name: /^Show the item ?: Decision · 47 BC$/ }).click()
   await expect(items.locator('.lrn-ss-note').first()).toBeFocused()
   await expect(items.locator('.lrn-bio-say').first()).toBeVisible()
@@ -431,6 +469,11 @@ test('the notes written before show on one list, and a note picked takes the dec
   await button(page, 'Done').click()
   const shapes = page.locator('input[name=au-shape]')
   await expect(shapes).toHaveCount(8)
+  // Done is gone, so focus goes to the first note, never to a Previous in its place: Enter by
+  // habit says why Done waits and does not go back to the claims.
+  await expect(shapes.first()).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('heading', { name: 'Choose the claims' })).toHaveCount(0)
   await expect(page.getByRole('navigation', { name: 'Note pages' })).toHaveCount(0)
   await pressLocked(page, 'Done')
   await expect(page.locator('.lrn-ss .why')).toHaveText('Choose a note, or write a new one.')
@@ -486,30 +529,6 @@ test('a short round an older page ended opens the next telling', async ({ page }
   await expect(page.locator('main')).toContainText('You have told it right 2 of 3 times.')
 })
 
-test('a lesson done reads again from its row, with the answer at the outcome', async ({ page }) => {
-  await withRecord(page, 'mid.json')
-  await page.goto(`${LIFE}?lesson=4`)
-  await expect(page.locator('h1')).toHaveText('The life of Augustus')
-  await expect(page.getByRole('heading', { level: 2, name: 'Lesson 4, read again' })).toBeVisible()
-  await next(page, 4)
-  await expect(page.locator('.lrn-bio-q')).toBeFocused()
-  await expect(page.locator('.lrn-bio-claim')).toContainText('Your entry')
-  await expect(page.locator('main')).not.toContainText('0 is best')
-  // The screen in view is kept: a reload lands on it.
-  await reloadSaved(page)
-  await expect(page.locator('.lrn-bio-claim')).toContainText('Your entry')
-})
-
-test('a lesson reached early says what opens it and links the page that does', async ({ page }) => {
-  await withRecord(page, 'mid.json')
-  await page.goto(`${LIFE}?lesson=20`)
-  await expect(page.locator('#au-lesson')).toContainText(
-    'This lesson opens once you finish the lessons before it.'
-  )
-  await page.getByRole('link', { name: 'the lessons before it' }).click()
-  await expect(page.getByRole('heading', { level: 2, name: 'Lesson 9' })).toBeVisible()
-})
-
 test('the pair of lives: a life added, the cells and the rule, and a rule saved', async ({
   page
 }) => {
@@ -544,6 +563,12 @@ test('a pair at the raised level pages its third life, and "no rule" closes it',
   await page.goto(LIFE)
   const cols = page.locator('.lrn-bio-pair > div')
   await expect(cols).toHaveCount(2)
+  // At the raised level, Augustus's column shows the era at each decision: before 43 BC from the
+  // main account, and a map with the list of its places where one is drawn.
+  await expect(cols.first()).toContainText('The era at this decision')
+  await expect(cols.first()).toContainText('From the main account.')
+  await expect(cols.first().locator('li').first()).toContainText('the first place named.')
+  await expect(cols.first().locator('svg')).toHaveCount(1)
   await button(page, 'The third life').click()
   await expect(cols.nth(1).locator('.lrn-ss-note').first()).toHaveText('Julius Caesar')
   await button(page, 'The second life').click()
@@ -573,13 +598,20 @@ test('the stuck path closes the life as stuck', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'This book does not show the setbacks' })
   ).toBeVisible()
-  await expect(page.locator('main')).toContainText('Once another account is built')
+  // No built life of the same person: no "Another account".
+  await expect(button(page, 'Another account')).toHaveCount(0)
   await button(page, 'End this life').click()
   // Ended as stuck, the life goes on to the next-life checklist, with no level check.
   await expect(page.getByRole('heading', { name: 'The next life' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'How your forecasts went' })).toHaveCount(0)
   await expect(page.locator('h1')).toHaveText('The life of Augustus')
   expect((await stored(page)).lives.augustus.stuck).toBeTruthy()
+  // Until a built life opens, the life can be kept: it is the life in hand again.
+  await button(page, 'Keep this life').click()
+  await expect(
+    page.getByRole('heading', { name: 'This book does not show the setbacks' })
+  ).toBeVisible()
+  expect((await stored(page)).lives.augustus.stuck).toBeUndefined()
 })
 
 test('the level check, then the next-life checklist, written and kept', async ({ page }) => {
@@ -610,9 +642,20 @@ test('the level check, then the next-life checklist, written and kept', async ({
   await page.locator('#au-people').fill('Agrippa\n\nMaecenas')
   // Enter in a one-line field presses Done.
   await page.locator('#au-rank').press('Enter')
-  await expect(page.locator('main')).toContainText('The next life opens here once it is built.')
+  // Two listed and another note unpaired: a yes or no for each on the next oldest note.
+  await expect(page.locator('main')).toContainText('Person 1 of 2')
+  await expect(page.locator('main')).toContainText('An offer of help that would bind him to a faction.')
+  await button(page, 'No').click()
+  await expect(page.locator('main')).toContainText('Does the life of Maecenas share this note too?')
+  await button(page, 'Yes').click()
+  await expect(page.locator('main')).toContainText('Nothing left. The next life is not built yet.')
+  // Those who share it go first.
+  await expect(page.locator('main')).toContainText(
+    /Maecenas: shares your next note\.\s*Agrippa: does not share your next note\./
+  )
   const r = await stored(page)
   expect(r.checklist.people).toEqual(['Agrippa', 'Maecenas'])
+  expect(r.checklist.nextNote).toEqual({ note: 'n2', answers: [false, true] })
   expect(r.you).toEqual({ field: 'Law', rank: 'Associate' })
   await page.getByRole('link', { name: 'Go to Augustus' }).click()
   await expect(page.locator('h1')).toHaveText('Augustus')
@@ -625,7 +668,7 @@ test('the next-life checklist skipped with nothing typed still closes it', async
   await page.locator('#au-field').fill('')
   await page.locator('#au-rank').fill('')
   await button(page, 'Skip').click()
-  await expect(page.locator('main')).toContainText('The next life opens here once it is built.')
+  await expect(page.locator('main')).toContainText('Nothing left. The next life is not built yet.')
   const r = await stored(page)
   expect(r.checklist.people).toEqual([])
   expect(r.you).toEqual({ field: 'Law', rank: 'Associate' })
@@ -642,8 +685,6 @@ for (const [route, record] of /** @type {[string, keyof typeof RECORDS | null][]
   [`${R}/review`, null],
   [`${R}/review`, 'due.json'],
   [LIFE, null],
-  [`${LIFE}?lesson=4`, 'mid.json'],
-  [`${LIFE}?lesson=20`, 'mid.json'],
   ...Object.keys(RECORDS)
     .filter(k => k !== 'sample.json')
     .map(k => /** @type {[string, keyof typeof RECORDS]} */ ([LIFE, k]))
@@ -682,6 +723,7 @@ test('the question and the setbacks behind a click have no accessibility violati
     expect(violations.map(v => `${what} ${v.id}: ${v.nodes.length}`)).toEqual([])
   }
   await page.goto(LIFE)
+  await pastYou(page)
   await next(page, 8)
   await pressLocked(page, 'Lock')
   await axe('question with a locked button')
@@ -697,17 +739,14 @@ test('the question and the setbacks behind a click have no accessibility violati
 })
 
 // One address per test: a second load in the same page can meet the record still held by the first.
-test('a row not reached says what it opens after, in the words read with it', async ({ page }) => {
+test('the unit page lists no lesson and no section, so nothing names a decision', async ({
+  page
+}) => {
+  await withRecord(page, 'mid.json')
   await page.goto(R)
-  const second = page.locator('.hm-numbered li').nth(1)
-  await expect(second.locator('.hm-still')).toContainText('Opens after 1')
-  await expect(second.getByRole('link')).toHaveCount(0)
-})
-
-test('the rows are named by their years, and no row or line names a decision', async ({ page }) => {
-  await page.goto(R)
-  const first = page.locator('.hm-numbered li').first()
-  await expect(first.locator('.hm-row-title')).toHaveText('63 to 47 BC')
+  await expect(page.locator('.hm-place')).toHaveText('Lesson 9 of 56.')
+  await expect(page.locator('.hm-sources-label')).toBeVisible()
+  await expect(page.locator('.hm-rows, .hm-section, #hm-find')).toHaveCount(0)
   await expect(page.locator('main')).not.toContainText('Has Octavian')
 })
 
@@ -720,11 +759,14 @@ test('once the learner has begun, the cards keep their order: Continue, Review, 
   await expect(page.locator('a.hm-start')).toHaveText([/^Continue/, /^Review/, /^Start/])
 })
 
-test('the Continue card opens the first lesson span', async ({ page }) => {
+test('the Continue card opens the lesson in hand on the life page', async ({ page }) => {
+  await withRecord(page, 'mid.json')
   await page.goto(R)
   const card = page.locator('a.hm-start', { hasText: 'Continue' })
-  await expect(card.locator('.hm-start-note')).toHaveText(/^63 to 47 BC$/)
-  await expect(card).toHaveAttribute('href', /\/life$/)
+  await expect(card.locator('.hm-start-note')).toHaveText('The life of Augustus')
+  await card.click()
+  await expect(page.locator('h1')).toHaveText('The life of Augustus')
+  await expect(page.getByRole('heading', { level: 2, name: 'Lesson 9' })).toBeVisible()
 })
 
 test('the place line names the next lesson by its place only', async ({ page }) => {
@@ -848,9 +890,19 @@ test('the end level: drawn the day after the life closed, one screen a part, the
   await page.locator('#au-wit-0').selectOption('Appian')
   await button(page, 'Next').click()
   await expect(page.getByRole('heading', { name: 'Footing' })).toBeVisible()
-  await button(page, 'Next').click()
+  // Each turn puts focus on the level's heading, so Enter after Enter turns on.
+  const head = page.getByRole('heading', { name: 'The end level', exact: true })
+  await expect(head).toBeFocused()
+  await page.keyboard.press('Enter')
   await expect(page.getByRole('heading', { name: 'Reading' })).toBeVisible()
   await expect(page.locator('main')).toContainText('Passage 1 of 10')
+  await settled(page)
+  await expect(head).toBeFocused()
+  const first = await page.locator('main').innerText()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('main')).not.toHaveText(first)
+  await settled(page)
+  await expect(head).toBeFocused()
   // Through every passage and its list of ten to Done.
   while (!(await button(page, 'Done').isVisible())) await button(page, 'Next').click()
   await page.locator('main input[type=radio]').first().check()
@@ -860,4 +912,60 @@ test('the end level: drawn the day after the life closed, one screen a part, the
   const r = await stored(page)
   expect(r.lives.augustus.end.lines).toHaveLength(1)
   expect(r.lives.augustus.end.lines[0].right).toBe(false)
+})
+
+test('turning a screen focuses its date heading, and the status says where you are', async ({ page }) => {
+  await page.goto(LIFE)
+  await pastYou(page)
+  await button(page, 'Next').click()
+  await settled(page)
+  const focused = page.locator(':focus')
+  await expect(focused).toHaveText('59 BC · age 3–4')
+  expect(await focused.evaluate(el => el.tagName)).toBe('H3')
+  await expect(status(page)).toHaveText(/^Screen 2 of \d+\. 59 BC · age 3–4$/)
+})
+
+for (const id of ['#au-p', '#au-reason'])
+  test(`on a phone with its keyboard open, the question stays in view with ${id}, and describes it`, async ({
+    page
+  }) => {
+    await page.setViewportSize({ width: 390, height: 420 })
+    await page.goto(LIFE)
+    await pastYou(page)
+    await next(page, 8)
+    const field = page.locator(id)
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await field.focus()
+    await expect(field).toHaveAccessibleDescription(/North Africa/)
+    // the question's first and last lines show, under the top bar and above the screen's foot
+    const seen = await page.locator('#au-question').evaluate(el => {
+      const r = el.getBoundingClientRect()
+      const top = document.elementFromPoint(r.left + 4, r.top + 4)
+      const foot = document.elementFromPoint(r.left + 4, r.bottom - 4)
+      return [el.contains(top), el.contains(foot)]
+    })
+    expect(seen).toEqual([true, true])
+  })
+
+test('each recall mark is named by its item', async ({ page }) => {
+  await withRecord(page, 'judge.json')
+  await page.goto(LIFE)
+  const groups = page.locator('fieldset.mark')
+  await expect(groups.first()).toBeVisible()
+  /** @type {string[]} */
+  const names = []
+  for (const g of await groups.all()) {
+    await expect(g).toHaveAccessibleDescription(/^Right when /)
+    names.push(await g.evaluate(el => (el.getAttribute('aria-labelledby') ?? '').split(' ').map(id => document.getElementById(id)?.textContent).join(' ')))
+  }
+  expect(names.length).toBeGreaterThan(1)
+  expect(new Set(names).size).toBe(names.length)
+  expect(names.some(n => /47 BC/.test(n))).toBe(true)
+  await expect(groups.first()).toHaveAccessibleName(names[0] ?? '')
+})
+
+test('an item told again is told aloud or on paper before it is shown', async ({ page }) => {
+  await withRecord(page, 'retry.json')
+  await page.goto(LIFE)
+  await expect(page.locator('main')).toContainText('aloud or on paper, then show it')
 })

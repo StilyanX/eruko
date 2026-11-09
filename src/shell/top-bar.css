@@ -13,7 +13,7 @@
        in the bar's height. */
     align-items: baseline;
     gap: var(--space-2);
-    height: var(--topbar-h);
+    min-height: var(--topbar-h);
     padding-block-start: calc((var(--topbar-h) - var(--target)) / 2);
     padding-inline: calc(max(0px, (100% - var(--frame)) / 2) + var(--gutter));
     font-family: var(--font-ui);
@@ -29,17 +29,17 @@
   }
   /* The steps share one baseline, so the wordmark in the reading face and the unit in the UI face
      stand on the same line. */
+  /* A name too long for its line wraps inside its step, so none is cut, at any text spacing
+     (WCAG 1.4.12); no step shrinks below its longest word. */
   .lv-crumb ol {
     display: flex;
     align-items: baseline;
     min-width: 0;
     list-style: none;
-    white-space: nowrap;
   }
   .lv-crumb li {
     display: flex;
     align-items: baseline;
-    min-width: 0;
   }
   /* A chevron between steps of the path. */
   .lv-sep {
@@ -54,8 +54,6 @@
     align-items: center;
     min-width: var(--target);
     min-height: var(--target);
-    overflow: hidden;
-    text-overflow: ellipsis;
     color: var(--text-2);
     text-decoration: none;
   }

@@ -21,6 +21,7 @@ import {
   hostLibs,
   hostReport
 } from '../../src/units/cpp/core/check.logic.js'
+import { scanFlags, scanHits } from '../../src/units/cpp/core/scan.logic.js'
 import { countOf, fillSlots } from '../../src/units/cpp/core/track.logic.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..')
@@ -132,7 +133,17 @@ const KEYS = new Set([
   'Reject',
   'Source',
   'Orders',
-  'Forbidden'
+  'Forbidden',
+  'Settled',
+  'Rule',
+  'Pattern',
+  'Warning',
+  'Exempt',
+  'Task',
+  'Shape',
+  'Tag',
+  'Count',
+  'Newer'
 ])
 
 /**
@@ -305,7 +316,8 @@ const pool = n => {
       else queue.push(start)
     })
 }
-const host = pool(Math.max(1, availableParallelism()))
+// ERUKO_CPP_JOBS caps the compiles at once, when several checks share the machine
+const host = pool(Number(process.env.ERUKO_CPP_JOBS) || Math.max(1, availableParallelism()))
 // the device runs one program at a time, so a count read from it is not shared with another
 const gpu = pool(1)
 
@@ -317,7 +329,8 @@ const gpu = pool(1)
  */
 const spawned = (command, args, o = {}) =>
   new Promise(resolve => {
-    const child = spawn(command, args, { cwd: o.cwd, env: o.env ?? process.env })
+    // its own process group, so a timeout reaches compute-sanitizer's launched program too
+    const child = spawn(command, args, { cwd: o.cwd, env: o.env ?? process.env, detached: true })
     let stdout = ''
     let stderr = ''
     let finished = true
@@ -328,7 +341,11 @@ const spawned = (command, args, o = {}) =>
     // a guard against a program that never ends, never a check: no answer reads it
     const timer = setTimeout(() => {
       finished = false
-      child.kill('SIGKILL')
+      try {
+        process.kill(-(child.pid ?? 0), 'SIGKILL')
+      } catch {
+        child.kill('SIGKILL')
+      }
     }, MS)
     child.on('error', e => (stderr += e.message))
     child.on('close', code => {
@@ -606,7 +623,7 @@ async function resultOf(text, set, input, result, o = {}) {
   if (!b.compiled) return { compiled: false, out: '', report: null, finished: true, code: null, error: b.error, errors: b.errors }
   const r = await runOn(b, input, set)
   const out = result === 'output' ? compared(r.stdout) : String(countOf(result, b.reports))
-  return { compiled: true, out, report: r.report, finished: r.finished, code: r.code, error: r.stderr, errors: [] }
+  return { compiled: true, out, printed: compared(r.stdout), report: r.report, finished: r.finished, code: r.code, error: r.stderr, errors: [] }
 }
 
 /**
@@ -615,17 +632,22 @@ async function resultOf(text, set, input, result, o = {}) {
  * the examples and fails a test or the witness. Sanitizer: the reference is silent and the wrong
  * version loud with the same report twice. Flag: the reference gets the stated verdict at every
  * level and the wrong one does not. Probes: every accepted line compiles, each rejected line
- * fails at its own line, and the wrong version fails a probe.
+ * fails at its own line, and the wrong version fails a probe. A stage 7 kind's item alone also
+ * passes its kind's scan: the reference silent, the wrong version loud with the same output.
+ * `Exempt: R.3` names a rule the statement asks to break; the statement then says so.
  * @param {Section} s
  * @param {boolean} device
  * @param {string} file
+ * @param {import('../../src/units/cpp/core/scan.logic.js').Scan | null} [scan] the kind's own scan
  */
-async function checkAlone(s, device, file) {
+async function checkAlone(s, device, file, scan = null) {
   const form = keyOf(s, 'Form')?.value ?? 'run'
   if (!FORMS.includes(form)) fail(file, s.line, 'Item alone', `Form: is one of ${FORMS.join(', ')}`)
   const dev = device || keyOf(s, 'Device')?.value === 'yes'
   const lang = dev ? 'cuda' : 'cpp'
-  const statement = statementOf(s, file)
+  const exempt = (keyOf(s, 'Exempt')?.value ?? '').split(/[\s,]+/).filter(Boolean)
+  if (exempt.some(r => !/^(P|I|F|R|ES|Con|T|Per|CP)\.\d+$/.test(r))) fail(file, keyOf(s, 'Exempt')?.line ?? s.line, 'Exempt', 'it names Guidelines rules, as R.3, F.22')
+  const statement = [...statementOf(s, file), ...exempt.map(r => `This program breaks Core Guidelines rule ${r} on purpose, so the check of that rule skips it.`)]
   const sub = (/** @type {string} */ t) => s.subs.find(x => x.title === t)
   const ref = sub('Reference')
   const wrongS = sub('Wrong')
@@ -650,7 +672,12 @@ async function checkAlone(s, device, file) {
     witness,
     sub
   }
-  const base = { id: '', form, statement, device: dev, settings: a.set, result: a.result, reference: a.reference.lines, wrong: a.wrong.lines }
+  if (form === 'sanitizer' && !a.set.sanitize && !a.set.tool) fail(file, s.line, 'Item alone', 'a sanitizer item names its Sanitizer: address, thread, or a compute-sanitizer tool')
+  const base = { id: '', form, statement, device: dev, settings: a.set, result: a.result, reference: a.reference.lines, wrong: a.wrong.lines, ...(exempt.length ? { exempt } : {}) }
+  if (scan) {
+    if (form !== 'run') fail(file, s.line, 'Item alone', 'a stage 7 item alone is a run item, judged by its output and its scan')
+    return { ...base, ...(await checkScanAlone(a, scan)) }
+  }
   if (form === 'run' || form === 'sanitizer') return { ...base, ...(await checkRunAlone(a)) }
   if (form === 'flag') return { ...base, ...(await checkFlagAlone(a)) }
   if (form === 'orders') return { ...base, ...(await checkOrdersAlone(a)) }
@@ -713,33 +740,46 @@ function weaker(slot, what) {
  * An orders item: the reference, its slots filled, passes as a sanitizer item (silent on every
  * test, loud wrong version on the witness); and each slot weakened one step, its order and then
  * its scope, is loud under the sanitizer or listed in Forbidden: with two derivations, its
- * permitted results holding one the item forbids.
+ * permitted results holding one the item forbids. `Settled: stored` names an item whose fence no
+ * sanitizer models (a host fence: ThreadSanitizer does not model one): it runs none, every slot is
+ * in Forbidden:, and its ### Wrong stores the results its weaker slot adds, one out block each,
+ * by which its witness is judged.
  * @param {Alone} a
  */
 async function checkOrdersAlone(a) {
   const { s, file, dev, set } = a
-  if (!dev && set.sanitize !== 'thread') fail(file, s.line, 'Orders', 'a host orders item runs under Sanitizer: thread')
+  const settled = keyOf(s, 'Settled')
+  const stored = settled?.value === 'stored'
+  if (settled && !stored) fail(file, settled.line, 'Settled', 'its one value is "stored": the stored verdict alone settles the item')
+  if (stored && (set.sanitize || set.tool)) fail(file, s.line, 'Orders', 'an item settled by its stored verdict runs no sanitizer, so it names none')
+  if (!dev && !stored && set.sanitize !== 'thread') fail(file, s.line, 'Orders', 'a host orders item runs under Sanitizer: thread, or is Settled: stored')
   const slots = slotsOf(keyOf(s, 'Orders'), dev, file, s.line)
   const forbidden = (keyOf(s, 'Forbidden')?.value ?? '').split(/[\s,]+/).filter(Boolean).map(Number)
   if (forbidden.length && (!keyOf(s, 'Derivation 1') || !keyOf(s, 'Derivation 2'))) fail(file, s.line, 'Orders', 'a slot in Forbidden: needs Derivation 1: and Derivation 2:, written apart')
-  const run = await checkRunAlone({ ...a, form: 'sanitizer', byOutput: true })
+  const forbids = stored ? a.wrongS.fences.filter(f => f.lang === 'out').map(f => compared(f.text)) : undefined
+  if (forbids && !forbids.length) fail(file, a.wrongS.line, 'Wrong version', 'an item settled by its stored verdict stores the results its weaker slot permits and the item forbids, one ```out block each')
+  const run = await checkRunAlone({ ...a, form: 'sanitizer', byOutput: true, ...(forbids ? { forbids } : {}) })
   const template = /** @type {{ template: string[] }} */ (/** @type {unknown} */ (a.reference)).template
   const inputs = [...run.examples, ...run.tests].map(t => t.input).concat(a.witness.text)
   for (const slot of slots)
     for (const what of /** @type {const} */ (['order', 'scope'])) {
       const down = weaker(slot, what)
       if (!down || (what === 'scope' && !dev)) continue
+      if (stored) {
+        if (!forbidden.includes(slot.n)) fail(file, s.line, 'Orders', `slot ${slot.n} is settled by the stored verdict alone, so it is in Forbidden: with two derivations, or its stored ${what} is stronger than needed`)
+        continue
+      }
       const text = `${fillSlots(template, slots.map(x => (x.n === slot.n ? down : x)), dev).join('\n')}\n`
       let loud = false
       for (const input of inputs) if (!loud) loud = Boolean((await resultOf(text, set, input, 'output')).report)
       if (!loud && !forbidden.includes(slot.n)) fail(file, s.line, 'Orders', `slot ${slot.n} with its ${what} one step weaker (${what === 'order' ? down.order : down.scope}) is silent under the sanitizer and is not in Forbidden:; the stored ${what} is stronger than needed, or the slot needs two derivations`)
     }
-  return { ...run, form: 'orders', template, slots, forbidden }
+  return { ...run, form: 'orders', template, slots, forbidden, ...(forbids ? { forbids } : {}) }
 }
 
 /**
  * What the checks of an item alone share.
- * @typedef {{ s: Section, file: string, form: string, dev: boolean, lang: string, set: import('../../src/units/cpp/core/check.logic.js').Settings, result: string, reference: { lines: string[], text: string }, wrong: { lines: string[], text: string }, ref: Section, wrongS: Section, wit: Section, witness: Fence, sub: (t: string) => Section | undefined, byOutput?: boolean }} Alone
+ * @typedef {{ s: Section, file: string, form: string, dev: boolean, lang: string, set: import('../../src/units/cpp/core/check.logic.js').Settings, result: string, reference: { lines: string[], text: string }, wrong: { lines: string[], text: string }, ref: Section, wrongS: Section, wit: Section, witness: Fence, sub: (t: string) => Section | undefined, byOutput?: boolean, forbids?: string[] }} Alone
  */
 
 /**
@@ -747,7 +787,7 @@ async function checkOrdersAlone(a) {
  * (sanitizer) is silent; the wrong version passes the examples and differs on the witness.
  * @param {Alone} a
  */
-async function checkRunAlone({ s, file, form, set, result, reference, wrong, ref, wrongS, wit, witness, sub, byOutput = false }) {
+async function checkRunAlone({ s, file, form, set, result, reference, wrong, ref, wrongS, wit, witness, sub, byOutput = false, forbids }) {
   const examples = testsOf(sub('Examples')?.fences ?? [])
   const hidden = testsOf(sub('Tests')?.fences ?? [])
   if (!examples.length) fail(file, s.line, 'Item alone', 'a run or sanitizer item shows one example or more')
@@ -772,21 +812,72 @@ async function checkRunAlone({ s, file, form, set, result, reference, wrong, ref
   // an orders item's weaker order is loud on any run, so its wrong version passes the examples by its output
   const { sanitize: _s, tool: _t, ...plain } = set
   const passes = async (/** @type {string} */ input, /** @type {string} */ want) => (byOutput ? (await resultOf(wrong.text, plain, input, result)).out === want : (await verdictOn(wrong.text, input, want)) === 'same')
-  for (const [i, t] of examples.entries())
+  // an output holds the wrong version to the examples here; a count, below
+  for (const [i, t] of result === 'output' ? examples.entries() : [])
     if (!(await passes(t.input, tests[i]?.output ?? ''))) fail(file, wrongS.line, 'Wrong version', `it does not pass example ${i + 1}; a wrong version passes the item's examples`)
+  // a count no input moves (nm, sass, registers): the wrong version passes the examples by what it
+  // prints, and gives another count
+  if (result !== 'output')
+    for (const [i, t] of examples.entries()) {
+      const r = await resultOf(reference.text, set, t.input, result)
+      const w = await resultOf(wrong.text, set, t.input, result)
+      if (w.compiled && r.printed !== w.printed) fail(file, wrongS.line, 'Wrong version', `it prints ${JSON.stringify(w.printed)} on example ${i + 1}, not the reference's ${JSON.stringify(r.printed)}; a wrong version passes the item's examples`)
+    }
   const want = await resultOf(reference.text, set, witness.text, result)
   if (form === 'sanitizer' && want.report) fail(file, wit.line, 'Witness', 'the reference is loud on the witness')
+  // settled by the stored verdict: the wrong version gives its stored results, the reference's and those it adds
+  if (forbids) {
+    if (!want.finished || !forbids.some(f => f !== want.out)) fail(file, wit.line, 'Witness', "the wrong version's stored results on the witness hold none but the reference's")
+    return { examples: tests.slice(0, examples.length), tests: tests.slice(examples.length), witness: { kind: 'input', text: witness.text } }
+  }
   const w1 = await verdictOn(wrong.text, witness.text, want.out)
   const w2 = await verdictOn(wrong.text, witness.text, want.out)
   if (w1 === 'same') fail(file, wit.line, 'Witness', "the wrong version gives the reference's result on the witness")
   // a sanitizer item's wrong version is loud, on the witness or on a hidden test
   if (form === 'sanitizer' && !byOutput && !w1.startsWith('loud')) {
     let loud = false
-    for (const t of hidden) if (!loud) loud = (await verdictOn(wrong.text, t.input, '')).startsWith('loud')
+    for (const t of hidden)
+      if (!loud) {
+        const v1 = await verdictOn(wrong.text, t.input, '')
+        // the same kind of report on the same line in a second run
+        loud = v1.startsWith('loud') && v1 === (await verdictOn(wrong.text, t.input, ''))
+      }
     if (!loud) fail(file, wrongS.line, 'Wrong version', 'a sanitizer item\'s wrong version is loud under the sanitizer, on the witness or a hidden test')
   }
   if (w1 !== w2) fail(file, wit.line, 'Entry check', `the wrong version's result on the witness changes between runs (${w1}, then ${w2})`)
   return { examples: tests.slice(0, examples.length), tests: tests.slice(examples.length), witness: { kind: 'input', text: witness.text } }
+}
+
+/**
+ * A stage 7 item alone: the reference passes every test, the same in a second build, its scan
+ * silent; the wrong version gives the same output on every test and its scan is loud; the witness
+ * is a program that compiles and on which the scan is silent, as the rule's bad example is not.
+ * @param {Alone} a
+ * @param {import('../../src/units/cpp/core/scan.logic.js').Scan} scan
+ */
+async function checkScanAlone({ s, file, set, result, reference, wrong, ref, wrongS, wit, witness, sub, dev }, scan) {
+  const examples = testsOf(sub('Examples')?.fences ?? [])
+  const hidden = testsOf(sub('Tests')?.fences ?? [])
+  if (!examples.length) fail(file, s.line, 'Item alone', 'a run item shows one example or more')
+  const tests = []
+  for (const t of [...examples, ...hidden]) {
+    const x = await resultOf(reference.text, set, t.input, result)
+    const y = await resultOf(reference.text, set, t.input, result, { fresh: true })
+    if (!x.compiled || !x.finished || x.code !== 0) fail(file, ref.line, 'Entry check', `the reference fails on ${JSON.stringify(t.input)}:\n${x.error}`)
+    if (x.out !== y.out) fail(file, ref.line, 'Entry check', `the reference gives another result in a second build on ${JSON.stringify(t.input)}`)
+    if (t.output !== undefined && compared(t.output) !== x.out) fail(file, ref.line, 'Entry check', `the reference prints ${JSON.stringify(x.out)} on an example that expects ${JSON.stringify(compared(t.output))}`)
+    const w = await resultOf(wrong.text, set, t.input, result)
+    if (!w.compiled || w.code !== 0 || w.out !== x.out) fail(file, wrongS.line, 'Wrong version', `it does not give the reference's output on ${JSON.stringify(t.input)}; a stage 7 wrong version breaks the rule, not the result`)
+    tests.push({ input: t.input, output: x.out })
+  }
+  const r = await hitsOf([scan], reference.text, dev, file, ref.line)
+  if (r.length) fail(file, ref.line, 'Entry check', `the scan of ${scan.rule} is loud on the reference, at its line ${r[0]?.line}`)
+  if (!(await hitsOf([scan], wrong.text, dev, file, wrongS.line)).length) fail(file, wrongS.line, 'Wrong version', `the scan of ${scan.rule} is silent on it; the wrong version breaks the rule`)
+  if (witness.lang !== (dev ? 'cuda' : 'cpp')) fail(file, wit.line, 'Witness', 'a stage 7 witness is a program, ```cpp')
+  const wb = await build(witness.text, compileOnly(dev ? { device: true } : {}))
+  if (!wb.compiled) fail(file, wit.line, 'Witness', `the witness does not compile:\n${wb.error}`)
+  if ((await hitsOf([scan], witness.text, dev, file, wit.line)).length) fail(file, wit.line, 'Witness', `the scan of ${scan.rule} is loud on the witness`)
+  return { examples: tests.slice(0, examples.length), tests: tests.slice(examples.length), witness: { kind: 'scan', text: witness.text } }
 }
 
 /**
@@ -804,13 +895,21 @@ async function checkFlagAlone({ s, file, dev, lang, set, reference, wrong, ref, 
     if (what !== 'accept' && what !== 'reject') fail(file, exp.line, 'Expect', `"${row}" ends in accept or reject`)
     for (const lv of levelsOf(range, file, exp.line)) expect[lv] = what
   }
-  const at = async (/** @type {string} */ text, /** @type {string} */ lv) => {
-    const b = await build(text, compileOnly(dev ? set : { ...set, std: /** @type {import('../../src/units/cpp/core/check.logic.js').Level} */ (lv) }))
-    return b.compiled ? 'accept' : 'reject'
-  }
+  const built = (/** @type {string} */ text, /** @type {string} */ lv) =>
+    build(text, compileOnly(dev ? set : { ...set, std: /** @type {import('../../src/units/cpp/core/check.logic.js').Level} */ (lv) }))
+  const at = async (/** @type {string} */ text, /** @type {string} */ lv) => ((await built(text, lv)).compiled ? 'accept' : 'reject')
+  // the lines where the reference is rejected: the same at every level that rejects it, stored
+  /** @type {string | null} */
+  let lines = null
   let differs = false
   for (const [lv, want] of Object.entries(expect)) {
-    if ((await at(reference.text, lv)) !== want) fail(file, ref.line, 'Entry check', `the reference does not ${want} at ${lv}`)
+    const b = await built(reference.text, lv)
+    if ((b.compiled ? 'accept' : 'reject') !== want) fail(file, ref.line, 'Entry check', `the reference does not ${want} at ${lv}`)
+    if (!b.compiled) {
+      const here = b.errors.join(', ')
+      if (lines !== null && lines !== here) fail(file, ref.line, 'Entry check', `the reference is rejected at lines ${here} at ${lv} but at ${lines} at another level`)
+      lines = here
+    }
     if ((await at(wrong.text, lv)) !== want) differs = true
   }
   if (!differs) fail(file, wrongS.line, 'Wrong version', 'it gets the stated verdict at every level; a wrong version misses one')
@@ -819,7 +918,7 @@ async function checkFlagAlone({ s, file, dev, lang, set, reference, wrong, ref, 
   const r = await at(`${reference.text}${witness.text}`, top)
   const w = await at(`${wrong.text}${witness.text}`, top)
   if (r === w) fail(file, wit.line, 'Witness', `the reference and the wrong version both ${r} the witness at ${top}`)
-  return { examples: [], tests: [], expect, witness: { kind: 'probe', text: witness.text, level: top } }
+  return { examples: [], tests: [], expect, ...(lines ? { rejects: lines.split(', ').map(Number) } : {}), witness: { kind: 'probe', text: witness.text, level: top } }
 }
 
 /**
@@ -872,6 +971,61 @@ const probeRun = (set, dev) => async (/** @type {string} */ answer, /** @type {s
   return true
 }
 
+// The scans of stage 7
+
+/**
+ * A stage 7 kind's scan: `Rule:` its number, `Pattern: /source/flags` over the answer's blanked
+ * text or `Warning: -Wname, …`, and the rule's own bad and good examples under `### Bad` and
+ * `### Good`. Entry check: loud on the bad example, silent on the good one.
+ * @param {Section} sec
+ * @param {boolean} device
+ * @param {string} file
+ */
+async function checkScan(sec, device, file) {
+  const rule = keyOf(sec, 'Rule')?.value ?? ''
+  if (!/^(P|I|F|R|ES|Con|T|Per|CP)\.\d+$/.test(rule)) fail(file, sec.line, 'Scan', 'Rule: names a Guidelines rule of P, I, F, R, ES, Con, T, Per or CP, as F.48')
+  const pat = keyOf(sec, 'Pattern')?.value.match(/^\/(.+)\/([ims]*)$/)
+  if (keyOf(sec, 'Pattern') && !pat) fail(file, keyOf(sec, 'Pattern')?.line ?? sec.line, 'Scan', 'Pattern: is /source/flags, a JavaScript regular expression')
+  const warning = (keyOf(sec, 'Warning')?.value ?? '').split(/[\s,]+/).filter(Boolean)
+  if (!pat && !warning.length) fail(file, sec.line, 'Scan', 'it names a Pattern: or a Warning:')
+  if (badFlag(warning)) fail(file, keyOf(sec, 'Warning')?.line ?? sec.line, 'Scan', `${badFlag(warning)} is not a warning flag`)
+  /** @type {import('../../src/units/cpp/core/scan.logic.js').Scan} */
+  const scan = { rule, ...(pat ? { pattern: pat[1] ?? '', ...(pat[2] ? { flags: pat[2] } : {}) } : {}), ...(warning.length ? { warning } : {}) }
+  const lang = device ? 'cuda' : 'cpp'
+  const sub = (/** @type {string} */ t) => sec.subs.find(x => x.title === t)
+  const badS = sub('Bad')
+  const goodS = sub('Good')
+  if (!badS || !goodS) fail(file, sec.line, 'Scan', 'it holds ### Bad and ### Good, the rule\'s own examples')
+  const bad = shown(fenceOf(badS, lang, file), file)
+  const good = shown(fenceOf(goodS, lang, file), file)
+  if (!(await hitsOf([scan], bad.text, device, file, badS.line)).length) fail(file, badS.line, 'Entry check', `the scan of ${rule} is silent on the rule's own bad example`)
+  const g = await hitsOf([scan], good.text, device, file, goodS.line)
+  if (g.length) fail(file, goodS.line, 'Entry check', `the scan of ${rule} is loud on the rule's own good example, at its line ${g[0]?.line}`)
+  return { scan, bad: bad.lines, good: good.lines }
+}
+
+/**
+ * The scans' hits on a program: a pattern over its text, a warning from g++ (nvcc's host compiler
+ * on the device) compiling it alone at c++23 with the warnings the scans read.
+ * @param {readonly import('../../src/units/cpp/core/scan.logic.js').Scan[]} scans
+ * @param {string} text
+ * @param {boolean} device
+ * @param {string} file
+ * @param {number} line
+ * @param {boolean} [lenient] a program that does not build at c++23 (an item alone asked to be
+ *   rejected there) is read by the patterns alone, as the app reads it
+ */
+async function hitsOf(scans, text, device, file, line, lenient = false) {
+  const flags = scanFlags(scans, device)
+  let said = ''
+  if (flags.length) {
+    const b = await build(text, compileOnly({ ...(device ? { device: true } : {}), flags }))
+    if (!b.compiled && !lenient) fail(file, line, 'Scan', `a warning scan reads the compiler, and this program does not compile:\n${b.error}`)
+    said = b.compiled ? (b.reports['resource-usage'] ?? '') : ''
+  }
+  return scanHits(scans, text, said, device ? 'main.cu' : 'main.cpp')
+}
+
 // The track
 
 /**
@@ -920,18 +1074,149 @@ async function readKind(file, stage, place, earlier) {
   const verdicts = sec(/^Verdict \d+$/)
   const alones = sec(/^Alone \d+$/)
   const counts = sec(/^Count$/)
+  const scans = sec(/^Scan$/)
+  if (stage === 7 && scans.length !== 1) fail(file, head.line, 'Kind', 'a stage 7 kind holds one ## Scan, its rule\'s scan')
+  if (stage !== 7 && scans.length) fail(file, head.line, 'Kind', 'only a stage 7 kind holds a ## Scan')
   if (!verdicts.length) fail(file, head.line, 'Kind', 'it holds ## Verdict 1')
   if (!alones.length) fail(file, head.line, 'Kind', 'it holds ## Alone 1')
   const tid = `t${id}`
+  const scan = scans[0] ? await checkScan(scans[0], device, file) : null
   const example = await checkExample(fenceOf(ex, device ? 'cuda' : 'cpp', file), device, file)
   const vs = await Promise.all(verdicts.map(async (v, i) => ({ id: `${tid}v${i + 1}`, ...(await checkVerdict(v, levels, device, file)) })))
   const count = counts[0] ? { id: `${tid}c`, ...(await checkCount(counts[0], device, file)) } : null
-  const as = await Promise.all(alones.map(async (a, i) => ({ ...(await checkAlone(a, device, file)), id: `${tid}a${i + 1}` })))
+  const as = await Promise.all(alones.map(async (a, i) => ({ ...(await checkAlone(a, device, file, scan?.scan ?? null)), id: `${tid}a${i + 1}` })))
   return {
-    shape: { id, stage, name, part, after, clause, levels, device, verdicts: vs.map(v => v.id), count: count?.id ?? null, alones: as.map(a => a.id) },
-    content: { id, source, example, verdicts: vs, count, alones: as }
+    shape: { id, stage, name, part, after, clause, levels, device, verdicts: vs.map(v => v.id), count: count?.id ?? null, alones: as.map(a => a.id), ...(scan ? { scan: scan.scan } : {}) },
+    content: { id, source, example, verdicts: vs, count, alones: as, ...(scan ? { scan: { bad: scan.bad, good: scan.good } } : {}) }
   }
 }
+
+// The reading
+
+/**
+ * One task of the track's reading (The track's reading): `# 0.NN <name>`, `Task:` the paper's
+ * wording of the task, `Shape:` the QUDA files whose routine was read to choose its shape, its
+ * statement lines; `## Bound`, the count the task bounds (`Count:` what, `Answer:` the number,
+ * `Source:` the library's file and how it gives it, two derivations); its verdict items, its count
+ * item where it has one, and one item alone with its witness. Every item names with `Tag:` the
+ * track kind whose part its check tests. `Newer: 12, 30` on the item alone names the lines of the
+ * reference that need c++23: g++ (nvcc on the device) rejects it at c++20 at exactly those lines.
+ * @param {string} file
+ * @param {number} place
+ * @param {ReadonlySet<string>} kinds the track's kinds, which a tag names
+ * @param {ReadonlyMap<string, readonly string[]>} [clauses] each kind's clauses: a task shows the clauses of the parts its checks test
+ */
+async function readTask(file, place, kinds, clauses = new Map()) {
+  const [, ...secs] = sectionsOf(file)
+  const id = `0.${String(place).padStart(2, '0')}`
+  const head = secs[0]
+  if (!head || !head.title.startsWith(`${id} `)) fail(file, 1, 'Task', `the file opens "# ${id} <name>", the task's place`)
+  const name = head.title.slice(id.length + 1)
+  const task = keyOf(head, 'Task')?.value ?? ''
+  const shape = keyOf(head, 'Shape')?.value ?? ''
+  if (!task || !shape) fail(file, head.line, 'Task', 'it names its Task:, as the paper words it, and its Shape:, the QUDA files read to choose it')
+  const intro = head.text.map(t => t.value)
+  if (!intro.length) fail(file, head.line, 'Task', 'its statement stands under the header, in plain words')
+  const device = keyOf(head, 'Device')?.value === 'yes'
+  const levels = levelsOf(keyOf(head, 'Levels')?.value ?? 'c++23', file, keyOf(head, 'Levels')?.line ?? head.line)
+  const sec = (/** @type {RegExp} */ re) => secs.filter(x => re.test(x.title))
+  const b = sec(/^Bound$/)[0]
+  if (!b) fail(file, head.line, 'Task', 'it holds ## Bound, the count the task bounds')
+  const answer = Number(keyOf(b, 'Answer')?.value)
+  const bound = {
+    count: keyOf(b, 'Count')?.value ?? '',
+    answer,
+    source: keyOf(b, 'Source')?.value ?? '',
+    derivations: [keyOf(b, 'Derivation 1')?.value ?? '', keyOf(b, 'Derivation 2')?.value ?? '']
+  }
+  if (!bound.count || !Number.isInteger(answer) || answer < 0 || !bound.source) fail(file, b.line, 'Bound', 'it names its Count:, its Answer: (a whole number) and its Source:, the library file that gives it')
+  if (!bound.derivations.every(Boolean)) fail(file, b.line, 'Bound', 'the bound is derived twice: Derivation 1: and Derivation 2:, written apart')
+  const verdicts = sec(/^Verdict \d+$/)
+  const counts = sec(/^Count$/)
+  const alones = sec(/^Alone \d+$/)
+  if (alones.length !== 1) fail(file, head.line, 'Task', 'it holds one ## Alone 1, the item alone with its witness')
+  /** @type {Record<string, string>} */
+  const tags = {}
+  const tagOf = (/** @type {Section} */ x, /** @type {string} */ item) => {
+    const t = keyOf(x, 'Tag')?.value ?? ''
+    if (!kinds.has(t)) fail(file, x.line, 'Tag', `"${t}" is not a kind of the track; each check names the kind whose part it tests`)
+    tags[item] = t
+  }
+  const tid = `t${id}`
+  tagOf(b, `${tid}b`)
+  verdicts.forEach((v, i) => tagOf(v, `${tid}v${i + 1}`))
+  if (counts[0]) tagOf(counts[0], `${tid}c`)
+  tagOf(/** @type {Section} */ (alones[0]), `${tid}a1`)
+  tags[`${tid}w1`] = tags[`${tid}a1`] ?? ''
+  const vs = await Promise.all(verdicts.map(async (v, i) => ({ id: `${tid}v${i + 1}`, ...(await checkVerdict(v, levels, device, file)) })))
+  const count = counts[0] ? { id: `${tid}c`, ...(await checkCount(counts[0], device, file)) } : null
+  const a = { ...(await checkAlone(/** @type {Section} */ (alones[0]), device, file)), id: `${tid}a1` }
+  const newer = (keyOf(/** @type {Section} */ (alones[0]), 'Newer')?.value ?? '').split(/[\s,]+/).filter(Boolean).map(Number)
+  if (newer.length) {
+    const old = await build(`${a.reference.join('\n')}\n`, compileOnly({ ...a.settings, std: 'c++20' }))
+    if (old.compiled || old.errors.join(', ') !== newer.join(', ')) fail(file, alones[0]?.line ?? 1, 'Newer', `at c++20 ${a.device ? 'nvcc' : 'g++'} rejects the reference at lines ${old.compiled ? 'none' : old.errors.join(', ')}, not exactly at ${newer.join(', ')}`)
+  }
+  return {
+    shape: { id, stage: 0, name, part: task, after: [], clause: [...new Set(Object.values(tags).flatMap(t => clauses.get(t) ?? []))], levels, device, verdicts: vs.map(v => v.id), count: count?.id ?? null, alones: [a.id], task, shape, intro, bound, tags, ...(newer.length ? { newer } : {}) },
+    content: { id, source: shape, example: { lines: [], labels: [] }, verdicts: vs, count, alones: [{ ...a, ...(newer.length ? { newer, statement: [...a.statement, `Your program uses C++23 where the reference does: ${a.device ? 'nvcc' : 'g++'} must accept it at c++23 and reject it at c++20.`] } : {}) }] }
+  }
+}
+
+/**
+ * The reading's tasks, each checked; none when the folder is missing. The first reading is
+ * `reading/NN-slug.md`; the reading written after the r-th wrong one is `reading/<r>/NN-slug.md`.
+ * NN is the task's number of the nine, and a task's id is 0.<r><n> (the first reading's 0.0<n>).
+ * @param {string} dir
+ * @param {ReadonlySet<string>} kinds
+ * @param {ReadonlyMap<string, readonly string[]>} [clauses]
+ */
+async function readReading(dir, kinds, clauses = new Map()) {
+  const folder = path.join(dir, 'reading')
+  if (!existsSync(folder)) return { tasks: [], gaps: [] }
+  // tasks.txt: the paper's nine tasks, "<n> <wording>"; a task file is NN-slug.md, NN its number
+  const listed = readFileSync(path.join(folder, 'tasks.txt'), 'utf8').split('\n').flatMap(l => {
+    const m = l.match(/^(\d) (.+)$/)
+    return m ? [{ n: Number(m[1]), task: m[2] ?? '' }] : []
+  })
+  const rounds = [0, ...readdirSync(folder).filter(f => /^[1-9]$/.test(f)).map(Number).sort((a, b) => a - b)]
+  const tasks = []
+  const gaps = []
+  for (const round of rounds) {
+    const here = round ? path.join(folder, String(round)) : folder
+    const files = readdirSync(here).filter(f => /^0[1-9]-.*\.md$/.test(f)).sort()
+    // the gap rule: a task for which nothing passes its entry check is shown by name and not read;
+    // its reason is printed for whoever builds it
+    const read = await Promise.all(
+      files.map(async f => {
+        const n = Number(f.slice(0, 2))
+        if (!listed.some(t => t.n === n)) fail(path.join(here, f), 1, 'Task', 'its number is not one of the nine tasks of tasks.txt')
+        try {
+          const t = await readTask(path.join(here, f), round * 10 + n, kinds, clauses)
+          return round ? { ...t, shape: { ...t.shape, round } } : t
+        } catch (e) {
+          console.error(`The reading leaves out task ${n}${round ? ` of reading ${round + 1}` : ''}: ${e instanceof Error ? e.message : String(e)}`)
+          return null
+        }
+      })
+    )
+    tasks.push(...read.flatMap(t => (t ? [t] : [])))
+    const built = new Set(files.filter((_, i) => read[i]).map(f => Number(f.slice(0, 2))))
+    gaps.push(...listed.filter(t => !built.has(t.n)).map(t => (round ? { ...t, round } : t)))
+  }
+  return { tasks, gaps }
+}
+
+/**
+ * The ids of every kind file of the track, read from the file names alone.
+ * @param {string} dir
+ */
+const kindIdsIn = dir =>
+  new Set(
+    readStages(dir).flatMap(st => {
+      const folder = path.join(dir, String(st.n))
+      return existsSync(folder) ? readdirSync(folder).filter(f => /^\d\d-.*\.md$/.test(f)).map(f => `${st.n}.${f.slice(0, 2)}`) : []
+    })
+  )
 
 /**
  * One kind file checked alone, while its stage is being written: its id from its folder and file
@@ -939,11 +1224,15 @@ async function readKind(file, stage, place, earlier) {
  * @param {string} file
  */
 export async function checkKindFile(file) {
+  const up = path.basename(path.dirname(file))
+  if (up === 'reading') return readTask(file, Number(path.basename(file).slice(0, 2)), kindIdsIn(path.dirname(path.dirname(file))))
+  if (/^[1-9]$/.test(up) && path.basename(path.dirname(path.dirname(file))) === 'reading')
+    return readTask(file, Number(up) * 10 + Number(path.basename(file).slice(0, 2)), kindIdsIn(path.dirname(path.dirname(path.dirname(file)))))
   const stage = Number(path.basename(path.dirname(file)))
   const place = Number(path.basename(file).slice(0, 2))
   if (!stage || !place) throw new Error(`${file}: a kind file is content/track/<stage>/NN-slug.md`)
-  const before = new Set()
-  for (let s = 1; s <= stage; s++) for (let n = 1; n < (s === stage ? place : 100); n++) before.add(`${s}.${String(n).padStart(2, '0')}`)
+  const id = (/** @type {string} */ k) => k.split('.').map(Number)
+  const before = new Set([...kindIdsIn(path.dirname(path.dirname(file)))].filter(k => { const [s = 0, n = 0] = id(k); return s < stage || (s === stage && n < place) }))
   return readKind(file, stage, place, before)
 }
 
@@ -953,8 +1242,13 @@ export async function checkKindFile(file) {
  * @param {string} [dir]
  */
 export async function buildTrack(dir = TRACK) {
-  if (!existsSync(dir)) return { stages: [], kinds: [], content: {} }
-  const stages = readStages(dir)
+  if (!existsSync(dir)) return { stages: [], kinds: [], content: {}, reading: [], gaps: [] }
+  // a stage's rules.txt (stage 7: the Guidelines rules a scan settles, and those left out and why) is
+  // shown when the stage opens
+  const stages = readStages(dir).map(st => {
+    const list = path.join(dir, String(st.n), 'rules.txt')
+    return existsSync(list) ? { ...st, rules: readFileSync(list, 'utf8').split('\n').filter(l => l.trim() && !l.startsWith('#')) } : st
+  })
   /** @type {Set<string>} */
   const earlier = new Set()
   const kinds = []
@@ -967,11 +1261,13 @@ export async function buildTrack(dir = TRACK) {
     if (!existsSync(folder) || st.n > upto) continue
     const files = readdirSync(folder).filter(f => f.endsWith('.md')).sort()
     const built = []
+    // a kind's number is its part's place in the paper's list (cpp-order.md), so a part that has
+    // no kind leaves its number unused and every other id stays as the paper numbers it
+    const places = files.map(f => Number(f.match(/^(\d\d)-/)?.[1] ?? 0))
     for (const [i, f] of files.entries()) {
-      if (!f.startsWith(`${String(i + 1).padStart(2, '0')}-`)) fail(path.join(folder, f), 1, 'Kind', `the files of a stage are numbered 01-, 02-, … in order; this is file ${i + 1}`)
-      const id = `${st.n}.${String(i + 1).padStart(2, '0')}`
-      built.push(readKind(path.join(folder, f), st.n, i + 1, new Set([...earlier, ...files.slice(0, i).map((_, j) => `${st.n}.${String(j + 1).padStart(2, '0')}`)])))
-      void id
+      const place = places[i] ?? 0
+      if (!place || places.indexOf(place) !== i) fail(path.join(folder, f), 1, 'Kind', 'a kind file is NN-slug.md, its part\'s number in the stage, used once')
+      built.push(readKind(path.join(folder, f), st.n, place, new Set([...earlier, ...places.slice(0, i).map(n => `${st.n}.${String(n).padStart(2, '0')}`)])))
     }
     const done = await Promise.all(built)
     for (const k of done) {
@@ -980,5 +1276,34 @@ export async function buildTrack(dir = TRACK) {
       content[st.n] = { ...(content[st.n] ?? {}), [k.shape.id]: k.content }
     }
   }
-  return { stages, kinds, content }
+  const { tasks: reading, gaps } = upto >= 9 ? await readReading(dir, new Set(kinds.map(k => k.id)), new Map(kinds.map(k => [k.id, k.clause]))) : { tasks: [], gaps: [] }
+  if (reading.length) content[0] = Object.fromEntries(reading.map(t => [t.shape.id, t.content]))
+  await scansOverReferences(kinds, content)
+  return { stages, kinds, content, reading: reading.map(t => t.shape), gaps }
+}
+
+/**
+ * Every scan of stage 7 runs over every answer written once its kind is retired, so every item
+ * alone's reference, in every stage, is silent under every scan its statement does not exempt:
+ * a learner who writes the reference is never marked wrong by a scan.
+ * @param {readonly { id: string, scan?: import('../../src/units/cpp/core/scan.logic.js').Scan }[]} kinds
+ * @param {Record<number, Record<string, any>>} content
+ */
+async function scansOverReferences(kinds, content) {
+  const scans = kinds.flatMap(k => (k.scan ? [k.scan] : []))
+  if (!scans.length) return
+  const jobs = []
+  for (const [stage, ks] of Object.entries(content))
+    for (const k of Object.values(ks))
+      for (const a of k.alones) {
+        if (a.form === 'orders') continue
+        const own = scans.filter(x => !(a.exempt ?? []).includes(x.rule))
+        const file = path.join(TRACK, stage, `${k.id}`)
+        jobs.push(
+          hitsOf(own, `${a.reference.join('\n')}\n`, a.device, file, 1, true).then(hits => {
+            if (hits[0]) fail(file, 1, 'Scan', `${a.id}'s reference breaks rule ${hits[0].rule} at its line ${hits[0].line}; write it so the scan is silent, or ask for the break in the statement with Exempt: ${hits[0].rule}`)
+          })
+        )
+      }
+  await Promise.all(jobs)
 }

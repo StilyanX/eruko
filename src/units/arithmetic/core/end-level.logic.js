@@ -3,15 +3,20 @@
 // problems, the timed sheet that passes with no errors, in no more time and inside the line's own
 // bar, the passing sheet as the line's first dated line, and returns decided on errors alone. A
 // sheet shows one problem at a time and clocks it from its appearance to its last key; after an
-// untimed or timed sheet each entry is retyped and the retyping time taken off its problem. The record is the `end` field of the unit's part, read by `decodeEnd`.
+// untimed or timed sheet each entry is retyped and the retyping time taken off its problem. A
+// line opens on its number-facts set, or on every set and its section; one line is in hand until
+// it passes, drilled in what the gate's one block a day leaves after the gate's own drill; a
+// sheet due back, and the missed problems of a returned sheet, fall outside the block (Opens, In
+// hand, Block). The record is the `end` field of the unit's part, read by `decodeEnd`.
 // Pure functions over plain data.
 import { RETENTION, addDays, isDue, nextOf, writeLine } from '../../../kernel/days.logic.js'
 import { isRecord } from '../../../kernel/decode.logic.js'
 import { unreachable } from '../../../kernel/invariant.logic.js'
-import { HOUR_MS } from '../../../kernel/facts.logic.js'
+import { HOUR_MS, drillToday, factsPassed, allFactsPassed } from '../../../kernel/facts.logic.js'
 import { linesOf } from '../../../kernel/practice.logic.js'
 import { drawPair, drawSheet } from './end-draw.logic.js'
 import {
+  LINES,
   LINE_IDS,
   allowanceOf,
   answerValue,
@@ -300,46 +305,92 @@ export function linePassed(rec) {
 }
 
 /**
- * Seconds of end-level drill today: a day holds one block.
+ * Seconds of end-level drill today.
  * @param {EndRecord} end
  * @param {string} today
  */
 const drillSeconds = (end, today) => (end.spent?.day === today ? end.spent.seconds : 0)
 
 /**
+ * What the rest of the record allows the end level today: the lines open, in the order of Opens,
+ * and the seconds of the number facts' one block a day left to it, none while the gate still has
+ * a sheet to drill.
+ * @typedef {Readonly<{ open: readonly import('./end-lines.logic.js').LineId[], left: number }>} Gate
+ */
+
+/**
+ * The gate the end level runs in: a line is open once its set has passed, or every set has
+ * passed and its section is finished (`finished`, the sections' titles); a line once begun
+ * stays open. The block left is what the gate's drill has not spent today, once it has none left.
+ * @param {EndRecord} end
+ * @param {import('../../../kernel/facts.logic.js').FactsRecord} facts
+ * @param {ReadonlySet<string>} finished
+ * @param {string} today
+ * @returns {Gate}
+ */
+export function gateOf(end, facts, finished, today) {
+  const all = allFactsPassed(facts)
+  const open = LINES.filter(l =>
+    end.lines?.[l.id] !== undefined || ('set' in l.opens ? factsPassed(facts[l.opens.set]) : all && finished.has(l.opens.section))
+  ).map(l => l.id)
+  const spent = facts.spent?.day === today ? facts.spent.seconds : 0
+  return { open, left: drillToday(facts, today) ? 0 : Math.max(0, HOUR_MS / 1000 - spent) }
+}
+
+/**
+ * The line in hand for drill: a line begun and not passed, held until it passes, else the first
+ * open line, in the order of Opens, not passed.
+ * @param {EndRecord} end
+ * @param {Gate} gate
+ */
+export function drillLine(end, gate) {
+  const unpassed = gate.open.filter(id => !linePassed(end.lines?.[id]))
+  return unpassed.find(id => end.lines?.[id] !== undefined) ?? unpassed[0] ?? null
+}
+
+/**
+ * A sheet due back: a passed line's return, or the missed problems of a returned sheet.
+ * @param {SheetKind | null} kind
+ * @param {LineRecord | undefined} rec
+ */
+const dueBack = (kind, rec) => kind === 'return' || (kind === 'misses' && rec?.missFrom === 'return')
+
+/**
  * What a line offers today: an untimed sheet, a timed sheet, a return, a sheet of missed
- * problems, or nothing. A return's missed problems decide it the day after; a drill sheet's count
- * toward the day's block.
+ * problems, or nothing. A return's missed problems decide it the day after, outside the block;
+ * the line in hand's drill sheets run in what the block leaves.
  * @param {EndRecord} end
  * @param {import('./end-lines.logic.js').LineId} id
  * @param {string} today
+ * @param {Gate} gate
  * @returns {SheetKind | null}
  */
-export function lineStep(end, id, today) {
+export function lineStep(end, id, today, gate) {
   /** @type {LineRecord} */
   const rec = end.lines?.[id] ?? {}
-  if (rec.misses?.length) {
-    if (rec.missFrom === 'return') return (rec.missDay ?? '') < today ? 'misses' : null
-    return drillSeconds(end, today) < HOUR_MS / 1000 ? 'misses' : null
-  }
+  if (rec.misses?.length && rec.missFrom === 'return') return (rec.missDay ?? '') < today ? 'misses' : null
   if (linePassed(rec)) return isDue(rec.returns, today) ? 'return' : null
-  if (rec.failed === today) return null
-  if (drillSeconds(end, today) >= HOUR_MS / 1000) return null
+  if (id !== drillLine(end, gate) || rec.failed === today || drillSeconds(end, today) >= gate.left) return null
+  if (rec.misses?.length) return 'misses'
   return rec.clean ? 'timed' : 'untimed'
 }
 
 /**
- * The line in hand today: the first in order with a sheet to work, and its kind.
+ * The sheet to work today: a sheet due back first, in the order of Opens, then the drill of the
+ * line in hand.
  * @param {EndRecord} end
  * @param {string} today
+ * @param {Gate} gate
  * @returns {{ line: import('./end-lines.logic.js').LineId, kind: SheetKind } | null}
  */
-export function lineInHand(end, today) {
+export function lineInHand(end, today, gate) {
   for (const line of LINE_IDS) {
-    const kind = lineStep(end, line, today)
-    if (kind) return { line, kind }
+    const kind = lineStep(end, line, today, gate)
+    if (kind && dueBack(kind, end.lines?.[line])) return { line, kind }
   }
-  return null
+  const line = drillLine(end, gate)
+  const kind = line && lineStep(end, line, today, gate)
+  return line && kind ? { line, kind } : null
 }
 
 /**
@@ -350,15 +401,17 @@ export const lineNext = rec =>
   rec?.missFrom === 'return' && rec.misses?.length && rec.missDay ? addDays(rec.missDay, 1) : nextOf(rec?.returns)
 
 /**
- * How many lines have a drill sheet today (not yet passed).
+ * How many lines have a drill sheet today: the line in hand, or none.
  * @param {EndRecord} end
  * @param {string} today
+ * @param {Gate} gate
  */
-export const drillLines = (end, today) =>
-  LINE_IDS.filter(id => {
-    const k = lineStep(end, id, today)
-    return k === 'untimed' || k === 'timed' || (k === 'misses' && !linePassed(end.lines?.[id]))
-  }).length
+export function drillLines(end, today, gate) {
+  const line = drillLine(end, gate)
+  if (!line) return 0
+  const kind = lineStep(end, line, today, gate)
+  return kind && !dueBack(kind, end.lines?.[line]) ? 1 : 0
+}
 
 /** @param {EndRecord} end */
 export const linesPassed = end => LINE_IDS.filter(id => linePassed(end.lines?.[id])).length
@@ -374,12 +427,13 @@ export const endPassed = end => linesPassed(end) === LINE_IDS.length
  * @param {EndSheet | undefined} sheet
  * @param {EndRecord} end
  * @param {string} today
+ * @param {Gate} gate
  * @returns {sheet is EndSheet}
  */
-export function sheetHeld(sheet, end, today) {
+export function sheetHeld(sheet, end, today, gate) {
   if (!sheet || sheet.typed.length !== sheet.problems.length || sheet.i > sheet.problems.length) return false
   if (sheet.result) return sheet.day === today
-  const step = lineStep(end, sheet.line, today)
+  const step = lineStep(end, sheet.line, today, gate)
   if (sheet.kind === 'misses') return step === 'misses'
   if (sheet.kind === 'untimed') return step === 'untimed'
   return step === 'timed' || step === 'return'
@@ -783,7 +837,7 @@ function checkSheet(end, nowMs, today) {
 /**
  * A move on the end level.
  * @typedef {Readonly<
- *   | { t: 'end-begin', seed: number, nowMs: number, day: string }
+ *   | { t: 'end-begin', seed: number, nowMs: number, day: string, gate: Gate }
  *   | { t: 'end-type', value: string, nowMs: number }
  *   | { t: 'end-enter', nowMs: number, day: string }
  *   | { t: 'end-next', nowMs: number, day: string }
@@ -819,7 +873,7 @@ function changeSheet(end, change, nowMs, day) {
 export function endStep(end, move) {
   switch (move.t) {
     case 'end-begin': {
-      const hand = lineInHand(end, move.day)
+      const hand = lineInHand(end, move.day, move.gate)
       if (!hand || (end.sheet && !end.sheet.result)) return end
       const { problems, rec } = drawFor(end.lines?.[hand.line] ?? {}, hand.line, hand.kind, move.seed, move.nowMs)
       return {

@@ -1,4 +1,4 @@
-// Hides: the start screen's checks, once, before the first session: the network's file to choose,
+// Hides: the start screen's checks, once, when the first game comes: the network's file to choose,
 // a check that the engine answers through the relay, the speed test in visits a second, and the
 // server's user name. The engine and the user name are each kept as soon as it is right, so one
 // does not wait on the other. Nothing to set after.
@@ -163,7 +163,8 @@ export class GoSetUp extends Screen {
             value: this.user,
             onChange: v => this.#set({ user: v }),
             why: this.serverWhy,
-            whyId: 'go-server-why'
+            whyId: 'go-server-why',
+            autocomplete: 'username'
           })
         ),
         why(this.serverWhy, 'go-server-why'),

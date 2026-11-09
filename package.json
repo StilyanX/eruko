@@ -1,6 +1,6 @@
 {
   "name": "eruko",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Self-hosted study app: each unit a course under its own self-study system. No accounts, no backend, no tracking.",
   "type": "module",
   "scripts": {

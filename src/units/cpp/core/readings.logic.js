@@ -2,7 +2,7 @@
 // it: The contest, A change of series or method; The first stage: First reading; Kinds, first runs,
 // and readings against noise: Noise line; The build, Programming, The checks: First reading,
 // Gate 2): when a reading falls due, what it reads (the mean and standard deviation of 10 rated
-// performances, and the share of never-tried problems right at the first submit in mixed
+// performances, and the share of never-tried problems right at the first check in mixed
 // practice), whether either dropped past its noise line, and the reading screen's lines. A
 // reading is shown and holds nothing: new kinds open as gate 3 allows.
 import { daysBetween } from '../../../kernel/days.logic.js'
@@ -206,7 +206,7 @@ export function withReading(record, day) {
 
 /**
  * The reading screen's lines for the last reading, in the paper's words: the performance, the
- * first submits right, each beside the last where the last was read, then what the reading
+ * first checks right, each beside the last where the last was read, then what the reading
  * says. Before the first reading: each performance as read, and "Not settled."
  * @param {import('./decode.logic.js').CppRecord} record
  * @returns {string[]}
@@ -230,10 +230,10 @@ export function readingLines(record) {
     now.mean === null
       ? 'Performance not read: fewer than 10 contests.'
       : `Performance ${r(now.mean)}, last 10 contests.${lastMean}`
-  const solving = `Right at the first submit: ${right(now)}.${last ? ` Last: ${right(last)}.` : ''}`
+  const solving = `Right at the first check: ${right(now)}.${last ? ` Last: ${right(last)}.` : ''}`
   const says =
     now.state === 'held'
-      ? 'Your performance or your first submits in mixed practice dropped since the last reading. New kinds stay open.'
+      ? 'Your performance or your first checks in mixed practice dropped since the last reading. New kinds stay open.'
       : 'No drop since the last reading. New kinds stay open.'
   return [performance, solving, says]
 }

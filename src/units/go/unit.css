@@ -12,6 +12,11 @@
   go-start .go-board {
     margin: var(--space-4) 0;
   }
+  /* Start's steps name an address, a network file and a command, each one long word: they break
+     anywhere rather than push the page sideways. */
+  go-start .lrn li {
+    overflow-wrap: anywhere;
+  }
   /* A board is drawn at its real size and scrolls in this box when it is wider than its column. */
   go-work .lrn-figure-scroll,
   go-review .lrn-figure-scroll,
@@ -147,6 +152,15 @@
   go-review .go-board figcaption,
   go-start .go-board figcaption {
     font-size: var(--type-body);
+  }
+  /* A whole board's overview line opens its stone list: a target of the full size. */
+  go-work .go-board summary,
+  go-review .go-board summary,
+  go-start .go-board summary {
+    box-sizing: border-box;
+    min-height: var(--target);
+    padding-block: var(--space-2);
+    cursor: pointer;
   }
   /* The text beside a board: its stones as a plain list. */
   go-work .go-text,

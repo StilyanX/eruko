@@ -38,9 +38,6 @@ export function beginStep(course, record) {
 }
 
 export class CppBegin extends StepScreen {
-  /** How many rows of the filled trace show: the first at once, then one a press. */
-  #shown = 1
-
   setup() {
     this.watch(cppStore())
     this.watch(kindsLoaded)
@@ -63,12 +60,12 @@ export class CppBegin extends StepScreen {
         const start = content?.start
         if (!start) return null
         const onNext = () => send({ t: 'start-read', day: today() })
+        const { shown } = record.position
         const onRow = () => {
-          this.#shown += 1
-          say(rowSaid(start, this.#shown - 1))
-          this.update()
+          say(rowSaid(start, shown))
+          send({ t: 'start-row' })
         }
-        return step(filledTrace(start, this.#shown, { onRow, onNext }), { key: 'start' })
+        return step(filledTrace(start, shown, { onRow, onNext }), { key: 'start' })
       }
       case 'practice':
         return step(

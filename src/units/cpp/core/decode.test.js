@@ -24,7 +24,7 @@ import {
 import { studyDay } from '../../../kernel/days.logic.js'
 
 const course = courseFrom(
-  [{ title: 'First kinds', first: 1, last: 2 }],
+  [{ title: 'Whole programs', first: 1, last: 2 }],
   [
     { id: 1, name: 'a', after: [], plan: [], problems: ['1.01', '1.02'], trace: 'T1' },
     { id: 2, name: 'b', after: [1], plan: [], problems: ['2.01'], trace: 'T2' }
@@ -35,7 +35,11 @@ test('ids: a trace item by its T, a problem otherwise; a kind content module rea
   assert.equal(isTrace(itemId('T7')), true)
   assert.equal(isTrace(itemId('7.03')), false)
   const KIND = { id: 1 }
-  assert.deepEqual(kindContentOf({ KIND }), { start: null, id: 1 }, 'a kind with no filled trace')
+  assert.deepEqual(
+    kindContentOf({ KIND }),
+    { start: null, traces: [], id: 1 },
+    'a kind with no filled trace and no returning trace'
+  )
   const start = { id: 'S1', lines: [], columns: [], input: '', rows: [] }
   assert.deepEqual(kindContentOf({ KIND: { ...KIND, start } }).start, start)
 })
@@ -55,12 +59,13 @@ test('an empty or odd record reads as a fresh one, the first kind at its filled 
     contests: [],
     practice: '',
     readings: [],
-    position: { open: null, pasted: '' },
+    position: { open: null, pasted: '', shown: 1 },
     sessions: [],
     turn: null,
     track: [],
     trackTries: [],
     trackTurn: null,
+    trackReading: { round: 0, task: 0, at: 0, wrong: [], done: '', reopened: [] },
     side: null,
     pin: null
   })
@@ -117,6 +122,27 @@ test('a stored record keeps what the course holds and leaves out what it does no
   )
 })
 
+test("a retired kind is dated: its line kept; a record from before kinds were dated gets one, right, the day it retired, its problems' lines kept", () => {
+  const k1 = [{ date: '2026-10-03', right: false, next: '2026-10-04' }]
+  const old = {
+    course: [
+      { kind: 1, opened: '2026-10-01', retired: '2026-10-01', part: 'alone' },
+      { kind: 2, opened: '2026-10-01', retired: '2026-10-02', part: 'alone' }
+    ],
+    recall: {
+      1.02: [{ date: '2026-10-01', right: true, next: '2026-10-09' }],
+      2.01: [{ date: '2026-10-02', right: false, next: '2026-10-03' }]
+    }
+  }
+  const r = decodeRecord(old, course)
+  // kind 1 comes back when its problem dated right would have; kind 2 the day after it retired
+  assert.deepEqual(r.recall.K1, [{ date: '2026-10-01', right: true, next: '2026-10-09' }])
+  assert.deepEqual(r.recall.K2, [{ date: '2026-10-02', right: true, next: '2026-10-03' }])
+  assert.deepEqual(r.recall['2.01'], old.recall['2.01'])
+  assert.deepEqual(decodeRecord({ ...old, recall: { K1: k1 } }, course).recall.K1, k1)
+  assert.deepEqual(decodeRecord({ recall: { K1: k1, K9: k1 } }, course).recall, { K1: k1 })
+})
+
 test('the item left open is reopened as it stood, its run and its last run kept; one the course no longer holds is not', () => {
   /** @param {unknown} open */
   const reopen = open => decodeRecord({ position: { open, pasted: '2026-10-06' } }, course).position
@@ -125,7 +151,8 @@ test('the item left open is reopened as it stood, its run and its last run kept;
     reopen({ ...asked, code: 'x', running: 'submit', ran: { compiled: true, runs: [] } }),
     {
       open: { ...asked, code: 'x', running: 'submit', ran: { compiled: true, runs: [] } },
-      pasted: '2026-10-06'
+      pasted: '2026-10-06',
+      shown: 1
     }
   )
   assert.deepEqual(reopen({ ...asked, code: 'x', running: 'x', ran: { compiled: 3 } }).open, {

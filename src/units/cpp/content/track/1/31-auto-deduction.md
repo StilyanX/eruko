@@ -1,8 +1,8 @@
 # 1.31 `auto` and `decltype(auto)` deduction
 Part: `auto` and `decltype(auto)` deduction
-Clause: [dcl.spec.auto], [dcl.type.auto.deduct], [dcl.type.decltype], [temp.deduct.call]
+Clause: [dcl.spec.auto], [dcl.type.auto.deduct], [dcl.type.decltype], [temp.deduct.call], [expr.prim.id.unqual]
 After: none
-Levels: c++23
+Levels: c++20
 
 ## Example
 ```cpp
@@ -45,20 +45,20 @@ int main()
 ```cpp
 #include <type_traits>
 
-int total {0};
-
-decltype(auto) get()
+decltype(auto) pass(int&& x)
 {
-    return (total);
+    return (x);
 }
 
-static_assert(std::is_same_v<decltype(get()), int>);
+static_assert(std::is_same_v<decltype(pass(1)), int&>);
 
 int main()
 {
 }
 ```
-Answer: c++23 ill-formed 10
+Answer:
+- c++20: defined
+- c++23: ill-formed 8
 
 ## Verdict 2
 ```cpp
@@ -74,7 +74,7 @@ int main()
     static_assert(std::is_same_v<decltype(b), const int&>);
 }
 ```
-Answer: c++23 defined
+Answer: c++20 defined
 
 ## Alone 1
 Form: probes

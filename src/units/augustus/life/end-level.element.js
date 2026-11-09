@@ -120,7 +120,8 @@ export class AugustusEndLevel extends LifeScreen {
     }
     const views = [() => this.#gaps(now), () => this.#witnesses(now), () => this.#footing(now)]
     return step([
-      h('h3', { tabindex: '-1' }, 'The end level'),
+      // a new heading for each part, so focus put on it after a turn is never the node that held it
+      h('h3', { key: `head-${at}`, tabindex: '-1' }, 'The end level'),
       at < 3 ? views[at]?.() : this.#reading(now, reading, at - 3),
       turn({
         label: 'The parts of the round',

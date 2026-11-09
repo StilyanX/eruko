@@ -10,9 +10,9 @@
 export const LEVELS = ['c++11', 'c++14', 'c++17', 'c++20', 'c++23']
 
 /** @typedef {'address' | 'thread'} HostSanitizer `-fsanitize=address,undefined` or `-fsanitize=thread`, each in its own run */
-/** @typedef {'memcheck' | 'initcheck' | 'racecheck' | 'synccheck'} DeviceTool The one tool of compute-sanitizer a device check runs */
+/** @typedef {'memcheck' | 'initcheck' | 'racecheck'} DeviceTool The one tool of compute-sanitizer a device check runs */
 /** @type {readonly DeviceTool[]} */
-export const TOOLS = ['memcheck', 'initcheck', 'racecheck', 'synccheck']
+export const TOOLS = ['memcheck', 'initcheck', 'racecheck']
 
 /**
  * The flags an item may add, each a part's own subject (`-ffp-contract`, `-fmad`, `-ftz`) or what
@@ -36,8 +36,8 @@ const EXTRA = new Set([
   '-c'
 ])
 
-/** The device's architecture flag: the RTX 4050 is compute capability 8.9. */
-const ARCH = 'sm_89'
+/** The device's architecture: nvcc's `native`, the compute capability of the GPU present, which the pin stores. */
+const ARCH = 'native'
 
 /**
  * A run's settings as an item names them; `debug` builds for gdb (`-g -O0`).
@@ -49,7 +49,10 @@ const ARCH = 'sm_89'
  * @param {readonly string[] | undefined} flags
  * @returns {string | null}
  */
-export const badFlag = flags => (flags ?? []).find(f => !EXTRA.has(f)) ?? null
+export const badFlag = flags => (flags ?? []).find(f => !EXTRA.has(f) && !WARNING.test(f)) ?? null
+
+/** A warning a Guidelines scan reads (`-Wold-style-cast`, `-Xcompiler=-W…` for nvcc's host compiler); a warning never fails a build, and `-Werror` is not one. */
+const WARNING = /^(?:-Xcompiler=)?-W(?!error)[a-z][a-z0-9-]*(?:=\d+)?$/
 
 /**
  * g++'s arguments for a host program: the level, `-pedantic-errors` always, so an extension is an
@@ -185,7 +188,7 @@ export function hostReport(stderr, file = 'main.cpp') {
     const at = stderr.slice(stderr.indexOf('ERROR: AddressSanitizer'))
     return { tool: 'address', kind: asan[1] ?? '', line: lineIn(at, file) }
   }
-  const tsan = stderr.match(/SUMMARY: ThreadSanitizer: ([\w ]+?) \S*?:(\d+)/)
+  const tsan = stderr.match(/SUMMARY: ThreadSanitizer: ([\w ()-]+?) \S*?:(\d+)/)
   if (tsan) return { tool: 'thread', kind: tsan[1] ?? '', line: Number(tsan[2]) }
   return null
 }
@@ -206,8 +209,7 @@ export function deviceReport(text, tool, file = 'main.cu') {
   }
   const found = at(/=+ (Invalid __\w+__ (?:read|write)) of size/) ??
     at(/=+ (Uninitialized __\w+__ memory read) of size/) ??
-    at(/=+ Error: (Race reported) between/) ??
-    at(/=+ (Barrier error) detected/) ??
+    at(/=+ (?:Error|Warning): (Race reported) between/) ??
     at(/=+ (Invalid arguments)/) ??
     at(/=+ (Misaligned (?:address|shared or local address))/) ??
     at(/=+ (Leaked) \d+ bytes/) ??

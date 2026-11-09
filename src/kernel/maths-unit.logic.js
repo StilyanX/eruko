@@ -25,19 +25,21 @@ const isDate = d => Boolean(d)
  *   recordOf: (r: import('./pages.logic.js').UnitRecords) => R,
  *   topics: readonly T[],
  *   bank: readonly import('./practice.logic.js').Practised[],
- *   topicState: (topic: T, record: R) => { finished: boolean },
+ *   topicState: (topic: T, record: R) => { finished: boolean, waits?: boolean },
  *   lost?: (record: R) => readonly import('./practice.logic.js').Practised[],
  *   proofsToday?: (topic: T, record: R, today: string) => boolean
  * }>} MathsCourse
  */
 
 /**
- * The unit page's rows: Start, the pages used every session, then the topics in course order.
+ * The unit page's rows: Start, the pages used every session, then the topics in course order. The
+ * open topic that waits only for proof checks (`waits`) is `idle`: the way on names nothing there.
  * @param {import('./pages.logic.js').Unit} unit
  * @param {Set<string>} done
+ * @param {Set<string>} waits
  * @returns {import('./pages.logic.js').Rows}
  */
-function rowsOf(unit, done) {
+function rowsOf(unit, done, waits) {
   const startPage = unit.pages.find(p => p.start)
   assert(startPage, `unit ${unit.slug} has a Start page`)
   /** @param {import('./pages.logic.js').Page} p */
@@ -50,7 +52,9 @@ function rowsOf(unit, done) {
   return {
     start: row(startPage),
     top: unit.pages.filter(p => p.repeats).map(row),
-    items: unit.pages.filter(inCourse).map(row)
+    items: unit.pages
+      .filter(inCourse)
+      .map(p => (waits.has(p.slug) ? { ...row(p), idle: true } : row(p)))
   }
 }
 
@@ -124,7 +128,11 @@ export function mathsUnit(course) {
     },
     finished,
     /** @param {import('./pages.logic.js').UnitRecords} r */
-    rows: r => rowsOf(unit, finished(r)),
+    rows: r => {
+      const record = recordOf(r)
+      const waits = new Set(topics.filter(t => topicState(t, record).waits).map(t => t.slug))
+      return rowsOf(unit, finished(r), waits)
+    },
     /**
      * @param {import('./pages.logic.js').UnitRecords} r
      * @param {string} today

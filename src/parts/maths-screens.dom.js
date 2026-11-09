@@ -2,12 +2,18 @@
 // formulas set from their MathML, a figure, an answer worked on paper, a solution's lines, an idea,
 // and a problem's dated list. The pieces of the Mathematics division of "A Self-Study System" that
 // the maths units' screens share. Their styles are in study-page.css.
-import { CLOSE_PUNCT, displayKey, formulaPieces, textRuns } from '../kernel/maths-text.logic.js'
+import {
+  CLOSE_PUNCT,
+  displayKey,
+  formulaPieces,
+  spoken,
+  textRuns
+} from '../kernel/maths-text.logic.js'
 import { sentencesOf, widthInBodyText } from '../kernel/figure.logic.js'
 import { mathmlOf } from './mathml.dom.js'
 import { markSentence } from '../kernel/answer.logic.js'
 import { dayName } from '../kernel/days.logic.js'
-import { actionsAs, choice, mark } from './study.dom.js'
+import { actionsAs, choice, mark, say } from './study.dom.js'
 import { h } from './view.dom.js'
 
 /** The button of a learner who has no further step: it counts as wrong and shows the answer. */
@@ -23,37 +29,116 @@ export const SAY_WHY =
   'End the sentence "This step is allowed because …, and it helps because …." aloud or on paper.'
 
 /**
- * One formula piece, set from its MathML.
- * @param {string} tex
+ * A scroll box while what it holds is wider than its line, else nothing: it takes the region role,
+ * a name and a place in the keyboard's order (WCAG 1.4.10, 2.1.1, 4.1.2).
+ * @param {Element} box
+ * @param {boolean} wide
  */
-const piece = tex => h('span', { class: 'lrn-piece', '.innerHTML': mathmlOf(tex) })
+function scrollBox(box, wide) {
+  const attrs = new Map([
+    ['role', 'region'],
+    ['tabindex', '0'],
+    ['aria-label', `${box.getAttribute('data-name')}, scrolls sideways`]
+  ])
+  for (const [name, value] of attrs)
+    if (wide) box.setAttribute(name, value)
+    else box.removeAttribute(name)
+}
 
 /**
- * Inline maths that can wrap: a browser never breaks an inline formula itself, so a long one is
- * set as several pieces (study/maths-text.js). Each side of a relation is a block that moves to a
- * new line whole, and wraps before its own + and − only when it is still wider than the line. The
- * punctuation after a formula stays on its line, inside its last block.
+ * An inline formula's box, once drawn: it scrolls while a part of the formula that cannot wrap
+ * (`data-whole`: the formula, or one piece of a long one) is wider than its line, at least 24
+ * pixels high (WCAG 2.5.8). The shared check for wide maths (markWide, study.dom.js) leaves the
+ * formula to this box: a formula of one piece stands in a block of its own size, which it is never
+ * wider than, and a formula of pieces carries a tabindex of its own, -1, which takes no Tab stop.
+ * @param {Element} box
+ */
+function inlineWhenWide(box) {
+  if (!(box instanceof HTMLElement)) return
+  /** @type {Element | null} */
+  let line = null
+  const watch = new ResizeObserver(() => {
+    if (!line) {
+      line = box.parentElement?.closest('p, li, div, td, figcaption') ?? null
+      if (line) watch.observe(line)
+    }
+    const widest = Math.max(
+      ...[...box.querySelectorAll('[data-whole]')].map(el => el.getBoundingClientRect().width)
+    )
+    const wide = line !== null && widest > line.clientWidth
+    box.style.cssText = wide
+      ? 'display: inline-block; max-width: 100%; min-height: 24px; overflow-x: auto; vertical-align: middle;'
+      : ''
+    scrollBox(box, wide)
+  })
+  watch.observe(box)
+  for (const el of box.querySelectorAll('[data-whole]')) watch.observe(el)
+}
+
+/**
+ * One formula's MathML in a block of its own size (`inlineWhenWide`), a pixel wider than the
+ * formula on the inside and none on the outside: markWide reads the block's width in whole pixels.
+ * @param {string} mathml
+ * @param {string} style the block's
+ */
+const sized = (mathml, style) =>
+  h('div', {
+    style: `${style} padding-inline-end: 1px; margin-inline-end: -1px;`,
+    'data-whole': '',
+    '.innerHTML': mathml
+  })
+
+/**
+ * The MathML inside a piece's <math>.
+ * @param {string} mathml
+ */
+const inner = mathml => mathml.replace(/^<math>|<\/math>$/g, '')
+
+/**
+ * Inline maths: one <math>, so a screen reader reads one formula whole. A browser never breaks a
+ * formula, so a long one is set from pieces (maths-text.logic.js) inside it: each side of a
+ * relation an mrow that moves to a new line whole, and wraps before its own + and − only when it
+ * is still wider than the line. The punctuation after a formula follows it, on its line.
  * @param {string} tex
  * @param {string} after
  */
 function maths(tex, after) {
   const sides = formulaPieces(tex)
-  return sides.map((pieces, i) => [
-    i > 0 && '​',
-    h(
+  if (sides.length === 1 && sides[0]?.length === 1)
+    return h(
       'span',
-      { class: 'lrn-side' },
-      pieces.map((p, j) => [j > 0 && '​', piece(p)]),
-      i === sides.length - 1 && after
+      { class: 'lrn-piece', 'data-name': 'Formula', ref: inlineWhenWide },
+      sized(mathmlOf(tex), 'display: inline-block;'),
+      after
     )
-  ])
+  const mathml = sides
+    .map(
+      side =>
+        `<mrow style="display: inline-block; max-width: 100%;">${side
+          .map(p => `<mrow data-whole style="display: inline math;">${inner(mathmlOf(p))}</mrow>`)
+          .join('')}</mrow>`
+    )
+    .join('')
+  return [
+    h('span', {
+      'data-name': 'Formula',
+      ref: inlineWhenWide,
+      '.innerHTML': `<math tabindex="-1" style="display: inline; margin: 0 0.1em; vertical-align: baseline;">${mathml}</math>`
+    }),
+    after
+  ]
 }
 
 /**
  * A formula set on a line of its own, which scrolls inside that line when it is wider.
  * @param {string} tex
  */
-const display = tex => h('span', { class: 'lrn-display', '.innerHTML': mathmlOf(displayKey(tex)) })
+const display = tex =>
+  h(
+    'span',
+    { class: 'lrn-display', 'data-name': 'Formula', ref: scrollsWhenWide },
+    sized(mathmlOf(displayKey(tex)), 'width: max-content;')
+  )
 
 /**
  * The runs of one part of a text: words, inline maths made to wrap, each formula taking the
@@ -96,17 +181,7 @@ export function rich(text) {
  * @param {Element} box
  */
 function scrollsWhenWide(box) {
-  const check = () => {
-    const wide = box.scrollWidth > box.clientWidth
-    const attrs = new Map([
-      ['role', 'region'],
-      ['tabindex', '0'],
-      ['aria-label', `${box.getAttribute('data-name')}, scrolls sideways`]
-    ])
-    for (const [name, value] of attrs)
-      if (wide) box.setAttribute(name, value)
-      else box.removeAttribute(name)
-  }
+  const check = () => scrollBox(box, box.scrollWidth > box.clientWidth)
   const watch = new ResizeObserver(check) // the box, and the drawing inside it (a text size change)
   watch.observe(box)
   const svg = box.querySelector('svg')
@@ -202,7 +277,14 @@ export function answerBox({
       actionsAs(
         'choose',
         choice({ label: STUCK, onPress: () => onDone(false) }),
-        choice({ primary: true, label: 'Show the answer', onPress: onOpen })
+        choice({
+          primary: true,
+          label: 'Show the answer',
+          onPress: () => {
+            onOpen()
+            say(`The answer: ${spoken(problem.answer)}`)
+          }
+        })
       )
     ]
   return h(

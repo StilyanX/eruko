@@ -1,9 +1,8 @@
 // Hides: the life's page and which screen it shows. It shows the item the work list names, under
-// the last telling's mark while it may still be changed, or a lesson already done when it is
-// opened from its row (?lesson=<n>). The page keeps one title, the life's; its one section names
-// the lesson in hand.
+// the last telling's mark while it may still be changed. The page keeps one title, the life's; its
+// one section names the lesson in hand.
 import { COURSE } from '../core/course.gen.js'
-import { lessonAsked, lifeId } from '../core/decode.logic.js'
+import { lifeId } from '../core/decode.logic.js'
 import { learningNow, lifeAction } from '../core/next.logic.js'
 import { livesStore, record, send } from '../core/session.dom.js'
 import { dayName } from '../../../kernel/days.logic.js'
@@ -13,13 +12,13 @@ import '../../../parts/study-page.element.js'
 import { actions, choice } from '../../../parts/study.dom.js'
 import { Screen, h } from '../../../parts/view.dom.js'
 import './end-level.element.js'
-import './lesson-again.element.js'
 import './lesson.element.js'
 import './level-check.element.js'
 import './next-life.element.js'
 import './pair.element.js'
 import './recall.element.js'
 import './stuck.element.js'
+import './you.element.js'
 
 /**
  * The item in hand, on the life's page.
@@ -50,6 +49,8 @@ function todayView(action) {
           h('augustus-level-check', { key: `level-${action.life}`, '.life': action.life }),
         h('augustus-next-life', { key: `next-${action.life}`, '.life': action.life })
       ]
+    case 'you':
+      return h('augustus-you', { key: 'you' })
     case 'none':
       return h(
         'p',
@@ -98,26 +99,10 @@ function roundDoneView(s, action) {
 }
 
 /**
- * The page's one section: a lesson done read again, or the item in hand.
- * @param {number | null} again the lesson asked for by the address, from 1
+ * The page's one section: the item in hand.
  * @returns {import('../../../parts/study-page.element.js').StudyPageConfig}
  */
-function configOf(again) {
-  if (again !== null)
-    return {
-      named: true,
-      sections: [
-        {
-          id: 'au-lesson',
-          title: `Lesson ${again}, read again`,
-          content: h('augustus-lesson-again', {
-            key: again,
-            '.life': lifeId('augustus'),
-            '.n': again - 1
-          })
-        }
-      ]
-    }
+function configOf() {
   const action = lifeAction(record(), COURSE, today())
   const name = action.kind === 'lesson' ? `Lesson ${action.lesson + 1}` : 'Today'
   return {
@@ -140,17 +125,8 @@ export class AugustusLife extends Screen {
     this.watch(clock)
   }
 
-  /** Read the address again: ?lesson=<n> opens a lesson done. */
-  reread() {
-    this.update()
-  }
-
   view() {
-    const asked = new URL(location.href).searchParams.get('lesson')
-    return h('ae-study-page', {
-      '.slug': this.slug,
-      '.config': configOf(lessonAsked(asked, COURSE.lessons.length))
-    })
+    return h('ae-study-page', { '.slug': this.slug, '.config': configOf() })
   }
 }
 customElements.define('augustus-life', AugustusLife)

@@ -3,6 +3,8 @@
 import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 import { DISCIPLINES, UNITS } from '../src/shell/registry.js'
+import { lockNote } from '../src/shell/unit-view.js'
+import { viewOf } from '../src/shell/views.js'
 
 const [FIRST] = UNITS
 if (!FIRST) throw new Error('No unit is listed.')
@@ -183,11 +185,67 @@ test('Enter on arriving at a topic presses its first primary, below the fold too
   const topic = FIRST.pages.find(p => !p.start && !p.review && !p.repeats)
   await page.goto(`${FIRST.slug}/${topic?.slug}`)
   await expect(page.locator('h1')).toBeVisible()
-  const label = (await page.locator('.lrn-ss-primary').first().textContent()) ?? ''
-  const same = page.locator('.lrn-ss-primary', { hasText: label })
-  const before = await same.count()
+  // The first primary's step: Enter presses it, so the step changes (a reveal goes, or a run of
+  // ideas turns to its next item).
+  const first = page.locator('.lrn-section', { has: page.locator('.lrn-ss-primary') }).first()
+  const before = (await first.textContent()) ?? ''
   await page.locator('h1').focus()
   await page.keyboard.press('Enter')
-  await expect(same).toHaveCount(before - 1)
+  await expect(first).not.toHaveText(before)
   await expect(page.locator(':focus')).not.toHaveText(/^(Wrong|Right)$/)
+})
+
+// Locked items: one look and one reach in every unit.
+
+/** The first locked row of the course a fresh record shows: its unit, title and reason. */
+const LOCKED = UNITS.flatMap(u =>
+  viewOf(u.slug)
+    .rows({})
+    .items.map((it, i) => ({ slug: u.slug, title: it.title, why: lockNote(it, i) }))
+    .filter(r => r.why)
+)[0]
+
+/**
+ * The locked row, in view: its section opened if it is shut.
+ * @param {import('@playwright/test').Page} page
+ */
+async function lockedRow(page) {
+  const name = `${LOCKED?.title} ${LOCKED?.why}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const row = page.locator('.hm-rows li:not(:has(li))').filter({
+    has: page.locator('.hm-row-title', { hasText: new RegExp(`^${name}$`) })
+  })
+  if (!(await row.isVisible()))
+    await page
+      .locator('li:has(> button.hm-section)')
+      .filter({ has: row })
+      .locator('> button.hm-section')
+      .click()
+  await expect(row).toBeVisible()
+  return row
+}
+
+test('a locked row is still text in its place: its title and reason one name, no link, no Tab stop', async ({
+  page
+}) => {
+  test.skip(!LOCKED, 'no unit shows a locked row on a fresh record')
+  await page.goto(LOCKED?.slug ?? '')
+  const row = await lockedRow(page)
+  await expect(row.locator('a, button, input, [tabindex]')).toHaveCount(0)
+  await expect(row.locator('[aria-disabled]')).toHaveCount(0)
+  await expect(row.locator('.hm-row-note')).toHaveAttribute('lang', 'en')
+  expect(await row.ariaSnapshot()).toContain(`${LOCKED?.title} ${LOCKED?.why}`)
+  const { violations } = await new AxeBuilder({ page }).analyze()
+  expect(violations.map(v => `${v.id}: ${v.nodes.length}`)).toEqual([])
+})
+
+test('in forced colours a locked row keeps its reason, and at 320 px it wraps', async ({
+  page
+}) => {
+  test.skip(!LOCKED, 'no unit shows a locked row on a fresh record')
+  await page.emulateMedia({ forcedColors: 'active' })
+  await page.setViewportSize({ width: 320, height: 800 })
+  await page.goto(LOCKED?.slug ?? '')
+  const row = await lockedRow(page)
+  await expect(row.locator('.hm-row-note')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

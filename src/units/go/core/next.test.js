@@ -4,7 +4,9 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   answerItem,
+  caseOf,
   closeItem,
+  dueToday,
   exampleRead,
   formLack,
   freshToday,
@@ -18,13 +20,20 @@ import {
   postGame,
   restOf,
   sameAnswer,
+  setUpLack,
   skipGame,
   startGate,
   waitsOn
 } from './next.logic.js'
-import { SERVER, kindLine, recordOf, withKind } from './record.logic.js'
+import { ENGINE, SERVER, kindLine, recordOf, withKind } from './record.logic.js'
 import { kindId, readMove } from './decode.logic.js'
-import { askedFrom, courseFrom, fieldsOf, gameFrom, recordFrom } from '../../../../tests/lib/go-typed.mjs'
+import {
+  askedFrom,
+  courseFrom,
+  fieldsOf,
+  gameFrom,
+  recordFrom
+} from '../../../../tests/lib/go-typed.mjs'
 
 const day = '2026-10-08'
 const next = '2026-10-09'
@@ -39,7 +48,19 @@ const course = courseFrom({
     { id: 3, name: 'nets', after: [1], problems: ['3.1'] }
   ]
 })
-const fresh = () => recordOf({}, course)
+const zero = () => recordOf({}, course)
+// A learner whose practice game is counted: no game is owed while the start gate is closed, so
+// the list's other cases come first. Before Start's set-up the first game is owed (see the game test).
+const fresh = () => ({ ...zero(), start: { counted: '2026-01-01', equal: '' } })
+/**
+ * The next action with today's game skipped: the review tests read the draw, not the game, which
+ * is owed before set-up once the start gate opens.
+ * @param {import('./own.logic.js').Course} c
+ * @param {import('./decode.logic.js').GoRecord} r
+ * @param {string} d
+ */
+const noGame = (c, r, d) => nextAction(c, skipGame(d)(r), d)
+
 /**
  * Work the list: answer each item the same way until `until` says stop, from `r`.
  * @param {import('./decode.logic.js').GoRecord} r
@@ -52,7 +73,8 @@ function run(r, on, right = true, until = () => false) {
     const item = nextAction(course, r, on)
     if (item.step === 'nothing' || until(item, r)) return r
     if (item.step === 'example') r = exampleRead(course, item.kind, on)(r)
-    else if ('id' in item && !('right' in item)) r = closeItem(answerItem(course, askedFrom(item), right, on)(r))
+    else if ('id' in item && !('right' in item))
+      r = closeItem(answerItem(course, askedFrom(item), right, on)(r))
     else return r
   }
   return r
@@ -106,8 +128,10 @@ test('gate 3: the first problem is shown solved and writes no line; a right answ
   assert.equal(fieldsOf(nextAction(course, wrong, day)).id, '1.3')
   // no untried problem left: the kind retires there, whatever the answers
   assert.equal(
-    kindLine(closeItem(answerItem(course, askedFrom(nextAction(course, wrong, day)), false, day)(wrong)), kindId(1))
-      ?.retired,
+    kindLine(
+      closeItem(answerItem(course, askedFrom(nextAction(course, wrong, day)), false, day)(wrong)),
+      kindId(1)
+    )?.retired,
     day
   )
   const right = closeItem(answerItem(course, askedFrom(item), true, day)(r))
@@ -115,23 +139,33 @@ test('gate 3: the first problem is shown solved and writes no line; a right answ
   assert.deepEqual(right.tries, [{ id: '1.2', date: day, right: true, mixed: false }])
   // the kind has had a problem this session: the next kind's first run opens
   assert.deepEqual(nextAction(course, right, day), { n: 5, step: 'example', id: '2.1', kind: 2 })
-  // the next session, the retired kind joins mixed practice, ahead of new material
+  // the next session, the retired kind is due, its first line the day it retired: it gives a
+  // never-tried problem, a first try of mixed practice and the kind's one problem of step 4
   const later = {
     ...right,
     recall: Object.fromEntries(
       Object.entries(right.recall).map(([id, lines]) => [
         id,
-        lines.map((/** @type {import('../../../kernel/days.logic.js').Line} */ l) => ({ ...l, next: '2027-01-01' }))
+        lines.map((/** @type {import('../../../kernel/days.logic.js').Line} */ l) => ({
+          ...l,
+          next: '2027-01-01'
+        }))
       ])
     )
   }
-  assert.deepEqual(nextAction(course, later, next), { n: 4, step: 'mixed', id: '1.3', kind: 1 })
-  const mixed = closeItem(answerItem(course, askedFrom(nextAction(course, later, next)), true, next)(later))
-  assert.equal(mixed.tries.at(-1)?.mixed, true)
+  assert.deepEqual(nextAction(course, later, next), { n: 1, step: 'recall', id: '1.3', kind: 1 })
+  const mixed = closeItem(
+    answerItem(course, askedFrom(nextAction(course, later, next)), true, next)(later)
+  )
+  assert.deepEqual(mixed.tries.at(-1), { id: '1.3', date: next, right: true, mixed: true })
+  // right at its first try: the kind's line, none of the problem's own
+  assert.equal(mixed.recall['1.3'], undefined)
+  assert.equal(mixed.recall.k1?.length, 1)
+  assert.ok((mixed.recall.k1?.[0]?.next ?? '') > '2026-10-10')
   assert.deepEqual(nextAction(course, mixed, next), { n: 5, step: 'example', id: '2.1', kind: 2 })
 })
 
-test('a kind with one problem retires when its first run ends, and its problem is asked once in mixed practice on a later day', () => {
+test('a kind with one problem retires when its first run ends, and its return asks its problem on a later day', () => {
   let r = withKind(
     withKind(
       run(fresh(), day, true, i => i.step === 'example'),
@@ -151,21 +185,38 @@ test('a kind with one problem retires when its first run ends, and its problem i
   assert.equal(place(course, r), 'All 2 rules parts and 3 kinds done.')
   // read solved today: nothing more of it today
   assert.deepEqual(nextAction(course, r, day), { n: 6, step: 'nothing' })
-  // a later day, with nothing due: mixed practice draws it, the answer writes its first line and its first try
+  // a later day, with only kind 3 due: its return gives its problem, a first try of mixed practice
+  /** @type {import('./decode.logic.js').GoRecord['recall']} */
+  const ahead = {
+    k1: [{ date: day, right: true, next: '2027-01-01' }],
+    k2: [{ date: day, right: true, next: '2027-01-01' }]
+  }
   const later = {
     ...r,
-    recall: Object.fromEntries(
-      Object.entries(r.recall).map(([id, lines]) => [
-        id,
-        lines.map((/** @type {import('../../../kernel/days.logic.js').Line} */ l) => ({ ...l, next: '2027-01-01' }))
-      ])
-    )
+    recall: {
+      ...Object.fromEntries(
+        Object.entries(r.recall).map(([id, lines]) => [
+          id,
+          lines.map((/** @type {import('../../../kernel/days.logic.js').Line} */ l) => ({
+            ...l,
+            next: '2027-01-01'
+          }))
+        ])
+      ),
+      ...ahead
+    }
   }
-  assert.deepEqual(nextAction(course, later, next), { n: 4, step: 'mixed', id: '3.1', kind: 3 })
-  const asked = closeItem(answerItem(course, askedFrom(nextAction(course, later, next)), true, next)(later))
+  assert.deepEqual(nextAction(course, later, next), { n: 1, step: 'recall', id: '3.1', kind: 3 })
+  const asked = closeItem(
+    answerItem(course, askedFrom(nextAction(course, later, next)), true, next)(later)
+  )
   assert.deepEqual(asked.tries.at(-1), { id: '3.1', date: next, right: true, mixed: true })
-  assert.equal(asked.recall['3.1']?.length, 1)
+  assert.equal(asked.recall['3.1'], undefined)
+  assert.equal(asked.recall.k3?.length, 1)
   assert.deepEqual(nextAction(course, asked, next), { n: 6, step: 'nothing' })
+  // each later return of the kind gives the same problem, the one seen longest ago
+  const back = asked.recall.k3?.[0]?.next ?? ''
+  assert.deepEqual(nextAction(course, asked, back), { n: 1, step: 'recall', id: '3.1', kind: 3 })
 })
 
 test('what is due comes first, and a wrong answer comes back the next day', () => {
@@ -176,8 +227,8 @@ test('what is due comes first, and a wrong answer comes back the next day', () =
   assert.equal(r.recall['R1.1']?.at(-1)?.next, '2026-10-10')
   // a second answer the same day is a retry and writes no line
   assert.equal(
-    answerItem(course, askedFrom({ n: 1, step: 'recall', id: 'R1.1', kind: null }), true, next)(r).recall['R1.1']
-      ?.length,
+    answerItem(course, askedFrom({ n: 1, step: 'recall', id: 'R1.1', kind: null }), true, next)(r)
+      .recall['R1.1']?.length,
     2
   )
 })
@@ -187,12 +238,17 @@ test('a reading that marks a drop never holds new kinds, and nothing left never 
   r = recordFrom({ ...r, readings: [{ games: 15, state: 'held' }] }) // a reading with only the fields read here
   r = run(r, '2026-10-10', true, i => i.step !== 'recall')
   assert.equal(openKind(course, r)?.id, 1)
-  assert.deepEqual(nextAction(course, r, '2026-10-10'), { n: 5, step: 'example', id: '1.1', kind: 1 })
+  assert.deepEqual(nextAction(course, r, '2026-10-10'), {
+    n: 5,
+    step: 'example',
+    id: '1.1',
+    kind: 1
+  })
 })
 
-test('the game: a practice game until one is counted right, then none until the start gate opens, then rated', () => {
+test('the game: a practice game until one is counted, right or wrong, then none until the start gate opens, then rated', () => {
   /** @type {import('./decode.logic.js').GoRecord} */
-  let r = { ...fresh(), server: { ...SERVER, user: 'x', id: 1, since: '' } }
+  let r = { ...zero(), server: { ...SERVER, user: 'x', id: 1, since: '' } }
   assert.deepEqual(gameToday(course, r, day), { practice: true, waiting: false })
   // case 3 stands before new material
   assert.equal(nextAction(course, r, day).step, 'game')
@@ -206,7 +262,8 @@ test('the game: a practice game until one is counted right, then none until the 
   // a game with only the fields the check reads
   const held = gameFrom({ id: 7, date: day })
   assert.equal(gameToday(course, { ...r, games: [held] }, day), null)
-  r = { ...r, start: { counted: day } }
+  // a wrong count counts: `start.counted` set and `start.equal` empty
+  r = { ...r, start: { counted: day, equal: '' } }
   assert.equal(startGate(course, r), false)
   assert.equal(gameToday(course, r, next), null)
   // every rules item right on a day after its first
@@ -218,7 +275,27 @@ test('the game: a practice game until one is counted right, then none until the 
   assert.equal(gameToday(course, r, next), null)
   const after = '2026-10-10'
   assert.deepEqual(gameToday(course, r, after), { practice: false, waiting: false })
-  assert.equal(gameToday(course, { ...r, server: null }, after), null)
+  // set-up comes when the first game comes: with no user name or engine the game is still owed,
+  // and its screen asks for the set-up
+  assert.deepEqual(gameToday(course, { ...r, server: null }, after), {
+    practice: false,
+    waiting: false
+  })
+  assert.equal(setUpLack({ ...r, server: null }), true)
+  assert.equal(setUpLack({ ...r, engine: { ...ENGINE, checksum: 'c' } }), false)
+})
+
+test('before set-up the first game is the first item, a fresh learner skips it, and the rules items run', () => {
+  const r = zero()
+  assert.equal(setUpLack(r), true)
+  assert.deepEqual(nextAction(course, r, day), { n: 3, step: 'game', practice: true })
+  assert.deepEqual(nextAction(course, skipGame(day)(r), day), {
+    n: 5,
+    step: 'rules',
+    id: 'R1.1',
+    kind: null
+  })
+  assert.equal(nextAction(course, skipGame(day)(r), next).step, 'game')
 })
 
 test('a game to review stands after what is due and before the game, and waits when the engine did not answer', () => {
@@ -232,7 +309,12 @@ test('a game to review stands after what is due and before the game, and waits w
     ]
   }
   // a record whose engine, server and game hold only the fields the next action reads
-  let r = recordFrom({ ...fresh(), engine: { address: 'x' }, server: { user: 'x', id: 1 }, games: [game] })
+  let r = recordFrom({
+    ...fresh(),
+    engine: { address: 'x' },
+    server: { user: 'x', id: 1 },
+    games: [game]
+  })
   assert.deepEqual(nextAction(course, r, next), { n: 2, step: 'review', game: 5, index: 1 })
   // the two rules items of the first part are waiting, with no date
   assert.equal(freshToday(course, fresh(), day), 2)
@@ -259,10 +341,13 @@ test('an answer of another form is refused, never judged', () => {
 
 test('nothing left says when the next item comes back', () => {
   const r = recordOf({}, course)
-  assert.deepEqual(restOf(r, day), { later: '' })
+  assert.deepEqual(restOf(course, r, day), { later: '' })
   const met = recordFrom({ ...r, recall: { 'R1.1': [{ date: day, right: true, next }] } })
-  assert.equal(restOf(met, day).later, next)
-  assert.equal(restOf(met, next).later, '')
+  assert.equal(restOf(course, met, day).later, next)
+  assert.equal(restOf(course, met, next).later, '')
+  // a retired kind comes back the day after it retired
+  const retired = withKind(met, kindId(1), { opened: day, retired: next })
+  assert.equal(restOf(course, retired, next).later, '2026-10-10')
 })
 
 test('a kind may open once the first three rules parts and the kinds it uses are done; one begun from its row runs first', () => {
@@ -284,19 +369,28 @@ test('a kind may open once the first three rules parts and the kinds it uses are
     assert.ok(k)
     return k
   }
-  let r = recordOf({}, three)
+  let r = { ...recordOf({}, three), start: { counted: '2026-01-01', equal: '' } }
   assert.equal(kindReady(three, r, kind(1)), false)
-  assert.deepEqual(waitsOn(three, r, kind(2)), ['the first three rules parts', 'Capture a stone in atari'])
+  assert.deepEqual(waitsOn(three, r, kind(2)), [
+    { name: 'the first three rules parts', kind: null },
+    { name: 'Capture a stone in atari', kind: 1 }
+  ])
   // the first two parts answered: ko is still to come
   for (const id of ['R1.1', 'R1.2', 'R2.1'])
-    r = closeItem(answerItem(three, askedFrom({ n: 5, step: 'rules', id, kind: null }), true, day)(r))
+    r = closeItem(
+      answerItem(three, askedFrom({ n: 5, step: 'rules', id, kind: null }), true, day)(r)
+    )
   assert.equal(kindReady(three, r, kind(1)), false)
-  assert.deepEqual(waitsOn(three, r, kind(1)), ['the first three rules parts'])
+  assert.deepEqual(waitsOn(three, r, kind(1)), [
+    { name: 'the first three rules parts', kind: null }
+  ])
   // the first three parts answered; the fourth still open
-  r = closeItem(answerItem(three, askedFrom({ n: 5, step: 'rules', id: 'R3.1', kind: null }), true, day)(r))
+  r = closeItem(
+    answerItem(three, askedFrom({ n: 5, step: 'rules', id: 'R3.1', kind: null }), true, day)(r)
+  )
   assert.equal(kindReady(three, r, kind(1)), true)
   assert.equal(kindReady(three, r, kind(2)), false)
-  assert.deepEqual(waitsOn(three, r, kind(2)), ['Capture a stone in atari'])
+  assert.deepEqual(waitsOn(three, r, kind(2)), [{ name: 'Capture a stone in atari', kind: 1 }])
   // the work list keeps the course's order: the open part first
   assert.deepEqual(nextAction(three, r, day), { n: 5, step: 'rules', id: 'R4.1', kind: null })
   // a kind begun from its row: its problems come before the rules part left
@@ -311,4 +405,227 @@ test('a kind may open once the first three rules parts and the kinds it uses are
   assert.equal(kindReady(three, r, kind(3)), true)
   r = closeItem(answerItem(three, askedFrom(nextAction(three, r, day)), true, day)(r))
   assert.deepEqual(nextAction(three, r, day), { n: 5, step: 'example', id: '2.1', kind: 2 })
+})
+
+test('a due kind gives its problem answered wrong, else a never-tried one, else the one seen longest ago; a wrong answer brings the problem and its kind back the next day', () => {
+  const four = courseFrom({
+    parts: [],
+    kinds: [
+      { id: 1, name: 'capture a stone in atari', after: [], problems: ['1.1', '1.2', '1.3', '1.4'] }
+    ]
+  })
+  const d1 = '2026-10-10'
+  const d2 = '2026-10-11'
+  // retired on day at 1.2, right; 1.3 and 1.4 never tried
+  let r = recordFrom({
+    ...withKind({ ...recordOf({}, four), start: { counted: '2026-01-01', equal: '' } }, kindId(1), {
+      opened: day,
+      retired: day
+    }),
+    tries: [{ id: '1.2', date: day, right: true, mixed: false }]
+  })
+  assert.deepEqual(noGame(four, r, day), { n: 6, step: 'nothing' })
+  // due the day after it retired: the first never-tried problem, in the order the problems entered
+  assert.deepEqual(noGame(four, r, next), { n: 1, step: 'recall', id: '1.3', kind: 1 })
+  r = closeItem(answerItem(four, askedFrom(noGame(four, r, next)), false, next)(r))
+  // wrong: the problem's own line and the kind's, both back the next day
+  assert.deepEqual(r.recall['1.3'], [{ date: next, right: false, next: d1 }])
+  assert.deepEqual(r.recall.k1, [{ date: next, right: false, next: d1 }])
+  assert.deepEqual(r.tries.at(-1), { id: '1.3', date: next, right: false, mixed: true })
+  // the same problem comes back, ahead of the never-tried one
+  assert.deepEqual(noGame(four, r, d1), { n: 1, step: 'recall', id: '1.3', kind: 1 })
+  r = closeItem(answerItem(four, askedFrom(noGame(four, r, d1)), true, d1)(r))
+  assert.equal(r.recall['1.3']?.at(-1)?.right, true)
+  assert.equal(r.recall.k1?.length, 2)
+  const back = r.recall.k1?.at(-1)?.next ?? ''
+  assert.ok(back > d2)
+  // nothing due on a day between: step 4 still draws the kind's never-tried problem
+  assert.deepEqual(noGame(four, r, d2), { n: 4, step: 'mixed', id: '1.4', kind: 1 })
+  // right: the kind comes back with a fresh problem; the problem itself does not
+  assert.deepEqual(noGame(four, r, back), { n: 1, step: 'recall', id: '1.4', kind: 1 })
+  r = closeItem(answerItem(four, askedFrom(noGame(four, r, back)), true, back)(r))
+  assert.equal(r.recall['1.4'], undefined)
+  // no never-tried problem left: the one seen longest ago, by its newest line or its first try
+  const last = r.recall.k1?.at(-1)?.next ?? ''
+  assert.deepEqual(noGame(four, r, last), { n: 1, step: 'recall', id: '1.2', kind: 1 })
+})
+
+test('a problem answered wrong in mixed practice makes its kind due the next day; in a first run it comes back alone', () => {
+  const two = courseFrom({
+    parts: [],
+    kinds: [
+      { id: 1, name: 'capture a stone in atari', after: [], problems: ['1.1', '1.2', '1.3'] },
+      { id: 2, name: 'ladders', after: [], problems: ['2.1', '2.2', '2.3', '2.4'] }
+    ]
+  })
+  /** @type {import('./decode.logic.js').GoRecord['recall']} */
+  const ahead = { k1: [{ date: day, right: true, next: '2027-01-01' }] }
+  let r = recordFrom({
+    ...withKind({ ...recordOf({}, two), start: { counted: '2026-01-01', equal: '' } }, kindId(1), {
+      opened: day,
+      retired: day
+    }),
+    recall: ahead,
+    tries: [{ id: '1.2', date: day, right: true, mixed: false }]
+  })
+  assert.deepEqual(noGame(two, r, next), { n: 4, step: 'mixed', id: '1.3', kind: 1 })
+  r = closeItem(answerItem(two, askedFrom(noGame(two, r, next)), false, next)(r))
+  assert.deepEqual(r.recall['1.3'], [{ date: next, right: false, next: '2026-10-10' }])
+  // the kind's own line is untouched, and the kind is due the next day all the same
+  assert.deepEqual(r.recall.k1, ahead.k1)
+  assert.deepEqual(noGame(two, r, '2026-10-10'), { n: 1, step: 'recall', id: '1.3', kind: 1 })
+  // kind 2 in its first run: a wrong answer comes back alone, its own line only
+  r = exampleRead(two, kindId(2), next)(r)
+  r = closeItem(
+    answerItem(two, askedFrom({ n: 5, step: 'new', id: '2.2', kind: 2 }), false, next)(r)
+  )
+  assert.equal(kindLine(r, kindId(2))?.retired, '')
+  const due = noGame(
+    two,
+    closeItem(
+      answerItem(
+        two,
+        askedFrom({ n: 1, step: 'recall', id: '1.3', kind: 1 }),
+        true,
+        '2026-10-10'
+      )(r)
+    ),
+    '2026-10-10'
+  )
+  assert.deepEqual(due, { n: 1, step: 'recall', id: '2.2', kind: 2 })
+  r = closeItem(answerItem(two, askedFrom(due), true, '2026-10-10')(r))
+  assert.equal(r.recall.k2, undefined)
+  assert.equal(r.recall['2.2']?.at(-1)?.right, true)
+})
+
+test('a rules item comes back on another case its rule decides: one not yet asked, else the one asked longest ago; a case answered wrong comes back the next day', () => {
+  const cased = courseFrom({
+    parts: [{ n: 1, name: 'the board and turns', items: ['R1.1'], cases: [3] }],
+    kinds: []
+  })
+  const d = /** @type {const} */ (['2026-10-08', '2026-10-09', '2026-10-10'])
+  let r = { ...recordOf({}, cased), start: { counted: '2026-01-01', equal: '' } }
+  // met in step 4: its first case
+  r = closeItem(answerItem(cased, askedFrom(noGame(cased, r, d[0])), true, d[0])(r))
+  assert.deepEqual(r.recall['R1.1'], [{ date: d[0], right: true, next: d[1], case: 0 }])
+  assert.deepEqual(noGame(cased, r, d[1]), {
+    n: 1,
+    step: 'recall',
+    id: 'R1.1',
+    kind: null,
+    case: 1
+  })
+  r = closeItem(answerItem(cased, askedFrom(noGame(cased, r, d[1])), false, d[1])(r))
+  // wrong: the same case the next day
+  assert.deepEqual(noGame(cased, r, d[2]), {
+    n: 1,
+    step: 'recall',
+    id: 'R1.1',
+    kind: null,
+    case: 1
+  })
+  r = closeItem(answerItem(cased, askedFrom(noGame(cased, r, d[2])), true, d[2])(r))
+  const at = r.recall['R1.1']?.at(-1)?.next ?? ''
+  assert.deepEqual(noGame(cased, r, at), {
+    n: 1,
+    step: 'recall',
+    id: 'R1.1',
+    kind: null,
+    case: 2
+  })
+  r = closeItem(answerItem(cased, askedFrom(noGame(cased, r, at)), true, at)(r))
+  // every case asked: the one asked longest ago
+  const then = r.recall['R1.1']?.at(-1)?.next ?? ''
+  assert.deepEqual(noGame(cased, r, then), {
+    n: 1,
+    step: 'recall',
+    id: 'R1.1',
+    kind: null,
+    case: 0
+  })
+  assert.equal(caseOf([], 1), 0)
+})
+
+test('a record kept before kinds were dated: a problem right last is out of the due list, its kind dated from retired; a problem wrong last brings its kind back on its date; a rules line with no case asked its first', () => {
+  const old = {
+    course: [
+      { part: 1, done: '2026-09-01' },
+      { kind: 1, opened: '2026-09-01', retired: '2026-09-01' }
+    ],
+    recall: {
+      'R1.1': [
+        { date: '2026-09-01', right: true, next: '2026-09-02' },
+        { date: '2026-09-02', right: true, next: '2026-10-20' }
+      ],
+      // kept history, never due by itself: the kind brings its problems back
+      1.2: [{ date: '2026-09-01', right: true, next: '2026-09-02' }],
+      1.3: [
+        { date: '2026-09-03', right: true, next: '2026-09-04' },
+        { date: '2026-09-04', right: false, next: '2026-09-05' }
+      ]
+    },
+    tries: [
+      { id: '1.2', date: '2026-09-01', right: true, mixed: false },
+      { id: '1.3', date: '2026-09-03', right: true, mixed: true }
+    ]
+  }
+  const one = courseFrom({
+    parts: [{ n: 1, name: 'the board and turns', items: ['R1.1'] }],
+    kinds: [{ id: 1, name: 'capture a stone in atari', after: [], problems: ['1.1', '1.2', '1.3'] }]
+  })
+  const r = { ...recordOf(old, one), start: { counted: '2026-01-01', equal: '' } }
+  assert.deepEqual(r.recall['1.2'], old.recall['1.2'])
+  // kind 1's own date, from retired, is 2 September; 1.3 wrong last, back since 5 September
+  assert.deepEqual(noGame(one, r, '2026-09-01'), { n: 6, step: 'nothing' })
+  assert.deepEqual(noGame(one, r, '2026-09-02'), { n: 1, step: 'recall', id: '1.3', kind: 1 })
+  const once = closeItem(
+    answerItem(one, askedFrom(noGame(one, r, '2026-10-08')), true, '2026-10-08')(r)
+  )
+  assert.deepEqual(once.recall.k1?.length, 1)
+  assert.equal(once.recall['1.3']?.at(-1)?.right, true)
+  // its next return gives the problem seen longest ago: 1.2, by its line of 1 September
+  const back = once.recall.k1?.[0]?.next ?? ''
+  assert.deepEqual(
+    dueToday(one, once, back).find(x => x.kind === 1),
+    { n: 1, step: 'recall', id: '1.2', kind: 1 }
+  )
+  // the rules item's lines name no case: they asked its first, so its next case is the second
+  const cased = courseFrom({
+    parts: [{ n: 1, name: 'the board and turns', items: ['R1.1', 'R1.2'], cases: [2, 1] }],
+    kinds: []
+  })
+  assert.deepEqual(
+    noGame(
+      cased,
+      { ...recordOf(old, cased), start: { counted: '2026-01-01', equal: '' } },
+      '2026-10-20'
+    ),
+    { n: 1, step: 'recall', id: 'R1.1', kind: null, case: 1 }
+  )
+})
+
+test('a kind gives one problem a day: a second problem left wrong brings it back the next day', () => {
+  const four = courseFrom({
+    parts: [],
+    kinds: [
+      { id: 1, name: 'capture a stone in atari', after: [], problems: ['1.1', '1.2', '1.3', '1.4'] }
+    ]
+  })
+  const wrong = [{ date: day, right: false, next }]
+  let r = recordFrom({
+    ...withKind({ ...recordOf({}, four), start: { counted: '2026-01-01', equal: '' } }, kindId(1), {
+      opened: day,
+      retired: day
+    }),
+    recall: { 1.2: wrong, 1.3: wrong },
+    tries: [
+      { id: '1.2', date: day, right: false, mixed: false },
+      { id: '1.3', date: day, right: false, mixed: false }
+    ]
+  })
+  assert.deepEqual(noGame(four, r, next), { n: 1, step: 'recall', id: '1.2', kind: 1 })
+  r = closeItem(answerItem(four, askedFrom(noGame(four, r, next)), true, next)(r))
+  // not due again today; step 4 still asks a never-tried problem of it
+  assert.deepEqual(noGame(four, r, next), { n: 4, step: 'mixed', id: '1.4', kind: 1 })
+  assert.deepEqual(noGame(four, r, '2026-10-10'), { n: 1, step: 'recall', id: '1.3', kind: 1 })
 })

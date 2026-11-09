@@ -8,7 +8,7 @@ import { addDays } from '../../../kernel/days.logic.js'
 import { recordOf } from './record.logic.js'
 
 const course = courseFrom(
-  [{ title: 'First kinds', first: 1, last: 1 }],
+  [{ title: 'Whole programs', first: 1, last: 1 }],
   [{ id: 1, name: 'a', after: [], plan: [], problems: [], trace: 'T1' }]
 )
 const practice = '2027-01-01'
@@ -91,7 +91,7 @@ test('the first reading: contests 2 to 11, with every mixed first try up to it; 
   assert.deepEqual([first.p, first.n, first.state, first.date], [20 / 27, 27, 'open', day])
   assert.deepEqual(readingLines(read), [
     'Performance 692, last 10 contests.',
-    'Right at the first submit: 20 of 27.',
+    'Right at the first check: 20 of 27.',
     'No drop since the last reading. New kinds stay open.'
   ])
   // nothing more is due until 10 more contests or 10 weeks
@@ -124,8 +124,8 @@ test('after 10 more contests: each against the last, a drop past the noise line 
   assert.equal(read.readings[1]?.state, 'held')
   assert.deepEqual(readingLines(read), [
     'Performance 542, last 10 contests. Last 692.',
-    'Right at the first submit: 18 of 36. Last: 30 of 40.',
-    'Your performance or your first submits in mixed practice dropped since the last reading. New kinds stay open.'
+    'Right at the first check: 18 of 36. Last: 30 of 40.',
+    'Your performance or your first checks in mixed practice dropped since the last reading. New kinds stay open.'
   ])
   // the same window a little lower: inside the noise, no drop
   const near = {
@@ -166,7 +166,7 @@ test('fewer than 10 contests in 10 weeks: the solving share alone, and performan
   assert.equal(read.readings[1]?.state, 'open')
   assert.deepEqual(readingLines(read).slice(0, 2), [
     'Performance 692, last 10 contests.',
-    'Right at the first submit: 2 of 4. Last: 3 of 4.'
+    'Right at the first check: 2 of 4. Last: 3 of 4.'
   ])
   const sparse = withReading(
     { ...first, contests: [...first.contests, ...contests([600], 12)] },

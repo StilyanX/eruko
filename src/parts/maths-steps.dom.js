@@ -9,6 +9,8 @@
 import { InvariantError } from '../kernel/invariant.logic.js'
 import { decodePractice } from '../kernel/practice.logic.js'
 import { decodeProofs } from '../kernel/proofs-decode.logic.js'
+import { spoken } from '../kernel/maths-text.logic.js'
+import { say } from './say.dom.js'
 import { h } from './view.dom.js'
 
 /**
@@ -64,6 +66,19 @@ export const noProofsSend = () => {
 export const shownBy = effects => {
   for (const e of effects) if (e.t === 'show') return e.text
   return null
+}
+
+/**
+ * A move's wrong verdict said again with its correction first: "Wrong. The answer is 2. The
+ * solution is below.". A problem with no short answer (a proof) keeps
+ * the verdict as it was said.
+ * @param {readonly import('../kernel/maths-session.logic.js').Effect[]} effects
+ * @param {string | null | undefined} answer
+ */
+export function sayCorrected(effects, answer) {
+  for (const e of effects)
+    if (answer && e.t === 'say' && e.text.startsWith('Wrong.'))
+      say(`Wrong. The answer is ${spoken(answer)}.${e.text.slice('Wrong.'.length)}`)
 }
 
 /**
