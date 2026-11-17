@@ -1,0 +1,577 @@
+{
+  "equations-of-lines-1.svg": {
+    "x": [
+      -1,
+      4
+    ],
+    "y": [
+      -10,
+      4
+    ],
+    "equal": false,
+    "ystep": 2,
+    "curves": [
+      {
+        "y": "4*x-9"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -9
+        ],
+        "label": "(0, −9)",
+        "place": "e"
+      },
+      {
+        "at": [
+          1,
+          -5
+        ],
+        "label": "(1, −5)",
+        "place": "e"
+      }
+    ]
+  },
+  "equations-of-lines-2.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -6,
+      4
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*x+2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          2
+        ]
+      },
+      {
+        "at": [
+          4,
+          -4
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-3.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -2,
+      13
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*x+11"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          11
+        ]
+      },
+      {
+        "at": [
+          4,
+          9
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-4.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -14,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*x-10"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -10
+        ]
+      },
+      {
+        "at": [
+          4,
+          -12
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-5.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -15,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-4*x-1"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -1
+        ]
+      },
+      {
+        "at": [
+          3,
+          -13
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-6.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -11,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*x-3"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -3
+        ]
+      },
+      {
+        "at": [
+          4,
+          -9
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-7.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -14,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*x-6"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -6
+        ]
+      },
+      {
+        "at": [
+          3,
+          -12
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-8.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -13,
+      3
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-6*x+1"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          1
+        ]
+      },
+      {
+        "at": [
+          2,
+          -11
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-9.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -2,
+      12
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x+6"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          6
+        ]
+      },
+      {
+        "at": [
+          2,
+          10
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-10.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -10,
+      4
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x-8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -8
+        ]
+      },
+      {
+        "at": [
+          5,
+          2
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-11.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -2,
+      13
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x+7"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          7
+        ]
+      },
+      {
+        "at": [
+          2,
+          11
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-12.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -14,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x-12"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -12
+        ]
+      },
+      {
+        "at": [
+          3,
+          -6
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-13.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -12,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*x-4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -4
+        ]
+      },
+      {
+        "at": [
+          4,
+          -10
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-14.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -13,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*x-11"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -11
+        ]
+      },
+      {
+        "at": [
+          3,
+          -2
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-15.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -2,
+      14
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/2*x+10"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          10
+        ]
+      },
+      {
+        "at": [
+          4,
+          12
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-16.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -15,
+      2
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*x-13"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -13
+        ]
+      },
+      {
+        "at": [
+          4,
+          -1
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-17.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -2,
+      15
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*x+13"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          13
+        ]
+      },
+      {
+        "at": [
+          3,
+          4
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-18.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -2,
+      15
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x+9"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          9
+        ]
+      },
+      {
+        "at": [
+          2,
+          13
+        ]
+      }
+    ]
+  },
+  "equations-of-lines-19.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -2,
+      14
+    ],
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*x+12"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          12
+        ]
+      },
+      {
+        "at": [
+          4,
+          10
+        ]
+      }
+    ]
+  }
+}

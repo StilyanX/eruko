@@ -1,0 +1,20 @@
+/* Written by scripts/maths-fonts.py. The family every formula is set in, of three faces split by
+   unicode-range. The first has no range, so it is the family's first available font: the browser
+   reads the MATH table, the radical, the brackets and every sign from it. The second is Literata's
+   own upright face for the digits and upright letters; the third holds Literata Italic's letters
+   at the Mathematical Italic code points of a one-letter variable. No face names a weight: the
+   three must match as one family. */
+@font-face {
+  font-family: 'Eruko Maths';
+  src: url(./files/eruko-maths-signs.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Eruko Maths';
+  src: url(../literata-5.3.0/files/literata-latin-opsz-normal.woff2) format('woff2-variations');
+  unicode-range: U+0025,U+002C,U+002E,U+0030-0039,U+0041-005A,U+0061-007A;
+}
+@font-face {
+  font-family: 'Eruko Maths';
+  src: url(../eruko-maths-letters-5.3.0/files/eruko-maths-letters.woff2) format('woff2');
+  unicode-range: U+210E,U+1D434-1D454,U+1D456-1D467,U+1D6A4;
+}

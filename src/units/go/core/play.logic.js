@@ -1,5 +1,4 @@
-// Hides: step 3 of the Go unit as changes to the record, from "A Self-Study System" (Go, The steps;
-// Start; The build, Go, The screens and The checks): a game ended and read from the server, the
+// Hides: step 3 of the Go unit as changes to the record: a game ended and read from the server, the
 // practice game's count by area, and the reading gate 2 makes after every 15 rated games. Pure
 // functions, tested in tests/go-game.test.mjs.
 import { assert } from '../../../kernel/invariant.logic.js'

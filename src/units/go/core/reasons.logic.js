@@ -1,5 +1,5 @@
 // Hides: the reason each move of a solution line carries: one clause from the course's fixed list, each
-// with a test on the position, as "A Self-Study System" Go sets out. Pure functions, tested in
+// with a test on the position. Pure functions, tested in
 // tests/go-reasons.test.mjs. A new reason enters the list only with its test.
 import { assert } from '../../../kernel/invariant.logic.js'
 import { groupAt, neighbours, other, place } from './rules.logic.js'

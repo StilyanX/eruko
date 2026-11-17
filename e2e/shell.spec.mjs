@@ -142,16 +142,41 @@ test('a record no longer saved carries a button that saves the backup file at on
   await expect(note).toContainText('Download started.')
 })
 
+test('a browser that lets the site store nothing opens the app unsaved, with a plain note', async ({
+  page
+}) => {
+  // A private window refuses the folder the record lives in.
+  await page.addInitScript(() => {
+    navigator.storage.getDirectory = () =>
+      Promise.reject(new DOMException('Security error when calling GetDirectory', 'SecurityError'))
+  })
+  await page.goto(FIRST.slug)
+  await expect(page.locator('h1')).toHaveText(FIRST.title)
+  const note = page.locator('.sys-note')
+  await expect(note).toContainText('Eruko cannot save anything')
+  await expect(note.getByRole('button', { name: 'Save a backup file' })).toBeVisible()
+  // Work done here is kept for the tab's life.
+  const kept = await page.evaluate(async () => {
+    const record = await import(new URL('record/index.js', document.baseURI).href)
+    const reply = await record.saveText('aether-test', '"x"', record.storedVersion('aether-test'))
+    return [reply.ok, record.storedText('aether-test')]
+  })
+  expect(kept).toEqual([true, '"x"'])
+})
+
 for (const unit of UNITS)
-  test(`${unit.slug}: the cards stand Continue, Review, Start, the way on first`, async ({
+  test(`${unit.slug}: Continue is the page's one button, and Contents opens on Start, then Review`, async ({
     page
   }) => {
     await page.goto(unit.slug)
-    await expect(page.locator('.hm-start .hm-start-title')).toHaveText([
-      'Continue',
-      'Review',
-      'Start'
-    ])
+    await expect(page.locator('.hm-start .hm-start-title')).toHaveText(['Continue'])
+    const first = page.locator('#hm-course ~ ul.hm-rows').first().locator('.hm-row-title')
+    // Start's note, under its title until the unit is begun, says what the page holds.
+    await expect(first.nth(0)).toHaveText(/^Start What you need before the first session$/)
+    await expect(first.nth(1)).toHaveText('Review')
+    await expect(page.locator('a.hm-row[href$="/start"]').first()).toContainText(
+      'What you need before the first session'
+    )
   })
 
 for (const unit of UNITS)
@@ -160,7 +185,7 @@ for (const unit of UNITS)
   }) => {
     await page.goto(unit.slug)
     await expect(page.locator('a.hm-start', { hasText: 'Continue' })).toHaveCount(1)
-    await expect(page.locator('a.hm-start', { hasText: 'Review' })).toHaveAttribute(
+    await expect(page.locator('a.hm-row', { hasText: /^Review/ })).toHaveAttribute(
       'href',
       new RegExp(`/${unit.slug}/review$`)
     )
@@ -212,7 +237,7 @@ const LOCKED = UNITS.flatMap(u =>
 async function lockedRow(page) {
   const name = `${LOCKED?.title} ${LOCKED?.why}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const row = page.locator('.hm-rows li:not(:has(li))').filter({
-    has: page.locator('.hm-row-title', { hasText: new RegExp(`^${name}$`) })
+    has: page.locator('.hm-row', { hasText: new RegExp(`(^|\\d)${name}$`) })
   })
   if (!(await row.isVisible()))
     await page
@@ -232,7 +257,7 @@ test('a locked row is still text in its place: its title and reason one name, no
   const row = await lockedRow(page)
   await expect(row.locator('a, button, input, [tabindex]')).toHaveCount(0)
   await expect(row.locator('[aria-disabled]')).toHaveCount(0)
-  await expect(row.locator('.hm-row-note')).toHaveAttribute('lang', 'en')
+  await expect(row.locator('.hm-state')).toHaveAttribute('lang', 'en')
   expect(await row.ariaSnapshot()).toContain(`${LOCKED?.title} ${LOCKED?.why}`)
   const { violations } = await new AxeBuilder({ page }).analyze()
   expect(violations.map(v => `${v.id}: ${v.nodes.length}`)).toEqual([])
@@ -246,6 +271,6 @@ test('in forced colours a locked row keeps its reason, and at 320 px it wraps', 
   await page.setViewportSize({ width: 320, height: 800 })
   await page.goto(LOCKED?.slug ?? '')
   const row = await lockedRow(page)
-  await expect(row.locator('.hm-row-note')).toBeVisible()
+  await expect(row.locator('.hm-state')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

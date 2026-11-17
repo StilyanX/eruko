@@ -99,17 +99,9 @@ test('a wrong mark after a right one shows its own verdict, never the last one t
   const examples = page.locator('#ar-examples')
   await expect(examples).toContainText('The next problem hides')
   const again = page.locator('arithmetic-place-line')
-  // The next problem's line may be drawn again just after it shows, dropping a mark set that soon
-  // (an old race, named in the consistency report): the key is pressed until the mark holds.
-  await expect(async () => {
-    await again.getByRole('slider').focus()
-    await page.keyboard.press('End')
-    await expect(again.getByRole('button', { name: 'Check' })).not.toHaveAttribute(
-      'aria-disabled',
-      'true',
-      { timeout: 500 }
-    )
-  }).toPass()
+  // Focus put on the line at once is not taken away by the Next that opened it, so the mark holds.
+  await again.getByRole('slider').focus()
+  await page.keyboard.press('End')
   await again.getByRole('button', { name: 'Check' }).click()
   await expect(examples).toContainText('Wrong. Read the solution.')
   await expect(examples.locator('p', { hasText: /^Right\./ })).toHaveCount(0)

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// The words ERUKO.md §6 and the Self-Study System paper's wording rules forbid, and the marks of
+// The words ERUKO.md §6 forbid, and the marks of
 // machine-written prose, found wherever a regex can find them. The reading pass catches the rest.
 //
 // Everywhere (code, comments, docs, the units' own text): an em dash, and the stock words of

@@ -1,5 +1,4 @@
-// Hides: how the server's public record is read, by the user name with no login ("A Self-Study
-// System", The build, Go, The engine and the server): the rating and its deviation, and the games,
+// Hides: how the server's public record is read, by the user name with no login: the rating and its deviation, and the games,
 // each with its record. The user name is the one thing sent. Each read returns its value or why
 // it failed (decode.logic.js `ServerError`); the screens say each failure in one sentence
 // (`serverSays`). Tested on stored replies in tests/go-game.test.mjs.

@@ -45,10 +45,17 @@ export const kindKey = id => `k${id}`
 /** @param {number} n */
 export const gameId = n => /** @type {GameId} */ (n)
 /**
+ * A game position as `own.seen` keeps it: the game and its place in the review list.
+ * @param {GameId} game
+ * @param {number} place
+ */
+export const positionKey = (game, place) => /** @type {PositionKey} */ (`${game}@${place}`)
+/**
+ * The key a record made before 0.3.0 kept for a game position: the game and the move.
  * @param {GameId} game
  * @param {number} move
  */
-export const positionKey = (game, move) => /** @type {PositionKey} */ (`${game}-${move}`)
+export const oldPositionKey = (game, move) => /** @type {PositionKey} */ (`${game}-${move}`)
 /**
  * @param {ProblemId} seed
  * @param {string} at
@@ -190,7 +197,7 @@ export const posedOf = data =>
  * @typedef {Readonly<{ key: string, move: string, result: string, typed: string, number: string }>} Draft
  */
 /**
- * The Go record, with the fields "A Self-Study System" sets (The build, Go, The record).
+ * The Go record.
  * @typedef {Readonly<{ engine: Engine | null, server: Server | null, course: readonly CourseLine[], recall: Readonly<Record<string, readonly GoLine[]>>, tries: readonly Try[], games: readonly Game[], readings: readonly Reading[], first: First | null, start: Readonly<{ counted: string, equal: string }>, position: Position, own: Own }>} GoRecord
  */
 

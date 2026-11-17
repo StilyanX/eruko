@@ -1,5 +1,4 @@
-// Hides: step 2 of the Go unit, from "A Self-Study System" (Go, The steps; The review position; The
-// build, Go, The engine and the server): the engine's pass over every position of a game, the
+// Hides: step 2 of the Go unit: the engine's pass over every position of a game, the
 // points each move lost, and the list of the learner's moves to review. A move's loss is the
 // engine's lead for the mover after its best move minus its lead after the move played. Pure
 // functions, tested in tests/go-review.test.mjs.

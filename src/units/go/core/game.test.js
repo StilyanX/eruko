@@ -1,4 +1,4 @@
-// Step 3's checks on a game ("A Self-Study System", The build, Go, The checks): a game read from the
+// Step 3's checks on a game: a game read from the
 // server's record, which game is rated and which a practice game, and the count by area. The
 // replies below have the shape of the server's own.
 import { test } from 'node:test'

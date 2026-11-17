@@ -1,4 +1,4 @@
-// The end level's original against "A Self-Study System" (Biography, the end level's original):
+// The end level's original:
 // the chapters a sentence's evidence cites alone, cut from the stored LacusCurtius pages of
 // Shipley's Loeb text (1924), Latin and Greek, the English dropped.
 import { test } from 'node:test'

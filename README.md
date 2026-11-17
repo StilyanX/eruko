@@ -13,6 +13,7 @@ Each unit teaches one subject. A unit's Start page says what the unit needs befo
 | Unit | Discipline | Course |
 | --- | --- | --- |
 | Arithmetic | Mathematics | 51 topics in 7 sections, number facts, mixed practice and an end level |
+| Algebra | Mathematics | 145 topics in 23 sections, from the first equation to olympiad problems, mixed practice and an end level |
 | Augustus | Biography | 56 lessons |
 | Go course | Go | The rules of Go in 5 parts, then 22 kinds of problem in 3 sections |
 | C++ course | Programming | 74 kinds of program in 2 sections, then the language track: 304 kinds in 9 stages |

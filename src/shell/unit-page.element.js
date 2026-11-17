@@ -1,6 +1,7 @@
 // Hides: a unit's page, the same for every unit: the title, where the learner stands, Continue
-// (the way on), Review and Start as cards, always in that order, then Contents and the sources.
-// Contents holds a field that finds a row by a word, and one list of the course in named sections,
+// (the way on, the page's one button), then Contents and the sources. Contents holds a field that
+// finds a row by a word, then Start and Review as its first unnumbered rows (Start moves after the
+// course once the unit is begun), and one list of the course in named sections,
 // each opening in place on its rows. What the learner opened and typed is kept in the history
 // entry, so Back from a row, or a reload, returns to the list as it was left.
 import { unitBySlug } from './registry.js'
@@ -17,17 +18,17 @@ import { viewOf } from './views.js'
 import { failure } from './failure.element.js'
 
 /**
- * One row: its number where it has one, the title, and at its end where it stands: what waits on
- * its page today ("149 due"), else the unit's own word for it ("3 of 11 passed"), else Done once
- * done; a link where it has a page. A row that opens nothing says why under its
- * title ("Opens after 3"), in words read with it.
+ * One row: its number where it has one, the title, and at its end where it stands: Next on the
+ * row Continue opens, else what waits on its page today ("149 due"), else the unit's own word for
+ * it ("3 of 11 passed"), else Done once done, else, on a row that opens nothing, why ("Opens after
+ * 3"); a link where it has a page. A row's note (Start's, until begun) stands under its title.
  * @param {import('../kernel/pages.logic.js').Item} item
  * @param {number | null | undefined} n
  * @param {number} [before] the number of the row before it in the unit's order
  */
 function row(item, n, before = n ? n - 1 : 0) {
-  const state = item.state ?? (item.done ? 'Done' : '')
-  const locked = lockNote(item, before)
+  const state =
+    (item.next ? 'Next' : (item.state ?? (item.done ? 'Done' : ''))) || lockNote(item, before)
   const inner = [
     n !== undefined && n !== null && h('span', { class: 'hm-num' }, n),
     n === null && h('span', { class: 'hm-num' }),
@@ -36,15 +37,20 @@ function row(item, n, before = n ? n - 1 : 0) {
       { class: 'hm-row-title', lang: item.lang },
       item.title,
       // The space keeps the two lines apart when they are read as one name.
-      locked && h('span', { class: 'hm-row-note', lang: 'en' }, ` ${locked}`)
+      item.note && h('span', { class: 'hm-row-note', lang: 'en' }, ` ${item.note}`)
     ),
-    state && h('span', { class: 'hm-state' }, state)
+    // The space, as the note's, keeps the title and where it stands apart when read as one name.
+    state && h('span', { class: item.next ? 'hm-state hm-next' : 'hm-state', lang: 'en' }, ` ${state}`)
   ]
   return h(
     'li',
     { key: item.key },
     item.to
-      ? h('a', { class: 'hm-row', href: linkTo(item.to) }, inner)
+      ? h(
+          'a',
+          { class: 'hm-row', href: linkTo(item.to), 'aria-current': item.next ? 'step' : null },
+          inner
+        )
       : h('div', { class: 'hm-row hm-still' }, inner)
   )
 }
@@ -66,12 +72,14 @@ const rows = (items, first, tail = [], before = 0) =>
   )
 
 /**
- * How much of a section is done, in words: Done, a count, or nothing yet.
+ * Where a section stands, in words: Next where it holds the row Continue opens, else Done, a count,
+ * or nothing yet.
  * @param {readonly import('../kernel/pages.logic.js').Item[]} held
  */
 function sectionState(held) {
+  if (held.some(i => i.next)) return 'Next'
   const done = held.filter(i => i.done).length
-  if (done === held.length) return 'Done'
+  if (held.length && done === held.length) return 'Done'
   return done ? `${done} of ${held.length} done` : null
 }
 
@@ -93,22 +101,26 @@ function keptState(kept) {
 
 /**
  * What a search of the unit finds: the pages by title (those ahead of the course, then those
- * after it), the sections by name, and each section's rows by title, with how many in all.
+ * after it), the sections by their name or their part's, and each section's rows by title, its
+ * closing rows with them, with how many in all.
  * @param {string} query
- * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
+ * @param {import('../kernel/pages.logic.js').Rows & { review: import('../kernel/pages.logic.js').Item, sections: readonly import('../kernel/pages.logic.js').Section[] }} all
  */
 function searchHits(query, all) {
-  const { start, top, items, after = [], sections } = all
-  const hitPages = [start, ...top].filter(p => finds(query, p.title))
+  const { start, review, top, items, after = [], sections } = all
+  const hitPages = [start, review, ...top].filter(p => finds(query, p.title))
   const hitAfter = after.filter(p => finds(query, p.title))
-  const named = sections.map((s, i) => ({ s, i })).filter(({ s }) => finds(query, s.title))
+  const named = sections
+    .map((s, i) => ({ s, i }))
+    .filter(({ s }) => finds(query, s.title) || (s.part !== undefined && finds(query, s.part)))
   const groups = sections
-    .map(s => ({
+    .map((s, i) => ({
       s,
-      hits: items
-        .map((it, i) => ({ it, n: i + 1 }))
-        .slice(s.first - 1, s.last)
-        .filter(({ it }) => finds(query, it.title))
+      hits: [
+        ...items.map((it, j) => ({ it, n: j + 1 })).slice(s.first - 1, s.last),
+        // A section's closing rows (its level test), unnumbered, as in the list.
+        ...(all.ends?.[i] ?? []).map(it => ({ it, n: null }))
+      ].filter(({ it }) => finds(query, it.title))
     }))
     .filter(g => g.hits.length)
   const total =
@@ -131,11 +143,89 @@ const sourceList = unit => [
   )
 ]
 
+/**
+ * Start and Review, the first unnumbered rows of Contents, and whether the unit is begun (Start
+ * then moves after the course).
+ * @param {import('../kernel/pages.logic.js').Unit} unit
+ * @param {import('../kernel/pages.logic.js').Rows} rowsNow
+ * @param {import('../kernel/days.logic.js').DatedGroup[]} dated
+ * @param {string} day
+ */
+function leadRows(unit, rowsNow, dated, day) {
+  const { dueCount, freshCount, rows: kinds } = datedView(dated, day)
+  const begun = rowsNow.items.some(i => i.done) || dated.some(g => g.dates.length > 0)
+  return {
+    // What Start holds, under its title until the unit is begun: read at the left, where a list is
+    // scanned, and never in the column where the other rows say where they stand.
+    start: {
+      key: 'start',
+      title: rowsNow.start.title,
+      to: rowsNow.start.to ?? `/${unit.slug}/start`,
+      ...(begun ? {} : { note: 'What you need before the first session' })
+    },
+    review: {
+      key: 'review',
+      title: 'Review',
+      to: `/${unit.slug}/review`,
+      // Short words, as every row's state: no full stop.
+      state:
+        dueCount + freshCount
+          ? `${waiting(dueCount, freshCount)} today`
+          : kinds.some(k => k.away === 'In Anki')
+            ? 'In Anki'
+            : 'Nothing due today'
+    },
+    begun
+  }
+}
+
+/** @param {string | undefined} to */
+const pathOf = to => to?.split(/[?#]/)[0]
+
+/**
+ * The row Continue opens, marked Next, so the way on is found in the list as well as on the card:
+ * the row whose address is Continue's own, else the first in the list's order that goes to the
+ * same page.
+ * @template {import('../kernel/pages.logic.js').Rows} R
+ * @param {R} rows
+ * @param {{ start: import('../kernel/pages.logic.js').Item, review: import('../kernel/pages.logic.js').Item, begun: boolean }} lead
+ * @param {{ to: string } | null} next
+ */
+function markNext(rows, lead, next) {
+  const ends = rows.ends ?? {}
+  const listed = [
+    lead.start,
+    lead.review,
+    ...rows.top,
+    ...rows.items,
+    ...Object.values(ends).flat(),
+    ...(rows.after ?? [])
+  ]
+  const target =
+    next &&
+    (listed.find(it => it.to === next.to) ??
+      listed.find(it => it.to && pathOf(it.to) === pathOf(next.to)))
+  /** @param {import('../kernel/pages.logic.js').Item} it */
+  const mark = it => (it === target ? { ...it, next: true } : it)
+  return {
+    all: {
+      ...rows,
+      top: rows.top.map(mark),
+      items: rows.items.map(mark),
+      ends: Object.fromEntries(Object.entries(ends).map(([k, v]) => [k, v.map(mark)])),
+      ...(rows.after ? { after: rows.after.map(mark) } : {})
+    },
+    lead: { ...lead, start: mark(lead.start), review: mark(lead.review) }
+  }
+}
+
 export class ShellUnitPage extends Screen {
   slug = ''
   query = ''
   /** @type {Set<number>} */
   opened = new Set()
+  /** On arrival with nothing kept or named, the section that holds Next opens at the first view. */
+  arriving = false
 
   setup() {
     watchRecords(this)
@@ -154,6 +244,7 @@ export class ShellUnitPage extends Screen {
     // way on is in view without a search through closed sections.
     const ahead = sections.findIndex(s => items.slice(s.first - 1, s.last).some(i => !i.done))
     this.opened = new Set(left?.opened ?? (part >= 1 ? [part - 1] : ahead >= 0 ? [ahead] : []))
+    this.arriving = !left?.opened && !(part >= 1)
     this.query = left?.query ?? ''
     this.update()
   }
@@ -163,6 +254,20 @@ export class ShellUnitPage extends Screen {
     const r = viewOf(this.slug).rows(recordsNow())
     // A unit whose course grows with the learner's record (Go) gives its sections with its rows.
     return { ...r, sections: r.sections ?? unit?.sections ?? [] }
+  }
+
+  /**
+   * Open, in place of the first section not done, the one that holds Next, where one does.
+   * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
+   */
+  #openNext(all) {
+    this.arriving = false
+    const at = all.sections.findIndex(
+      (s, i) =>
+        all.items.slice(s.first - 1, s.last).some(it => it.next) ||
+        (all.ends?.[i] ?? []).some(it => it.next)
+    )
+    if (at >= 0) this.opened = new Set([at])
   }
 
   #keep() {
@@ -216,7 +321,8 @@ export class ShellUnitPage extends Screen {
         const heads = s.part !== undefined && s.part !== sections[i - 1]?.part
         return h(
           'li',
-          { key: s.title, id: `${id}-row` },
+          // Two sections may share a title: each is keyed by its first item, which no other has.
+          { key: s.first, id: `${id}-row` },
           heads && h('h3', { class: 'hm-part-title' }, s.part),
           h(
             'button',
@@ -241,20 +347,14 @@ export class ShellUnitPage extends Screen {
   }
 
   /**
-   * The cards at the head of the page, the same in every unit and at every point of it: Continue
-   * (the way on: the work due today, else the next row that opens, else Nothing left and the day
-   * something comes back), Review (what comes back today) and Start. The way on is the first.
-   * @param {import('../kernel/pages.logic.js').Unit} unit
-   * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
+   * The page's one button, the same in every unit and at every point of it: Continue (the way on:
+   * the work due today, else the next row that opens, else Nothing left and the day something
+   * comes back).
+   * @param {ReturnType<typeof nextWork>} next
    * @param {import('../kernel/days.logic.js').DatedGroup[]} dated
    * @param {string} day
    */
-  #cards(unit, all, dated, day) {
-    const { start, sections } = all
-    const { dueCount, freshCount, rows: kinds } = datedView(dated, day)
-    /** @param {string | number} key */
-    const repeats = key => unit.pages.some(p => p.slug === key && p.repeats)
-    const next = nextWork({ rows: all, sections, groups: dated, today: day, repeats })
+  #cards(next, dated, day) {
     const back = dated
       .flatMap(g => g.dates)
       .filter(d => d > day)
@@ -283,27 +383,7 @@ export class ShellUnitPage extends Screen {
               'Nothing left.',
               back && ` The next item comes back on ${dayName(back)}.`
             )
-          ),
-      h(
-        'a',
-        { class: 'hm-start', href: linkTo(`/${unit.slug}/review`) },
-        h('span', { class: 'hm-start-title' }, 'Review'),
-        h(
-          'span',
-          { class: 'hm-start-note' },
-          dueCount + freshCount
-            ? `${waiting(dueCount, freshCount)} today.`
-            : kinds.some(k => k.away === 'In Anki')
-              ? 'You recall your word cards in Anki.'
-              : 'Nothing due today.'
-        )
-      ),
-      h(
-        'a',
-        { class: 'hm-start', href: linkTo(start.to ?? `/${unit.slug}/start`) },
-        h('span', { class: 'hm-start-title' }, start.title),
-        h('span', { class: 'hm-start-note' }, 'What you need before the first session.')
-      )
+          )
     ]
   }
 
@@ -329,7 +409,7 @@ export class ShellUnitPage extends Screen {
       groups.map(({ s, hits }) =>
         h(
           'div',
-          { key: s.title },
+          { key: s.first },
           h('h3', { class: 'hm-found-title' }, s.title),
           h(
             'ul',
@@ -344,34 +424,41 @@ export class ShellUnitPage extends Screen {
   /**
    * Contents: a field that finds a row by a word, then the pages ahead of the course (those done
    * every session and a language's "now" page), the course in its sections and the rows after it.
+   * Start and Review lead the list; once the unit is begun, Start follows the course instead.
    * @param {import('../kernel/pages.logic.js').Rows & { sections: readonly import('../kernel/pages.logic.js').Section[] }} all
+   * @param {{ start: import('../kernel/pages.logic.js').Item, review: import('../kernel/pages.logic.js').Item, begun: boolean }} lead
    */
-  #contents(all) {
+  #contents(all, { start, review, begun }) {
     const { top, items, after = [], ends = {}, sections } = all
     const query = this.query
-    const found = query.trim() === '' ? null : searchHits(query, all)
+    const found = query.trim() === '' ? null : searchHits(query, { ...all, review })
     return h(
       'section',
       { class: 'hm-block', 'aria-labelledby': 'hm-course' },
       h('h2', { class: 'hm-block-label', id: 'hm-course' }, 'Contents'),
-      searchField({
-        id: 'hm-find',
-        label: 'Search this unit',
-        value: query,
-        found: found?.total ?? 0,
-        onChange: text => {
-          this.query = text
-          this.#keep()
-          this.update()
-        }
-      }),
+      // A unit with no sections lists only Start and Review: nothing to search.
+      sections.length > 0 &&
+        searchField({
+          id: 'hm-find',
+          label: 'Search this unit',
+          value: query,
+          found: found?.total ?? 0,
+          onChange: text => {
+            this.query = text
+            this.#keep()
+            this.update()
+          }
+        }),
       found
         ? this.#found(found, all)
-        : [
-            top.length > 0 && rows(top),
-            this.sections(sections, items, ends, this.opened, i => this.toggle(i)),
-            after.length > 0 && rows(after, undefined, [], items.length)
-          ]
+        : sections.length === 0
+          ? rows(begun ? [review, start] : [start, review])
+          : [
+              rows(begun ? [review, ...top] : [start, review, ...top]),
+              this.sections(sections, items, ends, this.opened, i => this.toggle(i)),
+              (after.length > 0 || begun) &&
+                rows(begun ? [...after, start] : after, undefined, [], items.length)
+            ]
     )
   }
 
@@ -388,22 +475,27 @@ export class ShellUnitPage extends Screen {
     // The rows done every session and the rows after the course carry what waits on their page
     // today, unless the unit gives its own word for where the row stands.
     const { rows: kinds } = datedView(dated, day)
-    const path = (/** @type {string | undefined} */ to) => to?.split(/[?#]/)[0]
     /** @param {import('../kernel/pages.logic.js').Item} it */
     const withWaits = it => {
       if (it.state) return it
-      const on = kinds.filter(k => !k.away && path(k.to) === path(it.to))
+      const on = kinds.filter(k => !k.away && pathOf(k.to) === pathOf(it.to))
       const waits = waiting(
         on.reduce((n, k) => n + k.due, 0),
         on.reduce((n, k) => n + k.fresh, 0)
       )
       return waits ? { ...it, state: waits } : it
     }
-    const all = {
+    const waited = {
       ...rowsNow,
       top: rowsNow.top.map(withWaits),
       ...(rowsNow.after ? { after: rowsNow.after.map(withWaits) } : {})
     }
+    /** @param {string | number} key */
+    const repeats = key => unit.pages.some(p => p.slug === key && p.repeats)
+    const next = nextWork({ rows: waited, sections: waited.sections, groups: dated, today: day, repeats })
+    const lead0 = leadRows(unit, rowsNow, dated, day)
+    const { all, lead } = markNext(waited, lead0, next)
+    if (this.arriving) this.#openNext(all)
     const place = view.place(records)
     return h(
       'main',
@@ -416,8 +508,8 @@ export class ShellUnitPage extends Screen {
         h(
           'nav',
           { class: 'hm-list', 'aria-label': `${unit.title}: pages` },
-          this.#cards(unit, all, dated, day),
-          all.sections.length > 0 && this.#contents(all)
+          this.#cards(next, dated, day),
+          this.#contents(all, lead)
         ),
         sourceList(unit)
       )

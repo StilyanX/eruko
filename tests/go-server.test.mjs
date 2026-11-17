@@ -1,5 +1,4 @@
-// The Go server's reads (src/units/go/core/server.dom.js; "A Self-Study System", The build, Go, The
-// checks): the learner found by user name, a game read from the server's record, and a reply in
+// The Go server's reads (src/units/go/core/server.dom.js): the learner found by user name, a game read from the server's record, and a reply in
 // another shape said in one plain sentence. The replies below have the shape of the server's own.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

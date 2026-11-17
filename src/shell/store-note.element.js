@@ -2,7 +2,8 @@
 // a part that could not be read (its text kept for Settings to save), and a record that is no
 // longer saved: opened read-only after its check found damage, or stopped after a write failed;
 // and another tab holding the record that does not answer. A record no longer saved carries its
-// own button to save a backup file.
+// own button to save a backup file. A browser that lets the site store nothing (a private window)
+// gets the same button, with a note that nothing is saved.
 // Empty, it shows nothing; it stays on the page so a screen reader hears it change.
 import { health } from '../record/store.js'
 import { recordState } from '../record/index.js'
@@ -48,13 +49,21 @@ export class ShellStoreNote extends Screen {
     const { damaged, stopped, waiting } = health.get()
     const names = damaged.map(nameOf)
     const readOnly = recordState().state === 'read-only'
+    const kept = recordState().kept !== ''
+    const unsaved = recordState().state === 'unsaved'
     return h(
       'div',
       { class: 'page sys-note', role: 'status' },
-      (names.length > 0 || stopped || waiting) &&
+      (names.length > 0 || stopped || waiting || kept || unsaved) &&
         h(
           'div',
           { class: 'page-col' },
+          kept &&
+            h(
+              'p',
+              null,
+              'Eruko could not move your record to its new store, so it keeps using the old one. Nothing is lost. Eruko tries again when you next open it.'
+            ),
           names.length > 0 &&
             h(
               'p',
@@ -81,7 +90,13 @@ export class ShellStoreNote extends Screen {
               null,
               'Eruko has stopped saving, because a save failed. Your work since then is still on this page. Save a backup file before you close the page.'
             ),
-          stopped && this.#backupButton()
+          unsaved &&
+            h(
+              'p',
+              null,
+              'This is a private window, so Eruko cannot save anything. You can still study, but your work is gone when you close the tab. Save a backup file to keep it.'
+            ),
+          (stopped || unsaved) && this.#backupButton()
         )
     )
   }

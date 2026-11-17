@@ -1,7 +1,4 @@
-// Hides: gate 2 of the C++ unit ("A Self-Study System", Programming, The steps: Gate 2; Running
-// it: The contest, A change of series or method; The first stage: First reading; Kinds, first runs,
-// and readings against noise: Noise line; The build, Programming, The checks: First reading,
-// Gate 2): when a reading falls due, what it reads (the mean and standard deviation of 10 rated
+// Hides: gate 2 of the C++ unit: when a reading falls due, what it reads (the mean and standard deviation of 10 rated
 // performances, and the share of never-tried problems right at the first check in mixed
 // practice), whether either dropped past its noise line, and the reading screen's lines. A
 // reading is shown and holds nothing: new kinds open as gate 3 allows.

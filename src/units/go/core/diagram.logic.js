@@ -1,4 +1,4 @@
-// Hides: a diagram, as "A Self-Study System" Go stores one: the board's size, the cut in view in real
+// Hides: a diagram: the board's size, the cut in view in real
 // coordinates, and the stones of each colour by coordinate. Drawn as lines and text, never kept
 // as a picture. Pure functions, tested in tests/go-data.test.mjs.
 import { assert } from '../../../kernel/invariant.logic.js'

@@ -187,7 +187,7 @@ export class AeProofReader extends StepScreen {
   view() {
     const proof = this.proof
     const rec = proofsOf(this.#study).proofs?.[proof.id]
-    const head = [heading(this.heading), h('p', null, rich(proof.statement))]
+    const head = [heading(this.heading), h('p', null, rich(proof.statement, true))]
     if (!isRead(rec)) {
       const reading = rec?.reading ?? { line: 0, wrong: [] }
       return step([

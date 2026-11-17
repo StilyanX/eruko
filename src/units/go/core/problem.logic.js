@@ -173,6 +173,21 @@ function groupOf({ board, target, name, s }) {
 }
 
 /**
+ * A stored problem with its group named as groupOf names it: problems built before that naming
+ * kept the stone the search started from.
+ * @param {import('./decode.logic.js').Problem} problem
+ * @returns {import('./decode.logic.js').Problem}
+ */
+export function namedGroup(problem) {
+  const at0 = problem.group?.at
+  const stones = [...(problem.black ?? []), ...(problem.white ?? [])]
+  if (!Array.isArray(problem.view) || !stones.includes(at0)) return problem
+  const { board, index, name } = boardOf(problem)
+  const at = namingStone(groupAt(board, index(problem.group.at)).stones.map(name))
+  return !at || at === problem.group.at ? problem : { ...problem, group: { ...problem.group, at } }
+}
+
+/**
  * The stone a group is named by: on the highest row, and of those the leftmost.
  * @param {readonly string[]} stones
  */

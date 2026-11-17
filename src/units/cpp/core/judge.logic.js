@@ -1,5 +1,4 @@
-// Hides: how an answer is judged ("A Self-Study System", Programming, The material: A test passes;
-// The wording: Check screen; Visuals: Program state; The build, Programming, The checks: Gate 1):
+// Hides: how an answer is judged:
 // a test passes when the output equals the stored one after the spaces at the ends of its lines
 // and its final blank lines are dropped from both; a submit passes when every test does; a trace
 // answer is right when every typed cell equals the recorded one after the spaces at its ends are

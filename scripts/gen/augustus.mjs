@@ -98,8 +98,7 @@ console.log(
   `Augustus: the original holds chapters ${original.chapters.map(c => c.n).join(', ')} of the ${cited.length} cited alone.`
 )
 
-// The era screens of the raised level (21.01 <bu-bi-pipeline> Era sentences, Era pick, Era, Places,
-// Map drawing): the session's answers stored as sources, checked and assembled here.
+// The era screens of the raised level: the session's answers stored as sources, checked and assembled here.
 //   scripts/lib/augustus-era-sentences.json  the era reference's sentences as Rewrite gave them and
 //     the Checker kept them (and, before 43 BC, none: those screens restate the main account).
 //   scripts/lib/augustus-era-lessons.json  per decision: where its era comes from, Era pick's list,
@@ -128,7 +127,7 @@ const later = /\b(later|soon|future|would go on to|fateful|first of many|little 
 /** Every word the places table, the list of persons or the list of other words holds. */
 const sorted = new Set([...placesOf.persons, ...placesOf.other])
 /**
- * What stops a decision's map (21.01 <bu-bi-pipeline> Map drawing): a name with no Pleiades id,
+ * What stops a decision's map: a name with no Pleiades id,
  * a place Pleiades first dates after the decision's year, and a capitalised word of the situation
  * in neither the table, the persons nor the other words.
  * @param {readonly { name: string, id?: string | null, at?: string }[]} places

@@ -9,7 +9,7 @@
 // is the Appendix after chapter 35, which sums the money and the works. A chapter missing in
 // either language, or holding a question mark or a run of dots in either, is left out.
 
-export const TITLE =
+const TITLE =
   'Res Gestae Divi Augusti (Monumentum Ancyranum), Latin and Greek, Loeb text of F. W. Shipley (1924), LacusCurtius transcription'
 
 const CELL = /<TD CLASS="(Latin|Greek)">([\s\S]*?)<\/TD>/g
@@ -31,8 +31,8 @@ const plain = html =>
   html
     .replace(NOT_WORDS, '')
     .replace(/<[^>]*>/g, '')
-    .replace(/[<>]/g, '')
     .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/[<>]/g, '')
     .replace(/&nbsp;/g, ' ')
     .replace(/&shy;/g, '')
     .replace(/&amp;/g, '&')

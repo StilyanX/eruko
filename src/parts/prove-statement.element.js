@@ -110,7 +110,7 @@ export class AeProveStatement extends StepScreen {
     })
     return step([
       heading(this.heading),
-      h('p', null, rich(s.statement)),
+      h('p', null, rich(s.statement, true)),
       !isDone(rec) &&
         !isSeen(rec) &&
         optionalStatement(s, this.prove, proved) &&

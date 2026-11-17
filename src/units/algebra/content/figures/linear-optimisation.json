@@ -1,0 +1,271 @@
+{
+  "linear-optimisation-1.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -2,
+      14
+    ],
+    "shade": [
+      {
+        "boundary": {
+          "x": 0
+        },
+        "side": "right"
+      },
+      {
+        "boundary": {
+          "y": "(0-(0)*x)/(1)"
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "y": "(36-(4)*x)/(3)"
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "y": "(24-(2)*x)/(3)"
+        },
+        "side": "below"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": true,
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ]
+      },
+      {
+        "at": [
+          9,
+          0
+        ]
+      },
+      {
+        "at": [
+          6,
+          4
+        ]
+      },
+      {
+        "at": [
+          0,
+          8
+        ]
+      }
+    ]
+  },
+  "linear-optimisation-2.svg": {
+    "x": [
+      -6,
+      8
+    ],
+    "y": [
+      -5,
+      9
+    ],
+    "shade": [
+      {
+        "boundary": {
+          "y": "(-6-(5)*x)/(-3)"
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "y": "(27-(2)*x)/(3)"
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "y": "(3-(8)*x)/(-9)"
+        },
+        "side": "above"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": true,
+    "points": [
+      {
+        "at": [
+          3,
+          7
+        ]
+      },
+      {
+        "at": [
+          -3,
+          -3
+        ]
+      },
+      {
+        "at": [
+          6,
+          5
+        ]
+      }
+    ]
+  },
+  "linear-optimisation-3.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -2,
+      8
+    ],
+    "shade": [
+      {
+        "boundary": {
+          "x": 0
+        },
+        "side": "right"
+      },
+      {
+        "boundary": {
+          "y": "(0-(0)*x)/(1)"
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "y": "(20-(2)*x)/(5)"
+        },
+        "side": "above"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": true
+  },
+  "linear-optimisation-4.svg": {
+    "x": [
+      -2,
+      14
+    ],
+    "y": [
+      -2,
+      12
+    ],
+    "shade": [
+      {
+        "boundary": {
+          "x": 0
+        },
+        "side": "right"
+      },
+      {
+        "boundary": {
+          "y": "(0-(0)*x)/(1)"
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "y": "(36-(3)*x)/(2)"
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "y": "(40-(2)*x)/(4)"
+        },
+        "side": "below"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": true,
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ]
+      },
+      {
+        "at": [
+          12,
+          0
+        ]
+      },
+      {
+        "at": [
+          8,
+          6
+        ]
+      },
+      {
+        "at": [
+          0,
+          10
+        ]
+      }
+    ]
+  },
+  "linear-optimisation-5.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -1,
+      6
+    ],
+    "shade": [
+      {
+        "boundary": {
+          "x": 0
+        },
+        "side": "right"
+      },
+      {
+        "boundary": {
+          "y": "(0-(0)*x)/(1)"
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "y": "(12-(2)*x)/(3)"
+        },
+        "side": "below"
+      }
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": true,
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          4
+        ]
+      },
+      {
+        "at": [
+          6,
+          0
+        ]
+      }
+    ]
+  }
+}

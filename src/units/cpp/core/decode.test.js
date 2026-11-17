@@ -7,6 +7,7 @@ import {
   contestRows,
   formText,
   zoneDay,
+  deviceDayOf,
   parsonsForm,
   traceForm,
   courseFrom,
@@ -312,4 +313,12 @@ test("a study day in the stored time zone, turning at 04:00 there; an unknown zo
     'before 04:00 there'
   )
   assert.equal(zoneDay(ms, 'Nowhere/None'), studyDay(ms))
+})
+
+test('a contest typed in another zone falls on the device day its start falls on', () => {
+  process.env.TZ = 'Europe/Copenhagen'
+  // 02:00 in Tokyo on the 7th is 18:00 in Copenhagen on the 6th
+  assert.equal(deviceDayOf('2026-11-07T02:00', 'Asia/Tokyo'), '2026-11-06')
+  assert.equal(deviceDayOf('2026-11-07T13:00', 'Europe/Copenhagen'), '2026-11-07')
+  assert.equal(deviceDayOf('', 'Europe/Copenhagen'), '')
 })

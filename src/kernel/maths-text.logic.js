@@ -73,6 +73,57 @@ export function formulaPieces(tex) {
 // formula's last block, so the line never breaks between them.
 export const CLOSE_PUNCT = /^[.,;:!?)\]}%’”"'…‰]+/
 
+// The relation signs a formula is read by, as Temml writes them in an <mo>.
+const RELATIONS = new Set(['=', '≠', '&lt;', '&gt;', '≤', '≥', '≈', '≡'])
+// The elements a sign may stand in and still be at the formula's top level.
+const ROWS = new Set(['math', 'mrow', 'mstyle'])
+
+/**
+ * How many relation signs (= ≠ < > ≤ ≥ ≈ ≡) a formula's MathML holds at its top level: in an <mo>
+ * outside every bracket, script, fraction, root and table. Two or more make a chain.
+ * @param {string} mathml
+ */
+export function relationsIn(mathml) {
+  /** @type {string[]} */
+  const open = []
+  let brackets = 0
+  let count = 0
+  for (const [, close, tag = '', text = ''] of mathml.matchAll(/<(\/?)([a-z]+)[^>]*>([^<]*)/g)) {
+    if (close) {
+      open.pop()
+      continue
+    }
+    if (tag === 'mo' && open.every(t => ROWS.has(t))) {
+      if (text && '([{'.includes(text)) brackets++
+      else if (text && ')]}'.includes(text)) brackets--
+      else if (brackets === 0 && RELATIONS.has(text)) count++
+    }
+    open.push(tag)
+  }
+  return count
+}
+
+/**
+ * True when a formula's MathML is one number or one name: 64, n, α.
+ * @param {string} mathml
+ */
+export const isOneToken = mathml => /^<math><(mi|mn)>[^<]*<\/\1><\/math>$/.test(mathml)
+
+/**
+ * True when a formula's MathML ends in a script: x², a₁. The maths font leaves a space after one.
+ * @param {string} mathml
+ */
+export const endsInScript = mathml => /<\/(msup|msub|msubsup)>(<\/mrow>)*<\/math>$/.test(mathml)
+
+/**
+ * True when a formula's MathML holds what is taller than a line of text: a fraction, a table
+ * (cases), a sign with something set over or under it, or a large operator (a sum with limits).
+ * Such a formula takes its full height in the line; any other leaves the lines at their pitch.
+ * @param {string} mathml
+ */
+export const isTall = mathml =>
+  /<(mfrac|mtable|munder|mover|munderover)[ >]|<mo[^>]*>[∑∏∐∫∬∭∮⋀⋁⋂⋃⨁⨂]<\/mo>/.test(mathml)
+
 /**
  * A text as the screens draw it: plain runs, inline formulas between single $, and formulas
  * between $$ set on a line of their own. A **bold** term may hold a formula too.

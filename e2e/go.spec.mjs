@@ -251,7 +251,7 @@ test('a rules item first met: typed with the keyboard, refused in the wrong form
   await noViolation(page)
   // Enter presses the step's Next
   await page.keyboard.press('Enter')
-  await expect(work).toContainText('No stone is on the board. Black plays C3. Is it legal?')
+  await expect(work).toContainText('No stone is on the board. Can Black now play at C3?')
   await expect(work).not.toContainText('Keep trying')
   // Check waits for the answer, so focus goes to the field, not to Check
   await expect(page.locator('#go-rule')).toBeFocused()
@@ -272,7 +272,7 @@ test('a rules item answered by points: each click adds a point or takes it out, 
   await setUp(page, RECORDS.pointsItem())
   await page.goto(`${G}/work`)
   const work = page.locator('#go-work')
-  await expect(work).toContainText('Black plays C3. Which stones does the move remove?')
+  await expect(work).toContainText('If Black now plays at C3, which stones does that move remove?')
   await clickPoint(work, [0, 0, 5, 5], 'B3')
   await clickPoint(work, [0, 0, 5, 5], 'D3')
   await expect(page.locator('#go-rule')).toHaveValue('B3 D3')
@@ -295,7 +295,7 @@ test('a rules item due: No further move counts as wrong, and a reload keeps the 
   await reloadKept(page)
   await expect(work).toContainText('Wrong. No further move counts as wrong.')
   await button(work, /^Next$/).click()
-  await expect(work).toContainText('No stone is on the board. Black plays C3. Is it legal?')
+  await expect(work).toContainText('No stone is on the board. Can Black now play at C3?')
 })
 
 test('a worked example is read, then its kind asks a problem', async ({ page }) => {
@@ -742,7 +742,7 @@ test('a position from the learner\'s own game is posed on its own thread, and be
     .poll(async () => (await stored(page)).own?.problems?.length ?? 0, { timeout: 20000 })
     .toBe(1)
   const r = await stored(page)
-  expect(r.own.seen).toEqual(['900-1'])
+  expect(r.own.seen).toEqual(['900@0'])
   expect(r.own.problems[0].answers).toEqual(['K9'])
 })
 
@@ -844,14 +844,14 @@ test('on a phone a whole board keeps its size and scrolls in its own box, with i
   await expect(box).toHaveAttribute('tabindex', '0')
   expect(await box.evaluate(el => el.scrollWidth > el.clientWidth)).toBe(true)
   const svg = box.locator('svg')
-  // drawn one to one: no scale, so the coordinates stand at the body text size of 17 pixels
+  // drawn one to one: no scale, so the coordinates stand at the body text size of 18 pixels
   expect(await svg.evaluate(el => el instanceof SVGSVGElement && el.getScreenCTM()?.a)).toBe(1)
   expect(
     await svg
       .locator('.go-coord')
       .first()
       .evaluate(el => getComputedStyle(el).fontSize)
-  ).toBe('17px')
+  ).toBe('18px')
   // clickable points are at least 24 pixels apart
   const rows = svg.locator('.go-line').first().locator('xpath=following-sibling::*[1]')
   const a = await svg.locator('.go-line').first().boundingBox()
@@ -971,7 +971,7 @@ test('a wrong rules item says the right answer, and Next says the new question',
   await button(work, 'No further move').click()
   await expect(status(page)).toHaveText('Wrong. The answer is 3.')
   await button(work, /^Next$/).click()
-  await expect(status(page)).toContainText('Black plays C3. Is it legal?')
+  await expect(status(page)).toContainText('Can Black now play at C3?')
 })
 
 test('a wrong problem says the first move and the result', async ({ page }) => {

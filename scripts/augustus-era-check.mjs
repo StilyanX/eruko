@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-// Hides: the Checker's first part run on the era sentences as shipped (21.01 <bu-bi-pipeline>
-// Checker): every name, number and quoted word of each sentence in scripts/lib/
+// Hides: the Checker's first part run on the era sentences as shipped: every name, number and quoted word of each sentence in scripts/lib/
 // augustus-era-sentences.json stands on its page of the era reference, and no sentence on a screen
 // states a date that may fall after its decision. The era reference is not in the repository, so
 // the pages are given as a folder of page files, p001.txt to p999.txt, one per printed page.

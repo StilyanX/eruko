@@ -1,5 +1,4 @@
-// Hides: the Go unit's one next action, from "A Self-Study System" (Go, The steps and Running it; The
-// build, Go, The one next action): a pure function of the record, the course and the day, which
+// Hides: the Go unit's one next action: a pure function of the record, the course and the day, which
 // returns the first case that applies. 1 what is due, oldest date first; 2 the next position of
 // a game to review; 3 the game; 4 mixed practice; 5 new material: a kind begun ahead, then a
 // rules item while a rules part is open, else the open kind's first run; 6 nothing left. A kind

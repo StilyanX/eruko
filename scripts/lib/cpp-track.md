@@ -1,7 +1,6 @@
 # The C++ language track: the source format
 
-What `scripts/lib/cpp-track.mjs` reads and checks ("A Self-Study System", Programming, The language
-track, The track's material). Run `node scripts/gen/cpp.mjs` after every change; a failing check stops
+What `scripts/lib/cpp-track.mjs` reads and checks. Run `node scripts/gen/cpp.mjs` after every change; a failing check stops
 it with `<file> line <n>: <rule>: <what to fix>` and nothing is written. It needs g++ 16
 (`g++` on PATH, or the compiler `ERUKO_CPP_COMPILER` names) and, for device items, the CUDA
 toolkit at `~/.cache/eruko-cuda/tk` (or `ERUKO_CUDA`). Builds are cached under

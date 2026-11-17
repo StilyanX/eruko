@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Reads the four classical collections as positions (scripts/lib/go-classical.mjs) and keeps
-// each one the exact search can pose and finish from its stones and its side to move alone, as
-// "A Self-Study System" Go sets out (src/units/go/pose.js). The search supplies every answer;
+// each one the exact search can pose and finish from its stones and its side to move alone
+// (src/units/go/pose.js). The search supplies every answer;
 // nothing of a file but its stones enters. What is kept goes to scripts/lib/go-classical.json
 // for scripts/gen/go.mjs.
 //

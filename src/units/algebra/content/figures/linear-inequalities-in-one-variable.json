@@ -1,0 +1,677 @@
+{
+  "linear-inequalities-in-one-variable-1.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      6
+    ],
+    "shade": [
+      {
+        "from": 3,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-2.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      1
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -2,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-3.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      1
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-4.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      4
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 2
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-5.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      6
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 4,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-6.svg": {
+    "kind": "numberline",
+    "x": [
+      -6,
+      1
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-7.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      1
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -1
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-8.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      7
+    ],
+    "shade": [
+      {
+        "from": 5,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-9.svg": {
+    "kind": "numberline",
+    "x": [
+      -7,
+      1
+    ],
+    "shade": [
+      {
+        "from": -5,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-10.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      4
+    ],
+    "shade": [
+      {
+        "from": 1,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-11.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      3
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 0
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-12.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      4
+    ],
+    "shade": [
+      {
+        "from": -2,
+        "to": 3,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-13.svg": {
+    "kind": "numberline",
+    "x": [
+      -6,
+      1
+    ],
+    "shade": [
+      {
+        "from": -5,
+        "to": -2,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-14.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      8
+    ],
+    "shade": [
+      {
+        "from": 6,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-15.svg": {
+    "kind": "numberline",
+    "x": [
+      -8,
+      1
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -6,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-16.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      2
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": 1
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-17.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      9
+    ],
+    "shade": [
+      {
+        "from": 7,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-18.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      4
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": 3,
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-19.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      5
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": 4,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-20.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      5
+    ],
+    "shade": [
+      {
+        "from": 1,
+        "to": 4,
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-21.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      2
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": 1
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-22.svg": {
+    "kind": "numberline",
+    "x": [
+      -2,
+      4
+    ],
+    "shade": [
+      {
+        "from": -1,
+        "to": 3,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-23.svg": {
+    "kind": "numberline",
+    "x": [
+      -2,
+      6
+    ],
+    "shade": [
+      {
+        "from": -1,
+        "to": 5,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-24.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      5
+    ],
+    "shade": [
+      {
+        "from": -2,
+        "to": 4
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-25.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      3
+    ],
+    "shade": [
+      {
+        "from": -2,
+        "to": 2,
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-26.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      5
+    ],
+    "shade": [
+      {
+        "from": 2,
+        "to": 4,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-27.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      3
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": 2,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-28.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      2
+    ],
+    "shade": [
+      {
+        "from": -1,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-29.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      5
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 3,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-30.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      2
+    ],
+    "shade": [
+      {
+        "from": -2,
+        "to": 1,
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-31.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      6
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 4,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-32.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      1
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-33.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      8
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 6
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-34.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      2
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": 1,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-35.svg": {
+    "kind": "numberline",
+    "x": [
+      -2,
+      3
+    ],
+    "shade": [
+      {
+        "from": -1,
+        "to": 2,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-36.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      1
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -2
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-37.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      5
+    ],
+    "shade": [
+      {
+        "from": 1,
+        "to": 4
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-38.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      6
+    ],
+    "shade": [
+      {
+        "from": 2,
+        "to": 5,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-39.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      5
+    ],
+    "shade": [
+      {
+        "from": 2,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-40.svg": {
+    "kind": "numberline",
+    "x": [
+      -7,
+      1
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -5,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-41.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      3
+    ],
+    "shade": [
+      {
+        "from": -3,
+        "to": 2,
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-42.svg": {
+    "kind": "numberline",
+    "x": [
+      -2,
+      4
+    ],
+    "shade": [
+      {
+        "from": -1,
+        "to": 3
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-43.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      4
+    ],
+    "shade": [
+      {
+        "from": 1,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-44.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      7
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 5
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-45.svg": {
+    "kind": "numberline",
+    "x": [
+      -6,
+      1
+    ],
+    "shade": [
+      {
+        "from": -5,
+        "to": -2,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-46.svg": {
+    "kind": "numberline",
+    "x": [
+      -5,
+      1
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": -1,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-47.svg": {
+    "kind": "numberline",
+    "x": [
+      -3,
+      3
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 0
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-48.svg": {
+    "kind": "numberline",
+    "x": [
+      -6,
+      1
+    ],
+    "shade": [
+      {
+        "from": -4,
+        "to": "inf"
+      }
+    ]
+  },
+  "linear-inequalities-in-one-variable-49.svg": {
+    "kind": "numberline",
+    "x": [
+      -1,
+      7
+    ],
+    "shade": [
+      {
+        "from": 3,
+        "to": 6,
+        "fromOpen": true,
+        "toOpen": true
+      }
+    ]
+  }
+}

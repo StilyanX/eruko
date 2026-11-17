@@ -1,10 +1,23 @@
-/* Temml's maths stylesheet, vendored whole (src/style/maths/), in its own layer. */
-@import './maths/temml-latin-modern.css' layer(maths);
+/* The family a formula is set in, "Eruko Maths", of three faces split by unicode-range (cut by
+   scripts/maths-fonts.py): Literata's own digits and upright letters, Literata Italic's letters
+   for the one-letter variables, and TeX Gyre Bonum Math's signs, radicals, brackets, Greek and
+   layout constants. Then Temml's maths stylesheet (src/style/maths/), in its own layer. */
+@import './fonts/eruko-maths-signs-1.005/faces.css';
+@import './maths/temml.css' layer(maths);
 
 @layer maths {
+  math {
+    font-family: var(--font-maths);
+  }
   /* A table's cells keep the padding above and below that MathML Core gives them, which the
      base layer's reset (app.css) takes off: Temml sets only their sides. */
   mtd {
     padding-block: 0.5ex;
+  }
+  /* Temml pads each row of a formula for its own line breaking, which the screens replace with
+     their pieces (parts/maths-screens.dom.js): the padding only pushed the lines of a paragraph
+     apart. */
+  math > mrow {
+    padding: 0;
   }
 }

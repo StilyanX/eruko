@@ -37,11 +37,11 @@ export default [
     "topic": "addition-of-rational-numbers-from-its-laws",
     "kind": "t24-k1",
     "calc": "no",
-    "prompt": "Compute $\\left(2\\frac{6}{7}\\right)^*+\\left(3\\frac{2}{5}\\right)^*$.",
+    "prompt": "Compute $\\left(2\\frac{6}{7}\\right)^*+\\left(3\\frac{2}{5}\\right)^*$. Here $p^*$ is the mirror reflection of $p$ across $0$, the number $-p$.",
     "answer": "-6 9/35",
     "form": "Answer as a fraction in lowest terms, or equivalent.",
     "solution": [
-      "Compute $\\left(2\\frac{6}{7}\\right)^*+\\left(3\\frac{2}{5}\\right)^*$.",
+      "Compute $\\left(2\\frac{6}{7}\\right)^*+\\left(3\\frac{2}{5}\\right)^*$. Here $p^*$ is the mirror reflection of $p$ across $0$, the number $-p$.",
       "Both numbers are negative, so their sum is the mirror reflection of $2\\frac{6}{7}+3\\frac{2}{5}$, by the rule that $x^*+y^*=(x+y)^*$.",
       "$2\\frac{6}{7}+3\\frac{2}{5}=\\frac{20}{7}+\\frac{17}{5}=\\frac{100}{35}+\\frac{119}{35}=\\frac{219}{35}=6\\,\\frac{9}{35}$.",
       "$-6\\,\\frac{9}{35}$."
@@ -52,11 +52,11 @@ export default [
     "topic": "addition-of-rational-numbers-from-its-laws",
     "kind": "t24-k1",
     "calc": "no",
-    "prompt": "Compute $\\left(\\frac{24}{11}\\right)^*+\\left(156\\frac{1}{2}\\right)^*$.",
+    "prompt": "Compute $\\left(\\frac{24}{11}\\right)^*+\\left(156\\frac{1}{2}\\right)^*$. Here $p^*$ is the mirror reflection of $p$ across $0$, the number $-p$.",
     "answer": "-158 15/22",
     "form": "Answer as a fraction in lowest terms, or equivalent.",
     "solution": [
-      "Compute $\\left(\\frac{24}{11}\\right)^*+\\left(156\\frac{1}{2}\\right)^*$.",
+      "Compute $\\left(\\frac{24}{11}\\right)^*+\\left(156\\frac{1}{2}\\right)^*$. Here $p^*$ is the mirror reflection of $p$ across $0$, the number $-p$.",
       "Both numbers are negative, so their sum is the mirror reflection of $\\frac{24}{11}+156\\frac{1}{2}$, by the rule that $x^*+y^*=(x+y)^*$.",
       "$\\frac{24}{11}+156\\frac{1}{2}=\\frac{48}{22}+\\frac{3\\,443}{22}=\\frac{3\\,491}{22}=158\\,\\frac{15}{22}$.",
       "$-158\\,\\frac{15}{22}$."

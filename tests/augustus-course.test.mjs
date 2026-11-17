@@ -1,5 +1,5 @@
-// The built life of Augustus against "A Self-Study System" (Biography, "The material": the screen,
-// the date line, the forecast point, the main account and the lowered level).
+// The built life of Augustus: the screen, the date line, the forecast point, the main account and
+// the lowered level.
 // The main account is Bringmann, Augustus, chapter I.1 to the end of chapter V. The copy prints no
 // page numbers, so a page is its chapter, section and paragraph: "II.1 ¶7".
 import { test } from 'node:test'

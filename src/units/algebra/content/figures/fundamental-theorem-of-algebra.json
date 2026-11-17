@@ -1,0 +1,2454 @@
+{
+  "fundamental-theorem-of-algebra-1.svg": {
+    "x": [
+      -5,
+      1
+    ],
+    "y": [
+      -30,
+      2
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+4)*(x+3)*(x+2)*(x+1)*x-20"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-2.svg": {
+    "x": [
+      -8,
+      1
+    ],
+    "y": [
+      -2,
+      28
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/8*(x+7)*(x+4)*(x+2)*x+20"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-3.svg": {
+    "x": [
+      -4,
+      5
+    ],
+    "y": [
+      -2,
+      28
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/3*(x+2)*x*(x-4)+24"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-4.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -11,
+      2
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/10*(x-1)*(x-2)*(x-4)*(x-5)*(x-6)*(x-7)-4"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-5.svg": {
+    "x": [
+      -6,
+      2
+    ],
+    "y": [
+      -2,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/16*(x+5)*(x+4)*(x+3)*(x+2)*(x+1)*x*(x-1)+22"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-6.svg": {
+    "x": [
+      -1,
+      7
+    ],
+    "y": [
+      -2,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/2*x*(x-3)*(x-6)+22"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-7.svg": {
+    "x": [
+      -3,
+      7
+    ],
+    "y": [
+      -2,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/12*(x+2)*(x-1)*(x-4)*(x-6)+22"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-8.svg": {
+    "x": [
+      -6,
+      3
+    ],
+    "y": [
+      -5,
+      55
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/4*(x+5)*(x+4)*(x+2)*x*(x-1)+40"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-9.svg": {
+    "x": [
+      -4,
+      3
+    ],
+    "y": [
+      -1,
+      16
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/3*(x+3)*(x+2)*(x+1)*x*(x-1)*(x-2)+14"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-10.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -65,
+      5
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/40*(x+8)*(x+7)*(x+5)*(x+4)*(x+2)*(x+1)*x-40"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-11.svg": {
+    "x": [
+      -3,
+      6
+    ],
+    "y": [
+      -2,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/4*(x+2)*(x-1)*(x-5)+14"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-12.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -2,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/4*x*(x-2)*(x-5)*(x-6)+12"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-13.svg": {
+    "x": [
+      -8,
+      2
+    ],
+    "y": [
+      -1,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/16*(x+7)*(x+6)*(x+4)*(x+1)*x+4"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-14.svg": {
+    "x": [
+      -6,
+      4
+    ],
+    "y": [
+      -12,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/15*(x+5)*(x+3)*(x+2)*x*(x-1)*(x-3)-6"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-15.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -11,
+      1
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/6*(x-1)*(x-6)*(x-8)-8"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-16.svg": {
+    "x": [
+      -6,
+      1
+    ],
+    "y": [
+      -20,
+      2
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+5)*(x+4)*(x+2)*(x+1)-10"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-17.svg": {
+    "x": [
+      -5,
+      4
+    ],
+    "y": [
+      -2,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/20*(x+4)*(x+3)*(x+1)*(x-1)*(x-3)+22"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-18.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/40*(x+4)*(x+3)*(x+1)*(x-2)*(x-3)*(x-4)+55"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-19.svg": {
+    "x": [
+      -7,
+      3
+    ],
+    "y": [
+      -17,
+      1
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/40*(x+6)*(x+5)*(x+3)*(x-1)*(x-2)-14"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-20.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -22,
+      12
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/4*(x-1)^2*(x-5)*(x-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          8,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          10
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-21.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -5,
+      45
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-4*(x+1)^2*(x-3)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          12
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-22.svg": {
+    "x": [
+      -6,
+      3
+    ],
+    "y": [
+      -20,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+5)*(x+4)*(x+1)^2*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          0,
+          20
+        ],
+        "label": "E"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-23.svg": {
+    "x": [
+      -4,
+      5
+    ],
+    "y": [
+      -400,
+      25
+    ],
+    "xstep": 1,
+    "ystep": 25,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+3)^2*(x-2)^2*(x-4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          -288
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-24.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -125,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 25,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+7)^2*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -7,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -98
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-25.svg": {
+    "x": [
+      -4,
+      4
+    ],
+    "y": [
+      -30,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3/2*(x+3)*(x+2)*(x-3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          81
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-26.svg": {
+    "x": [
+      -5,
+      3
+    ],
+    "y": [
+      -40,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+4)^2*(x+2)*(x-1)*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          0,
+          -32
+        ],
+        "label": "E"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-27.svg": {
+    "x": [
+      -7,
+      2
+    ],
+    "y": [
+      -20,
+      320
+    ],
+    "xstep": 1,
+    "ystep": 20,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+6)*(x+3)^2*(x-1)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          108
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-28.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -20,
+      200
+    ],
+    "xstep": 1,
+    "ystep": 20,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*(x+4)*(x-1)^2*(x-4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          24
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-29.svg": {
+    "x": [
+      -7,
+      1
+    ],
+    "y": [
+      -45,
+      5
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*(x+6)*(x+2)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -36
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-30.svg": {
+    "x": [
+      -3,
+      7
+    ],
+    "y": [
+      -50,
+      120
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2/3*(x+2)*(x-2)*(x-6)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          96
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-31.svg": {
+    "x": [
+      -1,
+      7
+    ],
+    "y": [
+      -120,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*x*(x-1)*(x-5)*(x-6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          4,
+          -72
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-32.svg": {
+    "x": [
+      -6,
+      1
+    ],
+    "y": [
+      -12,
+      18
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+5)*(x+2)*x"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -4,
+          16
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-33.svg": {
+    "x": [
+      -3,
+      4
+    ],
+    "y": [
+      -40,
+      45
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*(x+2)*(x+1)*x*(x-2)*(x-3)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          1,
+          36
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-34.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -30,
+      90
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2/3*(x+4)*(x+2)*x*(x-4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -1,
+          -10
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-35.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -40,
+      90
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*x*(x-5)*(x-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          8,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          56
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-36.svg": {
+    "x": [
+      -7,
+      2
+    ],
+    "y": [
+      -30,
+      40
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2/3*(x+6)*(x+4)*x*(x-1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -5,
+          -20
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-37.svg": {
+    "x": [
+      -7,
+      3
+    ],
+    "y": [
+      -80,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+6)*(x+5)*(x+3)*x*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          -1,
+          -60
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-38.svg": {
+    "x": [
+      -2,
+      3
+    ],
+    "y": [
+      -3,
+      6
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-5/2*(x+1)*x*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          5
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-39.svg": {
+    "x": [
+      -6,
+      4
+    ],
+    "y": [
+      -30,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/3*(x+5)*(x+3)*x*(x-3)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -2,
+          10
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-40.svg": {
+    "x": [
+      -5,
+      2
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+4)*(x+3)*(x+1)*x*(x-1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          -2,
+          6
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-41.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -200,
+      350
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-4*x*(x-3)*(x-6)*(x-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          8,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          5,
+          -120
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-42.svg": {
+    "x": [
+      -3,
+      1
+    ],
+    "y": [
+      -13,
+      1
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x+2)^2*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ]
+      },
+      {
+        "at": [
+          -1,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          -12
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-43.svg": {
+    "x": [
+      -1,
+      7
+    ],
+    "y": [
+      -40,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/3*(x-1)*(x-4)^2*(x-6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ]
+      },
+      {
+        "at": [
+          4,
+          0
+        ]
+      },
+      {
+        "at": [
+          6,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          -32
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-44.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -20,
+      80
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/2*(x-2)^2*(x-5)*(x-7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "at": [
+          5,
+          0
+        ]
+      },
+      {
+        "at": [
+          7,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          70
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-45.svg": {
+    "x": [
+      -6,
+      4
+    ],
+    "y": [
+      -50,
+      350
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2/3*(x+5)*(x+3)^2*(x-3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ]
+      },
+      {
+        "at": [
+          -3,
+          0
+        ]
+      },
+      {
+        "at": [
+          3,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          270
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-46.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -3500,
+      1000
+    ],
+    "xstep": 1,
+    "ystep": 250,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x+1)^3*(x-2)*(x-6)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ]
+      },
+      {
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "at": [
+          6,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          216
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-47.svg": {
+    "x": [
+      -5,
+      4
+    ],
+    "y": [
+      -400,
+      250
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+4)*(x+2)*(x-1)*(x-3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ]
+      },
+      {
+        "at": [
+          -2,
+          0
+        ]
+      },
+      {
+        "at": [
+          1,
+          0
+        ]
+      },
+      {
+        "at": [
+          3,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          144
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-48.svg": {
+    "x": [
+      -5,
+      4
+    ],
+    "y": [
+      -425,
+      25
+    ],
+    "xstep": 1,
+    "ystep": 25,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2/3*(x+4)^2*(x-3)^3"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ]
+      },
+      {
+        "at": [
+          3,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          -288
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-49.svg": {
+    "x": [
+      -7,
+      3
+    ],
+    "y": [
+      -50,
+      500
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/3*(x+6)*(x+4)^2*(x-2)^3"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ]
+      },
+      {
+        "at": [
+          -4,
+          0
+        ]
+      },
+      {
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          256
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-50.svg": {
+    "x": [
+      -4,
+      2
+    ],
+    "y": [
+      -30,
+      2
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+3)^2*(x+1)^2*(x-1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ]
+      },
+      {
+        "at": [
+          -1,
+          0
+        ]
+      },
+      {
+        "at": [
+          1,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          -18
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-51.svg": {
+    "x": [
+      -3,
+      3
+    ],
+    "y": [
+      -1,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+2)^3*(x-1)^2*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ]
+      },
+      {
+        "at": [
+          1,
+          0
+        ]
+      },
+      {
+        "at": [
+          2,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          8
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-52.svg": {
+    "x": [
+      -7,
+      1
+    ],
+    "y": [
+      -6,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/4*(x+6)^2*(x+2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ]
+      },
+      {
+        "at": [
+          -2,
+          0
+        ]
+      },
+      {
+        "at": [
+          0,
+          18
+        ]
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-53.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -6,
+      20
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2/3*(x-3)*(x-6)*(x-8)+(2)"
+      },
+      {
+        "y": "2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          3,
+          2
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          6,
+          2
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          8,
+          2
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          18
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-54.svg": {
+    "x": [
+      -6,
+      2
+    ],
+    "y": [
+      -14,
+      6
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2/3*(x+5)*(x+3)*(x+1)*(x-1)+(-6)"
+      },
+      {
+        "y": "-6"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          -6
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          -6
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -1,
+          -6
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          -6
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          -4,
+          4
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-55.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -45,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-1)*(x-5)*(x-7)+(-5)"
+      },
+      {
+        "y": "-5"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          -5
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          5,
+          -5
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          7,
+          -5
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          -35
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-56.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -1,
+      12
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+8)*(x+7)*(x+5)*(x+3)+(5)"
+      },
+      {
+        "y": "5"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          5
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -7,
+          5
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -5,
+          5
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -3,
+          5
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          -6,
+          2
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-57.svg": {
+    "x": [
+      -1,
+      7
+    ],
+    "y": [
+      -16,
+      16
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3/2*(x-1)*(x-2)*(x-5)*(x-6)+(-8)"
+      },
+      {
+        "y": "-8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          -8
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          -8
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          5,
+          -8
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          6,
+          -8
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          3,
+          10
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-58.svg": {
+    "x": [
+      -6,
+      1
+    ],
+    "y": [
+      -13,
+      1
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/2*(x+5)*(x+3)*x+(-9)"
+      },
+      {
+        "y": "-9"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          -9
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          -9
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -9
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -4,
+          -11
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-59.svg": {
+    "x": [
+      -2,
+      8
+    ],
+    "y": [
+      -16,
+      6
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/3*(x+1)*(x-3)*(x-7)+(-4)"
+      },
+      {
+        "y": "-4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          -4
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          -4
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          7,
+          -4
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          4
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-60.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -11,
+      1
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/3*(x+8)*(x+6)*(x+4)*(x+2)+(-7)"
+      },
+      {
+        "y": "-7"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          -7
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -6,
+          -7
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -4,
+          -7
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -2,
+          -7
+        ],
+        "label": "D"
+      },
+      {
+        "at": [
+          -7,
+          -2
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-61.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -10,
+      22
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/2*(x+8)*(x+2)*x+(-4)"
+      },
+      {
+        "y": "-4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          -4
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          -4
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -4
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -4,
+          12
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-62.svg": {
+    "x": [
+      -7,
+      3
+    ],
+    "y": [
+      -16,
+      6
+    ],
+    "xstep": 1,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/3*(x+6)*(x+1)*(x-2)+(-8)"
+      },
+      {
+        "y": "-8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          -8
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          -8
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          2,
+          -8
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -4,
+          4
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "fundamental-theorem-of-algebra-63.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -5,
+      8
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3/2*(x-4)*(x-5)*(x-8)+(-2)"
+      },
+      {
+        "y": "-2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4,
+          -2
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          5,
+          -2
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          8,
+          -2
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          7,
+          7
+        ],
+        "label": "P"
+      }
+    ]
+  }
+}

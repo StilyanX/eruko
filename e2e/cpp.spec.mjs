@@ -558,9 +558,9 @@ test('a new compiler the runner reports runs every reference solution first; one
 test('Review counts what waits today as its card does, in one Work list row that leads to the work list', async ({ page }) => {
   await setUp(page, 'due')
   await page.goto(C)
-  const card = page.locator('.hm-start', { hasText: 'Review' })
-  await expect(card).toContainText(' today.')
-  const waits = ((await card.locator('.hm-start-note').textContent()) ?? '').replace(' today.', '')
+  const card = page.locator('a.hm-row', { hasText: /^Review/ })
+  await expect(card).toContainText(/ today$/)
+  const waits = ((await card.locator('.hm-state').textContent()) ?? '').trim().replace(/ today$/, '')
   await page.goto(`${C}/review`)
   const table = page.locator('table.lrn-rv')
   await expect(table.locator('tbody tr')).toHaveCount(1)

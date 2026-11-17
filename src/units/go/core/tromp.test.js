@@ -1,5 +1,4 @@
-// The rules items ("A Self-Study System", Go, Start and The material, Rules item; The build, Go,
-// Rules program): the rules program is checked against Tromp's definition of the score on every
+// The rules items: the rules program is checked against Tromp's definition of the score on every
 // stored position before an item is shown, and each item asks one question with one exact answer.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

@@ -5,17 +5,18 @@
 // files' records, licences, notices and types, the units' YAML sources, the specs their figures
 // are drawn from and the maps of their sources' problems, notes in Markdown, the tests beside the
 // logic),
-// and the font faces of the scripts, which the worker keeps once a page first fetches one.
+// and the font faces of the scripts, which the worker keeps once a page first fetches one (the
+// two maths faces are kept from the start: every formula needs them).
 import { createHash } from 'node:crypto'
 import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 import { generated } from './generated.mjs'
 
-export const SRC = path.resolve(import.meta.dirname, '..', '..', 'src')
+const SRC = path.resolve(import.meta.dirname, '..', '..', 'src')
 export const OUT = path.join(SRC, 'sw-manifest.gen.js')
 
 const LEFT_OUT =
-  /^(sw\.js|sw-manifest\.gen\.js)$|(^|\/)(VENDOR\.json|LICENSE|NOTICE)$|\.d\.ts$|\.yaml$|\.md$|\.test\.js$|^units\/[^/]+\/content\/(figures|coverage)\/[^/]+\.json$|^style\/fonts\/.*\.woff2$/
+  /^(sw\.js|sw-manifest\.gen\.js)$|(^|\/)(VENDOR\.json|LICENSE|NOTICE)$|\.d\.ts$|\.yaml$|\.md$|\.test\.js$|^units\/[^/]+\/content\/(figures|coverage)\/[^/]+\.json$|^style\/fonts\/(?!eruko-maths-).*\.woff2$/
 
 /** @param {string | Buffer} data */
 const sha = data => createHash('sha256').update(data).digest('hex')

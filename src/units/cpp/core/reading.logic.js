@@ -1,4 +1,4 @@
-// Hides: the language track's reading ("A Self-Study System", Programming, The track's reading):
+// Hides: the language track's reading:
 // when it is asked, the order of each task's units (the bound, the verdict items, the count item,
 // the item alone and its witness), and what a reading's end does: right when every unit of every
 // task was right at the first try, else each kind a wrong check is tagged with opens again and

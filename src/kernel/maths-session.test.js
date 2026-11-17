@@ -90,7 +90,7 @@ test('a wrong answer kept in the record shows its solution there', () => {
     r.record.stage?.[K] && 'shown' in r.record.stage[K] ? r.record.stage[K].shown : false,
     true
   )
-  assert.deepEqual(says(r.effects), ['Wrong. The solution is below.'])
+  assert.deepEqual(says(r.effects), ['Wrong. Read the solution.'])
 })
 
 test('an idea stated: wrong keeps its day, right retires the kind', () => {
@@ -238,4 +238,12 @@ test('mixed practice: an answer shown holds the problem in hand until it is mark
     day
   })
   assert.equal(marked.record.mix?.phase, 'right')
+})
+
+test('an idea marked right and changed to wrong comes back, and changed again it retires', () => {
+  const right = mathsStep(practice({}), { t: 'idea-right', kind: K, day }).record
+  const wrong = mathsStep(right, { t: 'idea-wrong', kind: K, day }).record
+  assert.equal(wrong.retired?.[K], undefined)
+  assert.equal(wrong.stage?.[K]?.day, day)
+  assert.equal(mathsStep(wrong, { t: 'idea-right', kind: K, day }).record.retired?.[K], day)
 })

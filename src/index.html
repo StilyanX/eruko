@@ -13,6 +13,9 @@
     <link rel="icon" type="image/svg+xml" href="shell/favicon.svg" />
     <link rel="apple-touch-icon" href="shell/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Eruko" />
+    <!-- The Home Screen app's own name on the phone: without an id an iPhone opens Eruko from another web
+         app's Now Playing card (WebKit bug 267810). -->
+    <link rel="manifest" href="shell/app.json" />
 
     <!-- Each theme's ground and text, painted before the stylesheets load so the first frame is
          not the wrong colour. :where() gives them no weight, so the theme tokens win once the
@@ -85,7 +88,8 @@
     <link rel="preload" as="style" href="shell/unit-page.css">
     <link rel="preload" as="style" href="shell/settings.css">
     <link rel="preload" as="style" href="style/maths.css">
-    <link rel="preload" as="style" href="style/maths/temml-latin-modern.css">
+    <link rel="preload" as="style" href="style/fonts/eruko-maths-signs-1.005/faces.css">
+    <link rel="preload" as="style" href="style/maths/temml.css">
     <link rel="preload" as="style" href="parts/study-page.css">
     <link rel="modulepreload" href="kernel/backup.logic.js">
     <link rel="modulepreload" href="kernel/days.logic.js">
@@ -135,6 +139,12 @@
     <link rel="modulepreload" href="shell/unit-view.js">
     <link rel="modulepreload" href="shell/units.gen.js">
     <link rel="modulepreload" href="shell/views.js">
+    <link rel="modulepreload" href="units/algebra/core/course.gen.js">
+    <link rel="modulepreload" href="units/algebra/core/decode.logic.js">
+    <link rel="modulepreload" href="units/algebra/core/end-level.logic.js">
+    <link rel="modulepreload" href="units/algebra/core/entry.logic.js">
+    <link rel="modulepreload" href="units/algebra/core/unit.logic.js">
+    <link rel="modulepreload" href="units/algebra/manifest.js">
     <link rel="modulepreload" href="units/arithmetic/core/course.gen.js">
     <link rel="modulepreload" href="units/arithmetic/core/decode.logic.js">
     <link rel="modulepreload" href="units/arithmetic/core/end-count.logic.js">
@@ -171,9 +181,12 @@
     <link rel="modulepreload" href="units/go/core/game.logic.js">
     <link rel="modulepreload" href="units/go/core/next.logic.js">
     <link rel="modulepreload" href="units/go/core/own.logic.js">
+    <link rel="modulepreload" href="units/go/core/problem.logic.js">
+    <link rel="modulepreload" href="units/go/core/reasons.logic.js">
     <link rel="modulepreload" href="units/go/core/record.logic.js">
     <link rel="modulepreload" href="units/go/core/review.logic.js">
     <link rel="modulepreload" href="units/go/core/rules.logic.js">
+    <link rel="modulepreload" href="units/go/core/solve.logic.js">
     <link rel="modulepreload" href="units/go/core/unit.logic.js">
     <link rel="modulepreload" href="units/go/manifest.js">
     <!-- /preload -->

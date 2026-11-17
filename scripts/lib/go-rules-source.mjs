@@ -1,5 +1,5 @@
-// The stored set of positions the Go unit's rules items are built from, in the five parts of
-// "A Self-Study System" Go. Each is a whole small board, rows top first (`X` Black, `O` White,
+// The stored set of positions the Go unit's rules items are built from, in five parts.
+// Each is a whole small board, rows top first (`X` Black, `O` White,
 // `.` empty), with what its one question asks; scripts/gen/go.mjs works every answer out with
 // the rules program (src/units/go/core/rules.logic.js) and refuses a position on which that program and
 // Tromp's definition of the score (src/units/go/core/tromp.logic.js) differ, or which asks a move the two
@@ -156,7 +156,7 @@ export const POSITIONS = [
     rows: ['.....', '..XO.', '.XO.O', 'O.XO.', 'X....'],
     earlier: [KO[0], KO[1], ['.....', '..XO.', '.XO.O', '..XO.', 'X....']],
     toMove: 'B',
-    lead: 'White plays C3 and removes a black stone from D3. Then Black plays A1, and White plays A2.',
+    lead: 'White played C3 and removed a black stone from D3. Then Black played A1, and White played A2.',
     ask: { type: 'legal', side: 'B', at: 'D3' },
     rule: 'The capture back is legal when it does not repeat the whole board as it stood after an earlier move.'
   },
@@ -180,14 +180,14 @@ export const POSITIONS = [
   {
     part: 4,
     rows: FENCE,
-    lead: 'Black passes. White plays E3. Black passes.',
+    lead: 'Black passed. White played E3. Black passed.',
     ask: { type: 'passes', moves: ['pass', 'E3', 'pass'] },
     rule: 'A stone played between two passes starts the count of passes again.'
   },
   {
     part: 4,
     rows: FENCE,
-    lead: 'Black passes. White passes.',
+    lead: 'Black passed. White passed.',
     ask: { type: 'passes', moves: ['pass', 'pass'] },
     rule: 'Two passes in a row end play.'
   },

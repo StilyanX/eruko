@@ -1,5 +1,4 @@
-// Hides: what a scan of a Core Guidelines rule finds in an answer ("A Self-Study System",
-// Programming, The track's material: Scans). A scan is a fixed check written for one rule: a
+// Hides: what a scan of a Core Guidelines rule finds in an answer. A scan is a fixed check written for one rule: a
 // pattern over the answer's text, comments and the insides of literals blanked so a word in them
 // is never a hit, or the g++ 16 warnings the rule's text names, read from what the compiler wrote.
 // The generator checks each scan loud on the rule's own bad example and silent on its own good

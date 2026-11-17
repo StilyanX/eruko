@@ -1,5 +1,4 @@
-// The Arithmetic unit's material against "A Self-Study System" (Mathematics, "The material" and
-// "The wording"): the shape of a topic file and a bank problem, the counts, and the wording rules
+// The Arithmetic unit's material: the shape of a topic file and a bank problem, the counts, and the wording rules
 // that a machine can check.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

@@ -54,6 +54,7 @@
  * nothing, where the unit has a reason of its own. `look` marks a row that opens a page to look
  * at before its turn, which keeps nothing and which Continue never names. `idle` marks the row
  * in hand with nothing to take today (a topic waiting for its proof checks): it opens, but the way on names nothing.
+ * `note` is a line under the title that says what the page holds; `next` marks the row Continue opens.
  * @typedef {Readonly<{
  *   key: string | number,
  *   title: string,
@@ -63,7 +64,9 @@
  *   opens?: string,
  *   state?: string,
  *   idle?: boolean,
- *   look?: boolean
+ *   look?: boolean,
+ *   note?: string,
+ *   next?: boolean
  * }>} Item
  */
 /**

@@ -1,5 +1,4 @@
-// Hides: how a faded Parsons problem is cut from a problem's reference solution ("A Self-Study
-// System", Programming, The material: Parsons problem, Decoy lines): the frame (the includes,
+// Hides: how a faded Parsons problem is cut from a problem's reference solution: the frame (the includes,
 // `int main() {` and its `}`) and the empty lines stay whole and in place; every other line is
 // shuffled by the shuffle given, keeps its indentation, since C++ does not set its blocks by
 // indentation, and has the part of its group that carries the plan's step left as an empty

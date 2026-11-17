@@ -37,7 +37,7 @@ const ownerOf = f => {
 
 // Files no rule reads: generated, vendored, binary, or the lock file.
 const SKIP =
-  /(\.gen\.js|\.woff2|\.png|\.wasm|\.svg|package-lock\.json)$|^src\/record\/sqlite-|^scripts\/vendor\/|^src\/style\/fonts\/|\/hls-[^/]+\//
+  /(\.gen\.js|\.woff2|\.png|\.wasm|\.svg|package-lock\.json)$|^src\/record\/(wa-)?sqlite-|^scripts\/vendor\/|^src\/style\/fonts\/|\/hls-[^/]+\//
 /** The page's generated lists (stylesheets and preloads) are written by scripts/gen/preload.mjs. */
 const withoutGenerated = (/** @type {string} */ f, /** @type {string} */ text) =>
   f === 'src/index.html'

@@ -1,5 +1,4 @@
-// Gate 2 ("A Self-Study System", Kinds, first runs, and readings against noise; The build, Go,
-// The checks): the noise line, the solve arm, the rating arm, the first line, and the rank range.
+// Gate 2: the noise line, the solve arm, the rating arm, the first line, and the rank range.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
@@ -177,7 +176,7 @@ test('the rank range: 23.15 ln(rating / 525), the lower rounded down and the upp
   assert.deepEqual(rankRange(100), { lower: '30 kyu', upper: '30 kyu' })
 })
 
-// The end level ("A Self-Study System", The end level; The build, Go, The checks, End level)
+// The end level
 
 /**
  * A record whose first line is set at game 15 (that reading itself not walked), followed by the

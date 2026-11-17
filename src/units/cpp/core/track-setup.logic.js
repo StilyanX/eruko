@@ -1,5 +1,4 @@
-// Hides: the track's Setup ("A Self-Study System", Programming, The track's material: Setup, for
-// the track; Pin; Determinism gate): the fixed program each check form runs with its known
+// Hides: the track's Setup: the fixed program each check form runs with its known
 // outcome, how each outcome is read from the runner's replies, and the pin stored once every form
 // gives its known outcome. A form that does not ends Setup with its name, and the track does not
 // open.

@@ -1,4 +1,4 @@
-// "A Self-Study System", Mathematics, "Formats": digits in groups of three separated by a thin space.
+// Digits in groups of three separated by a thin space.
 // Digits after the decimal point group in threes from the point once there are `min` or more (4 or
 // 5, as each unit's course sets it).
 // A repeating decimal's overline is not grouped across.

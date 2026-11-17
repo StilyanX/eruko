@@ -7,7 +7,16 @@ import { dayName } from '../kernel/days.logic.js'
 import { kindId } from '../kernel/maths-decode.logic.js'
 import { TRY_AGAIN } from '../kernel/maths-session.logic.js'
 import { heading, noSend, practiceOf } from './maths-steps.dom.js'
-import { StepScreen, actions, choice, mark, step, studyStore, verdict } from './study.dom.js'
+import {
+  StepScreen,
+  actions,
+  actionsAs,
+  choice,
+  mark,
+  step,
+  studyStore,
+  verdict
+} from './study.dom.js'
 import { h } from './view.dom.js'
 
 /**
@@ -44,6 +53,20 @@ export class AeIdeaKind extends StepScreen {
     this.send({ t: right ? 'idea-right' : 'idea-wrong', kind: this.kind.id, day: today() })
     this.focusSoon('h3')
     if (!right) this.update()
+  }
+
+  /**
+   * Change the last mark, pressed by mistake, on the day it was given.
+   * @param {boolean} right the mark it becomes
+   */
+  #change(right) {
+    return actionsAs(
+      'change',
+      choice({
+        label: ['Change the last mark to ', right ? 'Right' : 'Wrong'],
+        onPress: () => this.#marked(right)
+      })
+    )
   }
 
   /** Show the check is gone once pressed: focus goes to the mark's question, past the optional box. */
@@ -101,15 +124,22 @@ export class AeIdeaKind extends StepScreen {
     return step([
       heading(this.heading),
       retired
-        ? h(
-            'p',
-            { key: 'retired' },
-            'You stated this idea on ',
-            dayName(retired),
-            '. Its problems now come in mixed practice.'
-          )
+        ? [
+            h(
+              'p',
+              { key: 'retired' },
+              'You stated this idea on ',
+              dayName(retired),
+              '. Its problems now come in mixed practice.'
+            ),
+            retired === today() && this.#change(false)
+          ]
         : [
-            failed && !this.written && verdict(false, TRY_AGAIN),
+            failed &&
+              !this.written && [
+                verdict(false, TRY_AGAIN),
+                failed === today() && this.#change(true)
+              ],
             h(
               'p',
               { id: `inst-${id}-q` },

@@ -1,5 +1,4 @@
-// Hides: gate 2 of the Go unit, from "A Self-Study System" (Go, The steps; Kinds, first runs, and
-// readings against noise; The build, Go, The checks): after every 15 rated games the rating arm
+// Hides: gate 2 of the Go unit: after every 15 rated games the rating arm
 // reads the server's rating against the reading 45 games before, and the solve arm the share of
 // first tries right in mixed practice against the last share. A reading lower than its last by
 // more than the noise line is marked as a drop. A reading is information for the learner: it
@@ -248,8 +247,7 @@ const printed = x => ({
 })
 
 /**
- * The end level, read from gate 2's readings and storing nothing ("A Self-Study System", The end
- * level; The build, Go, The checks, End level). The walk takes the readings made after the first
+ * The end level, read from gate 2's readings and storing nothing. The walk takes the readings made after the first
  * line, none marked as before a forced change, oldest first, from `unpassed`, and at each applies
  * only the test of the state before it: a pass when this reading and the 47 before it, all after
  * the first line and the last withdrawal, are settled (deviation 70 or less) and the newer and

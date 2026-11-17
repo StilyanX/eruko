@@ -1,4 +1,4 @@
-// The C++ record ("A Self-Study System", The build, Programming, The record): its twelve fields,
+// The C++ record: its twelve fields,
 // what Setup stores once, the next contest's start, a change of series or method, and the
 // practice submission.
 import { test } from 'node:test'

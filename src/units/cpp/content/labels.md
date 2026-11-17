@@ -855,5 +855,9 @@
 - Start the states to try and the values seen with the start.
 - Give back unreachable when no state reaches the goal.
 - Give back the states after adding 1 or doubling, one move later.
+- Halve the score less 10, rounding down.
+- Add each of the 4 rolls to the total, keeping the lowest.
+- Give back the total less the lowest roll.
+- Set each ability by `ability()`, and the hit points from the constitution.
 
 Plan words: counter, accumulator, loop, flag, sentinel, tally, running total

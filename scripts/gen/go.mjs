@@ -128,15 +128,15 @@ function asked(p, board, at, name, id) {
     if (!r && board.cells[at(ask.at)] === 0)
       throw new Error(`rules item ${id} asks a move the two rule sets judge differently`)
     const repeat = r && (p.earlier ?? []).some(rows => same(boardFrom(rows), r.board))
-    question = `${lead}${SIDE[ask.side]} plays ${ask.at}. Is it legal? Type yes or no.`
+    question = `${lead}Can ${SIDE[ask.side]} now play at ${ask.at}? Type yes or no.`
     answer = ask.side === p.toMove && r && !repeat ? 'yes' : 'no'
   } else if (ask.type === 'removed') {
     const r = place(board, colourOf(ask.side), at(ask.at))
     if (!r) throw new Error(`rules item ${id}: the move is not legal`)
-    question = `${lead}${SIDE[ask.side]} plays ${ask.at}. Which stones does the move remove? Type their points, or none.`
+    question = `${lead}If ${SIDE[ask.side]} now plays at ${ask.at}, which stones does that move remove? Type their points, or none.`
     answer = r.captured.map(name).sort(byPoint).join(' ') || 'none'
   } else if (ask.type === 'pass') {
-    question = `${lead}${SIDE[ask.side]} passes. Is it legal? Type yes or no.`
+    question = `${lead}Can ${SIDE[ask.side]} now pass? Type yes or no.`
     answer = 'yes'
   } else if (ask.type === 'passes') {
     let n = 0

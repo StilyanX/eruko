@@ -1,4 +1,4 @@
-// Hides: the proof rules of "A Self-Study System" (Mathematics) every maths unit with proofs
+// Hides: the proof rules every maths unit with proofs
 // keeps: a proof read counts its reading as its first line, each check adds one and a right check
 // makes it known ("The proof check"); the statements still open, and how many methods still need
 // a proved one; when a topic with proofs is finished; the dated list's rows of proofs read; and

@@ -1,5 +1,4 @@
-// Hides: what a test asks of the proof rules every maths unit with proofs keeps (proofs.logic.js),
-// against "A Self-Study System" (Mathematics, "Topic finished" and "The proof check").
+// Hides: what a test asks of the proof rules every maths unit with proofs keeps (proofs.logic.js).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { kindId, topicSlug } from './maths-decode.logic.js'

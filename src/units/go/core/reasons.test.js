@@ -1,4 +1,4 @@
-// The reasons a solution's moves carry ("A Self-Study System", Go, The solution, Reasons): one
+// The reasons a solution's moves carry: one
 // clause a move from the course's fixed list, each given by a test on the position.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

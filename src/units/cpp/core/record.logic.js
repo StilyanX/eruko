@@ -1,5 +1,4 @@
-// Hides: the changes to the C++ record that are no study step ("A Self-Study System", Programming,
-// Running it; The build, Programming, The record): what Setup stores once (the runtime and the
+// Hides: the changes to the C++ record that are no study step: what Setup stores once (the runtime and the
 // server), the fixed program Setup runs to check the runner, the practice submission accepted,
 // the next contest's start typed, and a change of series or method, which starts gate 2's windows
 // again from the day it is typed. The record's fields are typed and decoded in decode.logic.js.

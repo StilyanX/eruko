@@ -1,12 +1,11 @@
-// Hides: problems from the learner's own games and the problems Eruko writes, as "A Self-Study
-// System" Go sets out (The build, Go, Own games and written problems): when no never-tried
+// Hides: problems from the learner's own games and the problems Eruko writes: when no never-tried
 // problem is left in the course, the next build is the first position of the oldest reviewed
 // game's review list not yet posed; when no game has one, it is one change to a found problem the
 // learner got wrong. Each is posed from its stones alone (pose.logic.js) and enters only when the
 // exact search solves it. The problems are kept in the record, under `own`, with the kinds they
 // make: a problem joins the kind whose problems give its sequence of reasons, and else makes a
 // kind of its own, "own fight 1" on. Pure functions, tested in own.test.js.
-import { KINDS, PARTS, SECTIONS, changeKey, kindId, positionKey, problemId } from './decode.logic.js'
+import { KINDS, PARTS, SECTIONS, changeKey, kindId, oldPositionKey, positionKey, problemId } from './decode.logic.js'
 import { boardOf } from './diagram.logic.js'
 import { boardBefore, colours, diagramOf, oldestFirst } from './game.logic.js'
 import { kindLine } from './record.logic.js'
@@ -95,9 +94,9 @@ export function nextPosition(record) {
   const seen = new Set(record.own.seen)
   for (const game of [...record.games].sort(oldestFirst)) {
     if (!game.reviewed || game.size !== 19) continue
-    for (const entry of game.list ?? []) {
-      const key = positionKey(game.id, entry.move)
-      if (seen.has(key)) continue
+    for (const [place, entry] of (game.list ?? []).entries()) {
+      const key = positionKey(game.id, place)
+      if (seen.has(key) || seen.has(oldPositionKey(game.id, entry.move))) continue
       const board = boardBefore(game, entry.move - 1)
       if (!board) continue
       const { black, white } = diagramOf(board)

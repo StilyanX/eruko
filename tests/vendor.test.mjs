@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 
 // The only outside code the app runs is vendored into src/: the
-// record's SQLite and the two faces, and what a unit vendors for itself in its core/ (a sound
+// record's SQLite, the two faces and the two maths faces cut for Eruko (scripts/maths-fonts.py), and what a unit vendors for itself in its core/ (a sound
 // player). Each folder records its version and each file's SHA-256 in a VENDOR.json beside them;
 // a changed, swapped, added or missing file fails here.
 const SRC = path.join(import.meta.dirname, '..', 'src')
@@ -14,11 +14,18 @@ const folders = readdirSync(SRC, { recursive: true, withFileTypes: true })
   .map(e => e.parentPath)
 const byName = (/** @type {string} */ a, /** @type {string} */ b) => (a < b ? -1 : a > b ? 1 : 0)
 
-test("the vendored code is SQLite, Literata and Inter, and a unit's own in its core/, each in a folder named by its version", () => {
+test("the vendored code is SQLite, wa-sqlite, Literata, Inter and the two maths faces cut from Literata and TeX Gyre Bonum Math, and a unit's own in its core/, each in a folder named by its version", () => {
   const paths = folders.map(f => path.relative(SRC, f).split(path.sep).join('/')).sort(byName)
   assert.deepEqual(
     paths.filter(p => !p.startsWith('units/')),
-    ['record/sqlite-3.54.0', 'style/fonts/inter-5.3.0', 'style/fonts/literata-5.3.0']
+    [
+      'record/sqlite-3.54.0',
+      'record/wa-sqlite-1.2.0',
+      'style/fonts/eruko-maths-letters-5.3.0',
+      'style/fonts/eruko-maths-signs-1.005',
+      'style/fonts/inter-5.3.0',
+      'style/fonts/literata-5.3.0'
+    ]
   )
   for (const p of paths.filter(p => p.startsWith('units/')))
     assert.match(p, /^units\/[^/]+\/core\/[^/]+$/)

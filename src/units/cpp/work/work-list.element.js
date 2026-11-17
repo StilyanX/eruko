@@ -443,7 +443,7 @@ export class CppWorkList extends StepScreen {
     // the contest's day is read in the stored zone; on it the contest is the whole plan, and an
     // item open stays open for the next day
     const zoned = server ? zoneDay(clock.get(), server.zone) : day
-    if (server && contestToday(course, record, zoned))
+    if (server && contestToday(course, record, day))
       return step(contest(server), { key: 'contest' })
     const item = nextAction(course, record, day, zoned)
     if (this.#f.key !== keyOf(item)) this.#f = formOf(item)

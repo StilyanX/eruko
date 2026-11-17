@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Hides: how a C++ program typed in Eruko is compiled and run on the computer Eruko runs on. No
 // maintained C++23 compiler runs inside a page, so this small program does it at one fixed local
-// address and lets only Eruko's own address call it (A Self-Study System, Programming, Runner).
+// address and lets only Eruko's own address call it.
 //
 //   npm run cpp-runner [-- --origin <the address Eruko is open at>]… [--compiler g++] [--port 8767]
 //                      [--cuda <the CUDA toolkit's folder, holding bin/nvcc>]
@@ -59,7 +59,10 @@ const compiler = one('compiler') ?? 'g++'
 /** The host compiler nvcc is given: the same g++, by its full path. */
 const compilerPath = compiler.includes('/') ? compiler : (() => { try { return execFileSync('sh', ['-c', `command -v ${compiler}`], { encoding: 'utf8' }).trim() } catch { return compiler } })()
 const origins = new Set(['http://127.0.0.1:9999', 'http://localhost:9999', ...all('origin')])
-const FLAGS = ['-std=c++23', '-O2', '-pipe', '-fdiagnostics-color=never']
+// gigasecond and meetup include Boost's date_time, which is header-only: `--boost` names the folder
+// that holds `boost/` where the compiler does not already look (NixOS); elsewhere the system's is used
+const boost = one('boost') ?? process.env.ERUKO_BOOST ?? ''
+const FLAGS = ['-std=c++23', '-O2', '-pipe', '-fdiagnostics-color=never', ...(boost ? ['-isystem', boost] : [])]
 /** @param {string} dir */
 const ifThere = dir => (existsSync(dir) ? dir : '')
 const cuda = one('cuda') ?? ifThere(join(homedir(), '.cache', 'eruko-cuda', 'tk'))
@@ -68,6 +71,8 @@ const gdbProgram = tools ? join(tools, 'gdb', 'bin', 'gdb') : 'gdb'
 
 /** Catch2 v2, the test runner the Exercism track's tests are written for, vendored beside the runner. */
 const CATCH = join(import.meta.dirname, 'vendor', 'catch2-2.13.6', 'catch.hpp')
+/** A stand-in for Catch2 v3's header (complex-numbers includes it): v2 with v3's matcher base name. */
+const CATCH_V3 = join(import.meta.dirname, 'vendor', 'catch2-2.13.6', 'catch_amalgamated.hpp')
 const CAP = 1024 * 1024
 const ROOT = join(tmpdir(), 'aether-cpp')
 // The compiler writes its messages in plain English with plain quotes.
@@ -175,6 +180,7 @@ const build = (files, settings = null, main = '', all = true) => {
   if (main) {
     mkdirSync(join(dir, 'test'), { recursive: true })
     writeFileSync(join(dir, 'test', 'catch.hpp'), readFileSync(CATCH))
+    writeFileSync(join(dir, 'test', 'catch_amalgamated.hpp'), readFileSync(CATCH_V3))
   }
   /** @type {Promise<Built>} */
   const made = new Promise(resolve => {

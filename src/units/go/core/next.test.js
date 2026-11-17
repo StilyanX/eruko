@@ -1,5 +1,4 @@
-// The Go unit's one next action ("A Self-Study System", The build, Go, The one next action and
-// The checks): the six cases in order, gate 1, gate 3, and the start gate.
+// The Go unit's one next action: the six cases in order, gate 1, gate 3, and the start gate.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {

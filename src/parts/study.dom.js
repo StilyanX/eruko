@@ -91,11 +91,16 @@ export class StepScreen extends Screen {
 
   /**
    * Put focus, at the next frame, on the first element `selector` finds here: the control that
-   * held it is gone.
+   * held it is gone. Focus the learner moved in the meantime to a field or the next problem's line
+   * stays where it is: taking it away would drop the mark or the keys pressed there.
    * @param {string} selector
    */
   focusSoon(selector) {
+    const held = document.activeElement
     requestAnimationFrame(() => {
+      const now = document.activeElement
+      const field = now?.closest('input, textarea, select, [role=slider]')
+      if (now !== held && field) return
       const el = this.querySelector(selector)
       if (el instanceof HTMLElement) el.focus()
     })

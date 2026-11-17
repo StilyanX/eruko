@@ -1,4 +1,4 @@
-// The Go record ("A Self-Study System", The build, Go, The record): its eleven fields, the course's
+// The Go record: its eleven fields, the course's
 // state in step with the course, and a forced change.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

@@ -1,5 +1,4 @@
-// The rules items ("A Self-Study System", Go, Start and The material, Rules item; The build, Go,
-// Rules program): the rules program is checked against Tromp's definition of the score on every
+// The rules items: the rules program is checked against Tromp's definition of the score on every
 // stored position before an item is shown; an item is a rule with its cases, each case one
 // question with one exact answer that the rule decides.
 import { test } from 'node:test'
@@ -46,8 +45,8 @@ test('the positions decided by one rule are one item, its cases; no two items of
 test('an item asks for one of three things: legal or not, the stones removed, or a number', () => {
   for (const item of CASES) {
     const { question, answer } = item
-    if (question.endsWith('Is it legal? Type yes or no.')) assert.match(answer, /^(yes|no)$/, item.id)
-    else if (question.endsWith('Which stones does the move remove? Type their points, or none.')) assert.match(answer, /^(none|[A-HJ-T]\d+( [A-HJ-T]\d+)*)$/, item.id)
+    if (question.endsWith('? Type yes or no.')) assert.match(answer, /^(yes|no)$/, item.id)
+    else if (question.endsWith('which stones does that move remove? Type their points, or none.')) assert.match(answer, /^(none|[A-HJ-T]\d+( [A-HJ-T]\d+)*)$/, item.id)
     else {
       assert.ok(question.endsWith('Type a number.'), item.id)
       assert.match(answer, /^\d+$/, item.id)

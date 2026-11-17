@@ -1,5 +1,5 @@
-// Hides: a game as the Go record keeps it, read from the server's own record, and the checks "A
-// Self-Study System" sets on it (The build, Go, The checks): which game is a rated game, which a
+// Hides: a game as the Go record keeps it, read from the server's own record, and the checks on it:
+// which game is a rated game, which a
 // practice game, and the practice game's count by area. Pure functions over the server's JSON,
 // tested in tests/go-game.test.mjs.
 import { studyDay } from '../../../kernel/days.logic.js'

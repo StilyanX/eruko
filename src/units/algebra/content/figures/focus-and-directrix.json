@@ -1,0 +1,946 @@
+{
+  "focus-and-directrix-1.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -10,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/8*(x-10)^2-4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          10,
+          -2
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -6
+        ],
+        "to": [
+          18,
+          -6
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-2.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -16,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/8*(x-8)^2-4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          -6
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -2
+        ],
+        "to": [
+          16,
+          -2
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-3.svg": {
+    "x": [
+      -10,
+      6
+    ],
+    "y": [
+      -2,
+      18
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/8*(x+2)^2+12"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          10
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -10,
+          14
+        ],
+        "to": [
+          6,
+          14
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-4.svg": {
+    "x": [
+      -4,
+      12
+    ],
+    "y": [
+      -2,
+      20
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/8*(x-4)^2+14"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4,
+          12
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -4,
+          16
+        ],
+        "to": [
+          12,
+          16
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-5.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -2,
+      20
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/4*(x-8)^2+15"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          14
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          16
+        ],
+        "to": [
+          16,
+          16
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-6.svg": {
+    "x": [
+      -10,
+      6
+    ],
+    "y": [
+      -20,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/16*(x+2)^2-12"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          -8
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -10,
+          -16
+        ],
+        "to": [
+          6,
+          -16
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-7.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -28,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/12*(x-8)^2-13"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          -16
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -10
+        ],
+        "to": [
+          16,
+          -10
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-8.svg": {
+    "x": [
+      -2,
+      14
+    ],
+    "y": [
+      -16,
+      10
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/16*(x-6)^2-8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          -4
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -12
+        ],
+        "to": [
+          14,
+          -12
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-9.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -20,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/12*(x-10)^2-13"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          10,
+          -10
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -16
+        ],
+        "to": [
+          18,
+          -16
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-10.svg": {
+    "x": [
+      -2,
+      14
+    ],
+    "y": [
+      -24,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-1/4*(x-6)^2-15"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          -16
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          -14
+        ],
+        "to": [
+          14,
+          -14
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-11.svg": {
+    "x": [
+      -4,
+      12
+    ],
+    "y": [
+      -2,
+      30
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/16*(x-4)^2+12"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4,
+          16
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -4,
+          8
+        ],
+        "to": [
+          12,
+          8
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-12.svg": {
+    "x": [
+      -10,
+      6
+    ],
+    "y": [
+      -2,
+      26
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "16+sqrt((x+5)/(1/4))"
+      },
+      {
+        "y": "16-sqrt((x+5)/(1/4))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          16
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -6,
+          -2
+        ],
+        "to": [
+          -6,
+          26
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-13.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -2,
+      26
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "16+sqrt((x-10)/(-1/8))"
+      },
+      {
+        "y": "16-sqrt((x-10)/(-1/8))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          16
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          12,
+          -2
+        ],
+        "to": [
+          12,
+          26
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-14.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -2,
+      18
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "8+sqrt((x-7)/(1/4))"
+      },
+      {
+        "y": "8-sqrt((x-7)/(1/4))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          8
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          6,
+          -2
+        ],
+        "to": [
+          6,
+          18
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-15.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -24,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-14+sqrt((x-6)/(1/8))"
+      },
+      {
+        "y": "-14-sqrt((x-6)/(1/8))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          -14
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          4,
+          -24
+        ],
+        "to": [
+          4,
+          2
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-16.svg": {
+    "x": [
+      -4,
+      16
+    ],
+    "y": [
+      -2,
+      24
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "14+sqrt((x-8)/(-1/8))"
+      },
+      {
+        "y": "14-sqrt((x-8)/(-1/8))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          14
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          10,
+          -2
+        ],
+        "to": [
+          10,
+          24
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-17.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -2,
+      24
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "14+sqrt((x-13)/(-1/4))"
+      },
+      {
+        "y": "14-sqrt((x-13)/(-1/4))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          12,
+          14
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          14,
+          -2
+        ],
+        "to": [
+          14,
+          24
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-18.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -8,
+      12
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2+sqrt((x-9)/(1/12))"
+      },
+      {
+        "y": "2-sqrt((x-9)/(1/12))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          12,
+          2
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          6,
+          -8
+        ],
+        "to": [
+          6,
+          12
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-19.svg": {
+    "x": [
+      -10,
+      6
+    ],
+    "y": [
+      -20,
+      0
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-10+sqrt((x+6)/(1/8))"
+      },
+      {
+        "y": "-10-sqrt((x+6)/(1/8))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          -10
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -8,
+          -20
+        ],
+        "to": [
+          -8,
+          0
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-20.svg": {
+    "x": [
+      -2,
+      14
+    ],
+    "y": [
+      -2,
+      18
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "10+sqrt((x-5)/(1/4))"
+      },
+      {
+        "y": "10-sqrt((x-5)/(1/4))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          10
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          4,
+          -2
+        ],
+        "to": [
+          4,
+          18
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-21.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -2,
+      22
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "12+sqrt((x-11)/(-1/12))"
+      },
+      {
+        "y": "12-sqrt((x-11)/(-1/12))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          12
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          14,
+          -2
+        ],
+        "to": [
+          14,
+          22
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-22.svg": {
+    "x": [
+      -6,
+      14
+    ],
+    "y": [
+      -22,
+      2
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-12+sqrt((x-7)/(-1/12))"
+      },
+      {
+        "y": "-12-sqrt((x-7)/(-1/12))"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4,
+          -12
+        ],
+        "label": "F"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          10,
+          -22
+        ],
+        "to": [
+          10,
+          2
+        ]
+      }
+    ]
+  },
+  "focus-and-directrix-23.svg": {
+    "x": [
+      -2,
+      12
+    ],
+    "y": [
+      -2,
+      10
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "equal": false,
+    "curves": [
+      {
+        "y": "1/8*(x-5)^2+4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          5,
+          6
+        ],
+        "label": "F"
+      },
+      {
+        "at": [
+          5,
+          4
+        ],
+        "label": "V"
+      },
+      {
+        "at": [
+          9,
+          6
+        ],
+        "label": "P"
+      }
+    ],
+    "dashed": [
+      {
+        "from": [
+          -2,
+          2
+        ],
+        "to": [
+          12,
+          2
+        ]
+      }
+    ]
+  }
+}

@@ -371,8 +371,9 @@
   }
 
   /* The one search field (shell/search-field.element.js): label above, Clear beside it, the count under. */
+  /* The count line under the field, kept even when empty so nothing moves, is the gap below it. */
   .search {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-2);
   }
   .search .label {
     margin-bottom: var(--space-2);

@@ -21,6 +21,10 @@ import { generated } from '../lib/generated.mjs'
 const KINDS = ['topics', 'bank']
 // Commands the content uses that Temml spells differently.
 const MACROS = { '\\cdotp': '\\cdot' }
+// The radical sign shown bare, written as a root over a space: set over the room of one digit,
+// which a screen reader passes over, so the sign stands on the line as every root does and does
+// not hang below it.
+const BARE_ROOT = /\\sqrt\{\\ \}/g
 
 /**
  * Every string inside a value, at any depth.
@@ -71,11 +75,18 @@ for (const unit of mathsUnits()) {
       for (const tex of new Set([...written, ...typed])) {
         try {
           const display = tex.startsWith('$$')
-          map[tex] = temml.renderToString(display ? tex.slice(2) : tex, {
-            displayMode: display,
-            throwOnError: true,
-            macros: { ...MACROS }
-          })
+          // Temml marks a slash up as an identifier; a screen reader needs it as the operator it
+          // is (MathCAT), spaced as Temml set it.
+          map[tex] = temml
+            .renderToString(
+              (display ? tex.slice(2) : tex).replace(BARE_ROOT, '\\sqrt{\\phantom{0}}'),
+              {
+                displayMode: display,
+                throwOnError: true,
+                macros: { ...MACROS }
+              }
+            )
+            .replaceAll('<mi>/</mi>', '<mo lspace="0em" rspace="0em">/</mo>')
         } catch (err) {
           if (!written.has(tex)) continue
           failed.push(

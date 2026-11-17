@@ -29,6 +29,7 @@
   ],
   "exclude": [
     "node_modules",
-    "src/sw.js"
+    "src/sw.js",
+    "src/record/wa-sqlite-*/**"
   ]
 }

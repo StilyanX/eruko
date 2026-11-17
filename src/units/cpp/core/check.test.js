@@ -23,8 +23,13 @@ test('g++ always runs with -pedantic-errors at the stated level; a sanitizer add
   assert.ok(
     a.includes('-pedantic-errors') &&
       a.includes('-fsanitize=address,undefined') &&
+      a.includes('-D_GLIBCXX_DEBUG') &&
+      a.includes('-D_GLIBCXX_ASSERTIONS') &&
+      a.includes('-D_GLIBCXX_SANITIZE_VECTOR=1') &&
+      a.includes('-D_GLIBCXX_SANITIZE_STD_ALLOCATOR=1') &&
       a.includes('-O0')
   )
+  assert.ok(!hostArgs({}).includes('-D_GLIBCXX_DEBUG') && !hostArgs({ sanitize: 'thread' }).includes('-D_GLIBCXX_DEBUG'))
   assert.ok(!a.includes('-O2') && !a.includes('-ltbb'))
   assert.deepEqual(hostLibs({ flags: ['-ltbb'] }, ''), ['-ltbb'])
   assert.deepEqual(hostLibs({ flags: ['-ltbb'] }, '/t').at(-1), '-ltbb')

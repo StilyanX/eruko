@@ -507,10 +507,11 @@ export default [
     ]
   },
   { "id": "t12-k5-p02", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles form the unit 1. A congruent square sits beside the first to form a rectangle. A vertical line divides the second square into two congruent halves. The shaded region is the first square and the left half of the second square.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-02.svg", "alt": "Two squares of the same size side by side make a rectangle. The two diagonals cut the first square into 4 congruent triangles. A thick outline goes round its left and bottom triangles together: they form the unit 1. A vertical line cuts the second square into two congruent halves. The whole first square and the left half of the second square are shaded." },
     "answer": "3", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles form the unit 1. A congruent square sits beside the first to form a rectangle. A vertical line divides the second square into two congruent halves. The shaded region is the first square and the left half of the second square.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The shaded region is one full square plus half of a congruent square. Its area is $1+\\frac{1}{2}=\\frac{3}{2}$ of a full square.",
       "The unit (2 of the 4 congruent diagonal triangles) has area $\\frac{1}{2}$ of a full square.",
       "Both areas are whole numbers of halves: the shaded region is 3 halves and the unit is 1 half. So the shaded region is 3 of the unit's 1 equal half-size part.",
@@ -518,70 +519,77 @@ export default [
     ]
   },
   { "id": "t12-k5-p03", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A unit square (the unit 1) has 6 equal vertical columns, and 5 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-03.svg", "alt": "A unit square, the unit 1, cut into 6 equal vertical columns. The first 5 columns are shaded." },
     "answer": "5/6", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A unit square (the unit 1) has 6 equal vertical columns, and 5 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 6 columns are congruent, so each has area $\\frac{1}{6}$ of the unit square.",
       "Of the 6 columns, 5 are shaded.",
       "$\\frac{5}{6}$."
     ]
   },
   { "id": "t12-k5-p04", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A $10\\times 10$ grid divides a unit square (the unit 1) into 100 congruent cells, and 37 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-04.svg", "alt": "A unit square, the unit 1, cut by a 10 by 10 grid into 100 congruent cells. 37 cells are shaded: the top 3 rows and 7 cells of the fourth row." },
     "answer": "37/100", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A $10\\times 10$ grid divides a unit square (the unit 1) into 100 congruent cells, and 37 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 100 cells are congruent, so each has area $\\frac{1}{100}$ of the unit square.",
       "Of the 100 cells, 37 are shaded.",
       "$\\frac{37}{100}$."
     ]
   },
   { "id": "t12-k5-p05", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A unit rectangle (the unit 1) has 5 congruent strips, and 2 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-05.svg", "alt": "A unit rectangle, the unit 1, cut into 5 congruent vertical strips. The first 2 strips are shaded." },
     "answer": "2/5", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A unit rectangle (the unit 1) has 5 congruent strips, and 2 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 5 strips are congruent, so each has area $\\frac{1}{5}$ of the unit rectangle.",
       "Of the 5 strips, 2 are shaded.",
       "$\\frac{2}{5}$."
     ]
   },
   { "id": "t12-k5-p06", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A $3\\times 3$ grid divides a unit square (the unit 1) into 9 congruent cells, and 4 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-06.svg", "alt": "A unit square, the unit 1, cut by a 3 by 3 grid into 9 congruent cells. 4 cells are shaded: the top row and the first cell of the middle row." },
     "answer": "4/9", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A $3\\times 3$ grid divides a unit square (the unit 1) into 9 congruent cells, and 4 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 9 cells are congruent, so each has area $\\frac{1}{9}$ of the unit square.",
       "Of the 9 cells, 4 are shaded.",
       "$\\frac{4}{9}$."
     ]
   },
   { "id": "t12-k5-p07", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. Both diagonals and both perpendicular bisectors of a unit square (the unit 1) make 8 congruent triangles. Of these, 3 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-07.svg", "alt": "A unit square, the unit 1, cut by both diagonals and both lines through the midpoints of opposite sides into 8 congruent triangles. 3 triangles next to each other are shaded." },
     "answer": "3/8", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. Both diagonals and both perpendicular bisectors of a unit square (the unit 1) make 8 congruent triangles. Of these, 3 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 8 triangles are congruent, so each has area $\\frac{1}{8}$ of the unit square.",
       "Of the 8 triangles, 3 are shaded.",
       "$\\frac{3}{8}$."
     ]
   },
   { "id": "t12-k5-p08", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A $4\\times 3$ grid divides a unit square (the unit 1) into 12 congruent cells, and 7 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-08.svg", "alt": "A unit square, the unit 1, cut by a grid of 4 columns and 3 rows into 12 congruent cells. 7 cells are shaded: the top row and 3 cells of the middle row." },
     "answer": "7/12", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A $4\\times 3$ grid divides a unit square (the unit 1) into 12 congruent cells, and 7 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 12 cells are congruent, so each has area $\\frac{1}{12}$ of the unit square.",
       "Of the 12 cells, 7 are shaded.",
       "$\\frac{7}{12}$."
     ]
   },
   { "id": "t12-k5-p09", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region represents. A $5\\times 4$ grid divides a unit square (the unit 1) into 20 congruent cells, and 13 are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-09.svg", "alt": "A unit square, the unit 1, cut by a grid of 5 columns and 4 rows into 20 congruent cells. 13 cells are shaded: the top 2 rows and 3 cells of the third row." },
     "answer": "13/20", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region represents. A $5\\times 4$ grid divides a unit square (the unit 1) into 20 congruent cells, and 13 are shaded.",
+      "Find the fraction of the unit that the shaded region represents.",
       "The 20 cells are congruent, so each has area $\\frac{1}{20}$ of the unit square.",
       "Of the 20 cells, 13 are shaded.",
       "$\\frac{13}{20}$."
@@ -624,20 +632,22 @@ export default [
     ]
   },
   { "id": "t12-k5-p13", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size, divided the same way, has its right and bottom triangles shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region of the second square represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-13.svg", "alt": "Two squares of the same size. The two diagonals cut the first square into 4 congruent triangles. Its left and bottom triangles are shaded: they form the unit 1. The second square is cut the same way, and its right and bottom triangles are shaded." },
     "answer": "1", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size, divided the same way, has its right and bottom triangles shaded.",
+      "Find the fraction of the unit that the shaded region of the second square represents.",
       "The unit is the left and bottom triangles, and the shaded region is the right and bottom triangles. Each is 2 of the 4 congruent triangles.",
       "Congruent regions have equal area, so the unit and the shaded region have equal area.",
       "$1$."
     ]
   },
   { "id": "t12-k5-p14", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size has 4 equal columns and 2 equal rows. They make 8 congruent cells, and 3 of the cells are shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region of the second square represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-14.svg", "alt": "Two squares of the same size. The two diagonals cut the first square into 4 congruent triangles. Its left and bottom triangles are shaded: they form the unit 1. The second square has 4 equal columns and 2 equal rows, which make 8 congruent cells. 3 cells of its top row are shaded." },
     "answer": "3/4", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size has 4 equal columns and 2 equal rows. They make 8 congruent cells, and 3 of the cells are shaded.",
+      "Find the fraction of the unit that the shaded region of the second square represents.",
       "The unit (2 of the 4 congruent diagonal triangles) has area $\\frac{1}{2}$ of a full square.",
       "The shaded region (3 of 8 congruent cells in a same-size square) has area $\\frac{3}{8}$ of a full square.",
       "Split the unit's half into 4 equal parts to get 8 equal parts in all. So the unit's area equals $\\frac{4}{8}$ of a full square.",
@@ -646,10 +656,11 @@ export default [
     ]
   },
   { "id": "t12-k5-p15", "topic": "fractions-and-decimals-defined", "kind": "t12-k5", "calc": "no",
-    "prompt": "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size has 3 equal vertical columns, and the leftmost is shaded.",
+    "prompt": "Find the fraction of the unit that the shaded region of the second square represents.",
+    "figure": { "file": "fractions-and-decimals-defined-shaded-15.svg", "alt": "Two squares of the same size. The two diagonals cut the first square into 4 congruent triangles. Its left and bottom triangles are shaded: they form the unit 1. The second square has 3 equal vertical columns. Its leftmost column is shaded." },
     "answer": "2/3", "form": "Answer as a number, or equivalent.",
     "solution": [
-      "Find the fraction of the unit that the shaded region of the second square represents. The two diagonals of a unit square divide it into 4 congruent triangles. The left and bottom triangles are shaded, and they form the unit 1. A second square of the same size has 3 equal vertical columns, and the leftmost is shaded.",
+      "Find the fraction of the unit that the shaded region of the second square represents.",
       "The unit (2 of the 4 congruent diagonal triangles) has area $\\frac{1}{2}$ of a full square.",
       "The shaded region (the leftmost of 3 equal columns in a same-size square) has area $\\frac{1}{3}$ of a full square.",
       "Split the unit's half into 3 equal parts and the region's third into 2 equal parts. Both give 6 equal parts in all. So the unit's area equals $\\frac{3}{6}$ and the region's area equals $\\frac{2}{6}$ of a full square.",

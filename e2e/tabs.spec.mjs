@@ -1,6 +1,6 @@
-// Several tabs on one record: every tab works, the tab in view holds
-// the record, no tab's save is lost to another's, and a tab that holds the record and stops
-// answering is said plainly, then caught up with once it answers.
+// Several tabs on one record: every tab opens the record in its own
+// connection and saves on its own, no tab's save is lost to another's, and a stuck, hidden, closed
+// or frozen tab stops no other tab from saving.
 import { test, expect } from '@playwright/test'
 
 const KEY = 'aether-test-tabs'
@@ -30,7 +30,9 @@ async function openTab(context) {
 
 /** @param {import('@playwright/test').Page} page */
 const holds = page =>
-  page.evaluate(async () => (await import(`${location.origin}/eruko/record/index.js`)).holdsRecord())
+  page.evaluate(async () =>
+    (await import(`${location.origin}/eruko/record/index.js`)).holdsRecord()
+  )
 
 /**
  * Set `name` to true in the test part, in this tab, and write it at once.
@@ -48,7 +50,8 @@ const change = (page, name) =>
 /** @param {import('@playwright/test').Page} page */
 const value = page =>
   page.evaluate(
-    async key => (await import(`${location.origin}/eruko/record/store.js`)).persistedStore(key).get(),
+    async key =>
+      (await import(`${location.origin}/eruko/record/store.js`)).persistedStore(key).get(),
     KEY
   )
 
@@ -59,13 +62,13 @@ const saved = page =>
     KEY
   )
 
-test('a second tab opens the app, and the first keeps working', async ({ context }) => {
+test('a second tab opens the app, and both tabs hold the record', async ({ context }) => {
   const a = await openTab(context)
   const b = await openTab(context)
   await expect(b.getByText('not answering')).toHaveCount(0)
   await expect(a.getByText('not answering')).toHaveCount(0)
   await expect.poll(() => holds(a)).toBe(true)
-  expect(await holds(b)).toBe(false)
+  await expect.poll(() => holds(b)).toBe(true)
 })
 
 test('two tabs saving the same part at once keep both changes, in both tabs', async ({
@@ -84,30 +87,47 @@ test('two tabs saving the same part at once keep both changes, in both tabs', as
   expect(await value(b)).toEqual(both)
 })
 
-test('the tab in view takes the record from a hidden one', async ({ context }) => {
+test('three tabs saving many parts at once lose none', async ({ context }) => {
+  const first = await openTab(context)
+  const tabs = [first, await openTab(context), await openTab(context)]
+  await Promise.all(
+    tabs.map((tab, t) =>
+      Promise.all(Array.from({ length: 10 }, (_, i) => change(tab, `t${t}n${i}`)))
+    )
+  )
+  /** @type {Record<string, boolean>} */
+  const all = {}
+  for (let t = 0; t < 3; t++) for (let i = 0; i < 10; i++) all[`t${t}n${i}`] = true
+  for (const tab of tabs) await expect.poll(() => value(tab), { timeout: 15000 }).toEqual(all)
+  await first.reload()
+  await expect(first.locator('h1'))
+    .toHaveText('Units', { timeout: 8000 })
+    .catch(async e => {
+      throw new Error(`${e}\n${await first.locator('body').innerText()}`)
+    })
+  expect(JSON.parse((await saved(first)) ?? '{}')).toEqual(all)
+})
+
+test('a hidden tab and a tab in view both save on their own', async ({ context }) => {
   const a = await openTab(context)
   const b = await openTab(context)
-  await expect.poll(() => holds(a)).toBe(true)
   await a.evaluate(() => /** @type {any} */ (window).hideTab(true))
-  await expect.poll(() => holds(b)).toBe(true)
-  expect(await holds(a)).toBe(false)
-  // Both still save, through the new holder.
   await change(a, 'afterA')
   await change(b, 'afterB')
   await expect.poll(() => value(a)).toEqual({ afterA: true, afterB: true })
+  await expect.poll(() => holds(a)).toBe(true)
 })
 
-test('a tab closed while it holds the record loses no save sent to it', async ({ context }) => {
+test('a tab closed loses no save made in another', async ({ context }) => {
   const a = await openTab(context)
   const b = await openTab(context)
   await change(b, 'sentAsItClosed')
   await a.close()
-  await expect.poll(() => holds(b), { timeout: 10000 }).toBe(true)
   await expect.poll(() => saved(b), { timeout: 10000 }).toBe('{"sentAsItClosed":true}')
   await expect(b.getByText('not answering')).toHaveCount(0)
 })
 
-test('a tab holding the record that stops answering is said plainly, and is caught up with once it answers', async ({
+test('a stuck tab does not stop another from saving, and catches up once it comes into view', async ({
   context
 }) => {
   const a = await openTab(context)
@@ -116,23 +136,21 @@ test('a tab holding the record that stops answering is said plainly, and is caug
   await cdp.send('Debugger.enable')
   await cdp.send('Debugger.pause')
   await change(b, 'whileStuck')
-  await expect(b.getByText('Another Eruko tab is not answering')).toBeVisible({ timeout: 5000 })
-  expect(await value(b)).toEqual({ whileStuck: true })
+  await expect.poll(() => saved(b), { timeout: 10000 }).toBe('{"whileStuck":true}')
+  await expect(b.getByText('not answering')).toHaveCount(0)
   await cdp.send('Debugger.resume')
-  await expect(b.getByText('Another Eruko tab is not answering')).toHaveCount(0, {
-    timeout: 10000
-  })
+  await a.evaluate(() => /** @type {any} */ (window).hideTab(false))
   await expect.poll(() => saved(a), { timeout: 10000 }).toBe('{"whileStuck":true}')
 })
 
-test('a tab about to be frozen hands the record over first', async ({ context }) => {
+test('a tab about to be frozen closes its connection first, and another keeps saving', async ({
+  context
+}) => {
   const a = await openTab(context)
   const b = await openTab(context)
   // The browser sends this before it freezes a tab (Page Lifecycle); the test browser cannot freeze
-  // on request, so the test sends it. A tab frozen without it is the case above.
-  await expect.poll(() => holds(a)).toBe(true)
+  // on request, so the test sends it.
   await a.evaluate(() => document.dispatchEvent(new Event('freeze')))
-  await expect.poll(() => holds(b), { timeout: 10000 }).toBe(true)
   await change(b, 'whileFrozen')
   await expect.poll(() => saved(b)).toBe('{"whileFrozen":true}')
   await expect(b.getByText('not answering')).toHaveCount(0)

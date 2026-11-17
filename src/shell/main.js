@@ -58,7 +58,16 @@ else await import('./app.js')
 // The app keeps what it has downloaded (sw.js), so every page opens with no connection after the
 // first visit. A browser with no module service worker runs the app all the same. Coming back to
 // the tab looks for a new version, which waits until every Eruko tab is closed (sw.js).
-if ('serviceWorker' in navigator) {
+// The owner's own copy (port 9999, his Super+S) keeps nothing: a reload always shows the newest
+// files, with no forced reload. Any worker it kept before is removed.
+const ownCopy = location.hostname === '127.0.0.1' && location.port === '9999'
+if ('serviceWorker' in navigator && ownCopy) {
+  navigator.serviceWorker
+    .getRegistrations()
+    .then(list => Promise.all(list.map(r => r.unregister())))
+    .then(() => caches.delete('eruko'))
+    .catch(() => {})
+} else if ('serviceWorker' in navigator) {
   const sw = navigator.serviceWorker
   sw.register(new URL('sw.js', document.baseURI), { type: 'module', updateViaCache: 'none' })
     .then(registration =>

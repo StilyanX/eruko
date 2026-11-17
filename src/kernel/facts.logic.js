@@ -1,5 +1,4 @@
-// Hides: the number facts of the Mathematics division of "A Self-Study System" (Mathematics, "The
-// number-facts gate and the calculator"): the sheets, their gate and the dated returns, drilled
+// Hides: the number facts of Mathematics: the sheets, their gate and the dated returns, drilled
 // and stored once for every maths course, in one part of the record that every maths unit reads,
 // whose fields `decodeFacts` reads as stored. Pure functions over plain data, tested in
 // tests/study-facts.test.mjs.

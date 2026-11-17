@@ -1,5 +1,4 @@
-// Hides: the C++ language track ("A Self-Study System", Programming, The language track, The
-// track's material, The track's steps): when it opens, its kinds in stage order, its items and
+// Hides: the C++ language track: when it opens, its kinds in stage order, its items and
 // their ids, the side a Programming session belongs to, steps A, B and C with gates A and C, and
 // how each track answer is judged against what the machine gave. Pure: the runner's replies come
 // in, the next record goes out.

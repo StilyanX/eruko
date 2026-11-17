@@ -1,5 +1,4 @@
-// Hides: the C++ unit's one next action ("A Self-Study System", Programming, The steps and Running
-// it; The build, Programming, The one next action and The checks): a pure function of the course,
+// Hides: the C++ unit's one next action: a pure function of the course,
 // the record and the day, which returns the first case that applies: 1 the contest record, once
 // the start gate is open and the contest day has passed, then the next contest's start; 2 what is
 // due, oldest date first, kinds and problems before trace items, then course order, a due kind
@@ -9,7 +8,7 @@
 // the start gate opens the rated contests.
 import { assert, unreachable } from '../../../kernel/invariant.logic.js'
 import { nextOf, writeLine } from '../../../kernel/days.logic.js'
-import { isTrace, itemId, kindKey } from './decode.logic.js'
+import { deviceDayOf, isTrace, itemId, kindKey } from './decode.logic.js'
 import { kindLine, withKind } from './record.logic.js'
 import {
   openTrackKind,
@@ -288,14 +287,18 @@ export function contestStep(course, record, day) {
 }
 
 /**
- * The contest day: the start gate is open and the next contest starts today. The contest is
+ * The contest day: the start gate is open and the next contest starts today. `day` is the
+ * device's study day, which every caller holds; the contest's start is moved into it from the
+ * stored zone, so the work list, the unit page and the course's turn agree. The contest is
  * Programming's whole plan that day: steps 1, 3 and 4 do not run, and what is due stays due.
  * @param {import('./decode.logic.js').Course} course
  * @param {Pick<import('./decode.logic.js').CppRecord, 'course' | 'practice' | 'server'>} record
  * @param {string} day
  */
 export const contestToday = (course, record, day) =>
-  Boolean(record.server?.next.startsWith(day)) && startGate(course, record)
+  Boolean(record.server?.next) &&
+  deviceDayOf(record.server?.next ?? '', record.server?.zone ?? '') === day &&
+  startGate(course, record)
 
 /**
  * The first date after today on which an item comes back, or '' for none.
@@ -331,7 +334,7 @@ export function nextAction(course, record, day, zoned = day) {
     : record.pin
       ? trackAction(course.track, record, day, course.reading)
       : { n: 'C', step: 'track-setup' }
-  const side = sideToday(record, { open, contest: contestToday(course, record, zoned) }, day)
+  const side = sideToday(record, { open, contest: contestToday(course, record, day) }, day)
   if (side === 'track' && track && track.step !== 'track-waits') return track
   const mine = courseAction(course, record, day)
   // a drop at gate 2 gives every session to the course, even one with nothing to take

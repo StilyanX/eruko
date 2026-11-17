@@ -1,14 +1,14 @@
 // Why a position makes no problem (src/units/go/core/problem.logic.js): each refusal of the
 // builder, from a bank position asked another way or searched with too small a budget; and the
-// tagging run again on a sample of each source (21.01 <bu-go-checks> Tag).
+// tagging run again on a sample of each source.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { PROBLEMS } from '../content/problems.gen.js'
 import { KINDS } from './course.gen.js'
 import { boardOf } from './diagram.logic.js'
 import { BLACK, WHITE } from './rules.logic.js'
-import { kindId, problemId } from './decode.logic.js'
-import { movesOf, problemFrom } from './problem.logic.js'
+import { kindId, posedOf, problemId } from './decode.logic.js'
+import { movesOf, namedGroup, problemFrom } from './problem.logic.js'
 import { typed } from '../../../../tests/lib/go-typed.mjs'
 
 /**
@@ -109,4 +109,18 @@ test('the tagging, run on a sample of each source, gives each problem the reason
       const seq = made.value.solution.lines[0]?.moves.map(m => m.reason).filter((r, i, a) => r !== a[i - 1]).join('|') ?? ''
       assert.ok(KINDS.find(k => k.id === p.kind)?.seqs.includes(seq), `${source}: ${p.id} is tagged ${seq}`)
     }
+})
+
+test('an own problem stored with its search stone is named by its top, leftmost stone', () => {
+  /** @param {unknown} x */
+  const posed = x => {
+    const q = posedOf(x)
+    assert.ok(q)
+    return q
+  }
+  const p = posed(PROBLEMS.find(q => q.id === '1.4'))
+  assert.equal(namedGroup(posed({ ...p, group: { ...p.group, at: 'L9' } })).group.at, 'J9')
+  const lower = posed({ ...p, black: ['J9', 'J8'], white: [], group: { ...p.group, at: 'J8' } })
+  assert.equal(namedGroup(lower).group.at, 'J9')
+  assert.equal(namedGroup(p), p)
 })

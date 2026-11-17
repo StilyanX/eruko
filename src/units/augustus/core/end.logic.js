@@ -1,5 +1,4 @@
-// Hides: Augustus's end level (A Self-Study System, Biography, "The end level", and the End level
-// check of the build): which sentences and decisions each part of the round can draw from the
+// Hides: Augustus's end level: which sentences and decisions each part of the round can draw from the
 // built life, the draw of a round from those pools by the round's lines, `shown` and `tally`, the
 // key of every entry and the round's line, when the round is due, how a Reading passage and the
 // list of ten are paged, and the reading of Judgment over the scored forecasts. Pure functions of

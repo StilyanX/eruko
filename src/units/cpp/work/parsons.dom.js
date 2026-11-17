@@ -1,4 +1,4 @@
-// Hides: the Parsons board ("A Self-Study System", Programming, The material: Parsons problem):
+// Hides: the Parsons board:
 // the program as it stands, its frame in place and each line put in its place so far, the
 // blanks of a placed line as fields; under it the lines left to place, each one press that puts
 // it in the next empty place. A placed line is taken out with one press, and the lines after it

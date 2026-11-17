@@ -63,8 +63,9 @@ export class AeBareProblem extends StepScreen {
             })
           ]
         : [
-            this.result !== null && verdict(this.result.right),
-            lines({ lines: bare.solution, figures: this.figures, key: 'solution' }),
+            this.result !== null &&
+              verdict(this.result.right, this.result.right ? null : 'Read the solution.'),
+            lines({ lines: bare.solution, under: bare.prompt, figures: this.figures, key: 'solution' }),
             h(
               'p',
               { key: 'tried', class: 'lrn-ss-note' },

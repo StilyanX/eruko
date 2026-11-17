@@ -69,8 +69,8 @@ export const shownBy = effects => {
 }
 
 /**
- * A move's wrong verdict said again with its correction first: "Wrong. The answer is 2. The
- * solution is below.". A problem with no short answer (a proof) keeps
+ * A move's wrong verdict said again with its correction first: "Wrong. The answer is 2. Read the
+ * solution.". A problem with no short answer (a proof) keeps
  * the verdict as it was said.
  * @param {readonly import('../kernel/maths-session.logic.js').Effect[]} effects
  * @param {string | null | undefined} answer

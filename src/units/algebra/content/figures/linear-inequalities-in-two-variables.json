@@ -1,0 +1,3216 @@
+{
+  "linear-inequalities-in-two-variables-1.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            0.8571428571428571
+          ],
+          "to": [
+            2.3333333333333335,
+            -8.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-2.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            -0.8571428571428571
+          ],
+          "to": [
+            2.3333333333333335,
+            8.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-3.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            -0.625
+          ],
+          "to": [
+            6.4,
+            9.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-4.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            2.2857142857142856
+          ],
+          "to": [
+            0.875,
+            -9.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-5.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -4.4
+          ],
+          "to": [
+            6.0,
+            0.4
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-6.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -6.0
+          ],
+          "to": [
+            2.0,
+            6.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-7.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -5.0
+          ],
+          "to": [
+            0.6,
+            6.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-8.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.8,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            2.5
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-9.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -2.0,
+            6.0
+          ],
+          "to": [
+            6.0,
+            -6.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-10.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.2857142857142857,
+            -8.0
+          ],
+          "to": [
+            4.285714285714286,
+            8.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-11.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.375,
+            -9.0
+          ],
+          "to": [
+            6.375,
+            9.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-12.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            4.0
+          ],
+          "to": [
+            6.0,
+            -4.0
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-13.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -4.5
+          ],
+          "to": [
+            6.0,
+            4.5
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-14.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -2.4
+          ],
+          "to": [
+            6.0,
+            2.4
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-15.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            4.5
+          ],
+          "to": [
+            6.0,
+            -4.5
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-16.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.5,
+            -6.0
+          ],
+          "to": [
+            4.5,
+            6.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-17.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            -3.4285714285714284
+          ],
+          "to": [
+            8.0,
+            3.4285714285714284
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-18.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -5.714285714285714,
+            -8.0
+          ],
+          "to": [
+            5.714285714285714,
+            8.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-19.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            4.8
+          ],
+          "to": [
+            6.0,
+            -4.8
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-20.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.5,
+            6.0
+          ],
+          "to": [
+            4.5,
+            -6.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-21.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            2.4
+          ],
+          "to": [
+            6.0,
+            -2.4
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-22.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -3.6,
+            -6.0
+          ],
+          "to": [
+            3.6,
+            6.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-23.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -0.8
+          ],
+          "to": [
+            2.5,
+            6.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -4.4,
+            -6.0
+          ],
+          "to": [
+            0.4,
+            6.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-24.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -2.5,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            0.8
+          ]
+        },
+        "side": "above",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -2.5
+          ],
+          "to": [
+            0.8,
+            6.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-25.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -2.0
+          ],
+          "to": [
+            6.0,
+            6.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.6,
+            6.0
+          ],
+          "to": [
+            6.0,
+            -5.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-26.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            0.8
+          ],
+          "to": [
+            2.5,
+            -6.0
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            2.0
+          ],
+          "to": [
+            6.0,
+            -6.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-27.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -3.75,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -1.6
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            0.8333333333333334
+          ],
+          "to": [
+            2.4,
+            -7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-28.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.4,
+            6.0
+          ],
+          "to": [
+            4.4,
+            -6.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -4.0,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            1.5
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-29.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -0.6666666666666666
+          ],
+          "to": [
+            4.5,
+            7.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.8333333333333334,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -2.4
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-30.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -2.4
+          ],
+          "to": [
+            0.8333333333333334,
+            7.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            5.333333333333333
+          ],
+          "to": [
+            2.25,
+            -7.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-31.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            1.5
+          ],
+          "to": [
+            4.0,
+            -6.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            2.0
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-32.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            0.4
+          ],
+          "to": [
+            6.0,
+            -4.4
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -1.5,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            4.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-33.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.8,
+            -7.0
+          ],
+          "to": [
+            4.8,
+            7.0
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            4.5
+          ],
+          "to": [
+            0.6666666666666666,
+            -7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-34.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            9.0
+          ],
+          "to": [
+            9.0,
+            -3.75
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            0.75
+          ],
+          "to": [
+            4.0,
+            -9.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-35.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            -0.2857142857142857
+          ],
+          "to": [
+            8.0,
+            4.285714285714286
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            -4.285714285714286
+          ],
+          "to": [
+            8.0,
+            0.2857142857142857
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-36.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            6.428571428571429
+          ],
+          "to": [
+            8.0,
+            -0.42857142857142855
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            0.42857142857142855
+          ],
+          "to": [
+            8.0,
+            -6.428571428571429
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-37.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -0.6
+          ],
+          "to": [
+            5.0,
+            6.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -5.0,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            0.6
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-38.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            0.7142857142857143
+          ],
+          "to": [
+            4.2,
+            -8.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -4.2,
+            8.0
+          ],
+          "to": [
+            8.0,
+            -0.7142857142857143
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-39.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.375,
+            9.0
+          ],
+          "to": [
+            6.375,
+            -9.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.375,
+            9.0
+          ],
+          "to": [
+            0.375,
+            -9.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-40.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -8.0,
+            -7.0
+          ],
+          "to": [
+            0.5714285714285714,
+            8.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.5714285714285714,
+            -8.0
+          ],
+          "to": [
+            8.0,
+            7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-41.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.6666666666666666,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -4.5
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.666666666666667,
+            7.0
+          ],
+          "to": [
+            2.6666666666666665,
+            -7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-42.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.428571428571429,
+            -8.0
+          ],
+          "to": [
+            0.42857142857142855,
+            8.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.42857142857142855,
+            -8.0
+          ],
+          "to": [
+            6.428571428571429,
+            8.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-43.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.285714285714286,
+            8.0
+          ],
+          "to": [
+            0.2857142857142857,
+            -8.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.2857142857142857,
+            8.0
+          ],
+          "to": [
+            4.285714285714286,
+            -8.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-44.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            -8.0
+          ],
+          "to": [
+            3.75,
+            9.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.75,
+            -9.0
+          ],
+          "to": [
+            9.0,
+            4.0
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-45.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -0.8333333333333334
+          ],
+          "to": [
+            2.4,
+            7.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          5.0
+        ],
+        "label": "(0, 5)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-46.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.333333333333333,
+            -7.0
+          ],
+          "to": [
+            0.3333333333333333,
+            7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          6.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-47.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.0,
+            6.0
+          ],
+          "to": [
+            6.0,
+            -1.5
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          3.0
+        ],
+        "label": "(0, 3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-48.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            0.5
+          ],
+          "to": [
+            7.0,
+            -6.5
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -3.0
+        ],
+        "label": "(0, −3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-49.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            4.333333333333333
+          ],
+          "to": [
+            7.0,
+            -0.3333333333333333
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-50.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -1.0,
+            6.0
+          ],
+          "to": [
+            5.0,
+            -6.0
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          4.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-51.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -1.5
+          ],
+          "to": [
+            4.0,
+            6.0
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          3.0
+        ],
+        "label": "(0, 3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-52.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            5.0
+          ],
+          "to": [
+            0.6,
+            -6.0
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3.0,
+          0.0
+        ],
+        "label": "(−3, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          -5.0
+        ],
+        "label": "(0, −5)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-53.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.5,
+            -7.0
+          ],
+          "to": [
+            7.0,
+            0.6666666666666666
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -4.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-54.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.6666666666666666,
+            -7.0
+          ],
+          "to": [
+            7.0,
+            4.5
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-55.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            4.4
+          ],
+          "to": [
+            6.0,
+            -0.4
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          5.0,
+          0.0
+        ],
+        "label": "(5, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-56.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            3.75
+          ],
+          "to": [
+            1.6,
+            -7.0
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -6.5
+          ],
+          "to": [
+            7.0,
+            0.5
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -5.0
+        ],
+        "label": "(0, −5)"
+      },
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -3.0
+        ],
+        "label": "(0, −3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-57.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            8.5
+          ],
+          "to": [
+            9.0,
+            -0.5
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -1.6,
+            -9.0
+          ],
+          "to": [
+            5.6,
+            9.0
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          4.0
+        ]
+      },
+      {
+        "at": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -5.0
+        ],
+        "label": "(0, −5)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-58.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -1.5
+          ],
+          "to": [
+            7.0,
+            5.5
+          ]
+        },
+        "side": "above",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            0.6666666666666666
+          ],
+          "to": [
+            4.5,
+            -7.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      },
+      {
+        "at": [
+          -6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -4.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-59.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -5.5
+          ],
+          "to": [
+            7.0,
+            1.5
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.3333333333333333,
+            -7.0
+          ],
+          "to": [
+            4.333333333333333,
+            7.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -2.0
+        ]
+      },
+      {
+        "at": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-60.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.3333333333333333,
+            7.0
+          ],
+          "to": [
+            4.333333333333333,
+            -7.0
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -4.333333333333333
+          ],
+          "to": [
+            7.0,
+            0.3333333333333333
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          6.0
+        ]
+      },
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -2.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-61.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            5.5
+          ],
+          "to": [
+            7.0,
+            -1.5
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -0.8333333333333334,
+            -7.0
+          ],
+          "to": [
+            7.0,
+            2.4
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      },
+      {
+        "at": [
+          5.0,
+          0.0
+        ],
+        "label": "(5, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-62.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -1.6,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -3.75
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.5,
+            7.0
+          ],
+          "to": [
+            0.5,
+            -7.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          5.0
+        ],
+        "label": "(0, 5)"
+      },
+      {
+        "at": [
+          -3.0,
+          0.0
+        ],
+        "label": "(−3, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-63.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -2.4,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -0.8333333333333334
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -0.3333333333333333
+          ],
+          "to": [
+            7.0,
+            4.333333333333333
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          5.0
+        ],
+        "label": "(0, 5)"
+      },
+      {
+        "at": [
+          -6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-64.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -0.4
+          ],
+          "to": [
+            6.0,
+            4.4
+          ]
+        },
+        "side": "below"
+      },
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            1.0
+          ],
+          "to": [
+            6.0,
+            -5.0
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5.0,
+          0.0
+        ],
+        "label": "(−5, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          2.0
+        ]
+      },
+      {
+        "at": [
+          -4.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          -2.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-65.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            2.4
+          ],
+          "to": [
+            0.8333333333333334,
+            -7.0
+          ]
+        },
+        "side": "above"
+      },
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -0.5
+          ],
+          "to": [
+            7.0,
+            6.5
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5.0,
+          0.0
+        ],
+        "label": "(−5, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      },
+      {
+        "at": [
+          -6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          3.0
+        ],
+        "label": "(0, 3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-66.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -0.5,
+            -7.0
+          ],
+          "to": [
+            6.5,
+            7.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      },
+      {
+        "boundary": {
+          "from": [
+            -4.5,
+            7.0
+          ],
+          "to": [
+            7.0,
+            -0.6666666666666666
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          3.0,
+          0.0
+        ],
+        "label": "(3, 0)"
+      },
+      {
+        "at": [
+          0.0,
+          -6.0
+        ]
+      },
+      {
+        "at": [
+          6.0,
+          0.0
+        ]
+      },
+      {
+        "at": [
+          0.0,
+          4.0
+        ]
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-67.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            -4.5
+          ],
+          "to": [
+            0.6666666666666666,
+            7.0
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-68.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.428571428571429,
+            8.0
+          ],
+          "to": [
+            0.42857142857142855,
+            -8.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-69.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -7.0,
+            8.0
+          ],
+          "to": [
+            8.0,
+            -0.5714285714285714
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-70.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -2.4,
+            -7.0
+          ],
+          "to": [
+            7.0,
+            0.8333333333333334
+          ]
+        },
+        "side": "above"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-71.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -9.0,
+            -4.0
+          ],
+          "to": [
+            0.75,
+            9.0
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-72.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.4,
+            6.0
+          ],
+          "to": [
+            0.4,
+            -6.0
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-73.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.0,
+            9.0
+          ],
+          "to": [
+            9.0,
+            -0.75
+          ]
+        },
+        "side": "below"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-74.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -4.5,
+            -8.0
+          ],
+          "to": [
+            3.5,
+            8.0
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1.0,
+          3.0
+        ],
+        "label": "(1, 3)"
+      },
+      {
+        "at": [
+          3.0,
+          7.0
+        ],
+        "label": "(3, 7)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-75.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -3.3333333333333335,
+            6.0
+          ],
+          "to": [
+            4.666666666666667,
+            -6.0
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2.0,
+          4.0
+        ],
+        "label": "(−2, 4)"
+      },
+      {
+        "at": [
+          2.0,
+          -2.0
+        ],
+        "label": "(2, −2)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-76.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -1.3333333333333333,
+            -6.0
+          ],
+          "to": [
+            2.6666666666666665,
+            6.0
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1.0,
+          -5.0
+        ],
+        "label": "(−1, −5)"
+      },
+      {
+        "at": [
+          2.0,
+          4.0
+        ],
+        "label": "(2, 4)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-77.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -2.0,
+            7.0
+          ],
+          "to": [
+            7.0,
+            2.5
+          ]
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.0,
+          5.0
+        ],
+        "label": "(2, 5)"
+      },
+      {
+        "at": [
+          4.0,
+          4.0
+        ],
+        "label": "(4, 4)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-78.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -6.0,
+            -2.3333333333333335
+          ],
+          "to": [
+            6.0,
+            5.666666666666667
+          ]
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4.0,
+          -1.0
+        ],
+        "label": "(−4, −1)"
+      },
+      {
+        "at": [
+          2.0,
+          3.0
+        ],
+        "label": "(2, 3)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-79.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -3.0,
+            -6.0
+          ],
+          "to": [
+            6.0,
+            -1.5
+          ]
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1.0,
+          -4.0
+        ],
+        "label": "(1, −4)"
+      },
+      {
+        "at": [
+          5.0,
+          -2.0
+        ],
+        "label": "(5, −2)"
+      }
+    ]
+  },
+  "linear-inequalities-in-two-variables-80.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "from": [
+            -5.0,
+            8.0
+          ],
+          "to": [
+            0.3333333333333333,
+            -8.0
+          ]
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3.0,
+          2.0
+        ],
+        "label": "(−3, 2)"
+      },
+      {
+        "at": [
+          -1.0,
+          -4.0
+        ],
+        "label": "(−1, −4)"
+      }
+    ]
+  }
+}

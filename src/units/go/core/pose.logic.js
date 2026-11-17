@@ -1,5 +1,5 @@
 // Hides: how a problem is posed from a whole-board position of which only the stones and the side to move
-// are known, as "A Self-Study System" Go sets out for the classical collections and for the
+// are known for the classical collections and for the
 // learner's own games: no line of play says where the problem lies, and the position is open to
 // the rest of the board. A group is taken as the group asked about. Every empty point within
 // one line of its stones is open to a move, then within two lines, and so on; the diagram is

@@ -1,5 +1,4 @@
-// Hides: the language track's screens on the work list ("A Self-Study System", Programming, The
-// track's material, The track's steps; Track submit screen): the worked example, the verdict item
+// Hides: the language track's screens on the work list: the worked example, the verdict item
 // with a verdict for each level, the count item's table, the item alone and the witness, and what
 // each shows once answered: the course's two lines with "levels" or "counts" in place of "tests",
 // the first wrong level or count with your answer and the stored one, and the clause under it.

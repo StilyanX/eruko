@@ -1,0 +1,1771 @@
+export default [
+  {
+    "id": "t221-k1-p01",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt[3]{x + 9} - \\sqrt[3]{x - 28} = 1$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{55, -36}",
+    "solution": [
+      "Solve $\\sqrt[3]{x + 9} - \\sqrt[3]{x - 28} = 1$.",
+      "With $u = \\sqrt[3]{x + 9}$ and $v = \\sqrt[3]{x - 28}$: $u - v = 1$",
+      "$u^3 - v^3 = 37$",
+      "$(u - v)^3 = u^3 - v^3 - 3uv(u - v)$",
+      "$1 = 37 - 3uv$",
+      "$3uv = 36$",
+      "$uv = 12$",
+      "$(x + 9)(x - 28) = 1728$",
+      "$x^2 - 19x - 252 = 1728$",
+      "$x^2 - 19x - 1980 = 0$",
+      "$(x - 55)(x + 36) = 0$",
+      "Either $x = 55$ or $x = -36$.",
+      "Check: at $x = 55$ the left side is $\\sqrt[3]{64} - \\sqrt[3]{27} = 4 - 3 = 1$, and at $x = -36$ it is $\\sqrt[3]{-27} - \\sqrt[3]{-64} = -3 + 4 = 1$.",
+      "The set of values is $\\{55, -36\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p02",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{3x^2 + 14x - 24} - \\sqrt{3x^2 + 14x - 45} = 7$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{}",
+    "solution": [
+      "Solve $\\sqrt{3x^2 + 14x - 24} - \\sqrt{3x^2 + 14x - 45} = 7$.",
+      "With $u = \\sqrt{3x^2 + 14x - 24}$ and $v = \\sqrt{3x^2 + 14x - 45}$: $u - v = 7$",
+      "$u^2 - v^2 = 21$",
+      "$(u - v)(u + v) = 21$",
+      "$7(u + v) = 21$",
+      "$u + v = 3$",
+      "$2u = 10$",
+      "$u = 5$",
+      "$\\sqrt{3x^2 + 14x - 24} = 5$",
+      "$3x^2 + 14x - 24 = 25$",
+      "$3x^2 + 14x - 49 = 0$",
+      "$(x + 7)(3x - 7) = 0$",
+      "Either $x = -7$ or $x = \\dfrac{7}{3}$.",
+      "Check: at $x = -7$ and at $x = \\dfrac{7}{3}$ the value of $3x^2 + 14x$ is $49$, so the left side is $\\sqrt{25} - \\sqrt{4} = 3$, not $7$.",
+      "The set of values is $\\{\\}$: the equation has no solution."
+    ]
+  },
+  {
+    "id": "t221-k1-p03",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x^2 + 2x + 66} + \\sqrt{x^2 + 2x + 10} = 14$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-5, 3}",
+    "solution": [
+      "Solve $\\sqrt{x^2 + 2x + 66} + \\sqrt{x^2 + 2x + 10} = 14$.",
+      "With $u = \\sqrt{x^2 + 2x + 66}$ and $v = \\sqrt{x^2 + 2x + 10}$: $u + v = 14$",
+      "$u^2 - v^2 = 56$",
+      "$(u - v)(u + v) = 56$",
+      "$14(u - v) = 56$",
+      "$u - v = 4$",
+      "$2u = 18$",
+      "$u = 9$",
+      "$\\sqrt{x^2 + 2x + 66} = 9$",
+      "$x^2 + 2x + 66 = 81$",
+      "$x^2 + 2x - 15 = 0$",
+      "$(x + 5)(x - 3) = 0$",
+      "Either $x = -5$ or $x = 3$.",
+      "Check: at $x = -5$ and at $x = 3$ the value of $x^2 + 2x$ is $15$, so the left side is $\\sqrt{81} + \\sqrt{25} = 14$, the right side.",
+      "The set of values is $\\{-5, 3\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p04",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $2\\sqrt{x^2 - 11x + 18} = \\sqrt{x^2 - 26x + 48}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{2}",
+    "solution": [
+      "Solve $2\\sqrt{x^2 - 11x + 18} = \\sqrt{x^2 - 26x + 48}$.",
+      "$2\\sqrt{(x - 2)(x - 9)} = \\sqrt{(x - 2)(x - 24)}$",
+      "$4(x - 2)(x - 9) = (x - 2)(x - 24)$",
+      "$4(x - 2)(x - 9) - (x - 2)(x - 24) = 0$",
+      "$(x - 2)(4(x - 9) - (x - 24)) = 0$",
+      "$(x - 2)(3x - 12) = 0$",
+      "Either $x = 2$ or $x = 4$.",
+      "Check: at $x = 2$ both numbers under the roots are $0$, so both sides are $0$; at $x = 4$ the number under the first root is $-10$, which is negative, so that root is not a real number.",
+      "The set of values is $\\{2\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p05",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $2\\sqrt{x^2 + 6x - 7} = \\sqrt{x^2 + 9x + 14}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-7, 2}",
+    "solution": [
+      "Solve $2\\sqrt{x^2 + 6x - 7} = \\sqrt{x^2 + 9x + 14}$.",
+      "$2\\sqrt{(x + 7)(x - 1)} = \\sqrt{(x + 7)(x + 2)}$",
+      "$4(x + 7)(x - 1) = (x + 7)(x + 2)$",
+      "$4(x + 7)(x - 1) - (x + 7)(x + 2) = 0$",
+      "$(x + 7)(4(x - 1) - (x + 2)) = 0$",
+      "$(x + 7)(3x - 6) = 0$",
+      "Either $x = -7$ or $x = 2$.",
+      "Check: at $x = -7$ both numbers under the roots are $0$, so both sides are $0$; at $x = 2$ the numbers under the roots are $9$ and $36$, so the left side is $2\\sqrt{9} = 6$ and the right side is $\\sqrt{36} = 6$.",
+      "The set of values is $\\{-7, 2\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p06",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt[3]{x + 10} - \\sqrt[3]{x - 53} = 3$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{54, -11}",
+    "solution": [
+      "Solve $\\sqrt[3]{x + 10} - \\sqrt[3]{x - 53} = 3$.",
+      "With $u = \\sqrt[3]{x + 10}$ and $v = \\sqrt[3]{x - 53}$: $u - v = 3$",
+      "$u^3 - v^3 = 63$",
+      "$(u - v)^3 = u^3 - v^3 - 3uv(u - v)$",
+      "$27 = 63 - 9uv$",
+      "$9uv = 36$",
+      "$uv = 4$",
+      "$(x + 10)(x - 53) = 64$",
+      "$x^2 - 43x - 530 = 64$",
+      "$x^2 - 43x - 594 = 0$",
+      "$(x - 54)(x + 11) = 0$",
+      "Either $x = 54$ or $x = -11$.",
+      "Check: at $x = 54$ the left side is $\\sqrt[3]{64} - \\sqrt[3]{1} = 4 - 1 = 3$, and at $x = -11$ it is $\\sqrt[3]{-1} - \\sqrt[3]{-64} = -1 + 4 = 3$.",
+      "The set of values is $\\{54, -11\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p07",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{2x^2 - 11x - 4} + \\sqrt{2x^2 - 11x - 24} = 10$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{8, -5/2}",
+    "solution": [
+      "Solve $\\sqrt{2x^2 - 11x - 4} + \\sqrt{2x^2 - 11x - 24} = 10$.",
+      "With $u = \\sqrt{2x^2 - 11x - 4}$ and $v = \\sqrt{2x^2 - 11x - 24}$: $u + v = 10$",
+      "$u^2 - v^2 = 20$",
+      "$(u - v)(u + v) = 20$",
+      "$10(u - v) = 20$",
+      "$u - v = 2$",
+      "$2u = 12$",
+      "$u = 6$",
+      "$\\sqrt{2x^2 - 11x - 4} = 6$",
+      "$2x^2 - 11x - 4 = 36$",
+      "$2x^2 - 11x - 40 = 0$",
+      "$(x - 8)(2x + 5) = 0$",
+      "Either $x = 8$ or $x = -\\dfrac{5}{2}$.",
+      "Check: at $x = 8$ and at $x = -\\dfrac{5}{2}$ the value of $2x^2 - 11x$ is $40$, so the left side is $\\sqrt{36} + \\sqrt{16} = 10$, the right side.",
+      "The set of values is $\\{8, -\\dfrac{5}{2}\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p08",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $3\\sqrt{x^2 - 11x + 24} = \\sqrt{x^2 + 21x - 72}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{3, 12}",
+    "solution": [
+      "Solve $3\\sqrt{x^2 - 11x + 24} = \\sqrt{x^2 + 21x - 72}$.",
+      "$3\\sqrt{(x - 3)(x - 8)} = \\sqrt{(x - 3)(x + 24)}$",
+      "$9(x - 3)(x - 8) = (x - 3)(x + 24)$",
+      "$9(x - 3)(x - 8) - (x - 3)(x + 24) = 0$",
+      "$(x - 3)(9(x - 8) - (x + 24)) = 0$",
+      "$(x - 3)(8x - 96) = 0$",
+      "Either $x = 3$ or $x = 12$.",
+      "Check: at $x = 3$ both numbers under the roots are $0$, so both sides are $0$; at $x = 12$ the numbers under the roots are $36$ and $324$, so the left side is $3\\sqrt{36} = 18$ and the right side is $\\sqrt{324} = 18$.",
+      "The set of values is $\\{3, 12\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p09",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt[3]{x + 30} + \\sqrt[3]{61 - x} = 7$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{34, -3}",
+    "solution": [
+      "Solve $\\sqrt[3]{x + 30} + \\sqrt[3]{61 - x} = 7$.",
+      "With $u = \\sqrt[3]{x + 30}$ and $v = \\sqrt[3]{61 - x}$: $u + v = 7$",
+      "$u^3 + v^3 = 91$",
+      "$(u + v)^3 = u^3 + v^3 + 3uv(u + v)$",
+      "$343 = 91 + 21uv$",
+      "$21uv = 252$",
+      "$uv = 12$",
+      "$(x + 30)(61 - x) = 1728$",
+      "$-x^2 + 31x + 1830 = 1728$",
+      "$x^2 - 31x - 102 = 0$",
+      "$(x - 34)(x + 3) = 0$",
+      "Either $x = 34$ or $x = -3$.",
+      "Check: at $x = 34$ the left side is $\\sqrt[3]{64} + \\sqrt[3]{27} = 4 + 3 = 7$, and at $x = -3$ it is $\\sqrt[3]{27} + \\sqrt[3]{64} = 3 + 4 = 7$.",
+      "The set of values is $\\{34, -3\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p10",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x^2 + 7x + 46} - \\sqrt{x^2 + 7x + 7} = 3$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{2, -9}",
+    "solution": [
+      "Solve $\\sqrt{x^2 + 7x + 46} - \\sqrt{x^2 + 7x + 7} = 3$.",
+      "With $u = \\sqrt{x^2 + 7x + 46}$ and $v = \\sqrt{x^2 + 7x + 7}$: $u - v = 3$",
+      "$u^2 - v^2 = 39$",
+      "$(u - v)(u + v) = 39$",
+      "$3(u + v) = 39$",
+      "$u + v = 13$",
+      "$2u = 16$",
+      "$u = 8$",
+      "$\\sqrt{x^2 + 7x + 46} = 8$",
+      "$x^2 + 7x + 46 = 64$",
+      "$x^2 + 7x - 18 = 0$",
+      "$(x - 2)(x + 9) = 0$",
+      "Either $x = 2$ or $x = -9$.",
+      "Check: at $x = 2$ and at $x = -9$ the value of $x^2 + 7x$ is $18$, so the left side is $\\sqrt{64} - \\sqrt{25} = 3$, the right side.",
+      "The set of values is $\\{2, -9\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p11",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt[3]{x + 2} + \\sqrt[3]{7 - x} = 3$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{6, -1}",
+    "solution": [
+      "Solve $\\sqrt[3]{x + 2} + \\sqrt[3]{7 - x} = 3$.",
+      "With $u = \\sqrt[3]{x + 2}$ and $v = \\sqrt[3]{7 - x}$: $u + v = 3$",
+      "$u^3 + v^3 = 9$",
+      "$(u + v)^3 = u^3 + v^3 + 3uv(u + v)$",
+      "$27 = 9 + 9uv$",
+      "$9uv = 18$",
+      "$uv = 2$",
+      "$(x + 2)(7 - x) = 8$",
+      "$-x^2 + 5x + 14 = 8$",
+      "$x^2 - 5x - 6 = 0$",
+      "$(x - 6)(x + 1) = 0$",
+      "Either $x = 6$ or $x = -1$.",
+      "Check: at $x = 6$ the left side is $\\sqrt[3]{8} + \\sqrt[3]{1} = 2 + 1 = 3$, and at $x = -1$ it is $\\sqrt[3]{1} + \\sqrt[3]{8} = 1 + 2 = 3$.",
+      "The set of values is $\\{6, -1\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p12",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x^2 + 13x + 52} + \\sqrt{x^2 + 13x + 37} = 5$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-9, -4}",
+    "solution": [
+      "Solve $\\sqrt{x^2 + 13x + 52} + \\sqrt{x^2 + 13x + 37} = 5$.",
+      "With $u = \\sqrt{x^2 + 13x + 52}$ and $v = \\sqrt{x^2 + 13x + 37}$: $u + v = 5$",
+      "$u^2 - v^2 = 15$",
+      "$(u - v)(u + v) = 15$",
+      "$5(u - v) = 15$",
+      "$u - v = 3$",
+      "$2u = 8$",
+      "$u = 4$",
+      "$\\sqrt{x^2 + 13x + 52} = 4$",
+      "$x^2 + 13x + 52 = 16$",
+      "$x^2 + 13x + 36 = 0$",
+      "$(x + 9)(x + 4) = 0$",
+      "Either $x = -9$ or $x = -4$.",
+      "Check: at $x = -9$ and at $x = -4$ the value of $x^2 + 13x$ is $-36$, so the left side is $\\sqrt{16} + \\sqrt{1} = 5$, the right side.",
+      "The set of values is $\\{-9, -4\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p13",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $2\\sqrt{x^2 + 3x - 54} = \\sqrt{x^2 + 6x - 27}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-9, 7}",
+    "solution": [
+      "Solve $2\\sqrt{x^2 + 3x - 54} = \\sqrt{x^2 + 6x - 27}$.",
+      "$2\\sqrt{(x + 9)(x - 6)} = \\sqrt{(x + 9)(x - 3)}$",
+      "$4(x + 9)(x - 6) = (x + 9)(x - 3)$",
+      "$4(x + 9)(x - 6) - (x + 9)(x - 3) = 0$",
+      "$(x + 9)(4(x - 6) - (x - 3)) = 0$",
+      "$(x + 9)(3x - 21) = 0$",
+      "Either $x = -9$ or $x = 7$.",
+      "Check: at $x = -9$ both numbers under the roots are $0$, so both sides are $0$; at $x = 7$ the numbers under the roots are $16$ and $64$, so the left side is $2\\sqrt{16} = 8$ and the right side is $\\sqrt{64} = 8$.",
+      "The set of values is $\\{-9, 7\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p14",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $3\\sqrt{x^2 - 9x + 18} = \\sqrt{x^2 - x - 6}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{3, 7}",
+    "solution": [
+      "Solve $3\\sqrt{x^2 - 9x + 18} = \\sqrt{x^2 - x - 6}$.",
+      "$3\\sqrt{(x - 3)(x - 6)} = \\sqrt{(x - 3)(x + 2)}$",
+      "$9(x - 3)(x - 6) = (x - 3)(x + 2)$",
+      "$9(x - 3)(x - 6) - (x - 3)(x + 2) = 0$",
+      "$(x - 3)(9(x - 6) - (x + 2)) = 0$",
+      "$(x - 3)(8x - 56) = 0$",
+      "Either $x = 3$ or $x = 7$.",
+      "Check: at $x = 3$ both numbers under the roots are $0$, so both sides are $0$; at $x = 7$ the numbers under the roots are $4$ and $36$, so the left side is $3\\sqrt{4} = 6$ and the right side is $\\sqrt{36} = 6$.",
+      "The set of values is $\\{3, 7\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p15",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{3x^2 - 13x + 34} - \\sqrt{3x^2 - 13x - 14} = 4$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{6, -5/3}",
+    "solution": [
+      "Solve $\\sqrt{3x^2 - 13x + 34} - \\sqrt{3x^2 - 13x - 14} = 4$.",
+      "With $u = \\sqrt{3x^2 - 13x + 34}$ and $v = \\sqrt{3x^2 - 13x - 14}$: $u - v = 4$",
+      "$u^2 - v^2 = 48$",
+      "$(u - v)(u + v) = 48$",
+      "$4(u + v) = 48$",
+      "$u + v = 12$",
+      "$2u = 16$",
+      "$u = 8$",
+      "$\\sqrt{3x^2 - 13x + 34} = 8$",
+      "$3x^2 - 13x + 34 = 64$",
+      "$3x^2 - 13x - 30 = 0$",
+      "$(x - 6)(3x + 5) = 0$",
+      "Either $x = 6$ or $x = -\\dfrac{5}{3}$.",
+      "Check: at $x = 6$ and at $x = -\\dfrac{5}{3}$ the value of $3x^2 - 13x$ is $30$, so the left side is $\\sqrt{64} - \\sqrt{16} = 4$, the right side.",
+      "The set of values is $\\{6, -\\dfrac{5}{3}\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p16",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $2\\sqrt{x^2 + x - 6} = \\sqrt{x^2 - 2x - 15}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-3}",
+    "solution": [
+      "Solve $2\\sqrt{x^2 + x - 6} = \\sqrt{x^2 - 2x - 15}$.",
+      "$2\\sqrt{(x + 3)(x - 2)} = \\sqrt{(x + 3)(x - 5)}$",
+      "$4(x + 3)(x - 2) = (x + 3)(x - 5)$",
+      "$4(x + 3)(x - 2) - (x + 3)(x - 5) = 0$",
+      "$(x + 3)(4(x - 2) - (x - 5)) = 0$",
+      "$(x + 3)(3x - 3) = 0$",
+      "Either $x = -3$ or $x = 1$.",
+      "Check: at $x = -3$ both numbers under the roots are $0$, so both sides are $0$; at $x = 1$ the number under the first root is $-4$, which is negative, so that root is not a real number.",
+      "The set of values is $\\{-3\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p17",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $2\\sqrt{x^2 - 6x - 7} = \\sqrt{x^2 - 24x - 25}$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{-1}",
+    "solution": [
+      "Solve $2\\sqrt{x^2 - 6x - 7} = \\sqrt{x^2 - 24x - 25}$.",
+      "$2\\sqrt{(x + 1)(x - 7)} = \\sqrt{(x + 1)(x - 25)}$",
+      "$4(x + 1)(x - 7) = (x + 1)(x - 25)$",
+      "$4(x + 1)(x - 7) - (x + 1)(x - 25) = 0$",
+      "$(x + 1)(4(x - 7) - (x - 25)) = 0$",
+      "$(x + 1)(3x - 3) = 0$",
+      "Either $x = -1$ or $x = 1$.",
+      "Check: at $x = -1$ both numbers under the roots are $0$, so both sides are $0$; at $x = 1$ the number under the first root is $-12$, which is negative, so that root is not a real number.",
+      "The set of values is $\\{-1\\}$."
+    ]
+  },
+  {
+    "id": "t221-k1-p18",
+    "topic": "radical-inequalities",
+    "kind": "t221-k1",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{2x^2 + 5x + 18} + \\sqrt{2x^2 + 5x - 54} = 6$.",
+    "form": "Answer as the set of values, as in {-1, 3}.",
+    "answer": "{}",
+    "solution": [
+      "Solve $\\sqrt{2x^2 + 5x + 18} + \\sqrt{2x^2 + 5x - 54} = 6$.",
+      "With $u = \\sqrt{2x^2 + 5x + 18}$ and $v = \\sqrt{2x^2 + 5x - 54}$: $u + v = 6$",
+      "$u^2 - v^2 = 72$",
+      "$(u - v)(u + v) = 72$",
+      "$6(u - v) = 72$",
+      "$u - v = 12$",
+      "$2u = 18$",
+      "$u = 9$",
+      "$\\sqrt{2x^2 + 5x + 18} = 9$",
+      "$2x^2 + 5x + 18 = 81$",
+      "$2x^2 + 5x - 63 = 0$",
+      "$(x + 7)(2x - 9) = 0$",
+      "Either $x = -7$ or $x = \\dfrac{9}{2}$.",
+      "Check: at $x = -7$ and at $x = \\dfrac{9}{2}$ the value of $2x^2 + 5x$ is $63$, so the left side is $\\sqrt{81} + \\sqrt{9} = 12$, not $6$.",
+      "The set of values is $\\{\\}$: the equation has no solution."
+    ]
+  },
+  {
+    "id": "t221-k2-p01",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{2x - 4} \\ge 6 - x$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "x >= 4",
+    "solution": [
+      "Solve $\\sqrt{2x - 4} \\ge 6 - x$.",
+      "The root is defined exactly when $x \\ge 2$.",
+      "For $x > 6$ the right side is negative, so the inequality holds wherever the root is defined: $x > 6$.",
+      "For $2 \\le x \\le 6$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $2x - 4 \\ge (6 - x)^2$.",
+      "$2x - 4 \\ge x^2 - 12x + 36$",
+      "$x^2 - 14x + 40 \\le 0$",
+      "$(x - 4)(x - 10) \\le 0$",
+      "So $4 \\le x \\le 10$.",
+      "Among $2 \\le x \\le 6$ this leaves $4 \\le x \\le 6$.",
+      "Together with $x > 6$: $x \\ge 4$."
+    ]
+  },
+  {
+    "id": "t221-k2-p02",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{5x - 9} \\le x - 1$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "9/5 <= x <= 2 or x >= 5",
+    "solution": [
+      "Solve $\\sqrt{5x - 9} \\le x - 1$.",
+      "The root is defined exactly when $x \\ge \\dfrac{9}{5}$.",
+      "For $x \\ge \\dfrac{9}{5}$: $x - 1 \\ge \\dfrac{4}{5}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $5x - 9 \\le (x - 1)^2$.",
+      "$5x - 9 \\le x^2 - 2x + 1$",
+      "$x^2 - 7x + 10 \\ge 0$",
+      "$(x - 2)(x - 5) \\ge 0$",
+      "So $x \\le 2$ or $x \\ge 5$.",
+      "Among $x \\ge \\dfrac{9}{5}$ this leaves $\\dfrac{9}{5} \\le x \\le 2$ or $x \\ge 5$."
+    ]
+  },
+  {
+    "id": "t221-k2-p03",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x + 18} \\le 2 - x$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-18 <= x <= -2",
+    "solution": [
+      "Solve $\\sqrt{x + 18} \\le 2 - x$.",
+      "The root is defined exactly when $x \\ge -18$.",
+      "For $x > 2$ the right side is negative, so no such $x$ is a solution.",
+      "For $-18 \\le x \\le 2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $x + 18 \\le (2 - x)^2$.",
+      "$x + 18 \\le x^2 - 4x + 4$",
+      "$x^2 - 5x - 14 \\ge 0$",
+      "$(x + 2)(x - 7) \\ge 0$",
+      "So $x \\le -2$ or $x \\ge 7$.",
+      "Among $-18 \\le x \\le 2$ this leaves $-18 \\le x \\le -2$."
+    ]
+  },
+  {
+    "id": "t221-k2-p04",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{10x - 4} \\le x + 2$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "2/5 <= x <= 2 or x >= 4",
+    "solution": [
+      "Solve $\\sqrt{10x - 4} \\le x + 2$.",
+      "The root is defined exactly when $x \\ge \\dfrac{2}{5}$.",
+      "For $x \\ge \\dfrac{2}{5}$: $x + 2 \\ge \\dfrac{12}{5}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $10x - 4 \\le (x + 2)^2$.",
+      "$10x - 4 \\le x^2 + 4x + 4$",
+      "$x^2 - 6x + 8 \\ge 0$",
+      "$(x - 2)(x - 4) \\ge 0$",
+      "So $x \\le 2$ or $x \\ge 4$.",
+      "Among $x \\ge \\dfrac{2}{5}$ this leaves $\\dfrac{2}{5} \\le x \\le 2$ or $x \\ge 4$."
+    ]
+  },
+  {
+    "id": "t221-k2-p05",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{8x + 49} \\ge x + 8$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-5 <= x <= -3",
+    "solution": [
+      "Solve $\\sqrt{8x + 49} \\ge x + 8$.",
+      "The root is defined exactly when $x \\ge -\\dfrac{49}{8}$.",
+      "For $x \\ge -\\dfrac{49}{8}$: $x + 8 \\ge \\dfrac{15}{8}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $8x + 49 \\ge (x + 8)^2$.",
+      "$8x + 49 \\ge x^2 + 16x + 64$",
+      "$x^2 + 8x + 15 \\le 0$",
+      "$(x + 5)(x + 3) \\le 0$",
+      "So $-5 \\le x \\le -3$.",
+      "Among $x \\ge -\\dfrac{49}{8}$ this leaves $-5 \\le x \\le -3$."
+    ]
+  },
+  {
+    "id": "t221-k2-p06",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{6x + 28} \\ge x + 2$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-14/3 <= x <= 6",
+    "solution": [
+      "Solve $\\sqrt{6x + 28} \\ge x + 2$.",
+      "The root is defined exactly when $x \\ge -\\dfrac{14}{3}$.",
+      "For $x < -2$ the right side is negative, so the inequality holds wherever the root is defined: $-\\dfrac{14}{3} \\le x < -2$.",
+      "For $x \\ge -2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $6x + 28 \\ge (x + 2)^2$.",
+      "$6x + 28 \\ge x^2 + 4x + 4$",
+      "$x^2 - 2x - 24 \\le 0$",
+      "$(x + 4)(x - 6) \\le 0$",
+      "So $-4 \\le x \\le 6$.",
+      "Among $x \\ge -2$ this leaves $-2 \\le x \\le 6$.",
+      "Together with $-\\dfrac{14}{3} \\le x < -2$: $-\\dfrac{14}{3} \\le x \\le 6$."
+    ]
+  },
+  {
+    "id": "t221-k2-p07",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x + 41} \\le x - 1$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "x >= 8",
+    "solution": [
+      "Solve $\\sqrt{x + 41} \\le x - 1$.",
+      "The root is defined exactly when $x \\ge -41$.",
+      "For $x < 1$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\ge 1$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $x + 41 \\le (x - 1)^2$.",
+      "$x + 41 \\le x^2 - 2x + 1$",
+      "$x^2 - 3x - 40 \\ge 0$",
+      "$(x + 5)(x - 8) \\ge 0$",
+      "So $x \\le -5$ or $x \\ge 8$.",
+      "Among $x \\ge 1$ this leaves $x \\ge 8$."
+    ]
+  },
+  {
+    "id": "t221-k2-p08",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{7x - 27} > x - 3$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "4 < x < 9",
+    "solution": [
+      "Solve $\\sqrt{7x - 27} > x - 3$.",
+      "The root is defined exactly when $x \\ge \\dfrac{27}{7}$.",
+      "For $x \\ge \\dfrac{27}{7}$: $x - 3 \\ge \\dfrac{6}{7}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $7x - 27 > (x - 3)^2$.",
+      "$7x - 27 > x^2 - 6x + 9$",
+      "$x^2 - 13x + 36 < 0$",
+      "$(x - 4)(x - 9) < 0$",
+      "So $4 < x < 9$.",
+      "Among $x \\ge \\dfrac{27}{7}$ this leaves $4 < x < 9$."
+    ]
+  },
+  {
+    "id": "t221-k2-p09",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{11x - 52} > x - 2$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "7 < x < 8",
+    "solution": [
+      "Solve $\\sqrt{11x - 52} > x - 2$.",
+      "The root is defined exactly when $x \\ge \\dfrac{52}{11}$.",
+      "For $x \\ge \\dfrac{52}{11}$: $x - 2 \\ge \\dfrac{30}{11}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $11x - 52 > (x - 2)^2$.",
+      "$11x - 52 > x^2 - 4x + 4$",
+      "$x^2 - 15x + 56 < 0$",
+      "$(x - 7)(x - 8) < 0$",
+      "So $7 < x < 8$.",
+      "Among $x \\ge \\dfrac{52}{11}$ this leaves $7 < x < 8$."
+    ]
+  },
+  {
+    "id": "t221-k2-p10",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{79 - 10x} \\ge x - 4$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "x <= 7",
+    "solution": [
+      "Solve $\\sqrt{79 - 10x} \\ge x - 4$.",
+      "The root is defined exactly when $x \\le \\dfrac{79}{10}$.",
+      "For $x < 4$ the right side is negative, so the inequality holds wherever the root is defined: $x < 4$.",
+      "For $4 \\le x \\le \\dfrac{79}{10}$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $79 - 10x \\ge (x - 4)^2$.",
+      "$79 - 10x \\ge x^2 - 8x + 16$",
+      "$x^2 + 2x - 63 \\le 0$",
+      "$(x + 9)(x - 7) \\le 0$",
+      "So $-9 \\le x \\le 7$.",
+      "Among $4 \\le x \\le \\dfrac{79}{10}$ this leaves $4 \\le x \\le 7$.",
+      "Together with $x < 4$: $x \\le 7$."
+    ]
+  },
+  {
+    "id": "t221-k2-p11",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{2x + 44} < x - 2$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "x > 10",
+    "solution": [
+      "Solve $\\sqrt{2x + 44} < x - 2$.",
+      "The root is defined exactly when $x \\ge -22$.",
+      "For $x < 2$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\ge 2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $2x + 44 < (x - 2)^2$.",
+      "$2x + 44 < x^2 - 4x + 4$",
+      "$x^2 - 6x - 40 > 0$",
+      "$(x + 4)(x - 10) > 0$",
+      "So $x < -4$ or $x > 10$.",
+      "Among $x \\ge 2$ this leaves $x > 10$."
+    ]
+  },
+  {
+    "id": "t221-k2-p12",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{x + 28} > x - 2$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-28 <= x < 8",
+    "solution": [
+      "Solve $\\sqrt{x + 28} > x - 2$.",
+      "The root is defined exactly when $x \\ge -28$.",
+      "For $x < 2$ the right side is negative, so the inequality holds wherever the root is defined: $-28 \\le x < 2$.",
+      "For $x \\ge 2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $x + 28 > (x - 2)^2$.",
+      "$x + 28 > x^2 - 4x + 4$",
+      "$x^2 - 5x - 24 < 0$",
+      "$(x + 3)(x - 8) < 0$",
+      "So $-3 < x < 8$.",
+      "Among $x \\ge 2$ this leaves $2 \\le x < 8$.",
+      "Together with $-28 \\le x < 2$: $-28 \\le x < 8$."
+    ]
+  },
+  {
+    "id": "t221-k2-p13",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{-5 - 2x} \\le x + 4$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-3 <= x <= -5/2",
+    "solution": [
+      "Solve $\\sqrt{-5 - 2x} \\le x + 4$.",
+      "The root is defined exactly when $x \\le -\\dfrac{5}{2}$.",
+      "For $x < -4$ the right side is negative, so no such $x$ is a solution.",
+      "For $-4 \\le x \\le -\\dfrac{5}{2}$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $-5 - 2x \\le (x + 4)^2$.",
+      "$-5 - 2x \\le x^2 + 8x + 16$",
+      "$x^2 + 10x + 21 \\ge 0$",
+      "$(x + 7)(x + 3) \\ge 0$",
+      "So $x \\le -7$ or $x \\ge -3$.",
+      "Among $-4 \\le x \\le -\\dfrac{5}{2}$ this leaves $-3 \\le x \\le -\\dfrac{5}{2}$."
+    ]
+  },
+  {
+    "id": "t221-k2-p14",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{71 - 5x} > 7 - x$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-2 < x <= 71/5",
+    "solution": [
+      "Solve $\\sqrt{71 - 5x} > 7 - x$.",
+      "The root is defined exactly when $x \\le \\dfrac{71}{5}$.",
+      "For $x > 7$ the right side is negative, so the inequality holds wherever the root is defined: $7 < x \\le \\dfrac{71}{5}$.",
+      "For $x \\le 7$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $71 - 5x > (7 - x)^2$.",
+      "$71 - 5x > x^2 - 14x + 49$",
+      "$x^2 - 9x - 22 < 0$",
+      "$(x + 2)(x - 11) < 0$",
+      "So $-2 < x < 11$.",
+      "Among $x \\le 7$ this leaves $-2 < x \\le 7$.",
+      "Together with $7 < x \\le \\dfrac{71}{5}$: $-2 < x \\le \\dfrac{71}{5}$."
+    ]
+  },
+  {
+    "id": "t221-k2-p15",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{46 - 5x} < 8 - x$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "x < 2",
+    "solution": [
+      "Solve $\\sqrt{46 - 5x} < 8 - x$.",
+      "The root is defined exactly when $x \\le \\dfrac{46}{5}$.",
+      "For $x > 8$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\le 8$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $46 - 5x < (8 - x)^2$.",
+      "$46 - 5x < x^2 - 16x + 64$",
+      "$x^2 - 11x + 18 > 0$",
+      "$(x - 2)(x - 9) > 0$",
+      "So $x < 2$ or $x > 9$.",
+      "Among $x \\le 8$ this leaves $x < 2$."
+    ]
+  },
+  {
+    "id": "t221-k2-p16",
+    "topic": "radical-inequalities",
+    "kind": "t221-k2",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Solve $\\sqrt{8x + 41} < x + 6$.",
+    "form": "Answer as an inequality, as in -2 <= x < 5.",
+    "answer": "-41/8 <= x < -5 or x > 1",
+    "solution": [
+      "Solve $\\sqrt{8x + 41} < x + 6$.",
+      "The root is defined exactly when $x \\ge -\\dfrac{41}{8}$.",
+      "For $x \\ge -\\dfrac{41}{8}$: $x + 6 \\ge \\dfrac{7}{8}$, so the right side is not negative.",
+      "So, where the root is defined, the inequality holds exactly when $8x + 41 < (x + 6)^2$.",
+      "$8x + 41 < x^2 + 12x + 36$",
+      "$x^2 + 4x - 5 > 0$",
+      "$(x + 5)(x - 1) > 0$",
+      "So $x < -5$ or $x > 1$.",
+      "Among $x \\ge -\\dfrac{41}{8}$ this leaves $-\\dfrac{41}{8} \\le x < -5$ or $x > 1$."
+    ]
+  },
+  {
+    "id": "t221-k3-p01",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(3x^2 + 24) - (x + 4)^2$; its sign shows how $\\sqrt{3x^2 + 24}$ compares with $x + 4$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "2*(x-2)^2",
+    "solution": [
+      "Find the completed-square form of $(3x^2 + 24) - (x + 4)^2$; its sign shows how $\\sqrt{3x^2 + 24}$ compares with $x + 4$ for every real number $x$ with $x \\ge 0$.",
+      "$(3x^2 + 24) - (x + 4)^2 = 2x^2 - 8x + 8$",
+      "$2x^2 - 8x + 8 = 2(x - 2)^2$",
+      "Here $2(x - 2)^2 \\ge 0$.",
+      "So $3x^2 + 24 \\ge (x + 4)^2$.",
+      "For $x \\ge 0$: $x + 4 \\ge 4$, so $x + 4$ is not negative.",
+      "So $\\sqrt{3x^2 + 24} \\ge x + 4$.",
+      "The completed-square form is $2(x - 2)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p02",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(11x^2 + 113) - (x + 10)^2$; its sign shows how $\\sqrt{11x^2 + 113}$ compares with $x + 10$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "10*(x-1)^2+3",
+    "solution": [
+      "Find the completed-square form of $(11x^2 + 113) - (x + 10)^2$; its sign shows how $\\sqrt{11x^2 + 113}$ compares with $x + 10$ for every real number $x$ with $x \\ge 0$.",
+      "$(11x^2 + 113) - (x + 10)^2 = 10x^2 - 20x + 13$",
+      "$10x^2 - 20x + 13 = 10(x - 1)^2 + 3$",
+      "Here $10(x - 1)^2 \\ge 0$.",
+      "So $10(x - 1)^2 + 3 > 0$.",
+      "So $11x^2 + 113 > (x + 10)^2$.",
+      "For $x \\ge 0$: $x + 10 \\ge 10$, so $x + 10$ is not negative.",
+      "So $\\sqrt{11x^2 + 113} > x + 10$.",
+      "The completed-square form is $10(x - 1)^2 + 3$."
+    ]
+  },
+  {
+    "id": "t221-k3-p03",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(6x^2 + 120) - (x + 10)^2$; its sign shows how $\\sqrt{6x^2 + 120}$ compares with $x + 10$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "5*(x-2)^2",
+    "solution": [
+      "Find the completed-square form of $(6x^2 + 120) - (x + 10)^2$; its sign shows how $\\sqrt{6x^2 + 120}$ compares with $x + 10$ for every real number $x$ with $x \\ge 0$.",
+      "$(6x^2 + 120) - (x + 10)^2 = 5x^2 - 20x + 20$",
+      "$5x^2 - 20x + 20 = 5(x - 2)^2$",
+      "Here $5(x - 2)^2 \\ge 0$.",
+      "So $6x^2 + 120 \\ge (x + 10)^2$.",
+      "For $x \\ge 0$: $x + 10 \\ge 10$, so $x + 10$ is not negative.",
+      "So $\\sqrt{6x^2 + 120} \\ge x + 10$.",
+      "The completed-square form is $5(x - 2)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p04",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(4x^2 + 198) - (x + 12)^2$; its sign shows how $\\sqrt{4x^2 + 198}$ compares with $x + 12$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "3*(x-4)^2+6",
+    "solution": [
+      "Find the completed-square form of $(4x^2 + 198) - (x + 12)^2$; its sign shows how $\\sqrt{4x^2 + 198}$ compares with $x + 12$ for every real number $x$ with $x \\ge 0$.",
+      "$(4x^2 + 198) - (x + 12)^2 = 3x^2 - 24x + 54$",
+      "$3x^2 - 24x + 54 = 3(x - 4)^2 + 6$",
+      "Here $3(x - 4)^2 \\ge 0$.",
+      "So $3(x - 4)^2 + 6 > 0$.",
+      "So $4x^2 + 198 > (x + 12)^2$.",
+      "For $x \\ge 0$: $x + 12 \\ge 12$, so $x + 12$ is not negative.",
+      "So $\\sqrt{4x^2 + 198} > x + 12$.",
+      "The completed-square form is $3(x - 4)^2 + 6$."
+    ]
+  },
+  {
+    "id": "t221-k3-p05",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(2x^2 + 35) - (x - 4)^2$; its sign shows how $\\sqrt{2x^2 + 35}$ compares with $x - 4$ for every real number $x$ with $x \\ge 4$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "(x+4)^2+3",
+    "solution": [
+      "Find the completed-square form of $(2x^2 + 35) - (x - 4)^2$; its sign shows how $\\sqrt{2x^2 + 35}$ compares with $x - 4$ for every real number $x$ with $x \\ge 4$.",
+      "$(2x^2 + 35) - (x - 4)^2 = x^2 + 8x + 19$",
+      "$x^2 + 8x + 19 = (x + 4)^2 + 3$",
+      "Here $(x + 4)^2 \\ge 0$.",
+      "So $(x + 4)^2 + 3 > 0$.",
+      "So $2x^2 + 35 > (x - 4)^2$.",
+      "For $x \\ge 4$: $x - 4 \\ge 0$, so $x - 4$ is not negative.",
+      "So $\\sqrt{2x^2 + 35} > x - 4$.",
+      "The completed-square form is $(x + 4)^2 + 3$."
+    ]
+  },
+  {
+    "id": "t221-k3-p06",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(2x^2 + 50) - (x + 5)^2$; its sign shows how $\\sqrt{2x^2 + 50}$ compares with $x + 5$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "(x-5)^2",
+    "solution": [
+      "Find the completed-square form of $(2x^2 + 50) - (x + 5)^2$; its sign shows how $\\sqrt{2x^2 + 50}$ compares with $x + 5$ for every real number $x$ with $x \\ge 0$.",
+      "$(2x^2 + 50) - (x + 5)^2 = x^2 - 10x + 25$",
+      "$x^2 - 10x + 25 = (x - 5)^2$",
+      "Here $(x - 5)^2 \\ge 0$.",
+      "So $2x^2 + 50 \\ge (x + 5)^2$.",
+      "For $x \\ge 0$: $x + 5 \\ge 5$, so $x + 5$ is not negative.",
+      "So $\\sqrt{2x^2 + 50} \\ge x + 5$.",
+      "The completed-square form is $(x - 5)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p07",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(5x^2 + 82) - (x - 8)^2$; its sign shows how $\\sqrt{5x^2 + 82}$ compares with $x - 8$ for every real number $x$ with $x \\ge 8$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "4*(x+2)^2+2",
+    "solution": [
+      "Find the completed-square form of $(5x^2 + 82) - (x - 8)^2$; its sign shows how $\\sqrt{5x^2 + 82}$ compares with $x - 8$ for every real number $x$ with $x \\ge 8$.",
+      "$(5x^2 + 82) - (x - 8)^2 = 4x^2 + 16x + 18$",
+      "$4x^2 + 16x + 18 = 4(x + 2)^2 + 2$",
+      "Here $4(x + 2)^2 \\ge 0$.",
+      "So $4(x + 2)^2 + 2 > 0$.",
+      "So $5x^2 + 82 > (x - 8)^2$.",
+      "For $x \\ge 8$: $x - 8 \\ge 0$, so $x - 8$ is not negative.",
+      "So $\\sqrt{5x^2 + 82} > x - 8$.",
+      "The completed-square form is $4(x + 2)^2 + 2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p08",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(10x^2 + 90) - (x + 9)^2$; its sign shows how $\\sqrt{10x^2 + 90}$ compares with $x + 9$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "9*(x-1)^2",
+    "solution": [
+      "Find the completed-square form of $(10x^2 + 90) - (x + 9)^2$; its sign shows how $\\sqrt{10x^2 + 90}$ compares with $x + 9$ for every real number $x$ with $x \\ge 0$.",
+      "$(10x^2 + 90) - (x + 9)^2 = 9x^2 - 18x + 9$",
+      "$9x^2 - 18x + 9 = 9(x - 1)^2$",
+      "Here $9(x - 1)^2 \\ge 0$.",
+      "So $10x^2 + 90 \\ge (x + 9)^2$.",
+      "For $x \\ge 0$: $x + 9 \\ge 9$, so $x + 9$ is not negative.",
+      "So $\\sqrt{10x^2 + 90} \\ge x + 9$.",
+      "The completed-square form is $9(x - 1)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p09",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(13x^2 + 156) - (x + 12)^2$; its sign shows how $\\sqrt{13x^2 + 156}$ compares with $x + 12$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "12*(x-1)^2",
+    "solution": [
+      "Find the completed-square form of $(13x^2 + 156) - (x + 12)^2$; its sign shows how $\\sqrt{13x^2 + 156}$ compares with $x + 12$ for every real number $x$ with $x \\ge 0$.",
+      "$(13x^2 + 156) - (x + 12)^2 = 12x^2 - 24x + 12$",
+      "$12x^2 - 24x + 12 = 12(x - 1)^2$",
+      "Here $12(x - 1)^2 \\ge 0$.",
+      "So $13x^2 + 156 \\ge (x + 12)^2$.",
+      "For $x \\ge 0$: $x + 12 \\ge 12$, so $x + 12$ is not negative.",
+      "So $\\sqrt{13x^2 + 156} \\ge x + 12$.",
+      "The completed-square form is $12(x - 1)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p10",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(4x^2 + 114) - (x + 9)^2$; its sign shows how $\\sqrt{4x^2 + 114}$ compares with $x + 9$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "3*(x-3)^2+6",
+    "solution": [
+      "Find the completed-square form of $(4x^2 + 114) - (x + 9)^2$; its sign shows how $\\sqrt{4x^2 + 114}$ compares with $x + 9$ for every real number $x$ with $x \\ge 0$.",
+      "$(4x^2 + 114) - (x + 9)^2 = 3x^2 - 18x + 33$",
+      "$3x^2 - 18x + 33 = 3(x - 3)^2 + 6$",
+      "Here $3(x - 3)^2 \\ge 0$.",
+      "So $3(x - 3)^2 + 6 > 0$.",
+      "So $4x^2 + 114 > (x + 9)^2$.",
+      "For $x \\ge 0$: $x + 9 \\ge 9$, so $x + 9$ is not negative.",
+      "So $\\sqrt{4x^2 + 114} > x + 9$.",
+      "The completed-square form is $3(x - 3)^2 + 6$."
+    ]
+  },
+  {
+    "id": "t221-k3-p11",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(12x^2 + 138) - (x + 11)^2$; its sign shows how $\\sqrt{12x^2 + 138}$ compares with $x + 11$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "11*(x-1)^2+6",
+    "solution": [
+      "Find the completed-square form of $(12x^2 + 138) - (x + 11)^2$; its sign shows how $\\sqrt{12x^2 + 138}$ compares with $x + 11$ for every real number $x$ with $x \\ge 0$.",
+      "$(12x^2 + 138) - (x + 11)^2 = 11x^2 - 22x + 17$",
+      "$11x^2 - 22x + 17 = 11(x - 1)^2 + 6$",
+      "Here $11(x - 1)^2 \\ge 0$.",
+      "So $11(x - 1)^2 + 6 > 0$.",
+      "So $12x^2 + 138 > (x + 11)^2$.",
+      "For $x \\ge 0$: $x + 11 \\ge 11$, so $x + 11$ is not negative.",
+      "So $\\sqrt{12x^2 + 138} > x + 11$.",
+      "The completed-square form is $11(x - 1)^2 + 6$."
+    ]
+  },
+  {
+    "id": "t221-k3-p12",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(3x^2 + 101) - (x + 8)^2$; its sign shows how $\\sqrt{3x^2 + 101}$ compares with $x + 8$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "2*(x-4)^2+5",
+    "solution": [
+      "Find the completed-square form of $(3x^2 + 101) - (x + 8)^2$; its sign shows how $\\sqrt{3x^2 + 101}$ compares with $x + 8$ for every real number $x$ with $x \\ge 0$.",
+      "$(3x^2 + 101) - (x + 8)^2 = 2x^2 - 16x + 37$",
+      "$2x^2 - 16x + 37 = 2(x - 4)^2 + 5$",
+      "Here $2(x - 4)^2 \\ge 0$.",
+      "So $2(x - 4)^2 + 5 > 0$.",
+      "So $3x^2 + 101 > (x + 8)^2$.",
+      "For $x \\ge 0$: $x + 8 \\ge 8$, so $x + 8$ is not negative.",
+      "So $\\sqrt{3x^2 + 101} > x + 8$.",
+      "The completed-square form is $2(x - 4)^2 + 5$."
+    ]
+  },
+  {
+    "id": "t221-k3-p13",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(4x^2 + 12) - (x + 3)^2$; its sign shows how $\\sqrt{4x^2 + 12}$ compares with $x + 3$ for every real number $x$ with $x \\ge 0$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "3*(x-1)^2",
+    "solution": [
+      "Find the completed-square form of $(4x^2 + 12) - (x + 3)^2$; its sign shows how $\\sqrt{4x^2 + 12}$ compares with $x + 3$ for every real number $x$ with $x \\ge 0$.",
+      "$(4x^2 + 12) - (x + 3)^2 = 3x^2 - 6x + 3$",
+      "$3x^2 - 6x + 3 = 3(x - 1)^2$",
+      "Here $3(x - 1)^2 \\ge 0$.",
+      "So $4x^2 + 12 \\ge (x + 3)^2$.",
+      "For $x \\ge 0$: $x + 3 \\ge 3$, so $x + 3$ is not negative.",
+      "So $\\sqrt{4x^2 + 12} \\ge x + 3$.",
+      "The completed-square form is $3(x - 1)^2$."
+    ]
+  },
+  {
+    "id": "t221-k3-p14",
+    "topic": "radical-inequalities",
+    "kind": "t221-k3",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the completed-square form of $(8x^2 + 63) - (x - 7)^2$; its sign shows how $\\sqrt{8x^2 + 63}$ compares with $x - 7$ for every real number $x$ with $x \\ge 7$.",
+    "form": "Answer in completed-square form, as in 2*(x-3)^2+5.",
+    "answer": "7*(x+1)^2+7",
+    "solution": [
+      "Find the completed-square form of $(8x^2 + 63) - (x - 7)^2$; its sign shows how $\\sqrt{8x^2 + 63}$ compares with $x - 7$ for every real number $x$ with $x \\ge 7$.",
+      "$(8x^2 + 63) - (x - 7)^2 = 7x^2 + 14x + 14$",
+      "$7x^2 + 14x + 14 = 7(x + 1)^2 + 7$",
+      "Here $7(x + 1)^2 \\ge 0$.",
+      "So $7(x + 1)^2 + 7 > 0$.",
+      "So $8x^2 + 63 > (x - 7)^2$.",
+      "For $x \\ge 7$: $x - 7 \\ge 0$, so $x - 7$ is not negative.",
+      "So $\\sqrt{8x^2 + 63} > x - 7$.",
+      "The completed-square form is $7(x + 1)^2 + 7$."
+    ]
+  },
+  {
+    "id": "t221-k4-p01",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 5,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{3x + 103} < 9 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{3x + 103} < 9 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{103}{3}$.",
+      "For $x > 9$ the right side is negative, so no such $x$ is a solution.",
+      "For $-\\dfrac{103}{3} \\le x \\le 9$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $3x + 103 < (9 - x)^2$.",
+      "$3x + 103 < x^2 - 18x + 81$",
+      "$x^2 - 21x - 22 > 0$",
+      "$(x - 1)(x - 22) > 0$",
+      "So $x < 1$ or $x > 22$.",
+      "Among $-\\dfrac{103}{3} \\le x \\le 9$ this leaves $-\\dfrac{103}{3} \\le x < 1$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 7: (x+1)*(x-22) > 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{3x + 103} < 9 - x$, and write that line right.",
+      "Line 7 writes the brackets $(x - 1)(x - 22)$: the product of $-1$ and $-22$ is $22$, and the constant of line 6 is $-22$.",
+      "Line 7 written right is $(x + 1)(x - 22) > 0$."
+    ]
+  },
+  {
+    "id": "t221-k4-p02",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{x + 16} < x - 2$, and write that line right.",
+    "given": [
+      "$\\sqrt{x + 16} < x - 2$",
+      "The root is defined exactly when $x \\ge -16$.",
+      "For $x < 2$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\ge 2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $x + 16 < (x - 2)^2$.",
+      "$x + 16 < x^2 + 4$",
+      "$x^2 - x - 12 > 0$",
+      "$(x + 3)(x - 4) > 0$",
+      "So $x < -3$ or $x > 4$.",
+      "Among $x \\ge 2$ this leaves $x > 4$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 5: x+16 < x^2-4*x+4",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{x + 16} < x - 2$, and write that line right.",
+      "Line 5 squares $x - 2$ as $x^2 + 4$: the middle term $-4x$ is missing.",
+      "Line 5 written right is $x + 16 < x^2 - 4x + 4$."
+    ]
+  },
+  {
+    "id": "t221-k4-p03",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{9x + 28} > 6 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{9x + 28} > 6 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{28}{9}$.",
+      "For $x > 6$ the right side is negative, so the inequality holds wherever the root is defined: $x > 6$.",
+      "For $-\\dfrac{28}{9} \\le x \\le 6$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $9x + 28 > (6 - x)^2$.",
+      "$9x + 28 > x^2 + 36$",
+      "$x^2 - 9x + 8 < 0$",
+      "$(x - 1)(x - 8) < 0$",
+      "So $1 < x < 8$.",
+      "Among $-\\dfrac{28}{9} \\le x \\le 6$ this leaves $1 < x \\le 6$.",
+      "Together with $x > 6$: $x > 1$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 5: 9*x+28 > x^2-12*x+36",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{9x + 28} > 6 - x$, and write that line right.",
+      "Line 5 squares $6 - x$ as $x^2 + 36$: the middle term $-12x$ is missing.",
+      "Line 5 written right is $9x + 28 > x^2 - 12x + 36$."
+    ]
+  },
+  {
+    "id": "t221-k4-p04",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{4x + 57} + 3 \\ge x$, and write that line right.",
+    "given": [
+      "$\\sqrt{4x + 57} + 3 \\ge x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{57}{4}$.",
+      "$\\sqrt{4x + 57} \\ge x - 3$",
+      "For $x < 3$ the right side is negative, so the inequality holds wherever the root is defined: $-\\dfrac{57}{4} \\le x < 3$.",
+      "For $x \\ge 3$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $4x + 57 \\ge (x - 3)^2$.",
+      "$4x + 57 \\ge x^2 + 6x + 9$",
+      "$x^2 + 2x - 48 \\le 0$",
+      "$(x + 8)(x - 6) \\le 0$",
+      "So $-8 \\le x \\le 6$.",
+      "Among $x \\ge 3$ this leaves $3 \\le x \\le 6$.",
+      "Together with $-\\dfrac{57}{4} \\le x < 3$: $-\\dfrac{57}{4} \\le x \\le 6$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 6: 4*x+57 >= x^2-6*x+9",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{4x + 57} + 3 \\ge x$, and write that line right.",
+      "Line 6 writes the middle term of $(x - 3)^2$ as $6x$: it is $-6x$.",
+      "Line 6 written right is $4x + 57 \\ge x^2 - 6x + 9$."
+    ]
+  },
+  {
+    "id": "t221-k4-p05",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{x + 44} > 2 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{x + 44} > 2 - x$",
+      "The root is defined exactly when $x \\ge -44$.",
+      "For $x > 2$ the right side is negative, so the inequality holds wherever the root is defined: $x > 2$.",
+      "For $-44 \\le x \\le 2$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $x + 44 > (2 - x)^2$.",
+      "$x + 44 > x^2 + 4x + 4$",
+      "$x^2 + 3x - 40 < 0$",
+      "$(x + 8)(x - 5) < 0$",
+      "So $-8 < x < 5$.",
+      "Among $-44 \\le x \\le 2$ this leaves $-8 < x \\le 2$.",
+      "Together with $x > 2$: $x > -8$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 5: x+44 > x^2-4*x+4",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{x + 44} > 2 - x$, and write that line right.",
+      "Line 5 writes the middle term of $(2 - x)^2$ as $4x$: it is $-4x$.",
+      "Line 5 written right is $x + 44 > x^2 - 4x + 4$."
+    ]
+  },
+  {
+    "id": "t221-k4-p06",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{6x + 8} - 2 < x - 6$, and write that line right.",
+    "given": [
+      "$\\sqrt{6x + 8} - 2 < x - 6$",
+      "The root is defined exactly when $x \\ge -\\dfrac{4}{3}$.",
+      "$\\sqrt{6x + 8} < x - 4$",
+      "For $x < 4$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\ge 4$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $6x + 8 < (x - 4)^2$.",
+      "$6x + 8 < x^2 - 8x + 16$",
+      "$x^2 - 14x + 24 > 0$",
+      "$(x - 2)(x - 12) > 0$",
+      "So $x < 2$ or $x > 12$.",
+      "Among $x \\ge 4$ this leaves $x > 12$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 7: x^2-14*x+8 > 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{6x + 8} - 2 < x - 6$, and write that line right.",
+      "Line 7 has the constant $24$: taking $6x + 8$ from both sides of line 6 leaves $16 - 8 = 8$ there.",
+      "Line 7 written right is $x^2 - 14x + 8 > 0$."
+    ]
+  },
+  {
+    "id": "t221-k4-p07",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{7x + 13} > 3 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{7x + 13} > 3 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{13}{7}$.",
+      "For $x > 3$ the right side is negative, so the inequality holds wherever the root is defined: $x > 3$.",
+      "For $-\\dfrac{13}{7} \\le x \\le 3$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $7x + 13 > (3 - x)^2$.",
+      "$7x + 13 > x^2 - 6x + 9$",
+      "$x^2 - 13x + 22 < 0$",
+      "$(x - 2)(x - 11) < 0$",
+      "So $2 < x < 11$.",
+      "Among $-\\dfrac{13}{7} \\le x \\le 3$ this leaves $2 < x \\le 3$.",
+      "Together with $x > 3$: $x > 2$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 6: x^2-13*x-4 < 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{7x + 13} > 3 - x$, and write that line right.",
+      "Line 6 has the constant $22$: taking $7x + 13$ from both sides of line 5 leaves $9 - 13 = -4$ there.",
+      "Line 6 written right is $x^2 - 13x - 4 < 0$."
+    ]
+  },
+  {
+    "id": "t221-k4-p08",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{3x - 8} - 2 > 6 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{3x - 8} - 2 > 6 - x$",
+      "The root is defined exactly when $x \\ge \\dfrac{8}{3}$.",
+      "$\\sqrt{3x - 8} > 4 - x$",
+      "For $x > 4$ the right side is negative, so the inequality holds wherever the root is defined: $x > 4$.",
+      "For $\\dfrac{8}{3} \\le x \\le 4$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $3x - 8 > (4 - x)^2$.",
+      "$3x - 8 > x^2 - 8x + 16$",
+      "$x^2 - 11x + 24 < 0$",
+      "$(x - 3)(x - 8) < 0$",
+      "So $3 < x < 8$.",
+      "Among $\\dfrac{8}{3} \\le x \\le 4$ this leaves $3 < x \\le 4$.",
+      "Together with $x > 4$: $x > 3$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 3: sqrt(3*x-8) > 8-x",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{3x - 8} - 2 > 6 - x$, and write that line right.",
+      "Line 3 takes $2$ from the right side, where adding $2$ to both sides of line 1 adds it to the right side as well.",
+      "Line 3 written right is $\\sqrt{3x - 8} > 8 - x$."
+    ]
+  },
+  {
+    "id": "t221-k4-p09",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 5,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{5x + 21} + 2 \\ge 5 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{5x + 21} + 2 \\ge 5 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{21}{5}$.",
+      "$\\sqrt{5x + 21} \\ge 3 - x$",
+      "For $x > 3$ the right side is negative, so the inequality holds wherever the root is defined: $x > 3$.",
+      "For $-\\dfrac{21}{5} \\le x \\le 3$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $5x + 21 \\ge (3 - x)^2$.",
+      "$5x + 21 \\ge x^2 - 6x + 9$",
+      "$x^2 - 11x - 12 \\le 0$",
+      "$(x - 1)(x - 12) \\le 0$",
+      "So $1 \\le x \\le 12$.",
+      "Among $-\\dfrac{21}{5} \\le x \\le 3$ this leaves $1 \\le x \\le 3$.",
+      "Together with $x > 3$: $x \\ge 1$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 8: (x+1)*(x-12) <= 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{5x + 21} + 2 \\ge 5 - x$, and write that line right.",
+      "Line 8 writes the brackets $(x - 1)(x - 12)$: the product of $-1$ and $-12$ is $12$, and the constant of line 7 is $-12$.",
+      "Line 8 written right is $(x + 1)(x - 12) \\le 0$."
+    ]
+  },
+  {
+    "id": "t221-k4-p10",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{7x + 23} + 2 \\ge x - 3$, and write that line right.",
+    "given": [
+      "$\\sqrt{7x + 23} + 2 \\ge x - 3$",
+      "$\\sqrt{7x + 23} \\ge x - 1$",
+      "The root is defined exactly when $x \\ge -\\dfrac{23}{7}$.",
+      "For $x < 1$ the right side is negative, so the inequality holds wherever the root is defined: $-\\dfrac{23}{7} \\le x < 1$.",
+      "For $x \\ge 1$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $7x + 23 \\ge (x - 1)^2$.",
+      "$7x + 23 \\ge x^2 - 2x + 1$",
+      "$x^2 - 9x - 22 \\le 0$",
+      "$(x + 2)(x - 11) \\le 0$",
+      "So $-2 \\le x \\le 11$.",
+      "Among $x \\ge 1$ this leaves $1 \\le x \\le 11$.",
+      "Together with $-\\dfrac{23}{7} \\le x < 1$: $-\\dfrac{23}{7} \\le x \\le 11$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 2: sqrt(7*x+23) >= x-5",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{7x + 23} + 2 \\ge x - 3$, and write that line right.",
+      "Line 2 adds $2$ on the right, where taking $2$ from both sides of line 1 takes it from the right side as well.",
+      "Line 2 written right is $\\sqrt{7x + 23} \\ge x - 5$."
+    ]
+  },
+  {
+    "id": "t221-k4-p11",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 5,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{2x + 29} - 2 \\le 1 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{2x + 29} - 2 \\le 1 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{29}{2}$.",
+      "$\\sqrt{2x + 29} \\le 3 - x$",
+      "For $x > 3$ the right side is negative, so no such $x$ is a solution.",
+      "For $-\\dfrac{29}{2} \\le x \\le 3$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $2x + 29 \\le (3 - x)^2$.",
+      "$2x + 29 \\le x^2 - 6x + 9$",
+      "$x^2 - 8x - 20 \\ge 0$",
+      "$(x - 2)(x - 10) \\ge 0$",
+      "So $x \\le 2$ or $x \\ge 10$.",
+      "Among $-\\dfrac{29}{2} \\le x \\le 3$ this leaves $-\\dfrac{29}{2} \\le x \\le 2$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 8: (x+2)*(x-10) >= 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{2x + 29} - 2 \\le 1 - x$, and write that line right.",
+      "Line 8 writes the brackets $(x - 2)(x - 10)$: the product of $-2$ and $-10$ is $20$, and the constant of line 7 is $-20$.",
+      "Line 8 written right is $(x + 2)(x - 10) \\ge 0$."
+    ]
+  },
+  {
+    "id": "t221-k4-p12",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{6x + 40} < 4 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{6x + 40} < 4 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{20}{3}$.",
+      "For $x > 4$ the right side is negative, so no such $x$ is a solution.",
+      "For $-\\dfrac{20}{3} \\le x \\le 4$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $6x + 40 < (4 - x)^2$.",
+      "$6x + 40 < x^2 + 8x + 16$",
+      "$x^2 + 2x - 24 > 0$",
+      "$(x + 6)(x - 4) > 0$",
+      "So $x < -6$ or $x > 4$.",
+      "Among $-\\dfrac{20}{3} \\le x \\le 4$ this leaves $-\\dfrac{20}{3} \\le x < -6$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 5: 6*x+40 < x^2-8*x+16",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{6x + 40} < 4 - x$, and write that line right.",
+      "Line 5 writes the middle term of $(4 - x)^2$ as $8x$: it is $-8x$.",
+      "Line 5 written right is $6x + 40 < x^2 - 8x + 16$."
+    ]
+  },
+  {
+    "id": "t221-k4-p13",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{8x + 9} + 2 \\le 6 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{8x + 9} + 2 \\le 6 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{9}{8}$.",
+      "$\\sqrt{8x + 9} \\le 4 - x$",
+      "For $x > 4$ the right side is negative, so no such $x$ is a solution.",
+      "For $-\\dfrac{9}{8} \\le x \\le 4$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $8x + 9 \\le (4 - x)^2$.",
+      "$8x + 9 \\le x^2 + 16$",
+      "$x^2 - 8x + 7 \\ge 0$",
+      "$(x - 1)(x - 7) \\ge 0$",
+      "So $x \\le 1$ or $x \\ge 7$.",
+      "Among $-\\dfrac{9}{8} \\le x \\le 4$ this leaves $-\\dfrac{9}{8} \\le x \\le 1$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 6: 8*x+9 <= x^2-8*x+16",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{8x + 9} + 2 \\le 6 - x$, and write that line right.",
+      "Line 6 squares $4 - x$ as $x^2 + 16$: the middle term $-8x$ is missing.",
+      "Line 6 written right is $8x + 9 \\le x^2 - 8x + 16$."
+    ]
+  },
+  {
+    "id": "t221-k4-p14",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{3x + 19} + 3 > 4 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{3x + 19} + 3 > 4 - x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{19}{3}$.",
+      "$\\sqrt{3x + 19} > 1 - x$",
+      "For $x > 1$ the right side is negative, so the inequality holds wherever the root is defined: $x > 1$.",
+      "For $-\\dfrac{19}{3} \\le x \\le 1$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $3x + 19 > (1 - x)^2$.",
+      "$3x + 19 > x^2 + 1$",
+      "$x^2 - 3x - 18 < 0$",
+      "$(x + 3)(x - 6) < 0$",
+      "So $-3 < x < 6$.",
+      "Among $-\\dfrac{19}{3} \\le x \\le 1$ this leaves $-3 < x \\le 1$.",
+      "Together with $x > 1$: $x > -3$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 6: 3*x+19 > x^2-2*x+1",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{3x + 19} + 3 > 4 - x$, and write that line right.",
+      "Line 6 squares $1 - x$ as $x^2 + 1$: the middle term $-2x$ is missing.",
+      "Line 6 written right is $3x + 19 > x^2 - 2x + 1$."
+    ]
+  },
+  {
+    "id": "t221-k4-p15",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 4,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{3x + 51} - 5 < 6 - x$, and write that line right.",
+    "given": [
+      "$\\sqrt{3x + 51} - 5 < 6 - x$",
+      "$\\sqrt{3x + 51} < 1 - x$",
+      "The root is defined exactly when $x \\ge -17$.",
+      "For $x > 1$ the right side is negative, so no such $x$ is a solution.",
+      "For $-17 \\le x \\le 1$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $3x + 51 < (1 - x)^2$.",
+      "$3x + 51 < x^2 - 2x + 1$",
+      "$x^2 - 5x - 50 > 0$",
+      "$(x + 5)(x - 10) > 0$",
+      "So $x < -5$ or $x > 10$.",
+      "Among $-17 \\le x \\le 1$ this leaves $-17 \\le x < -5$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 2: sqrt(3*x+51) < 11-x",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{3x + 51} - 5 < 6 - x$, and write that line right.",
+      "Line 2 takes $5$ from the right side, where adding $5$ to both sides of line 1 adds it to the right side as well.",
+      "Line 2 written right is $\\sqrt{3x + 51} < 11 - x$."
+    ]
+  },
+  {
+    "id": "t221-k4-p16",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{3x + 57} - 5 < x - 6$, and write that line right.",
+    "given": [
+      "$\\sqrt{3x + 57} - 5 < x - 6$",
+      "$\\sqrt{3x + 57} < x - 1$",
+      "The root is defined exactly when $x \\ge -19$.",
+      "For $x < 1$ the right side is negative, so no such $x$ is a solution.",
+      "For $x \\ge 1$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $3x + 57 < (x - 1)^2$.",
+      "$3x + 57 < x^2 + 2x + 1$",
+      "$x^2 - x - 56 > 0$",
+      "$(x + 7)(x - 8) > 0$",
+      "So $x < -7$ or $x > 8$.",
+      "Among $x \\ge 1$ this leaves $x > 8$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 6: 3*x+57 < x^2-2*x+1",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{3x + 57} - 5 < x - 6$, and write that line right.",
+      "Line 6 writes the middle term of $(x - 1)^2$ as $2x$: it is $-2x$.",
+      "Line 6 written right is $3x + 57 < x^2 - 2x + 1$."
+    ]
+  },
+  {
+    "id": "t221-k4-p17",
+    "topic": "radical-inequalities",
+    "kind": "t221-k4",
+    "formNo": 3,
+    "calc": "no",
+    "prompt": "Find the first wrong line in this solution of $\\sqrt{4x + 15} + 5 \\ge x$, and write that line right.",
+    "given": [
+      "$\\sqrt{4x + 15} + 5 \\ge x$",
+      "The root is defined exactly when $x \\ge -\\dfrac{15}{4}$.",
+      "$\\sqrt{4x + 15} \\ge x - 5$",
+      "For $x < 5$ the right side is negative, so the inequality holds wherever the root is defined: $-\\dfrac{15}{4} \\le x < 5$.",
+      "For $x \\ge 5$ the root is defined and both sides are nonnegative, so the inequality holds exactly when $4x + 15 \\ge (x - 5)^2$.",
+      "$4x + 15 \\ge x^2 - 10x + 25$",
+      "$x^2 - 14x + 40 \\le 0$",
+      "$(x - 4)(x - 10) \\le 0$",
+      "So $4 \\le x \\le 10$.",
+      "Among $x \\ge 5$ this leaves $5 \\le x \\le 10$.",
+      "Together with $-\\dfrac{15}{4} \\le x < 5$: $-\\dfrac{15}{4} \\le x \\le 10$."
+    ],
+    "form": "Answer as the wrong line and that line written right, as in Line 3: 2*x = 10.",
+    "answer": "Line 7: x^2-14*x+10 <= 0",
+    "solution": [
+      "Find the first wrong line in this solution of $\\sqrt{4x + 15} + 5 \\ge x$, and write that line right.",
+      "Line 7 has the constant $40$: taking $4x + 15$ from both sides of line 6 leaves $25 - 15 = 10$ there.",
+      "Line 7 written right is $x^2 - 14x + 10 \\le 0$."
+    ]
+  },
+  {
+    "id": "t221-k5-p01",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 12 is less than the square root of the number left when 3 times $x$ is taken from 4.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "144 < 4-3*x",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 12 is less than the square root of the number left when 3 times $x$ is taken from 4.",
+      "$12 < \\sqrt{4 - 3x}$",
+      "Where the root is defined, this holds exactly when $144 < 4 - 3x$.",
+      "Every $x$ with $144 < 4 - 3x$ has $4 - 3x \\ge 0$, so the root is defined for it.",
+      "$144 < 4 - 3x$"
+    ]
+  },
+  {
+    "id": "t221-k5-p02",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 12 less than 6 times $x$ is at least 7.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "6*x-12 >= 49",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 12 less than 6 times $x$ is at least 7.",
+      "$\\sqrt{6x - 12} \\ge 7$",
+      "Where the root is defined, this holds exactly when $6x - 12 \\ge 49$.",
+      "Every $x$ with $6x - 12 \\ge 49$ has $6x - 12 \\ge 0$, so the root is defined for it.",
+      "$6x - 12 \\ge 49$"
+    ]
+  },
+  {
+    "id": "t221-k5-p03",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 6 more than 7 times $x$ is at most 5.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "7*x+6 >= 0 and 7*x+6 <= 25",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 6 more than 7 times $x$ is at most 5.",
+      "$\\sqrt{7x + 6} \\le 5$",
+      "The root is defined exactly when $7x + 6 \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $7x + 6 \\le 25$.",
+      "So $7x + 6 \\ge 0$ and $7x + 6 \\le 25$."
+    ]
+  },
+  {
+    "id": "t221-k5-p04",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 25 more than 3 times $x$ is less than 2.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "3*x+25 >= 0 and 3*x+25 < 4",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 25 more than 3 times $x$ is less than 2.",
+      "$\\sqrt{3x + 25} < 2$",
+      "The root is defined exactly when $3x + 25 \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $3x + 25 < 4$.",
+      "So $3x + 25 \\ge 0$ and $3x + 25 < 4$."
+    ]
+  },
+  {
+    "id": "t221-k5-p05",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 11 is less than the square root of the number left when twice $x$ is taken from 26.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "121 < 26-2*x",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 11 is less than the square root of the number left when twice $x$ is taken from 26.",
+      "$11 < \\sqrt{26 - 2x}$",
+      "Where the root is defined, this holds exactly when $121 < 26 - 2x$.",
+      "Every $x$ with $121 < 26 - 2x$ has $26 - 2x \\ge 0$, so the root is defined for it.",
+      "$121 < 26 - 2x$"
+    ]
+  },
+  {
+    "id": "t221-k5-p06",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 6 is greater than the square root of the number left when twice $x$ is taken from 8.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "8-2*x >= 0 and 36 > 8-2*x",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 6 is greater than the square root of the number left when twice $x$ is taken from 8.",
+      "$6 > \\sqrt{8 - 2x}$",
+      "The root is defined exactly when $8 - 2x \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $36 > 8 - 2x$.",
+      "So $8 - 2x \\ge 0$ and $36 > 8 - 2x$."
+    ]
+  },
+  {
+    "id": "t221-k5-p07",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 6 is less than the square root of the number that is 2 more than twice $x$.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "36 < 2*x+2",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 6 is less than the square root of the number that is 2 more than twice $x$.",
+      "$6 < \\sqrt{2x + 2}$",
+      "Where the root is defined, this holds exactly when $36 < 2x + 2$.",
+      "Every $x$ with $36 < 2x + 2$ has $2x + 2 \\ge 0$, so the root is defined for it.",
+      "$36 < 2x + 2$"
+    ]
+  },
+  {
+    "id": "t221-k5-p08",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 4 is greater than the square root of the number that is 5 more than 3 times $x$.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "3*x+5 >= 0 and 16 > 3*x+5",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 4 is greater than the square root of the number that is 5 more than 3 times $x$.",
+      "$4 > \\sqrt{3x + 5}$",
+      "The root is defined exactly when $3x + 5 \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $16 > 3x + 5$.",
+      "So $3x + 5 \\ge 0$ and $16 > 3x + 5$."
+    ]
+  },
+  {
+    "id": "t221-k5-p09",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 9 less than 6 times $x$ is at most 7.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "6*x-9 >= 0 and 6*x-9 <= 49",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 9 less than 6 times $x$ is at most 7.",
+      "$\\sqrt{6x - 9} \\le 7$",
+      "The root is defined exactly when $6x - 9 \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $6x - 9 \\le 49$.",
+      "So $6x - 9 \\ge 0$ and $6x - 9 \\le 49$."
+    ]
+  },
+  {
+    "id": "t221-k5-p10",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 26 more than 6 times $x$ is at least 2.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "6*x+26 >= 4",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 26 more than 6 times $x$ is at least 2.",
+      "$\\sqrt{6x + 26} \\ge 2$",
+      "Where the root is defined, this holds exactly when $6x + 26 \\ge 4$.",
+      "Every $x$ with $6x + 26 \\ge 4$ has $6x + 26 \\ge 0$, so the root is defined for it.",
+      "$6x + 26 \\ge 4$"
+    ]
+  },
+  {
+    "id": "t221-k5-p11",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 7 more than 6 times $x$ is greater than 8.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "6*x+7 > 64",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number that is 7 more than 6 times $x$ is greater than 8.",
+      "$\\sqrt{6x + 7} > 8$",
+      "Where the root is defined, this holds exactly when $6x + 7 > 64$.",
+      "Every $x$ with $6x + 7 > 64$ has $6x + 7 \\ge 0$, so the root is defined for it.",
+      "$6x + 7 > 64$"
+    ]
+  },
+  {
+    "id": "t221-k5-p12",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number left when twice $x$ is taken from 4 is less than 8.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "4-2*x >= 0 and 4-2*x < 64",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number left when twice $x$ is taken from 4 is less than 8.",
+      "$\\sqrt{4 - 2x} < 8$",
+      "The root is defined exactly when $4 - 2x \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $4 - 2x < 64$.",
+      "So $4 - 2x \\ge 0$ and $4 - 2x < 64$."
+    ]
+  },
+  {
+    "id": "t221-k5-p13",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 1,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number left when 3 times $x$ is taken from 21 is greater than 5.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "21-3*x > 25",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The square root of the number left when 3 times $x$ is taken from 21 is greater than 5.",
+      "$\\sqrt{21 - 3x} > 5$",
+      "Where the root is defined, this holds exactly when $21 - 3x > 25$.",
+      "Every $x$ with $21 - 3x > 25$ has $21 - 3x \\ge 0$, so the root is defined for it.",
+      "$21 - 3x > 25$"
+    ]
+  },
+  {
+    "id": "t221-k5-p14",
+    "topic": "radical-inequalities",
+    "kind": "t221-k5",
+    "formNo": 2,
+    "calc": "no",
+    "prompt": "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 10 is greater than the square root of the number left when twice $x$ is taken from 11.",
+    "form": "Answer as an inequality, or two joined by and, or equivalent, as in y >= 2*x-3.",
+    "answer": "11-2*x >= 0 and 100 > 11-2*x",
+    "solution": [
+      "Write this sentence as an inequality in $x$ with no root, or as two such inequalities joined by and, that holds for exactly the same real numbers $x$: The number 10 is greater than the square root of the number left when twice $x$ is taken from 11.",
+      "$10 > \\sqrt{11 - 2x}$",
+      "The root is defined exactly when $11 - 2x \\ge 0$.",
+      "Where the root is defined, the inequality holds exactly when $100 > 11 - 2x$.",
+      "So $11 - 2x \\ge 0$ and $100 > 11 - 2x$."
+    ]
+  }
+]

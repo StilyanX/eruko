@@ -254,7 +254,7 @@ export class ShellSettings extends Screen {
      * @param {string} [cls]
      */
     const row = (text, onclick, cls = '') =>
-      h('button', { type: 'button', class: `radio set-row${cls}`, onclick }, text)
+      h('button', { type: 'button', class: `btn${cls}`, onclick }, text)
     const pick = () => {
       const input = this.querySelector('input[type=file]')
       if (input instanceof HTMLInputElement) input.click()
@@ -277,11 +277,16 @@ export class ShellSettings extends Screen {
             ? `Your last backup file is from ${dateOf(saved)}. Save a new one.`
             : `Your last backup file is from ${dateOf(saved)}.`
       ),
-      row('Save a backup file', () => {
-        downloadBackup()
-        this.done(STARTED)
-      }),
-      row('Load a backup file', pick, ' set-load'),
+      // Two buttons, each one thing to do.
+      h(
+        'div',
+        { class: 'actions' },
+        row('Save a backup file', () => {
+          downloadBackup()
+          this.done(STARTED)
+        }),
+        row('Load a backup file', pick, ' set-load')
+      ),
       damaged.length > 0 && row('Save the record Eruko could not read', () => this.saveDamaged()),
       this.#asked(),
       h('p', { class: 'set-note', role: 'status' }, this.msg),

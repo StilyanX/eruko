@@ -1,5 +1,4 @@
-// Posing a problem from the stones and the side to move alone ("A Self-Study System", The build,
-// Go, How problems are built and checked): the region grows from the group, the search is
+// Posing a problem from the stones and the side to move alone: the region grows from the group, the search is
 // run with both readings of what lies past the cut, and the problem stands only when they agree.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

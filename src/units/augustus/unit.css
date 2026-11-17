@@ -19,9 +19,9 @@
   augustus-start .lrn-bio .lrn-ss {
     max-width: calc(var(--bio-line) + 2 * var(--pad) + 2px);
   }
-  augustus-life .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
-  augustus-review .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
-  augustus-start .lrn .lrn-bio :is(.lrn-bio-text, .lrn-bio-q) {
+  augustus-life .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
+  augustus-review .lrn-bio :is(.lrn-bio-text, .lrn-bio-q),
+  augustus-start .lrn-bio :is(.lrn-bio-text, .lrn-bio-q) {
     max-width: var(--bio-line);
   }
   augustus-life .lrn-bio .lrn-ss:has(.lrn-bio-cols),

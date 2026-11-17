@@ -1,5 +1,4 @@
-// The end level of Augustus against "A Self-Study System" (Biography, "The end level", and the End
-// level check of the build): the evidence read part by part, the pools, the draw over many
+// The end level of Augustus: the evidence read part by part, the pools, the draw over many
 // rounds, the key and the line, when the round is due, the paging of the Reading, and Judgment.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
@@ -119,7 +118,7 @@ test("the course's own counts the paper gives, where the course has not moved si
 })
 
 // Chapter 17 prints whole in the stored transcription, so the Reading has ten chapters, 19 keys, and
-// chapter 6's one sentence the eleventh (21.01 b665ce8, row Reading).
+// chapter 6's one sentence the eleventh.
 test('the Reading: eleven chapters cited alone, ten printed whole, 19 keys and the eleventh from chapter 6, chapter 5 from lesson 36 so lesson 35 stays a Gaps decision', () => {
   assert.deepEqual(readingChapters(life), [1, 5, 6, 10, 15, 16, 17, 25, 27, 34, 35])
   assert.deepEqual(
@@ -444,7 +443,7 @@ test('Augustus done: closed, Judgment held, and the latest line right', () => {
   assert.equal(endDone({ ...NO_END, judged: '2026-12-01', lines }, undefined), false)
 })
 
-// The figures of row Reading (21.01 b665ce8), counted at the spaces of the transcription.
+// The figures of row Reading, counted at the spaces of the transcription.
 test('the Reading pages at the end of a sentence past 150 words or 17 lines: chapter 15 into 105 and 21 words in Latin and 112 and 16 in Greek; no other passage is paged', () => {
   /** @param {string} t */
   const words = t => t.split(' ').length

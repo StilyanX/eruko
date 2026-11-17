@@ -1,5 +1,4 @@
-// The relay and the way to the engine ("A Self-Study System", The build, Go, The engine and the
-// server): one line of JSON a query, passed to and from one local address, for Eruko's own
+// The relay and the way to the engine: one line of JSON a query, passed to and from one local address, for Eruko's own
 // address alone. A stand-in engine answers in KataGo's form.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

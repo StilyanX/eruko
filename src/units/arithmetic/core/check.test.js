@@ -1,4 +1,4 @@
-// Typed answers against stored ones, in the problem's form ("A Self-Study System", Mathematics, "Every answer").
+// Typed answers against stored ones, in the problem's form.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { matchAnswer } from './check.logic.js'

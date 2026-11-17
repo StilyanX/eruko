@@ -1,5 +1,4 @@
-// Problems from the learner's own games and the problems Eruko writes ("A Self-Study System", Go,
-// Own games and written problems): built when no never-tried problem is left, from the positions
+// Problems from the learner's own games and the problems Eruko writes: built when no never-tried problem is left, from the positions
 // of a reviewed game's list and then from changes to found problems got wrong, kept in the record
 // with the kinds they make.
 import { test } from 'node:test'
@@ -121,12 +120,13 @@ test('positions are taken from reviewed games, the oldest first, each once', () 
   })
   const next = nextPosition(r)
   assert.ok(next)
-  assert.equal(next.key, '1-3')
+  assert.equal(next.key, '1@0')
   assert.deepEqual(next.position, { black: ['D4'], white: ['Q16'], side: 'B' })
   r = withOwn(next.key, null)(r)
   const second = nextPosition(r)
   assert.ok(second)
-  assert.equal(second.key, '2-3')
+  assert.equal(second.key, '2@0')
+  // a record from before 0.3.0 keyed it by move: that key still marks it seen
   assert.equal(nextPosition(withOwn(keyFrom('2-3'), null)(r)), undefined)
 })
 
@@ -232,8 +232,8 @@ test("a reviewed game's position comes before any written problem", () => {
     ...tried([{ id: seed.id, right: false }]),
     games: [{ id: 5, date: '2026-10-01', reviewed: true, size: 19, first: 'black', placed: 0, colour: 'black', initial: { black: [], white: [] }, moves: ['D4', 'Q16', 'C3'], list: [{ move: 3 }] }]
   })
-  assert.equal(nextBuild(game, BANK)?.key, '5-3')
-  assert.equal(nextBuild(withOwn(keyFrom('5-3'), null)(game), BANK)?.seed, seed)
+  assert.equal(nextBuild(game, BANK)?.key, '5@0')
+  assert.equal(nextBuild(withOwn(keyFrom('5@0'), null)(game), BANK)?.seed, seed)
 })
 
 test("a written problem enters only with its seed's kind's reasons and best first moves none of its seed's", () => {

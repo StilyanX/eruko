@@ -1,0 +1,768 @@
+{
+  "integer-roots-1.svg": {
+    "x": [
+      -8,
+      1
+    ],
+    "y": [
+      -220,
+      60
+    ],
+    "xstep": 1,
+    "ystep": 20,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+2)*(x+7)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -7,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -196
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-2.svg": {
+    "x": [
+      -7,
+      1
+    ],
+    "y": [
+      -10,
+      130
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*(x+6)^2*(x+1)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          108
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-3.svg": {
+    "x": [
+      -6,
+      2
+    ],
+    "y": [
+      -70,
+      5
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x-1)*(x+5)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -50
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-4.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -325,
+      125
+    ],
+    "xstep": 1,
+    "ystep": 25,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-2)*(x-4)*(x+4)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          -256
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "integer-roots-5.svg": {
+    "x": [
+      -4,
+      4
+    ],
+    "y": [
+      -5,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+3)*(x-3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          54
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-6.svg": {
+    "x": [
+      -3,
+      7
+    ],
+    "y": [
+      -600,
+      50
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+2)^2*(x-6)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -288
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-7.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -5,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-7)*(x-1)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          7,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          14
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-8.svg": {
+    "x": [
+      -1,
+      9
+    ],
+    "y": [
+      -100,
+      280
+    ],
+    "xstep": 1,
+    "ystep": 20,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-2)*(x-8)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          8,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          256
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-9.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -170,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x+8)*(x+1)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -24
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-10.svg": {
+    "x": [
+      -3,
+      6
+    ],
+    "y": [
+      -120,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+2)*(x-5)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -100
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-11.svg": {
+    "x": [
+      -4,
+      5
+    ],
+    "y": [
+      -20,
+      340
+    ],
+    "xstep": 1,
+    "ystep": 20,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+3)^2*(x-4)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          288
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-12.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -160,
+      10
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+8)*(x+3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -144
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-13.svg": {
+    "x": [
+      -5,
+      2
+    ],
+    "y": [
+      -85,
+      5
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+4)^2*(x-1)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          -32
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-14.svg": {
+    "x": [
+      -3,
+      4
+    ],
+    "y": [
+      -5,
+      85
+    ],
+    "xstep": 1,
+    "ystep": 5,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+2)^2*(x-3)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          72
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-15.svg": {
+    "x": [
+      -2,
+      3
+    ],
+    "y": [
+      -1,
+      9
+    ],
+    "xstep": 1,
+    "ystep": 1,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+1)*(x-2)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          0,
+          8
+        ],
+        "label": "C"
+      }
+    ]
+  },
+  "integer-roots-16.svg": {
+    "x": [
+      -1,
+      8
+    ],
+    "y": [
+      -500,
+      150
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x-1)*(x-3)*(x-7)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          7,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          -441
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "integer-roots-17.svg": {
+    "x": [
+      -7,
+      3
+    ],
+    "y": [
+      -125,
+      325
+    ],
+    "xstep": 1,
+    "ystep": 25,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x+6)*(x+4)*(x-2)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -6,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          192
+        ],
+        "label": "D"
+      }
+    ]
+  },
+  "integer-roots-18.svg": {
+    "x": [
+      -9,
+      1
+    ],
+    "y": [
+      -650,
+      200
+    ],
+    "xstep": 1,
+    "ystep": 50,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x+3)*(x+1)*(x+8)^2"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          -576
+        ],
+        "label": "D"
+      }
+    ]
+  }
+}

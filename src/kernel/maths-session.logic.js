@@ -16,8 +16,8 @@ import { afterAnswer, freshProblem } from './steps.logic.js'
 
 /**
  * Where a marked question that lost marks is checked: the returned script with the tutor's notes,
- * or the module's own feedback; null for a problem of the course.
- * @typedef {'script' | 'feedback' | null} Lost
+ * the module's own feedback, or the published official solution; null for a problem of the course.
+ * @typedef {'script' | 'feedback' | 'official' | null} Lost
  */
 
 /** A problem of mixed practice, as a move names it. @typedef {Readonly<{ id: import('./maths-decode.logic.js').ProblemId, kind: import('./maths-decode.logic.js').KindId }>} Picked */
@@ -150,12 +150,14 @@ function answered(record, move) {
 
 /**
  * What a marked question that lost marks is checked against, in words.
- * @param {'script' | 'feedback'} lost
+ * @param {'script' | 'feedback' | 'official'} lost
  */
 export const sourceOf = lost =>
-  lost === 'feedback'
-    ? "the module's feedback on it"
-    : "the returned script and your tutor's notes on it"
+  lost === 'official'
+    ? 'the official solution'
+    : lost === 'feedback'
+      ? "the module's feedback on it"
+      : "the returned script and your tutor's notes on it"
 
 /**
  * What to read after a wrong answer: the solution, or for a lost question what it is checked against.
@@ -267,7 +269,7 @@ function workedStep(record, move) {
       // Kept in the record, a wrong answer cannot be taken back by a reload.
       return {
         record: placed(record, move.kind, { shown: true }, move.day),
-        effects: [say('Wrong. The solution is below.')]
+        effects: [say(`Wrong. ${readAgain(null)}`)]
       }
     case 'stage-open':
       return { record: placed(record, move.kind, { open: true }, move.day), effects: [] }
@@ -306,11 +308,14 @@ export function mathsStep(record, move) {
     case 'stage-wrong':
     case 'stage-open':
       return workedStep(record, move)
-    case 'idea-wrong':
+    case 'idea-wrong': {
+      // Also a right mark changed to wrong: the kind it retired comes back.
+      const { [move.kind]: _, ...retired } = record.retired ?? {}
       return {
-        record: { ...record, stage: { ...record.stage, [move.kind]: { day: move.day } } },
+        record: { ...record, retired, stage: { ...record.stage, [move.kind]: { day: move.day } } },
         effects: [say(TRY_AGAIN)]
       }
+    }
     case 'idea-right':
       return {
         record: {
@@ -328,7 +333,7 @@ export function mathsStep(record, move) {
           say(
             move.right
               ? 'Right. The worked example is open.'
-              : 'Wrong. The solution is below. The worked example is open.'
+              : 'Wrong. Read the solution. The worked example is open.'
           )
         ]
       }

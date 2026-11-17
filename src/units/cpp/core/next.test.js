@@ -1,5 +1,4 @@
-// The C++ unit's one next action ("A Self-Study System", Programming, The steps; The build,
-// Programming, The one next action and The checks): Setup, the five cases in order, the first
+// The C++ unit's one next action: Setup, the five cases in order, the first
 // run's parts, gate 1's dating, gate 3, the turns of cases 4 and 5, the start gate, the place
 // line and the course's rows.
 import { test } from 'node:test'

@@ -50,6 +50,8 @@ export class AeWorkedKind extends StepScreen {
   setForm = undefined
   /** @type {import('./maths-steps.dom.js').Written | undefined} */
   written = undefined
+  /** What the unit shows under a worked example's problem, from fields of its own (lines the problem gives to work on). @type {((example: import('../kernel/maths-decode.logic.js').Form['example']) => import('./view.dom.js').Child) | undefined} */
+  given = undefined
   /** A wrong answer's solution is kept shown in the record, so a reload returns to it. */
   inRecord = true
   /** @type {import('./maths-steps.dom.js').Send} */
@@ -194,7 +196,8 @@ export class AeWorkedKind extends StepScreen {
         heading(this.heading),
         passed,
         kind.forms.length > 1 && whereIn('Form', st.form + 1, kind.forms.length),
-        h('p', null, rich(form.example.problem)),
+        h('p', null, rich(form.example.problem, true)),
+        this.given?.(form.example),
         figure(form.example.figure, this.figures),
         h(
           'ol',
@@ -234,7 +237,7 @@ export class AeWorkedKind extends StepScreen {
     return (
       this.written?.(problem, hand) ?? [
         hide < all.length
-          ? lines({ lines: all, hide, figures: this.figures, key: 'covered' })
+          ? lines({ lines: all, under: problem.prompt, hide, figures: this.figures, key: 'covered' })
           : // Solved alone: one line, not a row of hidden lines whose count would give them away.
             h('p', { key: 'alone', class: 'lrn-ss-note' }, 'Write the full working on paper.'),
         answerBox({
@@ -283,7 +286,7 @@ export class AeWorkedKind extends StepScreen {
         shown
           ? [
               verdict(false, 'Read the solution.'),
-              lines({ lines: all, figures: this.figures, key: 'solution' }),
+              lines({ lines: all, under: problem.prompt, figures: this.figures, key: 'solution' }),
               actionsAs(
                 'next',
                 choice({

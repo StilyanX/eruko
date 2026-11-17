@@ -1,4 +1,4 @@
-// Hides: step 1 of the Mathematics division of "A Self-Study System" as rules over the record:
+// Hides: step 1 of Mathematics as rules over the record:
 // which problem a fading stage runs on, what an answer does next, how many lines a stage hides,
 // and the calculator line of a problem. Pure functions, tested in tests/study-steps.test.mjs.
 import { assert } from './invariant.logic.js'

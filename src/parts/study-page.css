@@ -47,12 +47,58 @@
   .lrn math {
     font-size: inherit;
   }
-  /* Display maths stands on its own line and scrolls inside it, never the page (WCAG 1.4.10). */
+  /* Display maths stands on its own line, centred, and scrolls inside it, never the page (WCAG
+     1.4.10). The formula and the punctuation after it are one row on one baseline, as wide as
+     what they hold: its auto margins centre it, and give way when it is wider than the line, so
+     the scroll starts at the formula's start. The pixel keeps a formula whose width is a part
+     of a pixel from counting as wider than its row (markWide, study.dom.js). It scrolls sideways
+     only: the room above and below it is its own padding, so a tall sign, and a line made
+     taller (WCAG 1.4.12), is whole inside it. */
   .lrn .lrn-display {
     display: block;
     max-width: 100%;
-    margin: var(--space-4) 0;
+    padding-block: var(--space-4);
     overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .lrn .lrn-display > [data-whole] {
+    display: flex;
+    align-items: baseline;
+    width: max-content;
+    margin-inline: auto;
+    padding-inline-end: 1px;
+  }
+  .lrn .lrn-display math {
+    width: auto;
+  }
+  /* A formula of several pieces is one block with its punctuation: it moves to the next line
+     whole, and wraps at its own relation signs only when it is wider than the line. */
+  .lrn-whole {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: baseline;
+    /* Wrapped, it stands on the line by its first line: the words before it, and a list's
+       number, read on into it. */
+    baseline-source: first;
+  }
+  /* A formula that fits in the line leaves the lines at the pitch of the text: a root's bar or a
+     script reaches a quarter em into the leading above and below. A formula that holds what is
+     taller than the line (lrn-tall: a fraction, a table, limits; maths-screens.dom.js) takes its
+     full height and a clear space above and below, so it never touches the next line. A formula
+     that has become a scroll box, or wraps over lines of its own (data-wrapped), keeps its full
+     height too. */
+  .lrn .lrn-piece:not([role='region'], .lrn-tall) > [data-whole],
+  .lrn .lrn-whole:not([role='region'], [data-wrapped], .lrn-tall) {
+    margin-block: -0.25em;
+  }
+  .lrn .lrn-piece.lrn-tall > [data-whole],
+  .lrn .lrn-whole.lrn-tall {
+    padding-block: 0.15em;
+  }
+  /* The punctuation after a formula that ends in a script: the maths font leaves 0.04em after a
+     script (TeX Gyre Bonum Math's SpaceAfterScript), which would part the two. */
+  .lrn-after-script {
+    margin-left: -0.04em;
   }
   /* Inline maths wider than its line is made a focusable scroll box (study.dom.js). Room above and
      below keeps a tall fraction whole beside the scrollbar, at any line height (WCAG 1.4.12). */
@@ -71,7 +117,9 @@
   }
 
   /* The contents of a page with more than one section: plain links to its sections, under the
-     title on a narrow screen and in the rail from 80em, where they stay in view. */
+     title on a narrow screen, closed to one line, "Contents", that opens the list in place; in the
+     rail from 80em, always open, where they stay in view and scroll in their own box when taller
+     than the screen. */
   .contents {
     margin-bottom: var(--space-7);
     font-family: var(--font-ui);
@@ -96,6 +144,17 @@
     align-items: center;
     min-height: var(--target);
   }
+  /* The section being read: in the text colour and heavier type, as Next is on a unit page. */
+  .contents a[aria-current] {
+    font-weight: var(--weight-head);
+    color: var(--text);
+  }
+  .contents summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--target);
+    cursor: pointer;
+  }
   @media (min-width: 80em) {
     .study > .page-col {
       grid-column: 1 / -1;
@@ -113,7 +172,20 @@
       top: calc(var(--topbar-h) + var(--space-6));
       grid-column: 1;
       grid-row: 1 / span 99;
+      max-height: calc(100dvh - var(--topbar-h) - 2 * var(--space-6));
+      overflow-y: auto;
       margin: 0;
+    }
+    .study .contents summary {
+      pointer-events: none;
+      list-style: none;
+    }
+    .study .contents summary::-webkit-details-marker {
+      display: none;
+    }
+    .study .contents details::details-content {
+      content-visibility: visible;
+      display: block;
     }
   }
 

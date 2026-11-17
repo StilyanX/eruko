@@ -1,0 +1,18 @@
+{
+  "name": "wa-sqlite",
+  "version": "1.2.0",
+  "source": "https://github.com/rhashimoto/wa-sqlite/archive/refs/tags/v1.2.0.tar.gz",
+  "sourceSha256": "75cb64338d60463514cb33814d2d6531b1e42897058fca48fce025e2d5f2faa7",
+  "licence": "MIT",
+  "note": "Tag v1.2.0 contains PR #304 (merge commit a50bad22ec6c4065494722ea6d1c49644c1dba45), the multi-tab lock fixes of OPFSCoopSyncVFS.",
+  "files": {
+    "LICENSE": "547f9e97e461bd369cc64b6fc12d724e8b02764b8db7812691f29f0ec572be79",
+    "dist/wa-sqlite.mjs": "035d94d6173b3acd4c9356133492ccdfb7181d970217d54dc6c7bec7fbddb3b5",
+    "dist/wa-sqlite.wasm": "aa0c2e6f606d49ecb276808bfd9f31176ecc73b5d9c9a80dd15c615fa801846c",
+    "src/sqlite-api.js": "ac0e59b8dba9f661a5d073275ccf8f1f598abd0d6d89eb371f825eccd11c3cc9",
+    "src/sqlite-constants.js": "f7b570f0c39e4b54c99f2598b6ad42018d4d8bf791861ede20d295628ae49f8f",
+    "src/VFS.js": "55e7455e2ec0000cc4ba7a8bf7882f414a40f2a0ba6eb4c4ac847f379f54d92f",
+    "src/FacadeVFS.js": "6de41eee28f7d4279d409e275b3e25fd5e7837163386e4e8f2c379cd9f72a60c",
+    "src/examples/OPFSCoopSyncVFS.js": "482e94678d69790eab9954ff4cc231697105c70448d8185f598fcc3fd2dd9c72"
+  }
+}

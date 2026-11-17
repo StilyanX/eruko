@@ -5,19 +5,26 @@ the services a unit reaches at run time, the works the units are built from, and
 runs on.
 
 ================================================================================
-FONTS (vendored from @fontsource-variable/literata and @fontsource-variable/inter, in
-src/style/fonts/, each folder with its licence and a VENDOR.json of its version and hashes)
+FONTS (in src/style/fonts/, each folder with its licence and a VENDOR.json of its version and
+hashes; Literata and Inter vendored from @fontsource-variable/literata and
+@fontsource-variable/inter)
 ================================================================================
 
 Literata            SIL Open Font License 1.1 (TypeTogether for Google Fonts). Everything
-                    read, headings included.
+                    read, headings included, and the digits and upright letters of a formula.
 Inter               SIL Open Font License 1.1 (Rasmus Andersson). Buttons, labels, the path, notes.
-Latin Modern Math   GUST Font License (GUST e-foundry), from Temml's repository
-                    (github.com/ronkok/Temml, site/assets). Every formula.
-Temml               MIT License, Copyright (c) 2020 Ron Kok. Its stylesheet for Latin Modern and
-                    its script font, Temml.woff2 (a clone of KaTeX_Script-Regular, MIT), bundled
-                    from the temml package into src/style/maths/; Temml itself only runs when the
-                    formulas are generated.
+Eruko Maths Letters SIL Open Font License 1.1. Derived from Literata Italic by Eruko
+                    (scripts/maths-fonts.py): its letters at the Mathematical Italic code
+                    points, under a new name. The one-letter variables of a formula.
+Eruko Maths Signs   GUST Font License. TeX Gyre Bonum Math 1.005 (Bogusław Jackowski, Piotr
+                    Strzelczyk and Piotr Pianowski, GUST e-foundry; from CTAN,
+                    fonts/tex-gyre-math), cut by Eruko to the code points its VENDOR.json lists
+                    (scripts/maths-fonts.py), under a new name. The signs, brackets, radicals
+                    and Greek of a formula.
+Temml               MIT License, Copyright (c) 2020 Ron Kok. Its stylesheet for Latin Modern,
+                    without that face, and its script font, Temml.woff2 (a clone of
+                    KaTeX_Script-Regular, MIT), bundled from the temml package into
+                    src/style/maths/; Temml itself only runs when the formulas are generated.
 
 ================================================================================
 ICONS
@@ -49,6 +56,10 @@ AtCoder             atcoder.jp. The C++ course links to the contests and to your
 SQLite (public domain) is served from this app (src/record/sqlite-3.54.0/, as sqlite.org ships
 it), not from a CDN. It keeps your record in this browser.
 
+wa-sqlite 1.2.0 (MIT License, Copyright (c) 2023 Roy T. Hashimoto) is served from this app
+(src/record/wa-sqlite-1.2.0/, as its GitHub tag v1.2.0 ships it, LICENSE inside). Each tab opens
+the record through it, in the browser's private file storage.
+
 ================================================================================
 WORKS THE UNITS ARE BUILT FROM
 ================================================================================
@@ -59,6 +70,11 @@ A unit not listed below carries its notice in its own folder (src/units/<unit>/c
 Arithmetic      Hung-Hsi Wu, Understanding Numbers in Elementary School Mathematics (AMS, 2011).
                 Edmund Landau, Foundations of Analysis.
                 Kevin Buzzard and Jon Eugster, Natural Number Game.
+Algebra         Richard Rusczyk, Introduction to Algebra.
+                Richard Rusczyk and Mathew Crawford, Intermediate Algebra.
+                Arthur Engel, Problem-Solving Strategies.
+                The end level links the IMO Shortlists on imo-official.org; Eruko stores none of
+                their problems.
 Augustus        Klaus Bringmann, Augustus (2nd edition, 2012).
                 A. K. Bowman, E. Champlin and A. Lintott (eds.), The Cambridge Ancient History
                 X: The Augustan Empire, 43 B.C.-A.D. 69 (2nd ed.).
@@ -113,7 +129,8 @@ PACKAGES
 
 Runtime: none from npm. The app runs as written, with no build and no framework. The only
 outside code it runs is vendored into src/, each folder with a VENDOR.json of its version and
-hashes, and its licence where it has one: SQLite (public domain, src/record/sqlite-3.54.0/). Generators and checks: see package.json; each package's
+hashes, and its licence where it has one: SQLite (public domain, src/record/sqlite-3.54.0/),
+wa-sqlite (MIT, src/record/wa-sqlite-1.2.0/). Generators and checks: see package.json; each package's
 licence is in its node_modules directory.
 
 ================================================================================

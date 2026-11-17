@@ -1,7 +1,6 @@
 // Hides: how the C++ unit's Markdown sources become its course: the source format of unit.md,
 // labels.md, each kinds/NN-slug/kind.md and its problem files, and every check a kind passes
-// before it is written (A Self-Study System, Programming: The material, The wording, Visuals;
-// the build's checks). readCourse parses and runs the checks that need no compiler; buildCourse
+// before it is written. readCourse parses and runs the checks that need no compiler; buildCourse
 // then compiles every program with g++, runs the tests, checks the slow solution against the
 // reference, and records each trace under gdb. Read by scripts/gen/cpp.mjs and
 // tests/cpp-course.test.mjs. A failing check throws "<file> line <n>: <rule>: <what to fix>".
@@ -29,6 +28,11 @@ const PROBLEMS = 10
 // the test runner they are written for, vendored beside the runner.
 const EXERCISM_COMMIT = '8d139cb0'
 const CATCH = path.join(ROOT, 'scripts', 'vendor', 'catch2-2.13.6', 'catch.hpp')
+// complex-numbers includes Catch2 v3's header: a stand-in that names v2's matcher base as v3 does
+const CATCH_V3 = path.join(ROOT, 'scripts', 'vendor', 'catch2-2.13.6', 'catch_amalgamated.hpp')
+// gigasecond and meetup include Boost's date_time (header-only): ERUKO_BOOST names the folder holding
+// `boost/` where the compiler does not already look
+const BOOST = process.env.ERUKO_BOOST ? ['-isystem', process.env.ERUKO_BOOST] : []
 
 /**
  * @typedef {object} Label A label standing above line `at` of a program. Level 1 opens a group,
@@ -1421,10 +1425,11 @@ async function checkFunctionProblem(p, fn) {
     if (!existsSync(binary)) {
       mkdirSync(path.join(dir, 'test'), { recursive: true })
       writeFileSync(path.join(dir, 'test', 'catch.hpp'), readFileSync(CATCH))
+      writeFileSync(path.join(dir, 'test', 'catch_amalgamated.hpp'), readFileSync(CATCH_V3))
       writeFileSync(path.join(dir, fn.header), program.text)
       writeFileSync(path.join(dir, fn.name), fn.test)
       const part = `program.${process.pid}.part`
-      const made = await run(COMPILER, ['-std=c++23', '-O2', '-pipe', '-fdiagnostics-color=never', ...(all ? ['-DEXERCISM_RUN_ALL_TESTS'] : []), '-I.', '-o', part, fn.name, main], { cwd: dir, env: { ...process.env, LANG: 'C', LC_ALL: 'C' } })
+      const made = await run(COMPILER, ['-std=c++23', '-O2', '-pipe', '-fdiagnostics-color=never', ...BOOST, ...(all ? ['-DEXERCISM_RUN_ALL_TESTS'] : []), '-I.', '-o', part, fn.name, main], { cwd: dir, env: { ...process.env, LANG: 'C', LC_ALL: 'C' } })
       if (made.code !== 0) fail(p.file, program.line, 'Entry check', `the ${what} does not build as ${fn.header} with ${fn.name} and Catch2:\n${made.stderr.slice(0, 3000)}`)
       renameSync(path.join(dir, part), binary)
     }

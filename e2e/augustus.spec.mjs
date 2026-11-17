@@ -746,17 +746,21 @@ test('the unit page lists no lesson and no section, so nothing names a decision'
   await page.goto(R)
   await expect(page.locator('.hm-place')).toHaveText('Lesson 9 of 56.')
   await expect(page.locator('.hm-sources-label')).toBeVisible()
-  await expect(page.locator('.hm-rows, .hm-section, #hm-find')).toHaveCount(0)
+  await expect(page.locator('.hm-section, #hm-find')).toHaveCount(0)
+  await expect(page.locator('.hm-row-title')).toHaveText(['Review', 'Start'])
   await expect(page.locator('main')).not.toContainText('Has Octavian')
 })
 
-test('once the learner has begun, the cards keep their order: Continue, Review, Start', async ({
+test('once the learner has begun, Review leads Contents and Start follows the course', async ({
   page
 }) => {
   await withRecord(page, 'mid.json')
   await page.goto(R)
   await expect(page.locator('h1')).toHaveText('Augustus')
-  await expect(page.locator('a.hm-start')).toHaveText([/^Continue/, /^Review/, /^Start/])
+  await expect(page.locator('a.hm-start')).toHaveText([/^Continue/])
+  const titles = page.locator('.hm-list .hm-row-title')
+  await expect(titles.first()).toHaveText('Review')
+  await expect(titles.last()).toHaveText('Start')
 })
 
 test('the Continue card opens the lesson in hand on the life page', async ({ page }) => {

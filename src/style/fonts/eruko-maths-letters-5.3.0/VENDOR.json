@@ -1,0 +1,12 @@
+{
+  "name": "Eruko Maths Letters",
+  "version": "5.3.0",
+  "source": "src/style/fonts/literata-5.3.0/files/literata-latin-opsz-italic.woff2",
+  "license": "OFL-1.1",
+  "cut": "scripts/maths-fonts.py",
+  "codePoints": "U+210E,U+1D434-1D454,U+1D456-1D467,U+1D6A4",
+  "files": {
+    "LICENSE": "cc789c5ae383170690b4bac753a9c128eedf5d98cafd740db20e6db48254737c",
+    "files/eruko-maths-letters.woff2": "0dc5185979d5561c3a6525ea0d1ea6a792797ce8371f6c371b5f569ab61ed613"
+  }
+}

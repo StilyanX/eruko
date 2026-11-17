@@ -3,7 +3,7 @@
 // typed shape with what a hand edit or an older page left odd read as absent or empty, never as a
 // crash; the course and a kind's content as the generator wrote them; the runner's replies; the
 // pasted AtCoder contest record; the fields typed at Setup and after a contest; and the id types,
-// each made by its one constructor here ("A Self-Study System", The build, Programming).
+// each made by its one constructor here.
 import { isRecord } from '../../../kernel/decode.logic.js'
 import { fail, ok } from '../../../kernel/result.logic.js'
 import { nextDate, nextOf, studyDay } from '../../../kernel/days.logic.js'
@@ -152,7 +152,7 @@ export const kindContentOf = module =>
  */
 /** @typedef {Readonly<{ open: Open | null, pasted: string, shown: number }>} Position The item open, the day the contest record was last pasted, and how many rows of the Start screen's filled trace show, so a reload keeps them */
 /**
- * The C++ record, with the fields "A Self-Study System" sets (The build, Programming, The record).
+ * The C++ record.
  * @typedef {Readonly<{ runtime: Runtime | null, server: Server | null, course: readonly KindLine[], recall: Readonly<Record<string, readonly import('../../../kernel/days.logic.js').Line[]>>, tries: readonly Try[], runs: readonly RunLine[], contests: readonly Contest[], practice: string, readings: readonly Reading[], position: Position, sessions: readonly string[], turn: 4 | 5 | null } & import('./track-decode.logic.js').TrackRecord>} CppRecord
  */
 
@@ -562,6 +562,32 @@ export function zoneDay(ms, zone) {
     month: '2-digit',
     day: '2-digit'
   }).format(ms - DAY_STARTS_MS)
+}
+
+/**
+ * The device's study day of a wall time typed in a time zone, "2026-11-07T13:00" in
+ * "Europe/Copenhagen", or '' for none. A zone the calendar does not know reads as the device's own.
+ * @param {string} wall
+ * @param {string} zone
+ */
+export function deviceDayOf(wall, zone) {
+  const guess = Date.parse(`${wall}Z`)
+  if (Number.isNaN(guess)) return ''
+  const known = readZone(zone)
+  if (!known.ok) return studyDay(Date.parse(wall))
+  const f = new Intl.DateTimeFormat('en-CA', {
+    timeZone: known.value,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+  const p = Object.fromEntries(f.formatToParts(guess).map(x => [x.type, x.value]))
+  const shown = Date.parse(`${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}Z`)
+  // ponytail: one offset step, off by an hour only for a start inside a DST change
+  return studyDay(guess - (shown - guess))
 }
 
 /**

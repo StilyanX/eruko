@@ -481,6 +481,13 @@ test('the contents lead to a section, and the end of a topic turns to the next l
     .click()
   await expect(page).toHaveURL(/place-value#ar-examples$/)
   await expect(page.locator('h1')).toHaveText('Place value')
+  // On a phone the contents close to one line, which opens the list in place.
+  await page.setViewportSize({ width: 390, height: 844 })
+  const contents = page.getByRole('navigation', { name: 'Contents' })
+  await expect(contents.getByRole('link', { name: 'Worked examples' })).toBeHidden()
+  await contents.getByText('Contents').click()
+  await expect(contents.getByRole('link', { name: 'Worked examples' })).toBeVisible()
+  await page.setViewportSize({ width: 1280, height: 720 })
   await page
     .getByRole('navigation', { name: 'Pages' })
     .getByRole('link', { name: 'Next lesson' })
@@ -526,12 +533,16 @@ test('the unit page lists the pages done every session as rows above the course'
   await page.goto(R)
   const contents = page.locator('section.hm-block')
   for (const name of ['Number facts', 'Mixed practice']) {
-    // The row's name carries what waits on its page today ("12 new"), when anything does.
-    const row = contents.getByRole('link', { name: new RegExp(`^${name}( \\d+ (due|new).*)?$`) })
+    // The row's name carries Next where Continue opens it, else what waits on its page today ("12 new").
+    const row = contents.getByRole('link', { name: new RegExp(`^${name}( Next| \\d+ (due|new).*)?$`) })
     await expect(row).toBeVisible()
     await expect(row).toHaveAttribute('href', new RegExp(`/${R}/[a-z-]+$`))
   }
-  await expect(contents.getByRole('link', { name: /^Number facts \d+ new$/ })).toBeVisible()
+  // Continue opens Number facts, so its row says Next and is the current step.
+  await expect(contents.getByRole('link', { name: /^Number facts Next$/ })).toHaveAttribute(
+    'aria-current',
+    'step'
+  )
   await contents.getByRole('link', { name: /^Mixed practice/ }).click()
   await expect(page.locator('h1')).toHaveText('Mixed practice')
 })
@@ -644,14 +655,6 @@ test('the end level opens line by line: Sums on the addition set, the rest waiti
  * Whether the focused element stands inside the window.
  * @param {import('@playwright/test').Page} page
  */
-const focusInView = page =>
-  page.evaluate(() => {
-    const el = document.activeElement
-    if (!el || el === document.body) return false
-    const r = el.getBoundingClientRect()
-    return r.bottom > 0 && r.top < innerHeight
-  })
-
 test("mixed practice's last Next puts focus on the empty day's line, and the status line says it", async ({
   page
 }) => {
@@ -681,8 +684,10 @@ test("a statement's proof compared: after Right, focus is on the mark, in view, 
   await button(prove.getByRole('navigation', { name: 'Statement pages' }), 'Next').click()
   for (const name of ['Done', 'Wrong', 'Done', 'Right']) await button(prove, name).press('Enter')
   await expect(prove).toContainText('Compare your proof line by line')
-  await expect(prove.locator('fieldset.mark')).toBeFocused()
-  expect(await focusInView(page)).toBe(true)
+  const mark = prove.locator('fieldset.mark')
+  await expect(mark).toBeFocused()
+  // the focus scrolls it in after the page has drawn: wait for that, not one look
+  await expect(mark).toBeInViewport()
 })
 
 test("an idea check's box is described by its question, which stays in view with it on a phone with its keyboard open", async ({
@@ -710,7 +715,7 @@ test('one formula is one maths object, and what Show the answer reveals and a wr
   await expect(status).toHaveText(/^The answer: \S/)
   await button(tryIt, 'Wrong').click()
   await expect(status).toHaveText(
-    /^Wrong\. The answer is \S.*\. The solution is below\. The worked example is open\.$/
+    /^Wrong\. The answer is \S.*\. Read the solution\. The worked example is open\.$/
   )
 })
 

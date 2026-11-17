@@ -9,6 +9,7 @@ Each unit is labelled with one of three words.
 | Unit | Label | What is missing |
 | --- | --- | --- |
 | Arithmetic | Testing | The testing round |
+| Algebra | Testing | The testing round |
 | Augustus | Testing | The testing round |
 | Go course | Testing | The testing round |
 | C++ course | Testing | The testing round |

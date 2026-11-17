@@ -60,11 +60,13 @@ import { kindId, problemId, topicSlug } from './maths-decode.logic.js'
 /**
  * A marked question that lost marks, as it returns in mixed practice: the title of its piece of
  * marked work, its label, the marks it got of how many, and whether the module's computer marked it.
+ * `official` is the address of the published solution a question is checked against, where it has one.
  * @typedef {Readonly<{
  *   id: import('./maths-decode.logic.js').ProblemId,
  *   kind: import('./maths-decode.logic.js').KindId,
  *   piece: string,
  *   typed: boolean,
+ *   official?: string,
  *   label: string,
  *   got: number,
  *   of: number

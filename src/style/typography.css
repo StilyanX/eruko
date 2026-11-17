@@ -7,10 +7,13 @@
   :root {
     --font-text: 'Literata Variable', Georgia, 'Times New Roman', serif;
     --font-ui: 'Inter Variable', system-ui, sans-serif;
+    /* A formula: Literata's digits and letters with the signs of a maths font, one family
+       (maths.css); `math` is the system's maths font, while the family loads. */
+    --font-maths: 'Eruko Maths', math;
     --font-mono: ui-monospace, monospace; /* the not-found address only */
 
-    --type-ui: 1rem; /* 16: buttons, labels, the path, notes; Inter 16 matches Literata 17's x-height */
-    --type-body: 1.0625rem; /* 17: every line to read, and every input */
+    --type-ui: 1.0625rem; /* 17: buttons, labels, the path, notes; Inter 17 matches Literata 18's x-height */
+    --type-body: 1.125rem; /* 18: every line to read, and every input */
     --type-h3: 1.1875rem; /* 19 */
     --type-h2: 1.4375rem; /* 23 */
     --type-h1: 1.875rem; /* 30 */
@@ -33,9 +36,10 @@
     }
   }
 
-  /* A formula piece sits in the line and never wraps inside itself (parts/maths-screens.dom.js). */
+  /* A formula sits in the line with the word space on either side and no margin of its own. A
+     piece never wraps inside itself, and the punctuation after it is set against it, in the same
+     box, so the two are never parted (parts/maths-screens.dom.js). */
   .lrn-piece {
-    margin: 0 0.1em;
     white-space: nowrap;
   }
 }

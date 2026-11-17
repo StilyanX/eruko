@@ -1,0 +1,213 @@
+# The unit's manifest. Built on Mathematics, "The second
+# stage": algebra runs arithmetic's four steps and gates, adds Find the error and Translate to
+# every topic before the olympiad topics, and allows no calculator. Step 4's statements come from
+# Mathlib, and for the olympiad topics from miniF2F and Compfiles, each proved on paper.
+
+slug: explore/mathematics/algebra
+discipline: Mathematics
+title: Algebra
+
+canon_sources:
+  - author: Richard Rusczyk
+    work: Introduction to Algebra
+    feeds: steps 1 to 3 (problems before text, worked examples, exercises and review problems, proofs)
+  - author: Richard Rusczyk and Mathew Crawford
+    work: Intermediate Algebra
+    feeds: steps 1 to 3 (problems before text, worked examples, exercises and review problems, proofs)
+  - author: Titu Andreescu, Navid Safaei and Alessandro Ventullo
+    work: Awesome Polynomials for Mathematics Competitions
+    feeds: steps 1 to 3 for Polynomials (theory, problems with full solutions, proofs)
+  - author: Pham Kim Hung
+    work: Secrets in Inequalities, Volumes 1 and 2
+    feeds: steps 1 to 3 for Inequalities (theory, problems with full solutions, proofs)
+  - author: Titu Andreescu, Iurie Boreico, Oleg Mushkarov and Nikolai Nikolov
+    work: Topics in Functional Equations
+    feeds: steps 1 to 3 for Functional equations (theory, problems with full solutions, proofs)
+  - author: Arthur Engel
+    work: Problem-Solving Strategies
+    feeds: steps 1 to 3 for Sequences and series, chapter 9 (theory, problems with full solutions, proofs)
+
+# The pages done every session: the number-facts gate (Arithmetic's page and record) and step 2.
+pages:
+  - number-facts
+  - mixed-practice
+
+# The sections: one course by subject, each an unbroken run of the course order. Each topic names its
+# section by number. The topics from Problem-Solving Strategies hold proof problems and no Find the
+# error or Translate kind.
+sections:
+  - Expressions
+  - Linear equations
+  - Linear systems
+  - Proportion
+  - Lines
+  - Linear inequalities
+  - Factoring
+  - Quadratic equations
+  - Quadratic inequalities
+  - Functions
+  - Polynomials
+  - Conics
+  - Complex roots
+  - Exponents and logarithms
+  - Rational functions
+  - Absolute value and floor
+  - Sequences and series
+  - Summation and induction
+  - Finite sums
+  - Roots and coefficients
+  - Substitution
+  - Means and bounds
+  - Recurrences
+
+# Course order: by subject, every topic after the topics it uses. A slug here with no file in topics/ is left out.
+topics:
+  - expressions-and-substituting-values
+  - integer-exponents
+  - fractional-exponents
+  - radicals
+  - like-terms-and-multiplying-out
+  - taking-out-a-common-factor
+  - algebraic-fractions
+  - rules-for-equations
+  - linear-equations-in-one-variable
+  - word-problems-with-one-unknown
+  - equations-with-roots-and-fractions-that-become-linear
+  - solving-for-one-letter
+  - linear-equations-in-two-variables
+  - systems-of-two-linear-equations
+  - word-problems-with-two-unknowns
+  - systems-that-become-linear
+  - systems-in-three-or-more-variables
+  - nonlinear-systems-by-elimination
+  - ratio-equations
+  - percent-equations-and-mixtures
+  - direct-proportion
+  - inverse-and-joint-proportion
+  - rate-problems
+  - the-pythagorean-theorem
+  - distance-and-midpoint
+  - slope
+  - graphs-of-linear-equations
+  - equations-of-lines
+  - parallel-and-perpendicular-lines
+  - rules-for-inequalities
+  - comparing-numbers
+  - linear-inequalities-in-one-variable
+  - linear-inequalities-in-two-variables
+  - linear-optimisation
+  - multiplying-binomials
+  - squares-of-binomials
+  - difference-of-squares
+  - sum-and-difference-of-cubes
+  - factoring-xy-plus-ax-plus-by
+  - factoring-quadratics
+  - rationalising-denominators
+  - zero-product-and-square-roots
+  - sum-and-product-of-roots
+  - nested-radicals
+  - imaginary-numbers
+  - complex-numbers
+  - completing-the-square
+  - quadratic-formula-and-discriminant
+  - equations-in-quadratic-form
+  - fractional-equations-that-become-quadratic
+  - radical-equations
+  - the-trivial-inequality
+  - quadratic-inequalities
+  - polynomial-and-rational-inequalities
+  - quadratic-optimisation
+  - functions-and-function-notation
+  - domain-and-range
+  - combining-and-composing-functions
+  - inverse-functions
+  - equations-for-functions
+  - operations-defined-by-a-formula
+  - graphs-of-functions
+  - transformations-of-graphs
+  - graphs-of-inverse-functions
+  - root-functions
+  - polynomials-degree-and-addition
+  - multiplying-polynomials
+  - polynomial-long-division
+  - synthetic-division
+  - the-remainder-theorem
+  - the-factor-theorem
+  - integer-roots
+  - rational-roots
+  - bounds-on-roots
+  - parabolas
+  - circles
+  - intersections-of-graphs
+  - focus-and-directrix
+  - ellipses
+  - hyperbolas
+  - classifying-conics
+  - the-complex-plane
+  - conjugate-and-magnitude-laws
+  - fundamental-theorem-of-algebra
+  - nonreal-roots
+  - exponential-functions-and-equations
+  - interest-and-present-value
+  - logarithms
+  - logarithm-identities
+  - monotonic-functions
+  - logarithmic-equations-and-inequalities
+  - rational-functions
+  - partial-fractions
+  - asymptotes-of-rational-functions
+  - even-and-odd-functions
+  - absolute-value-equations-and-graphs
+  - floor-and-ceiling
+  - graphs-with-absolute-values
+  - floor-and-fractional-part-equations
+  - piecewise-functions
+  - arithmetic-sequences
+  - arithmetic-series
+  - geometric-sequences
+  - geometric-series
+  - infinite-geometric-series
+  - natural-logarithm-and-decay
+  - summation-and-product-notation
+  - induction
+  - the-binomial-theorem
+  - proving-identities
+  - equal-ratios
+  - telescoping
+  - sums-of-polynomial-series
+  - arithmetico-geometric-series
+  - finite-differences
+  - identity-theorem-for-polynomials
+  - irrational-roots
+  - vietas-formulas
+  - power-sums-of-roots
+  - sums-and-differences-of-powers
+  - factor-theorem-in-several-variables
+  - undetermined-coefficients
+  - polynomials-with-transformed-roots
+  - common-divisors-of-polynomials
+  - raising-an-equation-to-a-power
+  - self-similar-expressions
+  - symmetric-systems
+  - reciprocal-equations
+  - functional-equations-by-substitution
+  - cyclic-functions
+  - radical-inequalities
+  - proving-inequalities-by-manipulation
+  - am-gm
+  - cauchy-schwarz
+  - maxima-and-minima-by-inequalities
+  - mean-inequality-chain
+  - rearrangement-inequality
+  - recursive-sequences
+  - linear-recurrences
+  - periodic-sequences
+  - monotone-bounded-sequences
+  - recurrences-made-linear
+  - recurrences-from-counting
+  - self-similar-sequences
+  - estimates-for-sequences
+# The topic written as a missing prerequisite (paper: Missing prerequisite). The engine must read this key:
+# the topic's number is the next unused one, out of course order.
+inserted:
+  - the-pythagorean-theorem

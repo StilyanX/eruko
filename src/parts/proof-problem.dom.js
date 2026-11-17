@@ -39,6 +39,7 @@ export const proofProblem =
           ? [
               lines({
                 lines: problem.solution,
+                under: problem.prompt,
                 figures,
                 label: 'Published proof',
                 key: 'proof-lines'

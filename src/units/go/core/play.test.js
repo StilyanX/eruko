@@ -1,4 +1,4 @@
-// Step 3's moves on the record ("A Self-Study System", The build, Go, The checks): "Game ended"
+// Step 3's moves on the record: "Game ended"
 // keeps a game and opens its count, and gate 2 reads after every 15 rated games. The replies
 // below have the shape of the server's own.
 import { test } from 'node:test'

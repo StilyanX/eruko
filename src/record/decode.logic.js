@@ -1,7 +1,11 @@
 // Hides: how a message from another tab enters this one: the record's channel carries only the
 // signals below, and anything else on it is left unheard.
 
-/** How the record opened: as it was, read-only after its check found damage, or not at all. @typedef {'ok' | 'read-only' | 'failed'} RecordState */
+/**
+ * How the record opened: as it was, read-only after its check found damage, not at all, or kept in
+ * memory only because the browser lets the site store nothing (a private window).
+ * @typedef {'ok' | 'read-only' | 'failed' | 'unsaved'} RecordState
+ */
 /** A part of the record: its text, and how many times it has been saved. @typedef {{ text: string, version: number }} Part */
 /**
  * A save's outcome: committed at a new version; refused because the part changed (the part as

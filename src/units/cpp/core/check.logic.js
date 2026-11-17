@@ -1,6 +1,4 @@
-// Hides: how the language track's machine checks are asked of a compiler and read back ("A Self-Study
-// System", Programming, The track's material: Check forms, Levels, Extensions, Races and memory
-// errors): the five `-std` levels, the flags an item may add, the compiler's arguments for a host
+// Hides: how the language track's machine checks are asked of a compiler and read back: the five `-std` levels, the flags an item may add, the compiler's arguments for a host
 // program and for a device program, and the report a sanitizer prints, read as its tool, its kind
 // and its line. The runner (scripts/cpp-runner.mjs) and the generator (scripts/lib/cpp-track.mjs)
 // both build their commands here, so a check runs the same in the app and at entry.
@@ -9,7 +7,7 @@
 /** The levels an item is asked at; c++26 never, since N4950 is the reference. @type {readonly Level[]} */
 export const LEVELS = ['c++11', 'c++14', 'c++17', 'c++20', 'c++23']
 
-/** @typedef {'address' | 'thread'} HostSanitizer `-fsanitize=address,undefined` or `-fsanitize=thread`, each in its own run */
+/** @typedef {'address' | 'thread'} HostSanitizer `-fsanitize=address,undefined` with libstdc++'s debug mode and assertions, or `-fsanitize=thread`, each in its own run */
 /** @typedef {'memcheck' | 'initcheck' | 'racecheck'} DeviceTool The one tool of compute-sanitizer a device check runs */
 /** @type {readonly DeviceTool[]} */
 export const TOOLS = ['memcheck', 'initcheck', 'racecheck']
@@ -73,6 +71,12 @@ export function hostArgs(s) {
       ? [
           '-g',
           '-fsanitize=address,undefined',
+          // libstdc++'s debug mode and assertions: library UB and invalid iterators (Wakely)
+          '-D_GLIBCXX_DEBUG',
+          '-D_GLIBCXX_ASSERTIONS',
+          // ASan tracks std::vector's unused capacity, so *(v.data() + v.size()) is caught too (Wakely)
+          '-D_GLIBCXX_SANITIZE_STD_ALLOCATOR=1',
+          '-D_GLIBCXX_SANITIZE_VECTOR=1',
           '-fno-omit-frame-pointer',
           '-fno-sanitize-recover=all'
         ]

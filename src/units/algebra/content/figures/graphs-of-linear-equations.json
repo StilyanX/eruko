@@ -1,0 +1,2046 @@
+{
+  "graphs-of-linear-equations-1.svg": {
+    "x": [
+      -2,
+      12
+    ],
+    "y": [
+      -4,
+      4
+    ],
+    "xstep": 2,
+    "ystep": 2,
+    "curves": [
+      {
+        "y": "(10-2*x)/5"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          2
+        ],
+        "label": "(0, 2)"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "(5, 0)"
+      },
+      {
+        "at": [
+          10,
+          -2
+        ],
+        "label": "(10, −2)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-2.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -2,
+      5
+    ],
+    "curves": [
+      {
+        "y": "(12-(3)*x)/(4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "(4, 0)"
+      },
+      {
+        "at": [
+          0,
+          3
+        ],
+        "label": "(0, 3)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-3.svg": {
+    "x": [
+      -2,
+      8
+    ],
+    "y": [
+      -7,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(30-(5)*x)/(-6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "(6, 0)"
+      },
+      {
+        "at": [
+          0,
+          -5
+        ],
+        "label": "(0, −5)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-4.svg": {
+    "x": [
+      -9,
+      2
+    ],
+    "y": [
+      -4,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(-14-(2)*x)/(7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -7,
+          0
+        ],
+        "label": "(−7, 0)"
+      },
+      {
+        "at": [
+          0,
+          -2
+        ],
+        "label": "(0, −2)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-5.svg": {
+    "x": [
+      -7,
+      2
+    ],
+    "y": [
+      -2,
+      4
+    ],
+    "curves": [
+      {
+        "y": "(-10-(2)*x)/(-5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "(−5, 0)"
+      },
+      {
+        "at": [
+          0,
+          2
+        ],
+        "label": "(0, 2)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-6.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -6,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(20-(4)*x)/(-5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "(5, 0)"
+      },
+      {
+        "at": [
+          0,
+          -4
+        ],
+        "label": "(0, −4)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-7.svg": {
+    "x": [
+      -2,
+      9
+    ],
+    "y": [
+      -2,
+      8
+    ],
+    "curves": [
+      {
+        "y": "(42-(6)*x)/(7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          7,
+          0
+        ],
+        "label": "(7, 0)"
+      },
+      {
+        "at": [
+          0,
+          6
+        ],
+        "label": "(0, 6)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-8.svg": {
+    "x": [
+      -10,
+      2
+    ],
+    "y": [
+      -5,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(-24-(3)*x)/(8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          0
+        ],
+        "label": "(−8, 0)"
+      },
+      {
+        "at": [
+          0,
+          -3
+        ],
+        "label": "(0, −3)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-9.svg": {
+    "x": [
+      -2,
+      10
+    ],
+    "y": [
+      -7,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(40-(5)*x)/(-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          8,
+          0
+        ],
+        "label": "(8, 0)"
+      },
+      {
+        "at": [
+          0,
+          -5
+        ],
+        "label": "(0, −5)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-10.svg": {
+    "x": [
+      -6,
+      2
+    ],
+    "y": [
+      -7,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(-20-(5)*x)/(4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "(−4, 0)"
+      },
+      {
+        "at": [
+          0,
+          -5
+        ],
+        "label": "(0, −5)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-11.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -9,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(14-(7)*x)/(-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "(2, 0)"
+      },
+      {
+        "at": [
+          0,
+          -7
+        ],
+        "label": "(0, −7)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-12.svg": {
+    "x": [
+      -4,
+      2
+    ],
+    "y": [
+      -11,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(-18-(9)*x)/(2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "(−2, 0)"
+      },
+      {
+        "at": [
+          0,
+          -9
+        ],
+        "label": "(0, −9)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-13.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "y": "(0-(3)*x)/(-4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          4,
+          3
+        ],
+        "label": "(4, 3)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-14.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "curves": [
+      {
+        "y": "(0-(5)*x)/(4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          4,
+          -5
+        ],
+        "label": "(4, −5)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-15.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "curves": [
+      {
+        "y": "(0-(4)*x)/(-5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          5,
+          4
+        ],
+        "label": "(5, 4)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-16.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -4,
+      4
+    ],
+    "curves": [
+      {
+        "y": "(0-(2)*x)/(7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          7,
+          -2
+        ],
+        "label": "(7, −2)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-17.svg": {
+    "x": [
+      -7,
+      7
+    ],
+    "y": [
+      -8,
+      8
+    ],
+    "curves": [
+      {
+        "y": "(0-(6)*x)/(-5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          5,
+          6
+        ],
+        "label": "(5, 6)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-18.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "curves": [
+      {
+        "y": "(0-(7)*x)/(3)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          3,
+          -7
+        ],
+        "label": "(3, −7)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-19.svg": {
+    "x": [
+      -9,
+      9
+    ],
+    "y": [
+      -6,
+      6
+    ],
+    "curves": [
+      {
+        "y": "(0-(4)*x)/(7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          7,
+          -4
+        ],
+        "label": "(7, −4)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-20.svg": {
+    "x": [
+      -10,
+      10
+    ],
+    "y": [
+      -7,
+      7
+    ],
+    "curves": [
+      {
+        "y": "(0-(5)*x)/(-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          8,
+          5
+        ],
+        "label": "(8, 5)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-21.svg": {
+    "x": [
+      -11,
+      11
+    ],
+    "y": [
+      -4,
+      4
+    ],
+    "curves": [
+      {
+        "y": "(0-(2)*x)/(-9)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          9,
+          2
+        ],
+        "label": "(9, 2)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-22.svg": {
+    "x": [
+      -8,
+      8
+    ],
+    "y": [
+      -9,
+      9
+    ],
+    "curves": [
+      {
+        "y": "(0-(7)*x)/(-6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          6,
+          7
+        ],
+        "label": "(6, 7)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-23.svg": {
+    "x": [
+      -6,
+      6
+    ],
+    "y": [
+      -11,
+      11
+    ],
+    "curves": [
+      {
+        "y": "(0-(9)*x)/(4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          0
+        ],
+        "label": "(0, 0)"
+      },
+      {
+        "at": [
+          4,
+          -9
+        ],
+        "label": "(4, −9)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-24.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -10,
+      5
+    ],
+    "curves": [
+      {
+        "y": "-8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -8
+        ],
+        "label": "(0, −8)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-25.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      11
+    ],
+    "curves": [
+      {
+        "y": "9"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          9
+        ],
+        "label": "(0, 9)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-26.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "y": "1"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          1
+        ],
+        "label": "(0, 1)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-27.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "y": "-1"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -1
+        ],
+        "label": "(0, −1)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-28.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      12
+    ],
+    "curves": [
+      {
+        "y": "10"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          10
+        ],
+        "label": "(0, 10)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-29.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -8,
+      5
+    ],
+    "curves": [
+      {
+        "y": "-6"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -6
+        ],
+        "label": "(0, −6)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-30.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -12,
+      5
+    ],
+    "curves": [
+      {
+        "y": "-10"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -10
+        ],
+        "label": "(0, −10)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-31.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -13,
+      5
+    ],
+    "curves": [
+      {
+        "y": "-11"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -11
+        ],
+        "label": "(0, −11)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-32.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      6
+    ],
+    "curves": [
+      {
+        "y": "4"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          4
+        ],
+        "label": "(0, 4)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-33.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      13
+    ],
+    "curves": [
+      {
+        "y": "11"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          11
+        ],
+        "label": "(0, 11)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-34.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      10
+    ],
+    "curves": [
+      {
+        "y": "8"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          8
+        ],
+        "label": "(0, 8)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-35.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 1
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "(1, 0)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-36.svg": {
+    "x": [
+      -7,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": -5
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "(−5, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-37.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": -1
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "(−1, 0)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-38.svg": {
+    "x": [
+      -12,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": -10
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -10,
+          0
+        ],
+        "label": "(−10, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-39.svg": {
+    "x": [
+      -5,
+      8
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 6
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          6,
+          0
+        ],
+        "label": "(6, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-40.svg": {
+    "x": [
+      -5,
+      12
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 10
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          10,
+          0
+        ],
+        "label": "(10, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-41.svg": {
+    "x": [
+      -13,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": -11
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -11,
+          0
+        ],
+        "label": "(−11, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-42.svg": {
+    "x": [
+      -10,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": -8
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -8,
+          0
+        ],
+        "label": "(−8, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-43.svg": {
+    "x": [
+      -5,
+      13
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 11
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          11,
+          0
+        ],
+        "label": "(11, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-44.svg": {
+    "x": [
+      -5,
+      11
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 9
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          9,
+          0
+        ],
+        "label": "(9, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-45.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -5,
+      5
+    ],
+    "curves": [
+      {
+        "x": 2
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "(2, 0)"
+      }
+    ]
+  },
+  "graphs-of-linear-equations-46.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -14,
+      2
+    ],
+    "curves": [
+      {
+        "y": "4*x+(-12)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -12
+        ],
+        "label": "(0, −12)"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "(3, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-47.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -2,
+      10
+    ],
+    "curves": [
+      {
+        "y": "-4*x+(8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          8
+        ],
+        "label": "(0, 8)"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "(2, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-48.svg": {
+    "x": [
+      -4,
+      2
+    ],
+    "y": [
+      -2,
+      14
+    ],
+    "curves": [
+      {
+        "y": "6*x+(12)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          12
+        ],
+        "label": "(0, 12)"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "(−2, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-49.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -2,
+      16
+    ],
+    "curves": [
+      {
+        "y": "-7*x+(14)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          14
+        ],
+        "label": "(0, 14)"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "(2, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-50.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -18,
+      2
+    ],
+    "curves": [
+      {
+        "y": "8*x+(-16)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -16
+        ],
+        "label": "(0, −16)"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "(2, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-51.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -2,
+      20
+    ],
+    "curves": [
+      {
+        "y": "-6*x+(18)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          18
+        ],
+        "label": "(0, 18)"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "(3, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-52.svg": {
+    "x": [
+      -3,
+      2
+    ],
+    "y": [
+      -2,
+      11
+    ],
+    "curves": [
+      {
+        "y": "9*x+(9)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          9
+        ],
+        "label": "(0, 9)"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "(−1, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-53.svg": {
+    "x": [
+      -4,
+      2
+    ],
+    "y": [
+      -2,
+      12
+    ],
+    "curves": [
+      {
+        "y": "4*x+(10)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          10
+        ],
+        "label": "(0, 10)"
+      },
+      {
+        "at": [
+          -2.5,
+          0
+        ],
+        "label": "(−5/2, 0)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-54.svg": {
+    "x": [
+      -5,
+      2
+    ],
+    "y": [
+      -26,
+      2
+    ],
+    "curves": [
+      {
+        "y": "-8*x+(-24)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -24
+        ],
+        "label": "(0, −24)"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "(−3, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-55.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -23,
+      2
+    ],
+    "curves": [
+      {
+        "y": "7*x+(-21)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -21
+        ],
+        "label": "(0, −21)"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "(3, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-56.svg": {
+    "x": [
+      -4,
+      2
+    ],
+    "y": [
+      -20,
+      2
+    ],
+    "curves": [
+      {
+        "y": "-9*x+(-18)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0,
+          -18
+        ],
+        "label": "(0, −18)"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "(−2, 0)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-57.svg": {
+    "x": [
+      -12,
+      2
+    ],
+    "y": [
+      -2,
+      4
+    ],
+    "curves": [
+      {
+        "y": "(x-(-10))/(5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -10,
+          0
+        ],
+        "label": "(−10, 0)"
+      },
+      {
+        "at": [
+          0,
+          2
+        ],
+        "label": "(0, 2)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-58.svg": {
+    "x": [
+      -2,
+      14
+    ],
+    "y": [
+      -2,
+      4
+    ],
+    "curves": [
+      {
+        "y": "(x-(12))/(-6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          12,
+          0
+        ],
+        "label": "(12, 0)"
+      },
+      {
+        "at": [
+          0,
+          2
+        ],
+        "label": "(0, 2)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-59.svg": {
+    "x": [
+      -2,
+      16
+    ],
+    "y": [
+      -4,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(x-(14))/(7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          14,
+          0
+        ],
+        "label": "(14, 0)"
+      },
+      {
+        "at": [
+          0,
+          -2
+        ],
+        "label": "(0, −2)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-60.svg": {
+    "x": [
+      -17,
+      2
+    ],
+    "y": [
+      -5,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(x-(-15))/(-5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -15,
+          0
+        ],
+        "label": "(−15, 0)"
+      },
+      {
+        "at": [
+          0,
+          -3
+        ],
+        "label": "(0, −3)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-61.svg": {
+    "x": [
+      -20,
+      2
+    ],
+    "y": [
+      -2,
+      5
+    ],
+    "curves": [
+      {
+        "y": "(x-(-18))/(6)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -18,
+          0
+        ],
+        "label": "(−18, 0)"
+      },
+      {
+        "at": [
+          0,
+          3
+        ],
+        "label": "(0, 3)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-62.svg": {
+    "x": [
+      -2,
+      9
+    ],
+    "y": [
+      -2,
+      3
+    ],
+    "curves": [
+      {
+        "y": "(x-(7))/(-7)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          7,
+          0
+        ],
+        "label": "(7, 0)"
+      },
+      {
+        "at": [
+          0,
+          1
+        ],
+        "label": "(0, 1)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-63.svg": {
+    "x": [
+      -2,
+      18
+    ],
+    "y": [
+      -4,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(x-(16))/(8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          16,
+          0
+        ],
+        "label": "(16, 0)"
+      },
+      {
+        "at": [
+          0,
+          -2
+        ],
+        "label": "(0, −2)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-64.svg": {
+    "x": [
+      -2,
+      22
+    ],
+    "y": [
+      -6,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(x-(20))/(5)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          20,
+          0
+        ],
+        "label": "(20, 0)"
+      },
+      {
+        "at": [
+          0,
+          -4
+        ],
+        "label": "(0, −4)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  },
+  "graphs-of-linear-equations-65.svg": {
+    "x": [
+      -2,
+      11
+    ],
+    "y": [
+      -2,
+      3
+    ],
+    "curves": [
+      {
+        "y": "(x-(9))/(-9)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          9,
+          0
+        ],
+        "label": "(9, 0)"
+      },
+      {
+        "at": [
+          0,
+          1
+        ],
+        "label": "(0, 1)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-66.svg": {
+    "x": [
+      -11,
+      2
+    ],
+    "y": [
+      -2,
+      3
+    ],
+    "curves": [
+      {
+        "y": "(x-(-9))/(9)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -9,
+          0
+        ],
+        "label": "(−9, 0)"
+      },
+      {
+        "at": [
+          0,
+          1
+        ],
+        "label": "(0, 1)"
+      }
+    ],
+    "xstep": 2,
+    "ystep": 2
+  },
+  "graphs-of-linear-equations-67.svg": {
+    "x": [
+      -18,
+      2
+    ],
+    "y": [
+      -4,
+      2
+    ],
+    "curves": [
+      {
+        "y": "(x-(-16))/(-8)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -16,
+          0
+        ],
+        "label": "(−16, 0)"
+      },
+      {
+        "at": [
+          0,
+          -2
+        ],
+        "label": "(0, −2)"
+      }
+    ],
+    "xstep": 4,
+    "ystep": 4
+  }
+}

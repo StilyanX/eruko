@@ -1,5 +1,4 @@
-// Step 2 ("A Self-Study System", Go, The steps and The review position; The build, Go, The
-// engine and the server and The checks): the query at the stored setting, a move's loss in
+// Step 2: the query at the stored setting, a move's loss in
 // points, and the review list.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'

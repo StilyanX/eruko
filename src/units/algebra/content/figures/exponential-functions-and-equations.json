@@ -1,0 +1,882 @@
+{
+ "exponential-functions-and-equations-1.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -50,
+   5
+  ],
+  "equal": false,
+  "ystep": 5,
+  "curves": [
+   {
+    "y": "7*6^x-42"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -42
+    ],
+    "to": [
+     2,
+     -42
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -35
+    ]
+   },
+   {
+    "at": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-2.svg": {
+  "x": [
+   -3,
+   3
+  ],
+  "y": [
+   -90,
+   10
+  ],
+  "equal": false,
+  "ystep": 10,
+  "curves": [
+   {
+    "y": "5*4^x-80"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -80
+    ],
+    "to": [
+     3,
+     -80
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -75
+    ]
+   },
+   {
+    "at": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-3.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -30,
+   5
+  ],
+  "equal": false,
+  "ystep": 5,
+  "curves": [
+   {
+    "y": "7*3^x-21"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -21
+    ],
+    "to": [
+     2,
+     -21
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -14
+    ]
+   },
+   {
+    "at": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-4.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -4,
+   4
+  ],
+  "equal": false,
+  "ystep": 1,
+  "curves": [
+   {
+    "y": "6*2^x-3"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -3
+    ],
+    "to": [
+     2,
+     -3
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     3
+    ]
+   },
+   {
+    "at": [
+     -1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-5.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -9,
+   1
+  ],
+  "equal": false,
+  "ystep": 1,
+  "curves": [
+   {
+    "y": "4*2^x-8"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -8
+    ],
+    "to": [
+     2,
+     -8
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -4
+    ]
+   },
+   {
+    "at": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-6.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -80,
+   10
+  ],
+  "equal": false,
+  "ystep": 10,
+  "curves": [
+   {
+    "y": "9*7^x-63"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -63
+    ],
+    "to": [
+     2,
+     -63
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -54
+    ]
+   },
+   {
+    "at": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-7.svg": {
+  "x": [
+   -3,
+   3
+  ],
+  "y": [
+   -70,
+   10
+  ],
+  "equal": false,
+  "ystep": 10,
+  "curves": [
+   {
+    "y": "6*3^x-54"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -54
+    ],
+    "to": [
+     3,
+     -54
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -48
+    ]
+   },
+   {
+    "at": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-8.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -2,
+   14
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "-3*4^x+12"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     12
+    ],
+    "to": [
+     2,
+     12
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     9
+    ]
+   },
+   {
+    "at": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-9.svg": {
+  "x": [
+   -3,
+   4
+  ],
+  "y": [
+   -140,
+   20
+  ],
+  "equal": false,
+  "ystep": 20,
+  "curves": [
+   {
+    "y": "4*3^x-108"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -108
+    ],
+    "to": [
+     4,
+     -108
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -104
+    ]
+   },
+   {
+    "at": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-10.svg": {
+  "x": [
+   -3,
+   4
+  ],
+  "y": [
+   -30,
+   5
+  ],
+  "equal": false,
+  "ystep": 5,
+  "curves": [
+   {
+    "y": "3*2^x-24"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -24
+    ],
+    "to": [
+     4,
+     -24
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -21
+    ]
+   },
+   {
+    "at": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-11.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -7,
+   4
+  ],
+  "equal": false,
+  "ystep": 1,
+  "curves": [
+   {
+    "y": "-9*3^x+3"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     3
+    ],
+    "to": [
+     2,
+     3
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -6
+    ]
+   },
+   {
+    "at": [
+     -1,
+     0
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-12.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -1,
+   7
+  ],
+  "equal": false,
+  "ystep": 1,
+  "curves": [
+   {
+    "y": "5*5^x+1"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     1
+    ],
+    "to": [
+     2,
+     1
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     6
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-13.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -2,
+   22
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "9*6^x+10"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     10
+    ],
+    "to": [
+     2,
+     10
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     19
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-14.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -2,
+   18
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "2*7^x+14"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     14
+    ],
+    "to": [
+     2,
+     14
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     16
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-15.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -10,
+   1
+  ],
+  "equal": false,
+  "ystep": 1,
+  "curves": [
+   {
+    "y": "-8*6^x-1"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -1
+    ],
+    "to": [
+     2,
+     -1
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -9
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-16.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -16,
+   2
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "-8*7^x-6"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -6
+    ],
+    "to": [
+     2,
+     -6
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -14
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-17.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -20,
+   2
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "-8*3^x-9"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -9
+    ],
+    "to": [
+     2,
+     -9
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -17
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-18.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -22,
+   2
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "-6*5^x-13"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -13
+    ],
+    "to": [
+     2,
+     -13
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -19
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-19.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -30,
+   5
+  ],
+  "equal": false,
+  "ystep": 5,
+  "curves": [
+   {
+    "y": "-9*4^x-15"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -15
+    ],
+    "to": [
+     2,
+     -15
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -24
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-20.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -2,
+   14
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "3*7^x+9"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     9
+    ],
+    "to": [
+     2,
+     9
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     12
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-21.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -30,
+   5
+  ],
+  "equal": false,
+  "ystep": 5,
+  "curves": [
+   {
+    "y": "-9*2^x-12"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     -12
+    ],
+    "to": [
+     2,
+     -12
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     -21
+    ]
+   }
+  ]
+ },
+ "exponential-functions-and-equations-22.svg": {
+  "x": [
+   -3,
+   2
+  ],
+  "y": [
+   -2,
+   16
+  ],
+  "equal": false,
+  "ystep": 2,
+  "curves": [
+   {
+    "y": "7*2^x+6"
+   }
+  ],
+  "dashed": [
+   {
+    "from": [
+     -3,
+     6
+    ],
+    "to": [
+     2,
+     6
+    ]
+   }
+  ],
+  "points": [
+   {
+    "at": [
+     0,
+     13
+    ]
+   }
+  ]
+ }
+}

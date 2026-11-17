@@ -1,4 +1,4 @@
-// Hides: the checks of Biography in "A Self-Study System", and the one next action of its work
+// Hides: the checks of Biography, and the one next action of its work
 // list. Pure functions over the decoded record (decode.logic.js), tested in
 // tests/augustus-next.test.mjs. Days are ISO 'YYYY-MM-DD' study days (the day turns at 04:00,
 // kernel/days.logic.js). A probability is stored as a whole number from 0 to 100. Years are

@@ -1,5 +1,4 @@
-// The wording of the Go unit's material ("A Self-Study System", Go, The wording, and The wording
-// of the material): the four result words; coordinates in one form; each term defined once; no
+// The wording of the Go unit's material: the four result words; coordinates in one form; each term defined once; no
 // difficulty labels, praise, hedging, "any", Japanese words or synonym for a result word; a loss in
 // points at one decimal.
 import { test } from 'node:test'

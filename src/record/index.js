@@ -1,6 +1,8 @@
-// Hides: where the record is stored, and which tab stores it. One tab at a time, the leader,
-// holds the record lock and the SQLite worker (lib/record-worker.js); every other open tab asks
-// the leader over a BroadcastChannel. Every tab keeps the whole record in memory, so a read never
+// Hides: where the record is stored, and which tab stores it. Each tab opens the record in its own
+// SQLite worker (record/worker.js) and saves on its own; saves and meetings with the computer run
+// one at a time across tabs, under a browser lock. While the record has not yet moved from its old
+// store (a copy that failed), one tab at a time, the leader, holds it, and every other open tab
+// asks the leader over a BroadcastChannel. Every tab keeps the whole record in memory, so a read never
 // waits; the leader tells every tab each saved change. The leader is the tab the learner is
 // looking at: a tab that comes into view while the leader is hidden asks for the record, and the
 // leader hands it over. A save names the version of the part it was based on and is refused when
@@ -22,6 +24,8 @@ const HANDOVER_MS = 15000
 const SYNC_MS = 30000
 /** A computer that does not answer within this long is taken to be out of reach. */
 const REACH_MS = 8000
+/** True once the host has said it keeps no shared record. */
+let noShared = false
 
 /** Every part of the record, by key. */
 /** @type {Map<string, import('./decode.logic.js').Part>} */
@@ -36,6 +40,10 @@ let silent = false
 /** @type {import('./decode.logic.js').RecordState} */
 let state = 'ok'
 let why = ''
+/** Why the record could not move to its new store, while it stays on the old one; else ''. */
+let kept = ''
+/** 'wa' once this tab opened the record in its own connection; 'pool' while on the old store. */
+let engine = ''
 
 /**
  * Told when a part changed in another tab (`changed`), when the tab holding the record stops or
@@ -146,7 +154,21 @@ function takeAll(records) {
 async function lead() {
   role = 'waiting'
   const reply = await ask({ op: 'lead', base, snapshot: heldBefore() })
+  // A tab that could not open the record does not hold it (the worker freed the lock) and never
+  // answers for it. One that was sent the record already keeps it and asks for the lock again;
+  // only a tab still opening, with no record yet, says it failed.
+  if ((reply.state ?? 'failed') === 'failed') {
+    role = 'follower'
+    if (firstSnapshot === null && opening === null) setTimeout(() => void lead(), ANSWER_MS)
+    else {
+      state = 'failed'
+      why = reply.error ?? ''
+    }
+    return state
+  }
   role = 'leader'
+  engine = reply.engine ?? 'pool'
+  kept = reply.kept ?? ''
   newLeader(me)
   state = reply.state ?? 'failed'
   why = reply.error ?? ''
@@ -184,6 +206,10 @@ async function commit(key, text, version) {
   /** @type {import('./worker.js').PutReply} */
   const reply = await ask({ op: 'put', key, text, version })
   if (reply.ok) {
+    // Marked unsent before any tab hears of it, so no tab's meeting with the computer takes the
+    // computer's older copy over it.
+    const unsent = unsentSaves()
+    if (!(key in unsent)) unsentSaves({ ...unsent, [key]: version })
     const part = { text, version: reply.version }
     parts.set(key, part)
     send({ t: 'changed', key, part })
@@ -197,10 +223,21 @@ async function commit(key, text, version) {
   return { ok: false, refused: true }
 }
 
-/** Sends to the computer and meetings with it, one at a time, in the order asked. */
+/**
+ * Run `job` while no other tab saves or meets the computer.
+ * @template T
+ * @param {() => Promise<T>} job
+ * @returns {Promise<T>}
+ */
+const acrossTabs = job => navigator.locks.request('aether-saving', job)
+
+/** Sends to the computer and meetings with it, one at a time, in the order asked, in every tab. */
 let turn = Promise.resolve()
 /** @param {() => Promise<void>} job */
-const inTurn = job => (turn = turn.then(job, job))
+const inTurn = job => {
+  const locked = () => acrossTabs(job)
+  return (turn = turn.then(locked, locked))
+}
 
 /**
  * Send a part saved here to the computer. It counts as unsent until the computer takes it, so a
@@ -211,15 +248,27 @@ const inTurn = job => (turn = turn.then(job, job))
  * @param {number} version the version the save was based on
  */
 async function share(key, text, version) {
-  const unsent = unsentSaves()
-  if (key in unsent) return meet()
-  unsentSaves({ ...unsent, [key]: version })
+  const since = unsentSaves()[key]
+  // Sent already, by a meeting since; or unsent from an earlier save, which a meeting settles.
+  if (since === undefined) return
+  if (since !== version) return meet()
   const there = await shared({ key, text, base: version, version: version + 1 })
-  if (there?.ok) {
-    const left = { ...unsentSaves() }
-    delete left[key]
-    unsentSaves(left)
-  } else if (there) await meet()
+  if (there?.ok) sentAt(key, version + 1)
+  else if (there) await meet()
+}
+
+/**
+ * The computer now holds the part at `version`. A save made here while that one was on its way is
+ * still unsent, from `version` on: without the mark the next meeting would take the computer's
+ * older copy over it, and what the learner typed meanwhile would vanish.
+ * @param {string} key
+ * @param {number} version
+ */
+function sentAt(key, version) {
+  const left = { ...unsentSaves() }
+  if (parts.get(key)?.version === version) delete left[key]
+  else left[key] = version
+  unsentSaves(left)
 }
 
 // --- the record every device shares, on the computer ---
@@ -230,12 +279,15 @@ async function share(key, text, version) {
  * @returns {Promise<any>}
  */
 async function shared(save) {
+  if (noShared) return null
   try {
     const res = await fetch(`${base}sync`, {
       method: save ? 'POST' : 'GET',
       body: save ? JSON.stringify(save) : null,
       signal: AbortSignal.timeout(REACH_MS)
     })
+    // A host with no shared record (a static copy, such as GitHub Pages) says so once; it is not asked again.
+    if (res.status === 404 || res.status === 405) noShared = true
     return res.ok ? await res.json() : null
   } catch {
     return null
@@ -276,7 +328,9 @@ function joined(now) {
  * @param {import('./decode.logic.js').Part} part
  */
 async function adopt(key, part) {
-  const reply = await ask({ op: 'set', key, text: part.text, version: part.version })
+  // Only over the version this tab saw: a save another tab made meanwhile stands.
+  const was = parts.get(key)?.version ?? 0
+  const reply = await ask({ op: 'set', key, text: part.text, version: part.version, was })
   if (!reply.ok) return
   parts.set(key, part)
   send({ t: 'changed', key, part })
@@ -314,10 +368,10 @@ async function meet() {
           keep: true
         })
         if (!r) return
-        if (!r.ok && 'now' in r) await adopt(key, r.now)
-        const left = { ...unsentSaves() }
-        delete left[key]
-        unsentSaves(left)
+        if (!r.ok && 'now' in r) {
+          await adopt(key, r.now)
+          sentAt(key, parts.get(key)?.version ?? 0)
+        } else sentAt(key, mine.version)
       } else if (mine && !theirs) {
         if (!(await shared({ key, text: mine.text, base: 0, version: mine.version }))) return
       } else if (theirs && !mine) await adopt(key, theirs)
@@ -348,6 +402,13 @@ async function meet() {
 
 /** Meet the shared record in turn with the sends. */
 const sync = () => inTurn(meet)
+
+/** A tab with its own connection reads it again, taking in any change another tab told it while it was stuck. */
+async function catchUp() {
+  if (engine !== 'wa' || role !== 'leader') return
+  const reply = await ask({ op: 'read' })
+  takeAll(reply.records ?? {})
+}
 
 /** Puts this tab sent to the leader, waiting for its answer. @type {Map<number, (r: import('./decode.logic.js').SaveReply) => void>} */
 const sent = new Map()
@@ -382,6 +443,8 @@ function heard(e) {
     case 'snapshot':
       if (s.to !== me && s.to !== '*') break
       if (role === 'leader' || role === 'handing') break
+      // A tab that failed to open the record does not hold it: its word is not the record's.
+      if (s.state === 'failed') break
       state = s.state
       why = s.why
       takeAll(s.records)
@@ -395,7 +458,8 @@ function heard(e) {
       if (s.hidden && !hidden() && role === 'waiting') send({ t: 'claim', from: me })
       break
     case 'claim':
-      if (role === 'leader' && hidden()) void handOver()
+      // A tab with its own connection has nothing to hand over.
+      if (role === 'leader' && engine === 'pool' && hidden()) void handOver()
       break
     case 'handover':
       moving = true
@@ -436,31 +500,28 @@ async function firstVisit() {
   }
 }
 
+/**
+ * Why the browser refuses the folder the record lives in, as a private window does, or '' when it
+ * gives it.
+ */
+async function storageRefused() {
+  try {
+    await navigator.storage.getDirectory()
+    return ''
+  } catch (e) {
+    return e instanceof Error ? e.message : String(e)
+  }
+}
+
 /** Resolves the first wait for the record, in a tab that does not hold it. @type {(() => void) | null} */
 let firstSnapshot = null
 
-/**
- * Open the record. Resolves once every part is in memory: opened in this tab, or sent by the tab
- * that holds it. Until then a tab that holds it and does not answer is reported through `onRecord`.
- * @param {string} appBase the app's own address, ending in /
- * @returns {Promise<import('./decode.logic.js').RecordState>}
- */
-export async function openRecords(appBase) {
-  if (typeof Worker === 'undefined') return state
-  base = appBase
-  worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
-  worker.onmessage = (/** @type {MessageEvent<{ id: number }>} */ e) => {
-    const done = waiting.get(e.data.id)
-    waiting.delete(e.data.id)
-    done?.(e.data)
-  }
-  channel = new BroadcastChannel('aether-record')
-  channel.onmessage = heard
-
-  setInterval(() => hidden() || void sync(), SYNC_MS)
+/** Keeps this tab in step with the others: on a timer, back online, shown, frozen or restored. */
+function listen() {
+  setInterval(() => hidden() || void catchUp().then(sync), SYNC_MS)
   window.addEventListener('online', () => void sync())
   document.addEventListener('visibilitychange', () => {
-    if (!hidden()) void sync()
+    if (!hidden()) void catchUp().then(sync)
     if (role === 'leader') send({ t: 'leader', from: me, hidden: hidden() })
     else if (!hidden()) send({ t: 'claim', from: me })
   })
@@ -472,6 +533,32 @@ export async function openRecords(appBase) {
   window.addEventListener('pageshow', e => {
     if (e.persisted) send({ t: 'hello', from: me })
   })
+}
+
+/**
+ * Open the record. Resolves once every part is in memory: opened in this tab, or sent by the tab
+ * that holds it. Until then a tab that holds it and does not answer is reported through `onRecord`.
+ * @param {string} appBase the app's own address, ending in /
+ * @returns {Promise<import('./decode.logic.js').RecordState>}
+ */
+export async function openRecords(appBase) {
+  if (typeof Worker === 'undefined') return state
+  // Storage refused: the record lives in this tab's memory alone, and nothing stored is touched.
+  why = await storageRefused()
+  if (why) return (state = 'unsaved')
+  base = appBase
+  // Ask the browser not to clear the record when space runs short. Refused or not, it opens.
+  void navigator.storage?.persist?.().catch(() => {})
+  worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
+  worker.onmessage = (/** @type {MessageEvent<{ id: number }>} */ e) => {
+    const done = waiting.get(e.data.id)
+    waiting.delete(e.data.id)
+    done?.(e.data)
+  }
+  channel = new BroadcastChannel('aether-record')
+  channel.onmessage = heard
+
+  listen()
 
   // Wait in line for the record, and ask whichever tab holds it for the record now: the first of
   // the two to arrive opens the page.
@@ -504,13 +591,14 @@ export async function openRecords(appBase) {
 }
 
 /**
- * True while this tab holds the record. Read by the browser tests.
+ * True while this tab has the record open: every tab once it has moved to its new store, the one
+ * leader before. Read by the browser tests.
  * @public
  */
 export const holdsRecord = () => role === 'leader'
 
 /** How the record opened, and the reason when it did not open for writing. */
-export const recordState = () => ({ state, why })
+export const recordState = () => ({ state, why, kept })
 
 /**
  * A part of the record as text, or null when it holds none.
@@ -533,7 +621,7 @@ export const storedVersion = key => parts.get(key)?.version ?? 0
  */
 export async function saveText(key, text, version) {
   if (worker === null) {
-    if (refusing || state !== 'ok') return { ok: false, refused: true }
+    if (refusing || (state !== 'ok' && state !== 'unsaved')) return { ok: false, refused: true }
     if (silent) return { ok: false, later: true }
     const now = parts.get(key) ?? { text: '', version: 0 }
     if (now.version !== version) return { ok: false, now }

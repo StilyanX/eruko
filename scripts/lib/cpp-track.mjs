@@ -1,13 +1,12 @@
-// Hides: what the C++ language track's sources are and how each item passes its entry check
-// ("A Self-Study System", Programming, The language track, The track's material). The format is
-// written out in scripts/lib/cpp-track.md. Every check runs the machine: g++ 16 under
+// Hides: what the C++ language track's sources are and how each item passes its entry check.
+// The format is written out in scripts/lib/cpp-track.md. Every check runs the machine: g++ 16 under
 // -pedantic-errors at each level, the host sanitizers, nvcc and compute-sanitizer for a device
 // program, nm and cuobjdump for a count; no check reads a clock. A failing check names its file,
 // line and rule, and the generator writes nothing.
 import { execFileSync, spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { availableParallelism, homedir } from 'node:os'
+import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
+import { availableParallelism, homedir, tmpdir } from 'node:os'
 import path from 'node:path'
 import {
   LEVELS,
@@ -25,7 +24,7 @@ import { scanFlags, scanHits } from '../../src/units/cpp/core/scan.logic.js'
 import { countOf, fillSlots } from '../../src/units/cpp/core/track.logic.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..', '..')
-export const TRACK = path.join(ROOT, 'src', 'units', 'cpp', 'content', 'track')
+const TRACK = path.join(ROOT, 'src', 'units', 'cpp', 'content', 'track')
 const CACHE = process.env.ERUKO_CPP_GEN_CACHE ?? path.join(homedir(), '.cache', 'eruko-cpp-gen', 'track')
 const COMPILER = process.env.ERUKO_CPP_COMPILER ?? 'g++'
 const CUDA = process.env.ERUKO_CUDA ?? path.join(homedir(), '.cache', 'eruko-cuda', 'tk')
@@ -318,8 +317,42 @@ const pool = n => {
 }
 // ERUKO_CPP_JOBS caps the compiles at once, when several checks share the machine
 const host = pool(Number(process.env.ERUKO_CPP_JOBS) || Math.max(1, availableParallelism()))
-// the device runs one program at a time, so a count read from it is not shared with another
-const gpu = pool(1)
+// The device runs one program at a time, so a count read from it is not shared with another, and
+// a check under compute-sanitizer is not starved: one at a time in this run, and across every run
+// on the machine by a lock folder (a second build checking the track at once waited for nothing).
+const GPU_LOCK = path.join(tmpdir(), 'eruko-gpu.lock')
+const PID = path.join(GPU_LOCK, 'pid')
+const gpuHeld = async () => {
+  for (;;) {
+    try {
+      mkdirSync(GPU_LOCK)
+      writeFileSync(PID, String(process.pid))
+      return
+    } catch {
+      // a lock left by a run that ended without freeing it is taken over
+      try {
+        process.kill(Number(readFileSync(PID, 'utf8')), 0)
+      } catch (e) {
+        if (/** @type {NodeJS.ErrnoException} */ (e).code === 'ESRCH') {
+          rmSync(GPU_LOCK, { recursive: true, force: true })
+          continue
+        }
+      }
+      await new Promise(r => setTimeout(r, 200))
+    }
+  }
+}
+const gpuHere = pool(1)
+/** @template T @param {() => Promise<T>} job @returns {Promise<T>} */
+const gpu = job =>
+  gpuHere(async () => {
+    await gpuHeld()
+    try {
+      return await job()
+    } finally {
+      rmSync(GPU_LOCK, { recursive: true, force: true })
+    }
+  })
 
 /**
  * @param {string} command
@@ -358,7 +391,7 @@ let versions = ''
 const versionsOf = () => {
   if (!versions) {
     const g = execFileSync(COMPILER, ['--version'], { encoding: 'utf8' }).split('\n')[0] ?? ''
-    if (!/ 16\./.test(g)) throw new Error(`The track's checks need g++ 16 (A Self-Study System, Setup, for the track); ${COMPILER} is ${g}.`)
+    if (!/ 16\./.test(g)) throw new Error(`The track's checks need g++ 16; ${COMPILER} is ${g}.`)
     let n = ''
     try {
       n = execFileSync(path.join(CUDA, 'bin', 'nvcc'), ['--version'], { encoding: 'utf8' })

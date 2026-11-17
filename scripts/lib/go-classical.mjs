@@ -1,4 +1,4 @@
-// Reads the four classical collections as positions only, as "A Self-Study System" Go sets out:
+// Reads the four classical collections as positions only:
 // the stones and the side to move of each problem, in the collection's own order. No comment and
 // no solution is read: where a file names no side to move, the side is the colour of the first
 // stone its line plays, and nothing else of the line is taken. The files are the transcriptions

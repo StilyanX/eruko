@@ -1,5 +1,4 @@
-// The Go unit's material ("A Self-Study System", Go, The material; The build, Go, How problems
-// are built and checked): every problem is solved again here by the exact search, its stored
+// The Go unit's material: every problem is solved again here by the exact search, its stored
 // answers are the search's whole set of best first moves, and each of its fields holds what the
 // paper sets.
 import { test } from 'node:test'

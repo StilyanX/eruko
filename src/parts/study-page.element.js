@@ -2,7 +2,7 @@
 // than one section, the sections, the rest of Review at the foot of a page done every session, and
 // the page's turn. From 80em the contents stand in the rail beside the text. It holds the page's
 // one polite live region, Enter for the step's primary control, focus kept in a step whose control
-// a press removed, and the scroll to a section the address names. The maths font, Latin Modern, in
+// a press removed, and the scroll to a section the address names. The maths family, Eruko Maths, in
 // which the browser sets every formula's MathML, and the page's sheet are linked from index.html
 // (src/style/maths.css, src/parts/study-page.css).
 import { courseSlot } from '../kernel/pages.logic.js'
@@ -208,6 +208,61 @@ function shortcuts() {
 // page's ready event does not come first.
 const HASH_WAIT_MS = 900
 
+/**
+ * A page's contents: closed to one line on a narrow screen; open in the rail from 80em
+ * (study-page.css).
+ * @param {readonly { id: string, title: string }[]} sections
+ */
+const contents = sections =>
+  h(
+    'nav',
+    { class: 'contents', 'aria-labelledby': 'contents-title' },
+    h(
+      'details',
+      null,
+      h('summary', { class: 'contents-title', id: 'contents-title' }, 'Contents'),
+      h(
+        'ol',
+        null,
+        sections.map(s => h('li', { key: s.id }, h('a', { href: hashTo(s.id) }, s.title)))
+      )
+    )
+  )
+
+/**
+ * Marks, in the contents, the section being read: the last whose top has passed the upper third of
+ * the screen, or the last section once the page is scrolled to its foot, so a section counts as read once it fills the view, not only when the one before has
+ * gone. The mark is aria-current, so it is heard as well as seen.
+ * @param {Element} root
+ */
+function markReading(root) {
+  let frame = 0
+  const mark = () => {
+    frame = 0
+    const line = innerHeight / 3
+    const all = [...root.querySelectorAll('.lrn-section[id]')]
+    // At the foot of the page the last section is the one read, though its top never reaches the line.
+    const foot = scrollY + innerHeight >= document.documentElement.scrollHeight - 2
+    const at = foot ? all.at(-1) : (all.filter(el => el.getBoundingClientRect().top <= line).pop() ?? all[0])
+    for (const a of root.querySelectorAll('.contents a')) {
+      const on = at !== undefined && a.getAttribute('href') === hashTo(at.id)
+      if (on) a.setAttribute('aria-current', 'location')
+      else a.removeAttribute('aria-current')
+    }
+  }
+  const later = () => {
+    if (!frame) frame = requestAnimationFrame(mark)
+  }
+  addEventListener('scroll', later, { passive: true })
+  addEventListener('resize', later)
+  later()
+  return () => {
+    cancelAnimationFrame(frame)
+    removeEventListener('scroll', later)
+    removeEventListener('resize', later)
+  }
+}
+
 export class AeStudyPage extends Screen {
   /** The page's slug, as the registry keys it. */
   slug = ''
@@ -254,6 +309,7 @@ export class AeStudyPage extends Screen {
       removeEventListener('hashchange', scroll)
       removeEventListener(EVENTS.pageReady, to)
     })
+    this.onLeave(markReading(this))
     if (pageAt(this.slug)?.repeats) {
       watchDated(this)
       this.watch(clock)
@@ -296,16 +352,7 @@ export class AeStudyPage extends Screen {
           this.said.map(p => (typeof p === 'string' ? p : h('span', { lang: 'de' }, p.de)))
         ),
         many &&
-          h(
-            'nav',
-            { class: 'contents', 'aria-labelledby': 'contents-title' },
-            h('h2', { class: 'contents-title', id: 'contents-title' }, 'Contents'),
-            h(
-              'ol',
-              null,
-              sections.map(s => h('li', { key: s.id }, h('a', { href: hashTo(s.id) }, s.title)))
-            )
-          ),
+          contents(sections),
         sections.map((s, i) =>
           h(
             'section',

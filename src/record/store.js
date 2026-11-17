@@ -70,7 +70,7 @@ export function damagedRecords() {
  */
 export const health = createStore({
   damaged: Object.keys(damagedRecords()),
-  stopped: recordState().state !== 'ok',
+  stopped: !['ok', 'unsaved'].includes(recordState().state),
   waiting: false
 })
 

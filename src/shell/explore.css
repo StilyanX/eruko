@@ -50,6 +50,8 @@
       grid-row: 1 / span 2;
       position: sticky;
       top: calc(var(--topbar-h) + var(--space-6));
+      max-height: calc(100dvh - var(--topbar-h) - 2 * var(--space-6));
+      overflow-y: auto;
     }
     .ep-sidebar ul {
       display: flex;

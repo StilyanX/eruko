@@ -1,0 +1,441 @@
+{
+  "polynomial-and-rational-inequalities-1.svg": {
+    "kind": "numberline",
+    "x": [
+      -22,
+      -16
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -20
+      },
+      {
+        "from": -18,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-2.svg": {
+    "kind": "numberline",
+    "x": [
+      -34,
+      -20
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -32,
+        "toOpen": true
+      },
+      {
+        "from": -22,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-3.svg": {
+    "kind": "numberline",
+    "x": [
+      -36,
+      -20
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -34,
+        "toOpen": true
+      },
+      {
+        "from": -26,
+        "to": -22,
+        "toOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-4.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      16
+    ],
+    "xstep": 4,
+    "shade": [
+      {
+        "from": 0,
+        "to": 6,
+        "fromOpen": true
+      },
+      {
+        "from": 10,
+        "to": 14
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-5.svg": {
+    "kind": "numberline",
+    "x": [
+      -30,
+      -22
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -28,
+        "toOpen": true
+      },
+      {
+        "from": -24,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-6.svg": {
+    "kind": "numberline",
+    "x": [
+      12,
+      36
+    ],
+    "xstep": 4,
+    "shade": [
+      {
+        "from": 16,
+        "to": 24
+      },
+      {
+        "from": 32,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-7.svg": {
+    "kind": "numberline",
+    "x": [
+      6,
+      22
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 8
+      },
+      {
+        "from": 18,
+        "to": 20,
+        "toOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-8.svg": {
+    "kind": "numberline",
+    "x": [
+      -32,
+      -26
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -30,
+        "toOpen": true
+      },
+      {
+        "from": -28,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-9.svg": {
+    "kind": "numberline",
+    "x": [
+      -28,
+      -8
+    ],
+    "xstep": 4,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -24
+      },
+      {
+        "from": -18,
+        "to": -16,
+        "toOpen": true
+      },
+      {
+        "from": -10,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-10.svg": {
+    "kind": "numberline",
+    "x": [
+      -32,
+      -16
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": -30,
+        "to": -28,
+        "toOpen": true
+      },
+      {
+        "from": -18,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-11.svg": {
+    "kind": "numberline",
+    "x": [
+      16,
+      30
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 18
+      },
+      {
+        "from": 20,
+        "to": 28,
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-12.svg": {
+    "kind": "numberline",
+    "x": [
+      -28,
+      -12
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": -26,
+        "to": -24,
+        "fromOpen": true
+      },
+      {
+        "from": -14,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-13.svg": {
+    "kind": "numberline",
+    "x": [
+      -24,
+      -12
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -22,
+        "toOpen": true
+      },
+      {
+        "from": -20,
+        "to": -14,
+        "toOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-14.svg": {
+    "kind": "numberline",
+    "x": [
+      16,
+      30
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": 18,
+        "to": 24,
+        "fromOpen": true,
+        "toOpen": true
+      },
+      {
+        "from": 26,
+        "to": 28,
+        "toOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-15.svg": {
+    "kind": "numberline",
+    "x": [
+      22,
+      38
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": 24,
+        "to": 28,
+        "toOpen": true
+      },
+      {
+        "from": 36,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-16.svg": {
+    "kind": "numberline",
+    "x": [
+      -26,
+      -10
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": -24,
+        "to": -22,
+        "toOpen": true
+      },
+      {
+        "from": -16,
+        "to": -12,
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-17.svg": {
+    "kind": "numberline",
+    "x": [
+      -18,
+      -2
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -16
+      },
+      {
+        "from": -12,
+        "to": -8,
+        "fromOpen": true
+      },
+      {
+        "from": -4,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-18.svg": {
+    "kind": "numberline",
+    "x": [
+      -24,
+      -8
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -22
+      },
+      {
+        "from": -12,
+        "to": -10
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-19.svg": {
+    "kind": "numberline",
+    "x": [
+      -4,
+      12
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -2
+      },
+      {
+        "from": 0,
+        "to": 4,
+        "fromOpen": true
+      },
+      {
+        "from": 10,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-20.svg": {
+    "kind": "numberline",
+    "x": [
+      -40,
+      -32
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -38
+      },
+      {
+        "from": -34,
+        "to": "inf"
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-21.svg": {
+    "kind": "numberline",
+    "x": [
+      -12,
+      0
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": -10,
+        "to": -8,
+        "fromOpen": true,
+        "toOpen": true
+      },
+      {
+        "from": -6,
+        "to": -2,
+        "fromOpen": true
+      }
+    ]
+  },
+  "polynomial-and-rational-inequalities-22.svg": {
+    "kind": "numberline",
+    "x": [
+      14,
+      20
+    ],
+    "xstep": 2,
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 16
+      },
+      {
+        "from": 18,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  }
+}

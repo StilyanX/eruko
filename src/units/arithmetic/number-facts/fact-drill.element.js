@@ -181,8 +181,9 @@ export class ArithmeticFactDrill extends StepScreen {
           autocomplete: 'off',
           '.value': sheet.answers[i] ?? '',
           oninput: (/** @type {Event} */ e) => {
+            // A number fact's answer is digits only: a slip onto the key beside 0 types nothing.
             if (e.target instanceof HTMLInputElement)
-              send({ t: 'sheet-answer', index: i, value: e.target.value.trim(), nowMs: Date.now() })
+              send({ t: 'sheet-answer', index: i, value: e.target.value.replace(/\D/g, ''), nowMs: Date.now() })
           },
           onkeydown: (/** @type {KeyboardEvent} */ e) => this.#enter(e, sheet.page, pages)
         })

@@ -1,0 +1,1178 @@
+{
+  "quadratic-inequalities-1.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -10,
+      39
+    ],
+    "equal": false,
+    "ystep": 5,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "3*x^2-22*x+35"
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          3.6666666666666665,
+          -5.333333333333333
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-2.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -29,
+      8
+    ],
+    "equal": false,
+    "ystep": 5,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-2*x^2+15*x-25"
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          3.75,
+          3.125
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-3.svg": {
+    "x": [
+      -3,
+      5
+    ],
+    "y": [
+      -4,
+      15
+    ],
+    "equal": false,
+    "ystep": 2,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-3*x^2+5*x+8"
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0.8333333333333334,
+          10.083333333333334
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-4.svg": {
+    "x": [
+      -2,
+      5
+    ],
+    "y": [
+      -44,
+      5
+    ],
+    "equal": false,
+    "ystep": 5,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-6*x^2+31*x-40"
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.5833333333333335,
+          0.041666666666666664
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-5.svg": {
+    "x": [
+      -29,
+      4
+    ],
+    "y": [
+      -6,
+      4
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "4*y^2+8*y-21"
+        },
+        "side": "left",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -25,
+          -1
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-6.svg": {
+    "x": [
+      -4,
+      21
+    ],
+    "y": [
+      -3,
+      6
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "-3*y^2+8*y+11"
+        },
+        "side": "right"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          16.333333333333332,
+          1.3333333333333333
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-7.svg": {
+    "x": [
+      -11,
+      20
+    ],
+    "y": [
+      -2,
+      6
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "-6*y^2+23*y-7"
+        },
+        "side": "right",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          15.041666666666666,
+          1.9166666666666667
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-8.svg": {
+    "x": [
+      -33,
+      4
+    ],
+    "y": [
+      -7,
+      5
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "2*y^2+5*y-25"
+        },
+        "side": "left"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -28.125,
+          -1.25
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-9.svg": {
+    "kind": "numberline",
+    "x": [
+      28,
+      36
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 30
+      },
+      {
+        "from": 34,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-10.svg": {
+    "kind": "numberline",
+    "x": [
+      -26,
+      -20
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -24
+      },
+      {
+        "from": -22,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-11.svg": {
+    "kind": "numberline",
+    "x": [
+      -41,
+      -33
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -39,
+        "toOpen": true
+      },
+      {
+        "from": -35,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-12.svg": {
+    "kind": "numberline",
+    "x": [
+      21,
+      29
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 23,
+        "toOpen": true
+      },
+      {
+        "from": 27,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-13.svg": {
+    "kind": "numberline",
+    "x": [
+      -28,
+      -21
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -26
+      },
+      {
+        "from": -23,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-14.svg": {
+    "kind": "numberline",
+    "x": [
+      12,
+      20
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 14
+      },
+      {
+        "from": 18,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-15.svg": {
+    "kind": "numberline",
+    "x": [
+      8,
+      14
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 10
+      },
+      {
+        "from": 12,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-16.svg": {
+    "kind": "numberline",
+    "x": [
+      -14,
+      -6
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -12,
+        "toOpen": true
+      },
+      {
+        "from": -8,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-17.svg": {
+    "x": [
+      -3,
+      8
+    ],
+    "y": [
+      -4,
+      38
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-3*x^2+16*x+12"
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.6666666666666665,
+          33.333333333333336
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-18.svg": {
+    "x": [
+      -6,
+      2
+    ],
+    "y": [
+      -14,
+      17
+    ],
+    "equal": false,
+    "ystep": 5,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-6*x^2-23*x-10"
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1.9166666666666667,
+          12.041666666666666
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-19.svg": {
+    "x": [
+      -7,
+      5
+    ],
+    "y": [
+      -33,
+      4
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "y": "2*x^2+3*x-27"
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -0.75,
+          -28.125
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-20.svg": {
+    "x": [
+      -2,
+      10
+    ],
+    "y": [
+      -38,
+      36
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "y": "3*x^2-28*x+32"
+        },
+        "side": "below"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          4.666666666666667,
+          -33.333333333333336
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-21.svg": {
+    "x": [
+      -7,
+      4
+    ],
+    "y": [
+      -26,
+      4
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "y": "2*x^2+5*x-18"
+        },
+        "side": "above",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1.25,
+          -21.125
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-22.svg": {
+    "x": [
+      -2,
+      7
+    ],
+    "y": [
+      -13,
+      31
+    ],
+    "equal": false,
+    "ystep": 5,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-6*x^2+29*x-9"
+        },
+        "side": "below",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.4166666666666665,
+          26.041666666666668
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-23.svg": {
+    "x": [
+      -8,
+      4
+    ],
+    "y": [
+      -4,
+      33
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 2,
+    "shade": [
+      {
+        "boundary": {
+          "y": "-2*x^2-7*x+22"
+        },
+        "side": "above"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1.75,
+          28.125
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-24.svg": {
+    "x": [
+      -26,
+      7
+    ],
+    "y": [
+      -2,
+      6
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "-3*y^2+17*y-22"
+        },
+        "side": "left",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          2.0833333333333335,
+          2.8333333333333335
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-25.svg": {
+    "x": [
+      -13,
+      41
+    ],
+    "y": [
+      -2,
+      11
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 10,
+    "shade": [
+      {
+        "boundary": {
+          "x": "-2*y^2+19*y-9"
+        },
+        "side": "right",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          36.125,
+          4.75
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-26.svg": {
+    "x": [
+      -21,
+      9
+    ],
+    "y": [
+      -7,
+      2
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 5,
+    "shade": [
+      {
+        "boundary": {
+          "x": "3*y^2+16*y+5"
+        },
+        "side": "left"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -16.333333333333332,
+          -2.6666666666666665
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-27.svg": {
+    "x": [
+      -20,
+      44
+    ],
+    "y": [
+      -2,
+      10
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 10,
+    "shade": [
+      {
+        "boundary": {
+          "x": "2*y^2-21*y+40"
+        },
+        "side": "right"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -15.125,
+          5.25
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-28.svg": {
+    "x": [
+      -29,
+      15
+    ],
+    "y": [
+      -2,
+      8
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 10,
+    "shade": [
+      {
+        "boundary": {
+          "x": "4*y^2-24*y+11"
+        },
+        "side": "left",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -25,
+          3
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-29.svg": {
+    "x": [
+      -20,
+      40
+    ],
+    "y": [
+      -2,
+      7
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 10,
+    "shade": [
+      {
+        "boundary": {
+          "x": "6*y^2-35*y+36"
+        },
+        "side": "right",
+        "strict": true
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -15.041666666666666,
+          2.9166666666666665
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-30.svg": {
+    "x": [
+      -5,
+      5
+    ],
+    "y": [
+      -3,
+      2
+    ],
+    "equal": false,
+    "ystep": 1,
+    "xstep": 1,
+    "shade": [
+      {
+        "boundary": {
+          "x": "-6*y^2-5*y-1"
+        },
+        "side": "left"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          0.041666666666666664,
+          -0.4166666666666667
+        ]
+      },
+      {
+        "at": [
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "quadratic-inequalities-31.svg": {
+    "kind": "numberline",
+    "x": [
+      25,
+      32
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 27,
+        "toOpen": true
+      },
+      {
+        "from": 30,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-32.svg": {
+    "kind": "numberline",
+    "x": [
+      -20,
+      -14
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -18,
+        "toOpen": true
+      },
+      {
+        "from": -16,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-33.svg": {
+    "kind": "numberline",
+    "x": [
+      -34,
+      -26
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -32
+      },
+      {
+        "from": -28,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-34.svg": {
+    "kind": "numberline",
+    "x": [
+      34,
+      41
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 36
+      },
+      {
+        "from": 39,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-35.svg": {
+    "kind": "numberline",
+    "x": [
+      15,
+      22
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 17
+      },
+      {
+        "from": 20,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-36.svg": {
+    "kind": "numberline",
+    "x": [
+      -24,
+      -16
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -22
+      },
+      {
+        "from": -18,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-37.svg": {
+    "kind": "numberline",
+    "x": [
+      11,
+      17
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 13
+      },
+      {
+        "from": 15,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-38.svg": {
+    "kind": "numberline",
+    "x": [
+      -40,
+      -34
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -38
+      },
+      {
+        "from": -36,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-39.svg": {
+    "kind": "numberline",
+    "x": [
+      -44,
+      -36
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -42,
+        "toOpen": true
+      },
+      {
+        "from": -38,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-40.svg": {
+    "kind": "numberline",
+    "x": [
+      -18,
+      -11
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -16
+      },
+      {
+        "from": -13,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-41.svg": {
+    "kind": "numberline",
+    "x": [
+      -25,
+      -17
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": -23
+      },
+      {
+        "from": -19,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-42.svg": {
+    "kind": "numberline",
+    "x": [
+      20,
+      28
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 22,
+        "toOpen": true
+      },
+      {
+        "from": 26,
+        "to": "inf"
+      }
+    ]
+  },
+  "quadratic-inequalities-43.svg": {
+    "kind": "numberline",
+    "x": [
+      38,
+      45
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 40
+      },
+      {
+        "from": 43,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  },
+  "quadratic-inequalities-44.svg": {
+    "kind": "numberline",
+    "x": [
+      16,
+      22
+    ],
+    "shade": [
+      {
+        "from": "-inf",
+        "to": 18,
+        "toOpen": true
+      },
+      {
+        "from": 20,
+        "to": "inf",
+        "fromOpen": true
+      }
+    ]
+  }
+}

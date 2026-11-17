@@ -3,8 +3,7 @@
 // labels, date, scale bar and north mark of the SVG, and the words of its text, each place's
 // direction and distance from the first one named. Lines and text only, in currentColor: no
 // border, no filled territory, no colour that marks a state, no arrow. The points come from
-// Pleiades by id and the coastline from the caller, which names it on the map (21.01
-// <bu-bi-pipeline> Map drawing).
+// Pleiades by id and the coastline from the caller, which names it on the map.
 
 const R = 6371
 const FONT = 17

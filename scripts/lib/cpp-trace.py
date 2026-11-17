@@ -1,5 +1,4 @@
-# Hides: how a trace item's state table is recorded from a real run (A Self-Study System,
-# Programming, Trace item: "Eruko fills the answer by running the program"). gdb runs this file
+# Hides: how a trace item's state table is recorded from a real run. gdb runs this file
 # against a program compiled with -g -O0: it steps line by line through the program's own code,
 # into the program's own functions and never into the library, and once each line has run reads
 # every column's value in the scope of that line. Run by scripts/lib/cpp-course.mjs:

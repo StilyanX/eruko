@@ -44,12 +44,18 @@ import { h } from './view.dom.js'
 const isLost = p => 'piece' in p
 
 /**
- * Where a lost question is checked again: the module's feedback on computer-marked work, the
- * returned script on tutor-marked work; null for a problem of the course.
+ * Where a lost question is checked again: the published official solution where it has one, the
+ * module's feedback on computer-marked work, the returned script on tutor-marked work.
+ * @param {import('../kernel/practice.logic.js').LostQuestion} p
+ */
+const sourceOfLost = p => (p.official ? 'official' : p.typed ? 'feedback' : 'script')
+
+/**
+ * Where a problem is checked again as a lost question; null for a problem of the course.
  * @param {Practice} p
  * @returns {import('../kernel/maths-session.logic.js').Lost}
  */
-const lostOf = p => (isLost(p) ? (p.typed ? 'feedback' : 'script') : null)
+const lostOf = p => (isLost(p) ? sourceOfLost(p) : null)
 
 /** @type {(record: import('../kernel/practice.logic.js').PracticeRecord) => readonly import('../kernel/practice.logic.js').LostQuestion[]} */
 const noLost = () => []
@@ -178,7 +184,18 @@ export class AeMixedPractice extends StepScreen {
         ' left today.'
       ),
       isLost(p)
-        ? h('p', null, p.piece, ', question ', p.label, '. You got ', p.got, ' of ', p.of, ' marks.')
+        ? h(
+            'p',
+            null,
+            p.official ? h('a', { href: p.official, target: '_blank', rel: 'noreferrer' }, p.piece) : p.piece,
+            ', question ',
+            p.label,
+            '. You got ',
+            p.got,
+            ' of ',
+            p.of,
+            ' marks.'
+          )
         : h('p', null, rich(p.prompt))
     ]
   }
@@ -199,7 +216,7 @@ export class AeMixedPractice extends StepScreen {
           { key: 'redo' },
           'Redo it on paper, from the question alone. Then check your new solution against',
           ' ',
-          sourceOf(p.typed ? 'feedback' : 'script'),
+          sourceOf(sourceOfLost(p)),
           '.'
         ),
         mark({
@@ -218,8 +235,11 @@ export class AeMixedPractice extends StepScreen {
     const hand = this.#own(p, 'solve', day)
     return (
       own ??
-      hand ??
-      answerBox({ problem: p, ...open, setAnswer: this.setAnswer, setForm: this.setForm })
+      hand ?? [
+        // Every answer is worked on paper, then marked against the one shown.
+        !shown && h('p', { key: 'paper', class: 'lrn-ss-note' }, 'Work it on paper.'),
+        answerBox({ problem: p, ...open, setAnswer: this.setAnswer, setForm: this.setForm })
+      ]
     )
   }
 
@@ -255,11 +275,11 @@ export class AeMixedPractice extends StepScreen {
     return [
       phase === 'right' && [
         verdict(true, [lost ? 'It' : 'This kind', ' comes back on ', dayName(date), '.'], 'right'),
-        !lost && lines({ lines: solution, figures: this.figures, key: 'right-solution' })
+        !lost && lines({ lines: solution, under: lost ? undefined : p.prompt, figures: this.figures, key: 'right-solution' })
       ],
       phase === 'wrong' && [
         verdict(false, read, 'wrong'),
-        !lost && !hide && lines({ lines: solution, figures: this.figures, key: 'wrong-solution' }),
+        !lost && !hide && lines({ lines: solution, under: lost ? undefined : p.prompt, figures: this.figures, key: 'wrong-solution' }),
         h(
           'p',
           { key: 'again' },

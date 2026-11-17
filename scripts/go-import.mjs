@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Reads An Younggil and David Ormerod's Weekly Go Problems (game-record files, CC BY-NC-SA 4.0)
-// and keeps each one the exact search can pose and finish, as "A Self-Study System" Go sets out:
+// and keeps each one the exact search can pose and finish:
 // a question about one named group with one of the four results, whose best first moves include
 // every move the file marks correct. The files are read where they were fetched once
 // (https://github.com/gogameguru/go-problems); nothing of them but the stones enters, and what

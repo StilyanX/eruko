@@ -1,12 +1,11 @@
 // Hides: how Augustus's era screens are built from the era reference by code once the session
-// has done the paper's jobs (21.01 <bu-bi-pipeline> Rewrite, Era sentences, Era pick, Era,
-// Checker, Rebuild): the marked additions of Rewrite and how they read once removed, the dates a
+// has done the paper's jobs: the marked additions of Rewrite and how they read once removed, the dates a
 // sentence states, Order's date order with an undated sentence taking the date of the one it
 // follows, the drop of what a decision's date has not reached, the Checker's string match, and
 // the screen limits. The session's answers are data (scripts/lib/augustus-era-*.json); this file
 // only checks and assembles them.
 
-export const MONTHS = [
+const MONTHS = [
   'January',
   'February',
   'March',
@@ -40,10 +39,10 @@ export function marksOf(text) {
 }
 
 /** A sentence with its marked additions taken out, as the Checker matches it. @param {string} text */
-export const unmarked = text => text.replace(MARK, '')
+const unmarked = text => text.replace(MARK, '')
 
 /**
- * A sentence as it reads once the marks are removed (21.01 <bu-bi-pipeline> Checker): an addition
+ * A sentence as it reads once the marks are removed: an addition
  * kept reads in the wording rules' forms ("Octavian, 19,", "consul, one of ...,", "Apollonia (in
  * modern Albania)"); one not kept is dropped.
  * @param {string} text

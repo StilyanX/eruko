@@ -35,14 +35,8 @@
   .set-lang-list {
     margin-top: var(--space-2);
   }
-  /* The records: rows like the theme's, each one thing to do; the word after one is done; and a
-     question asked in place before a backup replaces them, set off by a line of the
-     text's own colour. */
-  .set-row {
-    width: 100%;
-    color: var(--text);
-    text-align: left;
-  }
+  /* The records: two buttons, each one thing to do; the word after one is done; and a question
+     asked in place before a backup replaces them, set off by a line of the text's own colour. */
   .set-note {
     margin-top: var(--space-3);
     font-family: var(--font-ui);

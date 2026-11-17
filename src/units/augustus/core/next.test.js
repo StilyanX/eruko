@@ -1,5 +1,4 @@
-// The biography work list and its checks against "A Self-Study System" (Biography, "Running it" and
-// "The material").
+// The biography work list and its checks.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
@@ -487,7 +486,7 @@ test('next action: a life closed as stuck no longer gives the stuck screen', () 
   assert.notEqual(lifeAction(closed, course, '2026-10-01').kind, 'stuck')
 })
 
-test('a claim is contested with no choice, the first reason that applies: a dispute, no second account, a stake (21.01 <bu-bi-checks> Contested)', () => {
+test('a claim is contested with no choice, the first reason that applies: a dispute, no second account, a stake', () => {
   assert.equal(forcedWhy(sentence({ passage: null, dispute: '' })), WHY.none)
   assert.equal(forcedWhy(sentence({ passage: null, dispute: 'd' })), WHY.dispute)
   assert.equal(forcedWhy(sentence({ passage: passage(), dispute: '' })), null)

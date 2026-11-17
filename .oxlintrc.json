@@ -48,7 +48,7 @@
       }
     ]
   },
-  "ignorePatterns": ["node_modules/**", "src/record/sqlite-*/**"],
+  "ignorePatterns": ["node_modules/**", "src/record/sqlite-*/**", "src/record/wa-sqlite-*/**"],
   "overrides": [
     {
       "files": ["tests/**", "src/**/*.test.js"],

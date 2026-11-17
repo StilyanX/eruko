@@ -1,5 +1,5 @@
-// Hides: the rules of Go under the American Go Association's area rules, as "A Self-Study System" Go
-// sets them out: stones, liberties, capture, no suicide, and the area count. Pure functions
+// Hides: the rules of Go under the American Go Association's area rules:
+// stones, liberties, capture, no suicide, and the area count. Pure functions
 // over plain data, tested in tests/go-rules.test.mjs.
 //
 // A board is `{ w, h, cells }`: `cells` is a Uint8Array of w × h points, 0 empty, 1 Black, 2 White,

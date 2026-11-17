@@ -23,3 +23,4 @@ playwright-report/
 
 # Python bytecode
 __pycache__/
+!src/record/wa-sqlite-*/dist/

@@ -1,0 +1,530 @@
+{
+  "the-factor-theorem-1.svg": {
+    "x": [
+      -5,
+      2
+    ],
+    "y": [
+      -20,
+      110
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-1)*(x+3)*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -5,
+          96
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-2.svg": {
+    "x": [
+      -3,
+      6
+    ],
+    "y": [
+      -20,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+2)*(x-5)*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          3,
+          80
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-3.svg": {
+    "x": [
+      -2,
+      6
+    ],
+    "y": [
+      -30,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*(x-3)*(x-5)*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          48
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-4.svg": {
+    "x": [
+      -2,
+      4
+    ],
+    "y": [
+      -20,
+      70
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x-2)*(x+1)*(x-1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          4,
+          60
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-5.svg": {
+    "x": [
+      -3,
+      4
+    ],
+    "y": [
+      -44,
+      8
+    ],
+    "xstep": 1,
+    "ystep": 4,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*(x+1)*(x+2)*(x-3)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          -36
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-6.svg": {
+    "x": [
+      -6,
+      3
+    ],
+    "y": [
+      -50,
+      80
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x+5)*(x+2)*(x-2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -5,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          60
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-7.svg": {
+    "x": [
+      -5,
+      4
+    ],
+    "y": [
+      -20,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x-3)*(x+3)*(x+4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          72
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-8.svg": {
+    "x": [
+      -4,
+      4
+    ],
+    "y": [
+      -16,
+      40
+    ],
+    "xstep": 1,
+    "ystep": 4,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-2*(x+3)*(x-3)*(x+1)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -3,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          -1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          1,
+          32
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-9.svg": {
+    "x": [
+      -3,
+      5
+    ],
+    "y": [
+      -70,
+      30
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "-3*(x-2)*(x-4)*(x+2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          2,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          0,
+          -48
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-10.svg": {
+    "x": [
+      -5,
+      4
+    ],
+    "y": [
+      -30,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "3*(x-1)*(x-3)*(x+4)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -4,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          1,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          3,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          -1,
+          72
+        ],
+        "label": "P"
+      }
+    ]
+  },
+  "the-factor-theorem-11.svg": {
+    "x": [
+      -3,
+      6
+    ],
+    "y": [
+      -20,
+      100
+    ],
+    "xstep": 1,
+    "ystep": 10,
+    "equal": false,
+    "curves": [
+      {
+        "y": "2*(x-5)*(x-4)*(x+2)"
+      }
+    ],
+    "points": [
+      {
+        "at": [
+          -2,
+          0
+        ],
+        "label": "A"
+      },
+      {
+        "at": [
+          4,
+          0
+        ],
+        "label": "B"
+      },
+      {
+        "at": [
+          5,
+          0
+        ],
+        "label": "C"
+      },
+      {
+        "at": [
+          2,
+          48
+        ],
+        "label": "P"
+      }
+    ]
+  }
+}

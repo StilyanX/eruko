@@ -2,18 +2,17 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
     "src/shell/main.js",
-    "src/shell/registry.js",
     "src/units/*/manifest.js",
     "src/record/worker.js",
     "src/units/*/content/**/*.js",
     "src/units/*/core/typeset.logic.js",
     "src/units/go/core/own-worker.dom.js",
     "src/sw.js",
-    "scripts/**/*.mjs",
-    "tests/*.test.mjs",
-    "src/**/*.test.js",
-    "e2e/*.spec.mjs"
+    "scripts/*.mjs",
+    "scripts/gen/*.mjs",
+    "scripts/check/*.mjs"
   ],
   "project": ["src/**/*.js", "scripts/**/*.mjs", "tests/**/*.mjs", "e2e/**/*.mjs"],
-  "ignoreBinaries": ["tail", "g\\+\\+", "gdb", "nix-shell"]
+  "ignoreBinaries": ["tail", "g\\+\\+", "gdb", "nix-shell"],
+  "ignore": ["src/record/wa-sqlite-1.2.0/**"]
 }

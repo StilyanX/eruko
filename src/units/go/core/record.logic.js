@@ -1,9 +1,9 @@
 // Hides: the changes to the Go record that are no study step: what the first stage fixes for the
 // engine and the server, a course line's change, a forced change of the setting, and Set up
-// again. The record's fields are typed and decoded in decode.logic.js ("A Self-Study System",
-// The build, Go, The record). Pure functions, tested in tests/go-record.test.mjs.
+// again. The record's fields are typed and decoded in decode.logic.js. Pure functions, tested in tests/go-record.test.mjs.
 import { decodeRecord } from './decode.logic.js'
 import { passDone, reviewList } from './review.logic.js'
+import { namedGroup } from './problem.logic.js'
 
 /** What the first stage fixes for the engine: never changed once stored. */
 export const ENGINE = {
@@ -20,14 +20,16 @@ export const SERVER = { name: 'OGS', rules: 'aga', main: 1800, overtime: 0, size
 /**
  * The record as every function of the unit reads it (decode.logic.js), with the review list of a
  * game whose every position holds the engine's answer, as the answer that completed the pass
- * would have drawn it: such a game is not left waiting on an engine that has nothing left to read.
+ * would have drawn it: such a game is not left waiting on an engine that has nothing left to read;
+ * and with each own problem's group named as the builder names it now (problem.logic.js).
  * @param {unknown} raw
  * @param {Parameters<typeof decodeRecord>[1]} course the course it runs on (own.logic.js `courseOf`)
  * @returns {import('./decode.logic.js').GoRecord}
  */
 export function recordOf(raw, course) {
   const record = decodeRecord(raw, course)
-  return { ...record, games: record.games.map(listOwed) }
+  const own = { ...record.own, problems: record.own.problems.map(namedGroup) }
+  return { ...record, games: record.games.map(listOwed), own }
 }
 
 /**

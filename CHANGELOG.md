@@ -2,6 +2,68 @@
 
 Each release, newest first, with its download size. [`RELEASES.md`](RELEASES.md) says how releases are numbered.
 
+## 0.3.0
+
+Download: about 8.0 MB with Brotli (94 MB uncompressed), fetched once in the background after the first page. Most of the growth is the new Algebra unit. A browser that already holds 0.2.0 fetches only the files that changed.
+
+### Algebra, a new unit
+
+- School algebra from the first equation to olympiad problems, with no calculator: 145 topics in 23 sections named for what they hold, each topic after the topics it uses.
+- Every topic has its ideas, worked examples, problems that fade from the worked example to your own, and a bank of problems with full solutions, from linear equations through functions, logarithms, polynomials, inequalities, sequences and proof by induction to functional equations.
+- Mixed practice, number facts shared with Arithmetic, and the Review page, as in Arithmetic.
+- The end level is a paper of three algebra problems from the IMO Shortlists (2006 to 2025), one from each part of the list, in a sitting of 4 hours 30 minutes, the time of one IMO day. Eruko links the official file and stores none of its problems.
+- Its sources are Richard Rusczyk's Introduction to Algebra, Rusczyk and Mathew Crawford's Intermediate Algebra, and Arthur Engel's Problem-Solving Strategies.
+
+### The unit page
+
+- The row Continue opens says Next, in heavier type, and so does its section. A screen reader hears it as the current step.
+- When you arrive, the section that holds Next is the one open.
+- A locked row says why at its end ("Opens after 3"), where other rows say Done or Next.
+- Start's note, What you need before the first session, stands under its title until you begin. On a phone no title breaks into single letters.
+- The Review row reads "6 new today", with no full stop, like every other row.
+- Contents is set in the same size as Continue, and the gap under the search field is smaller.
+- Search finds Review, a section by the name of its part, and a section's level test. A section found by search is no longer hidden under the top bar.
+- A section with nothing in it no longer reads Done.
+
+### Lessons
+
+- The contents beside a lesson marks the section you are reading, in the text colour and heavier type, and the last section once you reach the foot of the page. A screen reader hears it as the current location.
+- On a phone the contents close to one line, Contents, that opens the list. On a wide screen a long list scrolls in its own box.
+- Text is larger: 17 pixels in the interface and 18 in the lessons.
+- Maths in lessons is set in Literata's own digits and letters with TeX Gyre Bonum Math signs. A full stop or comma stays next to its formula, a formula never breaks inside itself, and a formula that states a relation after a colon stands on its own line.
+- A screen reader reads a slash in a formula as division.
+- A wrong answer in a fading problem or a try-first problem says "Wrong. Read the solution." after the right answer. In mixed practice, an ordinary problem says "Work it on paper." before its answer shows.
+- On the day you mark an idea, Change the last mark turns it to Right after a Wrong, or to Wrong after a Right.
+- A mark set just after a new problem shows is kept.
+
+### Your record
+
+- What you type is no longer lost when two saves come close together.
+- Each tab opens your record on its own and saves on its own, so a save never waits on another tab. A tab left open when the tab that held the record closes takes it over, and one tab that cannot open the record no longer stops the others. The record runs on wa-sqlite 1.2.0.
+- In a private window that lets the site store nothing, Eruko opens with your record in memory and says plainly that nothing is saved, with the backup button beside the note.
+- On a host with no shared record, such as GitHub Pages, Eruko asks for it once, not every 30 seconds.
+- On an iPhone, Eruko saved to the Home Screen no longer opens from another web app's Now Playing card.
+
+### Go course
+
+- A rules question about a move reads as a choice still to make: "Can Black now play at D4?"
+- A position you have seen in a game's review is remembered by its place in the review list. A record from before 0.3.0 still marks it seen.
+
+### C++ course
+
+- Five more Exercism exercises: Gigasecond, Meetup, Robot Name, D&D Character and Complex Numbers.
+- A contest's day is read the same way everywhere, moved from its own time zone into your study day.
+- The memory checks also catch misuse of the standard library and of a vector's unused space.
+- A device program takes a lock on the machine, so two checks of the language track never meet on one GPU.
+
+### Augustus
+
+- The 40-character line now applies to the lesson text, as intended.
+
+### Focus
+
+- A focus move that comes late never takes focus from a control you already reached.
+
 ## 0.2.0
 
 Download: about 2.8 MB with Brotli (16.5 MB uncompressed), fetched once in the background after the first page. A browser that already holds 0.1.0 fetches only the files that changed.

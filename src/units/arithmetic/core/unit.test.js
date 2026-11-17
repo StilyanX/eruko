@@ -1,5 +1,4 @@
-// Hides: what a test asks of the way on Arithmetic's unit page reads from its record (unit.logic.js),
-// against "A Self-Study System" (Mathematics, "The one next action", case 7 · Nothing left).
+// Hides: what a test asks of the way on Arithmetic's unit page reads from its record (unit.logic.js).
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { addDays } from '../../../kernel/days.logic.js'

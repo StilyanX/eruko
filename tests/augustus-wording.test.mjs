@@ -1,5 +1,4 @@
-// The wording of the Augustus lessons, for a reader who has never met Rome ("A Self-Study System",
-// Biography, "The wording"): each office, term and place is explained once, in the sentence where
+// The wording of the Augustus lessons, for a reader who has never met Rome: each office, term and place is explained once, in the sentence where
 // the reader first meets it; everything else is in everyday words; and dates, brackets,
 // quotations, questions and dispute notes keep the paper's forms.
 import { test } from 'node:test'
